@@ -1,7 +1,7 @@
 <nav>
 	<ul>
 		<li>
-			<a class="logo" href="{{ path_for('pocetna') }}">ChaSha</a>
+			<a class="logo" href="{{ path_for('pocetna') }}">Kartoteka</a>
 		</li>
 		<li>
 			<a href="{{ path_for('pocetna') }}">
@@ -9,11 +9,11 @@
 			</a>
 		</li>
 		<li>
-			<a href="{{ path_for('strainicenje', {id: 1}) }}">
-				<i class="fas fa-file"></i> Stranicenje
+			<a href="{{ path_for('kartoni', {id: 1}) }}">
+				<i class="fas fa-file"></i> Kartoni
 			</a>
 		</li>
-		<li>
+		{# <li>
 			<a><i class="fas fa-question-circle"></i> Tutorijali <i class="fas fa-caret-down"></i></a>
 			<ul class="nav-dropdown">
 				<li>
@@ -27,7 +27,7 @@
 					</a>
 				</li>
 			</ul>
-		</li>
+		</li> #}
 		{% if auth.logged %}
 		<li>
 			<a href="{{ path_for('odjava') }}">
@@ -35,11 +35,11 @@
 			</a>
 		</li>
 		{% else %}
-		<li>
+		{# <li>
 			<a href="{{ path_for('registracija') }}">
 				<i class="fas fa-user-plus"></i> Registracija
 			</a>
-		</li>
+		</li> #}
 		<li>
 			<a href="{{ path_for('prijava') }}">
 				<i class="fas fa-sign-in-alt"></i> Prijava

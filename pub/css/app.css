@@ -15,7 +15,7 @@
     success
     warning
     danger
-  tekst - 
+  tekst -
     tamna
     svetla
     siva
@@ -265,110 +265,6 @@ input[type='submit']:disabled {
   opacity: .5;
 }
 
-.btn.btn-info,
-button.btn-info,
-input[type='button'].btn-info,
-input[type='reset'].btn-info,
-input[type='submit'].btn-info {
-  border-color: var(--color-bg-info);
-  background-color: var(--color-bg-info);
-  color: var(--color-text-info);
-}
-
-.btn.btn-info:hover,
-button.btn-info:hover,
-input[type='button'].btn-info:hover,
-input[type='reset'].btn-info:hover,
-input[type='submit'].btn-info:hover {
-  border-color: var(--color-text-info);
-  background-color: var(--color-text-info);
-  color: var(--color-bg-info);
-}
-
-/*
-  &:focus,
-  &:hover {
-    background-color: transparent;
-    border-color: $boja-sekundarna;
-    color: $boja-sekundarna;
-    outline: 0;
-  }
-  &[disabled] {
-    
-  }
-  &.d-primarno {
-    background-color: $boja-primarna;
-    border-color: $boja-primarna;
-    color: $boja-pozadine;
-  }
-  &.d-primarno:focus,
-  &.d-primarno:hover {
-    background-color: lighten($boja-primarna, 10%);
-    border-color: lighten($boja-primarna, 10%);
-    color: $boja-pozadine;
-  }
-  &.d-sekundarno {
-    background-color: $boja-sekundarna;
-    border-color: $boja-sekundarna;
-    color: $boja-pozadine;
-  }
-  &.d-sekundarno:focus,
-  &.d-sekundarno:hover {
-    background-color: lighten($boja-sekundarna, 10%);
-    border-color: lighten($boja-sekundarna, 10%);
-    color: $boja-pozadine;
-  }
-
-  &.d-info {
-    background-color: $boja-info;
-    border-color: $boja-info;
-    color: $boja-pozadine;
-  }
-  &.d-info:focus,
-  &.d-info:hover {
-    background-color: lighten($boja-info, 10%);
-    border-color: lighten($boja-info, 10%);
-    color: $boja-pozadine;
-  }
-
-  &.d-uspeh {
-    background-color: $boja-uspeh;
-    border-color: $boja-uspeh;
-    color: $boja-pozadine;
-  }
-  &.d-uspeh:focus,
-  &.d-uspeh:hover {
-    background-color: lighten($boja-uspeh, 10%);
-    border-color: lighten($boja-uspeh, 10%);
-    color: $boja-pozadine;
-  }
-
-  &.d-upozorenje {
-    background-color: $boja-upozorenje;
-    border-color: $boja-upozorenje;
-    color: $boja-pozadine;
-  }
-  &.d-upozorenje:focus,
-  &.d-upozorenje:hover {
-    background-color: lighten($boja-upozorenje, 10%);
-    border-color: lighten($boja-upozorenje, 10%);
-    color: $boja-pozadine;
-  }
-
-  &.d-opasnost {
-    background-color: $boja-opasnost;
-    border-color: $boja-opasnost;
-    color: $boja-pozadine;
-  }
-  &.d-opasnost:focus,
-  &.d-opasnost:hover {
-    background-color: lighten($boja-opasnost, 10%);
-    border-color: lighten($boja-opasnost, 10%);
-    color: $boja-pozadine;
-  }
-}
-*/
-
 /* Flash messages */
 .flash {
   padding: var(--pm-small) calc(var(--pm-large) * 2) var(--pm-small) var(--pm-large);
@@ -387,25 +283,25 @@ input[type='submit'].btn-info:hover {
 }
 
 .flash-info {
-  border: 1px solid var(--color-text-info);
+  border-bottom: .1rem solid var(--color-text-info);
   color: var(--color-text-info);
   background-color: var(--color-bg-info);
 }
 
 .flash-success {
-  border: 1px solid var(--color-text-success);
+  border-bottom: .1rem solid var(--color-text-success);
   color: var(--color-text-success);
   background-color: var(--color-bg-success);
 }
 
 .flash-warning {
-  border: 1px solid var(--color-text-warning);
+  border-bottom: .1rem solid var(--color-text-warning);
   color: var(--color-text-warning);
   background-color: var(--color-bg-warning);
 }
 
 .flash-danger {
-  border: 1px solid var(--color-text-danger);
+  border-bottom: .1rem solid var(--color-text-danger);
   color: var(--color-text-danger);
   background-color: var(--color-bg-danger);
 }
@@ -414,8 +310,8 @@ input[type='submit'].btn-info:hover {
 .pgn-btn {
   display: inline-block;
   margin-top: 0;
-  margin-left: -1px;
-  border: 1px solid var(--color-text-grey);
+  margin-left: -0.1rem;
+  border: .1rem solid var(--color-text-grey);
   padding: calc(var(--pm-small) / 2) var(--pm-small);
   background-color: var(--color-bg-light);
   color: var(--color-text-grey);
@@ -453,7 +349,7 @@ input[type='submit'].btn-info:hover {
 
 .pgn-goto {
   cursor: pointer;
-  border: 1px solid var(--color-text-grey);
+  border: .1rem solid var(--color-text-grey);
   border-radius: var(--radius-default);
   padding: calc(var(--pm-small) / 3) var(--pm-small);
   background-color: var(--color-bg-info) !important;
@@ -527,7 +423,7 @@ label {
 
 input {
   padding: calc(var(--pm-small) / 4);
-  border: 1px solid var(--color-text-info);
+  border: .1rem solid var(--color-text-info);
   border-radius: calc(var(--radius-default) / 2);
   margin-top: calc(var(--pm-table) / 2);
   background-color: var(--color-text-light);

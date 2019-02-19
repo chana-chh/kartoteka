@@ -16,13 +16,11 @@ use App\Middlewares\GuestMiddleware;
 $app->get('/', '\App\Controllers\HomeController:getHome')->setName('pocetna');
 
 $app->group('', function () {
-	$this->get('/registracija', '\App\Controllers\AuthController:getRegistracija')->setName('registracija');
-	$this->post('/registracija', '\App\Controllers\AuthController:postRegistracija');
 	$this->get('/prijava', '\App\Controllers\AuthController:getPrijava')->setName('prijava');
 	$this->post('/prijava', '\App\Controllers\AuthController:postPrijava');
 })->add(new GuestMiddleware($container));
 
 $app->group('', function () {
 	$this->get('/odjava', '\App\Controllers\AuthController:getOdjava')->setName('odjava');
-	$this->get('/strana', '\App\Controllers\HomeController:getPagination')->setName('strainicenje');
+	$this->get('/kartoni', '\App\Controllers\KartoniController:getKartoni')->setName('kartoni');
 })->add(new AuthMiddleware($container));

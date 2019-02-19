@@ -1,0 +1,47 @@
+{% extends "templates/app.twig" %}
+
+{% block sadrzaj %}
+<h1>Kartoni</h1>
+
+<table>
+    <caption>Tabela svih kartona</caption>
+    <thead>
+        <tr>
+            <th style="width:5%;">Id</th>
+            <th style="width:10%;">Broj</th>
+            <th style="width:10%;">Broj mesta</th>
+            <th style="width:10%;">Tip groba</th>
+            <th style="width:5%;">Aktivan</th>
+            <th style="width:60%;">Napomena</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for karton in kartoni.data %}
+        <tr>
+            <td><em>{{ karton.id }}</em></td>
+            <td>{{ karton.broj() }}</td>
+            <td>{{ karton.broj_mesta }}</td>
+            <td>{{ karton.tip_groba }}</td>
+            <td>{{ karton.aktivan()|raw }}</td>
+            <td>{{ karton.napomena }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="flex-row">
+    <div class="flex-col-3">{{ kartoni.links.buttons|raw }}</div>
+    <div class="flex-col-1">Idi na stranu {{ kartoni.links.select|raw }}</div>
+    <div class="flex-col-2" style="text-align: right;">
+        <p>
+            Prikazani redovi od
+            <strong>{{ kartoni.links.row_from }}</strong> do <strong>{{ kartoni.links.row_to }}</strong>
+            od ukupno <strong>{{ kartoni.links.total_rows }}</strong>
+        </p>
+    </div>
+</div>
+{% endblock sadrzaj %}
+
+{% block traka %}
+<h1>Sidebar</h1>
+{% endblock traka %}

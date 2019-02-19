@@ -42,10 +42,10 @@ class AuthController extends Controller
         // TODO: Upisati novog korisnika
         die();
         if ($this->validator->hasErrors()) {
-            $this->flash->addMessage('danger', 'Doslo je do greske prilikom registracije korisnika!');
+            $this->flash->addMessage('danger', 'Došlo je do greške prilikom registracije korisnika.');
             return $response->withRedirect($this->router->pathFor('registracija'));
         } else {
-            $this->flash->addMessage('success', 'Al si se upiso u usere. Svaka chas!');
+            $this->flash->addMessage('success', 'Novi korisnik je uspešno registrovan.');
             return $response->withRedirect($this->router->pathFor('prijava'));
         }
     }
@@ -59,10 +59,10 @@ class AuthController extends Controller
     {
         $ok = $this->auth->login($request->getParam('korisnicko_ime'), $request->getParam('lozinka'));
         if ($ok) {
-            $this->flash->addMessage('success', 'Al si se logovo. Svaka chas!');
+            $this->flash->addMessage('success', 'Korisnik je uspešno prijavljen.');
             return $response->withRedirect($this->router->pathFor('pocetna'));
         } else {
-            $this->flash->addMessage('danger', 'Negde si se zahebo!');
+            $this->flash->addMessage('danger', 'Podaci za prijavu korisnika nisu ispravni.');
             return $response->withRedirect($this->router->pathFor('prijava'));
         }
     }
