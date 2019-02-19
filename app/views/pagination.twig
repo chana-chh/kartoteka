@@ -1,0 +1,70 @@
+{% extends "templates/app.twig" %}
+
+{% block sadrzaj %}
+<h1>Stranicenje</h1>
+<h2>Data</h2>
+
+<table>
+    <caption>Tabela bre</caption>
+    <thead>
+        <tr>
+            <th style="width:5%;">Id</th>
+            <th style="width:10%;">Datum</th>
+            <th style="width:10%;">Broj</th>
+            <th style="width:25%;">Vrsta</th>
+            <th style="width:25%;">Tuzioci</th>
+            <th style="width:25%;">Tuzeni</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for predmet in predmeti.data %}
+        <tr>
+            <td><em>{{ predmet.id }}</em></td>
+            <td>{{ predmet.datum_tuzbe() }}</td>
+            <td>{{ predmet.broj() }}</td>
+            <td>{{ predmet.vrstaPredmeta().naziv }}</td>
+            <td>
+                <ul>
+                    {% for tuzilac in predmet.tuzioci() %}
+                    <li>{{ tuzilac.naziv }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    {% for tuzeni in predmet.tuzeni() %}
+                    <li>{{ tuzeni.naziv }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+            <td>4.000,00</td>
+            <td>5</td>
+            <td>6</td>
+        </tr>
+    </tfoot>
+</table>
+
+<div class="flex-row">
+    <div class="flex-col-3">{{ predmeti.links.buttons|raw }}</div>
+    <div class="flex-col-1">Idi na stranu {{ predmeti.links.select|raw }}</div>
+    <div class="flex-col-2" style="text-align: right;">
+        <p>
+            Prikazani redovi od
+            <strong>{{ predmeti.links.row_from }}</strong> do <strong>{{ predmeti.links.row_to }}</strong>
+            od ukupno <strong>{{ predmeti.links.total_rows }}</strong>
+        </p>
+    </div>
+</div>
+{% endblock sadrzaj %}
+
+{% block traka %}
+<h1>Sidebar</h1>
+{% endblock traka %}

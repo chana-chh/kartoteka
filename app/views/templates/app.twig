@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="sr>
+<head>
+<meta charset=" UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>ChaSha</title>
+<link rel="shortcut icon" href="{{base_url()}}/favicon.png">
+<link rel="stylesheet" href="{{base_url()}}/css/normalize.css">
+<link rel="stylesheet" href="{{base_url()}}/css/fontawesome.css">
+<link rel="stylesheet" href="{{base_url()}}/css/solid.css">
+<link rel="stylesheet" href="{{base_url()}}/css/app.css">
+</head>
+
+<body>
+	<header class="row">
+		<div class="col">
+			{% include 'templates/inc/navigation.twig' %}
+		</div>
+	</header>
+	<div class="row">{% include 'templates/inc/flash.twig' %}</div>
+	<main class="container">
+		<div class="row">
+			<div class="col content">
+
+				{% block sadrzaj %}{% endblock sadrzaj %}
+			</div>
+			<div class="col sidebar">
+				{% block traka %}{% endblock traka %}
+			</div>
+		</div>
+	</main>
+
+	<footer>
+		<div class="col">
+			{% include 'templates/inc/footer.twig' %}
+		</div>
+	</footer>
+	<script src="{{base_url()}}/js/app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,18 @@
+{% extends "templates/app.twig" %}
+
+{% block sadrzaj %}
+<h1>Registracija</h1>
+<form action="{{ path_for('registracija') }}" method="POST">
+    {{ csrf|raw }}
+    <label for="ime">Ime</label><br>
+    <input type="text" name="ime" id="ime" value="{{ old.ime }}" autocomplete="off"><br><br>
+    <label for="korisnicko_ime">Korisnicko ime</label><br>
+    <input type="text" name="korisnicko_ime" id="korisnicko_ime" value="{{ old.korisnicko_ime }}" autocomplete="off"><br><br>
+    <label for="lozinka">Lozinka</label><br>
+    <input type="password" name="lozinka" id="lozinka" autocomplete="off"><br><br>
+    <label for="potvrda_lozinke">Potvrda lozinke</label><br>
+    <input type="password" name="potvrda_lozinke" id="potvrda_lozinke" autocomplete="off"><br><br>
+    <input type="submit" value="Registruj se">
+    <a href="{{ path_for('pocetna') }}" class="btn">Otkazi registraciju</a>
+</form>
+{% endblock sadrzaj %}
