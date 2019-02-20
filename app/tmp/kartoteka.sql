@@ -114,12 +114,12 @@ CREATE TABLE IF NOT EXISTS `mape` (
   KEY `FK_mape_kartoni` (`karton_id`),
   CONSTRAINT `FK_mape_groblja` FOREIGN KEY (`groblje_id`) REFERENCES `groblja` (`id`),
   CONSTRAINT `FK_mape_kartoni` FOREIGN KEY (`karton_id`) REFERENCES `kartoni` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table kartoteka.mape: ~1 rows (approximately)
 /*!40000 ALTER TABLE `mape` DISABLE KEYS */;
 INSERT INTO `mape` (`id`, `karton_id`, `groblje_id`, `parcela`, `grobno_mesto`, `veza`, `x_pozicija`, `y_pozicija`) VALUES
-	(2, 1, 1, 'X', '1', 'http://localhost/kartoteka/pub/img/groblje.jpg', 100, 100);
+	(1, 1, 1, 'X', '1', 'http://localhost/kartoteka/pub/img/groblje.jpg', 100, 100);
 /*!40000 ALTER TABLE `mape` ENABLE KEYS */;
 
 -- Dumping structure for table kartoteka.pokojnici
