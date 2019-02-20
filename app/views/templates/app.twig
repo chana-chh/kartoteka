@@ -21,6 +21,11 @@
 	<div class="row">{% include 'templates/inc/flash.twig' %}</div>
 	<main class="container">
 		<div class="row">
+			<div class="col naslov">
+				{% block naslov %}{% endblock naslov %}
+			</div>
+		</div>
+		<div class="row">
 			<div class="col content">
 				{% block sadrzaj %}{% endblock sadrzaj %}
 			</div>

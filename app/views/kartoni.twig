@@ -1,34 +1,47 @@
 {% extends "templates/app.twig" %}
 
-{% block sadrzaj %}
+{% block naslov %}
 <h1>Kartoni</h1>
+<form action="" method="POST">
+    <label for="">Groblje</label>
+    <select name="goblje_id">
+        <option value="1">Bozman</option>
+        <option value="2">Varosko</option>
+    </select>
+    <label for="">Parcela</label>
+    <input type="text" name="parcela">
+    <label for="">Grobno mesto</label>
+    <input type="text" name="grobno_mesto">
+    <input type="submit" value="Pronadji">
+</form>
 
-<table>
-    <caption>Tabela svih kartona</caption>
-    <thead>
-        <tr>
-            <th style="width:5%;">Id</th>
-            <th style="width:15%;">Broj</th>
-            <th style="width:10%;">Broj mesta</th>
-            <th style="width:10%;">Tip groba</th>
-            <th style="width:5%;">Aktivan</th>
-            <th style="width:55%;">Napomena</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for karton in kartoni.data %}
-        <tr>
-            <td><em>{{ karton.id }}</em></td>
-            <td>{{ karton.broj() }}</td>
-            <td>{{ karton.broj_mesta }}</td>
-            <td>{{ karton.tip_groba }}</td>
-            <td>{{ karton.aktivan()|raw }}</td>
-            <td>{{ karton.napomena }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
+<div class="table-responsive">
+    <table>
+        <caption>Tabela svih kartona</caption>
+        <thead>
+            <tr>
+                <th style="width:5%;">Id</th>
+                <th style="width:15%;">Broj</th>
+                <th style="width:10%;">Broj mesta</th>
+                <th style="width:10%;">Tip groba</th>
+                <th style="width:5%;">Aktivan</th>
+                <th style="width:55%;">Napomena</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for karton in kartoni.data %}
+            <tr>
+                <td><em>{{ karton.id }}</em></td>
+                <td>{{ karton.broj() }}</td>
+                <td>{{ karton.broj_mesta }}</td>
+                <td>{{ karton.tip_groba }}</td>
+                <td>{{ karton.aktivan()|raw }}</td>
+                <td>{{ karton.napomena }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 <div class="flex-row">
     <div class="flex-col-3">{{ kartoni.links.buttons|raw }}</div>
     <div class="flex-col-1">Idi na stranu {{ kartoni.links.select|raw }}</div>
@@ -40,8 +53,4 @@
         </p>
     </div>
 </div>
-{% endblock sadrzaj %}
-
-{% block traka %}
-<h1>Sidebar</h1>
-{% endblock traka %}
+{% endblock naslov %}
