@@ -33,6 +33,11 @@ class Karton extends Model
         return $this->hasMany('App\Models\Dokument', 'karton_id');
     }
 
+    public function transakcije()
+    {
+        return $this->hasMany('App\Models\Transakcija', 'karton_id');
+    }
+
     public function mapa()
     {
         return $this->hasOne('App\Models\Mapa', 'karton_id');
@@ -44,4 +49,7 @@ class Karton extends Model
         $pk = $this->pk;
         return "<input type=\"checkbox\" name=\"aktivan\" data-id=\"{$this->$pk}\"{$chk}>";
     }
+
+    public function saldo()
+    { }
 }

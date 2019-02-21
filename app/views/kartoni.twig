@@ -1,22 +1,44 @@
 {% extends "templates/app.twig" %}
 
 {% block naslov %}
-<h1>Kartoni</h1>
+<h1>
+    Kartoni
+    {% if data %}
+    <small class="warning-text">
+        <em>[filtrirano]</em>
+    </small>
+    {% else %}
+    <small class="success-text">
+        <em>[svi kartoni]</em>
+    </small>
+    {% endif %}
+
+</h1>
 
 <div class="well">
     <form action="{{ path_for('kartoni.pretraga') }}" method="POST">
         {{ csrf|raw }}
-        <label for="groblje_id">Groblje</label>
-        <select name="groblje_id" id="groblje_id">
-            {% for groblje in groblja %}
-            <option value="{{ groblje.id }}">{{ groblje.naziv }}</option>
-            {% endfor %}
-        </select>
-        <label for="parcela">Parcela</label>
-        <input type="text" name="parcela" id="parcela">
-        <label for="grobno_mesto">Grobno mesto</label>
-        <input type="text" name="grobno_mesto" id="grobno_mesto">
-        <input type="submit" value="Pronađi" class="btn-success">
+        <div class="flex-row">
+            <div class="flex-col">
+                <select name="groblje_id" id="groblje_id" class="form-control">
+                    {% for groblje in groblja %}
+                    <option value="{{ groblje.id }}">{{ groblje.naziv }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="flex-col">
+                <input type="text" name="parcela" id="parcela" class="form-control" autocomplete="off" placeholder="Parcela">
+            </div>
+            <div class="flex-col">
+                <input type="text" name="grobno_mesto" id="grobno_mesto" class="form-control" autocomplete="off"
+                    placeholder="Grobno mesto">
+            </div>
+            <div class="flex-col-4">
+                <input type="submit" value="Filtriraj">
+                {# Pronađi #}
+                <a href="{{ path_for('kartoni') }}" class="btn btn-success">Svi kartoni</a>
+            </div>
+        </div>
     </form>
 </div>
 
@@ -38,20 +60,20 @@
                 <td><em>{{ karton.id }}</em></td>
                 <td>
                     <a href="{{ path_for('kartoni.pregled', { 'id': karton.id }) }}">
-                        {{ karton.broj() }}
+                        <strong>{{ karton.broj() }}</strong>
                     </a>
                 </td>
                 <td>{{ karton.broj_mesta }}</td>
                 <td>{{ karton.tip_groba }}</td>
                 <td>{{ karton.aktivan()|raw }}</td>
-                <td>{{ karton.napomena }}</td>
+                <td>{{ karton.napomena|nl2br }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
 <div class="flex-row">
-    <div class="flex-col-3">{{ kartoni.links.buttons|raw }}</div>
+    <div class="flex-col-4">{{ kartoni.links.buttons|raw }}</div>
     <div class="flex-col-1">Idi na stranu {{ kartoni.links.select|raw }}</div>
     <div class="flex-col-2" style="text-align: right;">
         <p>

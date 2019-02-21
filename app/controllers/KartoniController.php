@@ -54,11 +54,15 @@ class KartoniController extends Controller
         $sql = "SELECT * FROM {$model->getTable()} WHERE {$where};";
         $kartoni = $model->paginate($page, $sql, $params);
 
-        $this->render($response, 'kartoni.twig', compact('kartoni', 'groblja'));
+        $this->render($response, 'kartoni.twig', compact('kartoni', 'groblja', 'data'));
     }
 
     public function getKartoniPregled($request, $response, $args)
     {
-        echo "ID: {$args['id']}";
+        $id = $args['id'];
+        $modelKarton = new Karton();
+        $karton = $modelKarton->find($id);
+
+        $this->render($response, 'karton_pregled.twig', compact('karton'));
     }
 }
