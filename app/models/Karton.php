@@ -10,7 +10,7 @@ class Karton extends Model
 
     public function broj()
     {
-        return $this->groblje()->naziv . '/' . $this->parcela . '/' . $this->grobno_mesto;
+        return $this->groblje()->naziv . '-' . $this->parcela . '-' . $this->grobno_mesto;
     }
 
     public function groblje()

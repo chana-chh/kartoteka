@@ -25,4 +25,5 @@ $app->group('', function () {
 	$this->get('/kartoni', '\App\Controllers\KartoniController:getKartoni')->setName('kartoni');
 	$this->get('/kartoni/pretraga', '\App\Controllers\KartoniController:getKartoniPretraga')->setName('kartoni.pretraga');
 	$this->post('/kartoni/pretraga', '\App\Controllers\KartoniController:postKartoniPretraga');
+	$this->get('/kartoni/pregled/{id}', '\App\Controllers\KartoniController:getKartoniPregled')->setName('kartoni.pregled');
 })->add(new AuthMiddleware($container));

@@ -12,7 +12,7 @@
   --color-success: #5C946E;
   --color-warning: #FAA916;
   --color-danger: #931621;
-
+/* 
   --color-text-dark: #000;
   --color-text-light: #eee;
   --color-text-grey: #444;
@@ -31,7 +31,7 @@
   --color-bg-info: #96D6F2;
   --color-bg-success: #97BAA2;
   --color-bg-warning: #FBC86A;
-  --color-bg-danger: #CD959A;
+  --color-bg-danger: #CD959A; */
 
   /* padding & margin */
   --pm-xs: .25rem;
@@ -46,8 +46,8 @@
   --radius-s: .25rem;
 
   /* navigation */
-  --nav-color: var(--color-warning);
-  --nav-bg-hover: var(--color-black);
+  /* --nav-color: var(--color-warning);
+  --nav-bg-hover: var(--color-black); */
 }
 
 /* Dead Simple Grid (c) 2015 Vladimir Agafonkin */
@@ -103,8 +103,8 @@ body {
 }
 
 body {
-  color: var(--color-text-dark);
-  background-color: var(--color-bg-light);
+  color: var(--color-black);
+  background-color: var(--color-white);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -117,23 +117,23 @@ main {
 
 header,
 footer {
-  color: var(--color-text-light);
-  background-color: var(--color-bg-dark);
+  color: var(--color-white);
+  background-color: var(--color-black);
 }
 
 a {
-  color: var(--color-danger);
+  color: var(--color-primary);
   text-decoration: none;
 }
 
 a:focus,
 a:hover {
-  color: var(--color-warning);
+  color: var(--color-secondary);
 }
 
 hr {
   border: 0;
-  border-top: var(--border) solid var(--color-secondary);
+  border-top: var(--border) solid var(--color-grey);
   margin: var(--pm-m) 0;
 }
 
@@ -161,14 +161,14 @@ nav .logo {
   text-align: left;
   text-decoration: none;
   padding: var(--pm-s) 0;
-  color: var(--nav-color) !important;
+  color: var(--color-warning) !important;
   margin-right: var(--pm-xl);
   background-color: transparent !important;
   border: 0;
 }
 
 nav .logo:hover {
-  color: var(--color-text-light) !important;
+  color: var(--color-white) !important;
 }
 
 nav ul {
@@ -187,13 +187,13 @@ nav ul li a:visited {
   display: block;
   padding: var(--pm-s) var(--pm-l);
   text-decoration: none;
-  color: var(--color-text-light);
-  background-color: var(--color-bg-dark);
+  color: var(--color-white);
+  background-color: var(--color-black);
 }
 
 nav ul li a:hover {
-  color: var(--nav-color);
-  background-color: var(--nav-bg-hover);
+  color: var(--color-warning);
+  background-color: var(--color-grey);
 }
 
 nav ul li ul li {
@@ -217,14 +217,15 @@ input[type='button'],
 input[type='reset'],
 input[type='submit'] {
   border: var(--border) solid var(--color-primary);
-  background-color: var(--color-primary);
-  color: var(--color-white);
+  background-color: transparent;
+  color: var(--color-primary);
   border-radius: var(--radius);
   cursor: pointer;
   display: inline-block;
   font-weight: 500;
-  line-height: 2;
+  line-height: 2.5;
   font-size: .9rem;
+  font-weight: bold;
   padding: 0 var(--pm-m);
   text-align: center;
   text-decoration: none;
@@ -238,9 +239,9 @@ button:hover,
 input[type='button']:hover,
 input[type='reset']:hover,
 input[type='submit']:hover {
-  border-color: var(--color-bg-primary);
-  background-color: var(--color-bg-primary);
-  color: var(--color-text-primary);
+  border-color: var(--color-primary);
+  background-color: var(--color-primary);
+  color: var(--color-white);
 }
 
 .btn:disabled,
@@ -257,9 +258,8 @@ button.btn-info,
 input[type='button'].btn-info,
 input[type='reset'].btn-info,
 input[type='submit'].btn-info {
-  border-color: var(--color-bg-info);
-  background-color: var(--color-bg-info);
-  color: var(--color-text-info);
+  border-color: var(--color-info);
+  color: var(--color-info);
 }
 
 .btn.btn-info:hover,
@@ -267,8 +267,8 @@ button.btn-info:hover,
 input[type='button'].btn-info:hover,
 input[type='reset'].btn-info:hover,
 input[type='submit'].btn-info:hover {
-  border-color: var(--color-text-info);
-  background-color: var(--color-text-info);
+  border-color: var(--color-info);
+  background-color: var(--color-info);
   color: var(--color-white);
 }
 
@@ -277,9 +277,8 @@ button.btn-success,
 input[type='button'].btn-success,
 input[type='reset'].btn-success,
 input[type='submit'].btn-success {
-  border-color: var(--color-bg-success);
-  background-color: var(--color-bg-success);
-  color: var(--color-text-success);
+  border-color: var(--color-success);
+  color: var(--color-success);
 }
 
 .btn.btn-success:hover,
@@ -287,8 +286,8 @@ button.btn-success:hover,
 input[type='button'].btn-success:hover,
 input[type='reset'].btn-success:hover,
 input[type='submit'].btn-success:hover {
-  border-color: var(--color-text-success);
-  background-color: var(--color-text-success);
+  border-color: var(--color-success);
+  background-color: var(--color-success);
   color: var(--color-white);
 }
 
@@ -297,9 +296,8 @@ button.btn-warning,
 input[type='button'].btn-warning,
 input[type='reset'].btn-warning,
 input[type='submit'].btn-warning {
-  border-color: var(--color-bg-warning);
-  background-color: var(--color-bg-warning);
-  color: var(--color-text-warning);
+  border-color: var(--color-warning);
+  color: var(--color-warning);
 }
 
 .btn.btn-warning:hover,
@@ -307,8 +305,8 @@ button.btn-warning:hover,
 input[type='button'].btn-warning:hover,
 input[type='reset'].btn-warning:hover,
 input[type='submit'].btn-warning:hover {
-  border-color: var(--color-text-warning);
-  background-color: var(--color-text-warning);
+  border-color: var(--color-warning);
+  background-color: var(--color-warning);
   color: var(--color-white);
 }
 
@@ -317,9 +315,8 @@ button.btn-danger,
 input[type='button'].btn-danger,
 input[type='reset'].btn-danger,
 input[type='submit'].btn-danger {
-  border-color: var(--color-bg-danger);
-  background-color: var(--color-bg-danger);
-  color: var(--color-text-danger);
+  border-color: var(--color-danger);
+  color: var(--color-danger);
 }
 
 .btn.btn-danger:hover,
@@ -327,8 +324,8 @@ button.btn-danger:hover,
 input[type='button'].btn-danger:hover,
 input[type='reset'].btn-danger:hover,
 input[type='submit'].btn-danger:hover {
-  border-color: var(--color-text-danger);
-  background-color: var(--color-text-danger);
+  border-color: var(--color-danger);
+  background-color: var(--color-danger);
   color: var(--color-white);
 }
 
@@ -345,37 +342,33 @@ input[type='submit'].btn-danger:hover {
 }
 
 .flash-info {
-  border-bottom: var(--border) solid var(--color-info);
-  color: var(--color-text-info);
-  background-color: var(--color-bg-info);
+  color: var(--color-white);
+  background-color: var(--color-info);
 }
 
 .flash-success {
-  border-bottom: var(--border) solid var(--color-success);
-  color: var(--color-text-success);
-  background-color: var(--color-bg-success);
+  color: var(--color-white);
+  background-color: var(--color-success);
 }
 
 .flash-warning {
-  border-bottom: var(--border) solid var(--color-text-warning);
-  color: var(--color-text-warning);
-  background-color: var(--color-bg-warning);
+  color: var(--color-white);
+  background-color: var(--color-warning);
 }
 
 .flash-danger {
-  border-bottom: var(--border) solid var(--color-danger);
-  color: var(--color-text-danger);
-  background-color: var(--color-bg-danger);
+  color: var(--color-white);
+  background-color: var(--color-danger);
 }
 
 /* Pagination */
 .pgn-btn {
   display: inline-block;
   margin-left: -1px;
-  border: 1px solid var(--color-bg-grey);
-  padding: var(--pm-xs) var(--pm-s);
-  background-color: var(--color-bg-light);
-  color: var(--color-text-grey);
+  border: 1px solid var(--color-grey);
+  padding: var(--pm-s) var(--pm-m);
+  background-color: var(--color-white);
+  color: var(--color-black);
   text-decoration: none;
 }
 
@@ -394,26 +387,26 @@ input[type='submit'].btn-danger:hover {
 
 .pgn-btn:hover {
   color: var(--color-white);
-  background-color: var(--color-bg-info);
+  background-color: var(--color-info);
 }
 
 .pgn-cur-btn {
-  background-color: var(--color-info) !important;
+  background-color: var(--color-primary) !important;
   color: var(--color-white) !important;
 }
 
 .pgn-btn-disabled {
   pointer-events: none;
-  background-color: var(--color-text-light);
-  color: var(--color-text-grey);
+  background-color: var(--color-grey);
+  color: var(--color-white);
 }
 
 .pgn-goto {
   cursor: pointer;
-  border: var(--border) solid var(--color-info);
+  border: var(--border) solid var(--color-grey);
   border-radius: var(--radius);
-  padding: calc(var(--pm-xs) / 2) var(--pm-xs);
-  background-color: var(--color-info) !important;
+  padding: var(--pm-xs) var(--pm-s);
+  background-color: var(--color-primary) !important;
   color: var(--color-white) !important;
   text-align: center;
 }
@@ -429,6 +422,7 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
   empty-cells: show;
+  margin-bottom: var(--pm-m);
 }
 
 .table-responsive {
@@ -438,18 +432,18 @@ table {
 table caption {
   text-align: left;
   font-style: italic;
-  color: var(--color-text-info);
+  color: var(--color-secondary);
 }
 
 table thead th,
 table thead td,
 table tfoot td {
-  color: var(--color-text-light);
+  color: var(--color-white);
   background-color: var(--color-primary);
 }
 
 tr {
-  border-bottom: var(--border) solid var(--color-text-grey);
+  border-bottom: var(--border) solid var(--color-grey);
 }
 
 table tbody tr:nth-child(even) {
@@ -457,12 +451,13 @@ table tbody tr:nth-child(even) {
 }
 
 table tbody tr:hover {
-  background-color: var(--color-bg-info);
+  color: var(--color-white);
+  background-color: var(--color-secondary);
 }
 
 th,
 td {
-  padding: var(--pm-xs);
+  padding: var(--pm-s);
   margin: 0;
   vertical-align: top;
   text-align: left;
@@ -481,20 +476,20 @@ fieldset {
 }
 
 label {
-  color: var(--color-text-primary);
+  color: var(--color-primary);
 }
 
 input,
 select {
-  padding: var(--pm-xs);
+  padding: var(--pm-xs) var(--pm-s);
+  line-height: 1.8;
   border: var(--border) solid var(--color-primary);
   border-radius: var(--radius-s);
-  margin-top: var(--pm-xs);
-  background-color: var(--color-bg-light);
+  background-color: var(--color-white);
 }
 
 select {
-  padding: calc(var(--pm-xs) / 2) var(--pm-xs);
+  padding: var(--pm-xs) var(--pm-s);
 }
 
 input:active,
@@ -502,7 +497,8 @@ input:focus,
 select:active,
 select:focus {
   outline: 0;
-  background-color: var(--color-bg-info);
+  color: var(--color-white);
+  background-color: var(--color-secondary);
 }
 
 /* Close button */
@@ -521,7 +517,7 @@ select:focus {
 }
 
 .close:hover {
-  color: var(--color-text-light) !important;
+  color: var(--color-primary) !important;
   background-color: transparent !important;
 }
 
@@ -542,9 +538,9 @@ select:focus {
 
 /* Flex */
 .flex-row {
-  /* margin: var(--pm-m) 0; */
   padding: var(--pm-s) 0;
   display: block;
+  margin-bottom: var(--pm-m);
 }
 
 .flex-col,
@@ -592,10 +588,11 @@ select:focus {
 }
 
 .well {
+  margin-bottom: var(--pm-m); 
   padding: var(--pm-s);
-  color: var(--color-text-dark);
-  background-color: var(--color-text-light);
-  border: var(--border) solid var(--color-bg-grey);
+  color: var(--color-black);
+  background-color: #eee;
+  border: var(--border) solid var(--color-grey);
   border-radius: var(--radius);
 }
 
@@ -636,8 +633,8 @@ select:focus {
   border: var(--border) solid var(--color-primary);
   border-top-left-radius: var(--radius);
   border-top-right-radius: var(--radius);
-  color: var(--color-text-secondary);
-  background-color: var(--color-bg-info);
+  color: var(--color-primary);
+  background-color: #ddd;
 }
 
 .modal-header .close {
@@ -657,5 +654,5 @@ select:focus {
   border: var(--border) solid var(--color-primary);
   border-bottom-right-radius: 0.3rem;
   border-bottom-left-radius: 0.3rem;
-  background-color: var(--color-bg-info);
+  background-color: #ddd;
 }

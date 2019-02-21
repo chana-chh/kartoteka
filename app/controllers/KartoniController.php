@@ -56,4 +56,9 @@ class KartoniController extends Controller
 
         $this->render($response, 'kartoni.twig', compact('kartoni', 'groblja'));
     }
+
+    public function getKartoniPregled($request, $response, $args)
+    {
+        echo "ID: {$args['id']}";
+    }
 }

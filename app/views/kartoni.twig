@@ -22,7 +22,6 @@
 
 <div class="table-responsive">
     <table>
-        <caption>Tabela svih kartona</caption>
         <thead>
             <tr>
                 <th style="width:5%;">Id</th>
@@ -37,7 +36,11 @@
             {% for karton in kartoni.data %}
             <tr>
                 <td><em>{{ karton.id }}</em></td>
-                <td>{{ karton.broj() }}</td>
+                <td>
+                    <a href="{{ path_for('kartoni.pregled', { 'id': karton.id }) }}">
+                        {{ karton.broj() }}
+                    </a>
+                </td>
                 <td>{{ karton.broj_mesta }}</td>
                 <td>{{ karton.tip_groba }}</td>
                 <td>{{ karton.aktivan()|raw }}</td>

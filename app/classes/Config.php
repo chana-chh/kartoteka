@@ -41,7 +41,7 @@ final class Config
         'cyrillic' => false, // da li je aplikacija cirilicna
         'pagination' => [
             // Podesavanja za stranicenje
-            'per_page' => 10,
+            'per_page' => 15,
             'page_span' => 3,
         ],
         'db' => [
