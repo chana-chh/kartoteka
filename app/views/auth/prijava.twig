@@ -1,21 +1,20 @@
 {% extends "templates/app.twig" %}
 
 {% block naslov %}
-<h1>Prijava</h1>
-<hr>
-<div class="flex-row">
-    <div class="flex-col-2"></div>
-    <div class="flex-col-2">
-        <form action="{{ path_for('prijava') }}" method="POST">
-            {{ csrf|raw }}
-            <label for="korisnicko_ime">Korisničko ime</label><br>
-            <input type="text" name="korisnicko_ime" id="korisnicko_ime" value="{{ old.korisnicko_ime }}" autocomplete="off"><br><br>
-            <label for="lozinka">Lozinka</label><br>
-            <input type="password" name="lozinka" id="lozinka" autocomplete="off"><br><br>
-            <input type="submit" value="Prijavi se" class="btn btn-success">
-            <a href="{{ path_for('pocetna') }}" class="btn btn-danger">Otkaži prijavu</a>
-        </form>
-    </div>
-    <div class="flex-col-2"></div>
+
+<div class="center">
+    <br>
+    <h1>Prijava</h1>
+    <hr>
+    <br>
+    <form action="{{ path_for('prijava') }}" method="POST">
+        {{ csrf|raw }}
+        <label for="korisnicko_ime">Korisničko ime</label><br>
+        <input type="text" name="korisnicko_ime" id="korisnicko_ime" value="{{ old.korisnicko_ime }}" autocomplete="off"><br><br>
+        <label for="lozinka">Lozinka</label><br>
+        <input type="password" name="lozinka" id="lozinka" autocomplete="off"><br><br>
+        <input type="submit" value="Prijavi se" class="btn btn-success">
+        <a href="{{ path_for('pocetna') }}" class="btn btn-danger">Otkaži prijavu</a>
+    </form>
 </div>
 {% endblock naslov %}

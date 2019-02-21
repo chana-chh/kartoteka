@@ -1,11 +1,9 @@
 {% extends "templates/app.twig" %}
 
-{% block sadrzaj %}
-<h1>JKP Šumadija - Kragujevac</h1>
-<img src="{{ base_url() }}/img/jkp_sumadija.jpg" alt="JKP Sumadija Kragujevac">
-{% endblock sadrzaj %}
-
-{% block traka %}
-<h1>Gradska groblja</h1>
-<img src="{{ base_url() }}/img/logo.png" alt="Gradska groblja">
-{% endblock traka %}
+{% block naslov %}
+<div class="flex-col-2" style="text-align: center;">
+	<img src="{{ base_url() }}/img/jkp_sumadija.jpg" alt="JKP Sumadija Kragujevac">
+	<h1>Gradska groblja</h1>
+	<img src="{{ base_url() }}/img/logo.png" alt="Gradska groblja">
+</div>
+{% endblock naslov %}

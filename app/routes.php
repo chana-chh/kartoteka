@@ -23,4 +23,6 @@ $app->group('', function () {
 $app->group('', function () {
 	$this->get('/odjava', '\App\Controllers\AuthController:getOdjava')->setName('odjava');
 	$this->get('/kartoni', '\App\Controllers\KartoniController:getKartoni')->setName('kartoni');
+	$this->get('/kartoni/pretraga', '\App\Controllers\KartoniController:getKartoniPretraga')->setName('kartoni.pretraga');
+	$this->post('/kartoni/pretraga', '\App\Controllers\KartoniController:postKartoniPretraga');
 })->add(new AuthMiddleware($container));

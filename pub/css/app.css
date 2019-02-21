@@ -14,7 +14,7 @@
   --color-danger: #931621;
 
   --color-text-dark: #000;
-  --color-text-light: #ddd;
+  --color-text-light: #eee;
   --color-text-grey: #444;
   --color-text-primary: #0C1832;
   --color-text-secondary: #024F7E;
@@ -370,8 +370,8 @@ input[type='submit'].btn-danger:hover {
 /* Pagination */
 .pgn-btn {
   display: inline-block;
-  margin-left: calc(var(--border) * -1);
-  border: var(--border) solid var(--color-bg-grey);
+  margin-left: -1px;
+  border: 1px solid var(--color-bg-grey);
   padding: var(--pm-xs) var(--pm-s);
   background-color: var(--color-bg-light);
   color: var(--color-text-grey);
@@ -483,7 +483,8 @@ label {
   color: var(--color-text-primary);
 }
 
-input, select {
+input,
+select {
   padding: var(--pm-xs);
   border: var(--border) solid var(--color-primary);
   border-radius: var(--radius-s);
@@ -492,7 +493,7 @@ input, select {
 }
 
 input:active,
-input:focus, 
+input:focus,
 select:active,
 select:focus {
   outline: 0;
@@ -537,6 +538,7 @@ select:focus {
 
 /* Flex */
 .flex-row {
+  /* margin: var(--pm-m) 0; */
   padding: var(--pm-s) 0;
   display: block;
 }
@@ -567,4 +569,16 @@ select:focus {
   .flex-col-3 {
     flex: 3;
   }
+}
+
+.center {
+  text-align: center;
+}
+
+.well {
+  padding: var(--pm-s);
+  color: var(--color-text-dark);
+  background-color: var(--color-text-light);
+  border: var(--border) solid var(--color-bg-grey);
+  border-radius: var(--radius);
 }

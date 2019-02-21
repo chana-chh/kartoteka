@@ -2,18 +2,22 @@
 
 {% block naslov %}
 <h1>Kartoni</h1>
-<form action="" method="POST">
-    <label for="">Groblje</label>
-    <select name="goblje_id">
-        <option value="1">Bozman</option>
-        <option value="2">Varosko</option>
-    </select>
-    <label for="">Parcela</label>
-    <input type="text" name="parcela">
-    <label for="">Grobno mesto</label>
-    <input type="text" name="grobno_mesto">
-    <input type="submit" value="Pronadji">
-</form>
+
+<div class="well">
+    <form action="{{ path_for('kartoni.pretraga') }}" method="POST">
+        {{ csrf|raw }}
+        <label for="groblje_id">Groblje</label>
+        <select name="groblje_id" id="groblje_id">
+            <option value="1">Bozman</option>
+            <option value="2">Varosko</option>
+        </select>
+        <label for="parcela">Parcela</label>
+        <input type="text" name="parcela" id="parcela">
+        <label for="grobno_mesto">Grobno mesto</label>
+        <input type="text" name="grobno_mesto" id="grobno_mesto">
+        <input type="submit" value="Pronađi" class="btn-success">
+    </form>
+</div>
 
 <div class="table-responsive">
     <table>
