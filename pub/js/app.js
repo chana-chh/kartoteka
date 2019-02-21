@@ -33,10 +33,18 @@ if (paginator_goto !== null) {
 	});
 };
 
-// Close button
+// Close button flash
 var close = document.querySelectorAll(".flash .close");
 close.forEach(function (el) {
 	el.addEventListener("click", function () {
 		this.parentElement.style.display = "none";
+	});
+});
+
+// Close button modal
+var close = document.querySelectorAll(".modal .close");
+close.forEach(function (el) {
+	el.addEventListener("click", function () {
+		this.parentElement.parentElement.parentElement.parentElement.style.display = "none";
 	});
 });

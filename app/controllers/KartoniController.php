@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Karton;
+use App\Models\Groblje;
 
 class KartoniController extends Controller
 {
@@ -12,10 +13,12 @@ class KartoniController extends Controller
         parse_str($request->getUri()->getQuery(), $query);
         $page = isset($query['page']) ? (int)$query['page'] : 1;
 
-        $model = new Karton();
-        $kartoni = $model->paginate($page);
+        $modelKarton = new Karton();
+        $modelGroblje = new Groblje();
+        $kartoni = $modelKarton->paginate($page);
+        $groblja = $modelGroblje->all();
 
-        $this->render($response, 'kartoni.twig', compact('kartoni'));
+        $this->render($response, 'kartoni.twig', compact('kartoni', 'groblja'));
     }
 
     public function postKartoniPretraga($request, $response)
@@ -44,11 +47,13 @@ class KartoniController extends Controller
             $where .= " AND grobno_mesto = :grobno_mesto";
             $params[':grobno_mesto'] = $data['grobno_mesto'];
         }
+        $modelGroblje = new Groblje();
+        $groblja = $modelGroblje->all();
 
         $model = new Karton();
-        $sql = "SELECT * FROM kartoni WHERE {$where};"; // {$model->getTable()}
+        $sql = "SELECT * FROM {$model->getTable()} WHERE {$where};";
         $kartoni = $model->paginate($page, $sql, $params);
 
-        $this->render($response, 'kartoni.twig', compact('kartoni'));
+        $this->render($response, 'kartoni.twig', compact('kartoni', 'groblja'));
     }
 }

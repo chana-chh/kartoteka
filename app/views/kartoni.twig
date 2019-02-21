@@ -8,8 +8,9 @@
         {{ csrf|raw }}
         <label for="groblje_id">Groblje</label>
         <select name="groblje_id" id="groblje_id">
-            <option value="1">Bozman</option>
-            <option value="2">Varosko</option>
+            {% for groblje in groblja %}
+            <option value="{{ groblje.id }}">{{ groblje.naziv }}</option>
+            {% endfor %}
         </select>
         <label for="parcela">Parcela</label>
         <input type="text" name="parcela" id="parcela">
