@@ -62,7 +62,7 @@ class KartoniController extends Controller
         $id = $args['id'];
         $modelKarton = new Karton();
         $karton = $modelKarton->find($id);
-
-        $this->render($response, 'karton_pregled.twig', compact('karton'));
+        $saldo = $karton->saldo();
+        $this->render($response, 'karton_pregled.twig', compact('karton', 'saldo'));
     }
 }

@@ -196,3 +196,4 @@
 [21-Feb-2019 15:13:32 Europe/Belgrade] PHP Notice:  Undefined offset: 0 in C:\xampp\htdocs\kartoteka\app\models\Korisnik.php on line 15
 [21-Feb-2019 15:26:21 Europe/Belgrade] PHP Notice:  Array to string conversion in C:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 62
 [22-Feb-2019 10:37:51 Europe/Belgrade] PHP Notice:  Undefined offset: 0 in D:\xampp\htdocs\kartoteka\app\models\Korisnik.php on line 15
+[22-Feb-2019 12:57:37 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Karton::$id in C:\xampp\htdocs\kartoteka\app\models\Karton.php on line 55

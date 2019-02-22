@@ -111,12 +111,12 @@
 	<table>
 		<thead>
 			<tr>
-				<th style="width:5%;" class="danger-bg">Id</th>
-				<th style="width:15%;" class="danger-bg">RB</th>
-				<th style="width:10%;" class="danger-bg">Prezime</th>
-				<th style="width:10%;" class="danger-bg">Ime</th>
-				<th style="width:15%;" class="danger-bg">JMBG</th>
-				<th style="width:45%;" class="danger-bg">Mesto</th>
+				<th class="w-5 danger-bg">Id</th>
+				<th class="w-10 danger-bg">RB</th>
+				<th class="w-10 danger-bg">Prezime</th>
+				<th class="w-10 danger-bg">Ime</th>
+				<th class="w-15 danger-bg">JMBG</th>
+				<th class="w-50 danger-bg">Mesto</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -139,12 +139,12 @@
 	<table>
 		<thead>
 			<tr>
-				<th style="width:5%;" class="black-bg">Id</th>
-				<th style="width:15%;" class="black-bg">RB</th>
-				<th style="width:10%;" class="black-bg">Prezime</th>
-				<th style="width:10%;" class="black-bg">Ime</th>
-				<th style="width:15%;" class="black-bg">JMBG</th>
-				<th style="width:45%;" class="black-bg">Mesto</th>
+				<th class="w-5 black-bg">Id</th>
+				<th class="w-10 black-bg">RB</th>
+				<th class="w-10 black-bg">Prezime</th>
+				<th class="w-10 black-bg">Ime</th>
+				<th class="w-15 black-bg">JMBG</th>
+				<th class="w-50 black-bg">Mesto</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -169,12 +169,12 @@
 	<table>
 		<thead>
 			<tr>
-				<th style="width:15%;" class="success-bg">Tip</th>
-				<th style="width:15%;" class="success-bg">Godina</th>
-				<th style="width:15%;" class="success-bg">Datum</th>
-				<th style="width:15%;" class="success-bg">Iznos</th>
-				<th style="width:25%;" class="success-bg">Priznanica</th>
-				<th style="width:15%;" class="success-bg">Razduženo</th>
+				<th class="w-15 success-bg">Tip</th>
+				<th class="w-15 success-bg">Godina</th>
+				<th class="w-15 success-bg">Datum</th>
+				<th class="w-25 success-bg right">Iznos</th>
+				<th class="w-20 success-bg">Priznanica</th>
+				<th class="w-10 success-bg">Razd</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -183,12 +183,27 @@
 				<td><em>{{ tran.tip_transakcije().tip }}</em></td>
 				<td>{{ tran.tip_transakcije().godina }}</td>
 				<td>{{ tran.datum() }}</td>
-				<td>{{ tran.iznos }}</td>
+				<td class="right">{{ (tran.iznos)|number_format(2, '.', ',') }}</td>
 				<td>{{ tran.priznanica }}</td>
 				<td>{{ tran.razduzenoDisabled()|raw }}</td>
 			</tr>
 			{% endfor %}
 		</tbody>
+		<tfoot>
+			<tr>
+				<td></td>
+				<td></td>
+				{% if saldo <= 0 %}
+				<td class="right success-bg"><strong>Saldo:</strong></td>
+				<td class="right success-bg">{{ saldo|number_format(2, '.', ',') }}</td>
+				{% else %}
+				<td class="right danger-bg"><strong>Saldo:</strong></td>
+				<td class="right danger-bg">{{ saldo|number_format(2, '.', ',') }}</td>
+				{% endif %}
+				<td></td>
+				<td></td>
+			</tr>
+		</tfoot>
 	</table>
 </div>
 {% endblock traka %}

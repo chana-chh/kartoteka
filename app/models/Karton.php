@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Classes\Model;
+use App\Classes\Db;
 
 class Karton extends Model
 {
@@ -35,9 +36,7 @@ class Karton extends Model
 
     public function transakcije()
     {
-        return $this->hasMany('App\Models\Transakcija','karton_id','datum DESC');
-        // $sql = "SELECT * FROM transakcije WHERE karton_id = {$this->id} ORDER BY datum DESC;";
-        // return $this->fetch($sql, null, 'App\Models\Transakcija');
+        return $this->hasMany('App\Models\Transakcija', 'karton_id', 'datum DESC');
     }
 
     public function mapa()
@@ -53,5 +52,8 @@ class Karton extends Model
     }
 
     public function saldo()
-    { }
+    {
+        $sql = "SELECT SUM(iznos) AS saldo FROM transakcije WHERE karton_id = {$this->id};";
+        return (float)Db::fetch($sql)[0]->saldo;
+    }
 }
