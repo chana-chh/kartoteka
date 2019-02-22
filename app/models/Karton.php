@@ -35,7 +35,8 @@ class Karton extends Model
 
     public function transakcije()
     {
-        return $this->hasMany('App\Models\Transakcija', 'karton_id');
+        $sql = "SELECT * FROM transakcije WHERE karton_id = {$this->id} ORDER BY datum DESC;";
+        return $this->fetch($sql, null, 'App\Models\Transakcija');
     }
 
     public function mapa()

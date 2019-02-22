@@ -459,6 +459,16 @@ abstract class Model
     }
 
     /**
+	 * Vraca naziv Model-a
+	 *
+	 * @return string
+	 */
+    public function getModel()
+    {
+        return $this->model;
+    }
+
+    /**
 	 * Vraca poslednji uneti ID
 	 *
 	 * @return string
