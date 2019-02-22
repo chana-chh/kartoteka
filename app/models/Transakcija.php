@@ -25,4 +25,11 @@ class Transakcija extends Model
         $pk = $this->pk;
         return "<input type=\"checkbox\" name=\"razduzeno\" data-id=\"{$this->$pk}\"{$chk}>";
     }
+
+    public function razduzenoDisabled()
+    {
+        $chk = $this->razduzeno === 1 ? ' checked' : '';
+        $pk = $this->pk;
+        return "<input type=\"checkbox\" name=\"razduzeno\" data-id=\"{$this->$pk}\"{$chk} disabled>";
+    }
 }

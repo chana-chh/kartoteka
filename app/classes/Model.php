@@ -387,10 +387,11 @@ abstract class Model
 	 * @param string $foreign_table_fk
 	 * @return array \App\Classes\Model Niz instanci dece
 	 */
-    public function hasMany($model_class, $foreign_table_fk)
+    public function hasMany($model_class, $foreign_table_fk, $order=null) 
     {
         $m = new $model_class();
-        $sql = "SELECT * FROM {$m->getTable()} WHERE {$foreign_table_fk} = :{$foreign_table_fk};";
+        $o = $order===null?'':' ORDER BY '.$order;
+        $sql = "SELECT * FROM {$m->getTable()} WHERE {$foreign_table_fk} = :{$foreign_table_fk}{$o};";
         $pk = $this->getPrimaryKey();
         $params = [":{$foreign_table_fk}" => $this->$pk];
         $result = $this->fetch($sql, $params, $model_class);
@@ -427,13 +428,14 @@ abstract class Model
 	 * @param string $pt_foreign_table_fk FK druge strane u pivot tabeli
 	 * @return array \App\Classes\Model Niz instanci druge strane
 	 */
-    public function belongsToMany($model_class, $pivot_table, $pt_this_table_fk, $pt_foreign_table_fk)
+    public function belongsToMany($model_class, $pivot_table, $pt_this_table_fk, $pt_foreign_table_fk, $order=null)
     {
         $m = new $model_class();
         $tbl = $m->getTable();
+        $o = $order===null?'':' ORDER BY '.$order;
         $pk = $this->getPrimaryKey();
         $params = [":{$pk}" => $this->$pk];
-        $sql = "SELECT {$tbl}.* FROM {$tbl} JOIN {$pivot_table} ON {$tbl}.{$m->getPrimaryKey()} = {$pivot_table}.{$pt_foreign_table_fk} WHERE {$pivot_table}.{$pt_this_table_fk} = :{$pk};";
+        $sql = "SELECT {$tbl}.* FROM {$tbl} JOIN {$pivot_table} ON {$tbl}.{$m->getPrimaryKey()} = {$pivot_table}.{$pt_foreign_table_fk} WHERE {$pivot_table}.{$pt_this_table_fk} = :{$pk}{$o};";
         $result = $this->fetch($sql, $params, $model_class);
         return $result;
     }
