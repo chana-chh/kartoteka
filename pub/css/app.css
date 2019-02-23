@@ -200,6 +200,13 @@ input[type='submit'] {
   outline: none;
 }
 
+.btn-s {
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  border-radius: 0.25rem;
+}
+
 .btn:hover,
 button:hover,
 input[type='button']:hover,

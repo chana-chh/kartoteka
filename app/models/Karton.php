@@ -51,6 +51,13 @@ class Karton extends Model
         return "<input type=\"checkbox\" name=\"aktivan\" data-id=\"{$this->$pk}\"{$chk}>";
     }
 
+    public function aktivanDisabled()
+    {
+        $chk = $this->aktivan === 1 ? ' checked' : '';
+        $pk = $this->pk;
+        return "<input type=\"checkbox\" name=\"aktivan\" data-id=\"{$this->$pk}\"{$chk} disabled>";
+    }
+
     public function saldo()
     {
         $sql = "SELECT SUM(iznos) AS saldo FROM transakcije WHERE karton_id = {$this->id};";

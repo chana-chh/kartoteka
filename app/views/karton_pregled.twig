@@ -1,209 +1,181 @@
-{% extends "templates/app.twig" %}
+{% extends "templates/app.twig" %} {% block sadrzaj %}
 
-{% block naslov %}
-<h1>
-	Karton <span class="success-text"><small><em>[{{ karton.broj()}}]</em></small></span>
-</h1>
-<div class="well white-text primary-bg">
-	<div class="flex-row">
-		<div class="flex-col">
-			<strong>Groblje:</strong>
-			{{ karton.groblje().naziv }}
-		</div>
-		<div class="flex-col">
-			<strong>Parcela:</strong>
-			{{ karton.parcela }}
-		</div>
-		<div class="flex-col">
-			<strong>Grobno mesto:</strong>
-			{{ karton.grobno_mesto }}
-		</div>
-		<div class="flex-col">
-			<strong>Broj mesta:</strong>
-			{{ karton.broj_mesta }}
-		</div>
-		<div class="flex-col">
-			<strong>Tip groba:</strong>
-			{{ karton.tip_groba }}
-		</div>
-		<div class="flex-col">
-			<strong>Aktivan karton:</strong>
-			{{ karton.aktivan()|raw }}
-		</div>
-	</div>
-	<div>
-		<strong>Napomene:</strong><br>
-		{{ karton.napomena|nl2br }}
-	</div>
-</div>
-{#
-<div class="well">
-	<form action="{{ path_for('kartoni.pretraga') }}" method="POST">
-		{{ csrf|raw }}
-		<div class="flex-row">
-			<div class="flex-col">
-				<select name="groblje_id" id="groblje_id" class="form-control">
-					{% for groblje in groblja %}
-					<option value="{{ groblje.id }}">{{ groblje.naziv }}</option>
-					{% endfor %}
-				</select>
-			</div>
-			<div class="flex-col">
-				<input type="text" name="parcela" id="parcela" class="form-control" autocomplete="off" placeholder="Parcela">
-			</div>
-			<div class="flex-col">
-				<input type="text" name="grobno_mesto" id="grobno_mesto" class="form-control" autocomplete="off" placeholder="Grobno mesto">
-			</div>
-			<div class="flex-col-4">
-				<input type="submit" value="Filtriraj">
-				<a href="{{ path_for('kartoni') }}" class="btn btn-success">Svi kartoni</a>
-			</div>
-		</div>
-	</form>
-</div>
-
-<div class="table-responsive">
-	<table>
-		<thead>
-			<tr>
-				<th style="width:5%;">Id</th>
-				<th style="width:15%;">Broj</th>
-				<th style="width:10%;">Broj mesta</th>
-				<th style="width:10%;">Tip groba</th>
-				<th style="width:5%;">Aktivan</th>
-				<th style="width:55%;">Napomena</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for karton in kartoni.data %}
-			<tr>
-				<td><em>{{ karton.id }}</em></td>
-				<td>
-					<a href="{{ path_for('kartoni.pregled', { 'id': karton.id }) }}">
-						<strong>{{ karton.broj() }}</strong>
-					</a>
-				</td>
-				<td>{{ karton.broj_mesta }}</td>
-				<td>{{ karton.tip_groba }}</td>
-				<td>{{ karton.aktivan()|raw }}</td>
-				<td>{{ karton.napomena }}</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
-</div>
 <div class="flex-row">
-	<div class="flex-col-4">{{ kartoni.links.buttons|raw }}</div>
-	<div class="flex-col-1">Idi na stranu {{ kartoni.links.select|raw }}</div>
-	<div class="flex-col-2" style="text-align: right;">
-		<p>
-			Prikazani redovi od
-			<strong>{{ kartoni.links.row_from }}</strong> do <strong>{{ kartoni.links.row_to }}</strong>
-			od ukupno <strong>{{ kartoni.links.total_rows }}</strong>
-		</p>
-	</div>
-</div> #}
-{% endblock naslov %}
+  <div class="flex-col-6">
+    <h1>
+      Karton
+      <span class="success-text"><small><em>[{{ karton.broj() }}]</em></small></span>
+    </h1>
+  </div>
+  <div class="flex-col-1 right">
+    <a href="#" class="btn" style="margin-top: 1.5rem">Mapa</a>
+  </div>
+</div>
 
-{% block sadrzaj %}
+<div class="well white-text primary-bg">
+  <div class="flex-row">
+    <div class="flex-col">
+      <strong>Groblje:</strong>
+      {{ karton.groblje().naziv }}
+    </div>
+    <div class="flex-col">
+      <strong>Parcela:</strong>
+      {{ karton.parcela }}
+    </div>
+    <div class="flex-col">
+      <strong>Grobno mesto:</strong>
+      {{ karton.grobno_mesto }}
+    </div>
+    <div class="flex-col">
+      <strong>Broj mesta:</strong>
+      {{ karton.broj_mesta }}
+    </div>
+    <div class="flex-col">
+      <strong>Tip groba:</strong>
+      {{ karton.tip_groba }}
+    </div>
+    <div class="flex-col">
+      <strong>Aktivan karton:</strong>
+      {{ karton.aktivanDisabled() | raw }}
+    </div>
+  </div>
+  <strong>Napomene:</strong><br />
+  {{ karton.napomena | nl2br }}<br />
+</div>
 <h2>Staraoci</h2>
 <div class="table-responsive">
-	<table>
-		<thead>
-			<tr>
-				<th class="w-5 danger-bg">Id</th>
-				<th class="w-10 danger-bg">RB</th>
-				<th class="w-10 danger-bg">Prezime</th>
-				<th class="w-10 danger-bg">Ime</th>
-				<th class="w-15 danger-bg">JMBG</th>
-				<th class="w-50 danger-bg">Mesto</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for st in karton.staraoci() %}
-			<tr>
-				<td><em>{{ st.id }}</em></td>
-				<td>{{ st.redni_broj }}</td>
-				<td>{{ st.prezime }}</td>
-				<td>{{ st.ime }}</td>
-				<td><span class="secondary-text">{{ st.jmbg }}</span></td>
-				<td>{{ st.mesto }}</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+  <table>
+    <thead>
+      <tr>
+        <th class="w-5 danger-bg">Id</th>
+        <th class="w-5 danger-bg">RB</th>
+        <th class="w-15 danger-bg">Prezime</th>
+        <th class="w-15 danger-bg">Ime</th>
+        <th class="w-10 danger-bg">JMBG</th>
+        <th class="w-50 danger-bg">Mesto</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for st in karton.staraoci() %}
+      <tr>
+        <td>
+          <em>{{ st.id }}</em>
+        </td>
+        <td>{{ st.redni_broj }}</td>
+        <td>{{ st.prezime }}</td>
+        <td>{{ st.ime }}</td>
+        <td>
+          <span class="secondary-text">{{ st.jmbg }}</span>
+        </td>
+        <td>{{ st.mesto }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 
 <h2>Pokojnici</h2>
 <div class="table-responsive">
-	<table>
-		<thead>
-			<tr>
-				<th class="w-5 black-bg">Id</th>
-				<th class="w-10 black-bg">RB</th>
-				<th class="w-10 black-bg">Prezime</th>
-				<th class="w-10 black-bg">Ime</th>
-				<th class="w-15 black-bg">JMBG</th>
-				<th class="w-50 black-bg">Mesto</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for pok in karton.pokojnici() %}
-			<tr>
-				<td><em>{{ pok.id }}</em></td>
-				<td>{{ pok.redni_broj }}</td>
-				<td>{{ pok.prezime }}</td>
-				<td>{{ pok.ime }}</td>
-				<td><span class="secondary-text">{{ pok.jmbg }}</span></td>
-				<td>{{ pok.mesto }}</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+  <table>
+    <thead>
+      <tr>
+        <th class="w-5 black-bg">Id</th>
+        <th class="w-5 black-bg">RB</th>
+        <th class="w-15 black-bg">Prezime</th>
+        <th class="w-15 black-bg">Ime</th>
+        <th class="w-10 black-bg">JMBG</th>
+        <th class="w-50 black-bg">Mesto</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pok in karton.pokojnici() %}
+      <tr>
+        <td>
+          <em>{{ pok.id }}</em>
+        </td>
+        <td>{{ pok.redni_broj }}</td>
+        <td>{{ pok.prezime }}</td>
+        <td>{{ pok.ime }}</td>
+        <td>
+          <span class="secondary-text">{{ pok.jmbg }}</span>
+        </td>
+        <td>{{ pok.mesto }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
-{% endblock sadrzaj %}
+{% endblock sadrzaj %} {% block traka %}
 
-{% block traka %}
+<h2>Dokumenta</h2>
+<div class="table-responsive">
+  <table>
+    <thead>
+      <tr>
+        <th class="w-20">Tip</th>
+        <th class="w-15">Datum</th>
+        <th class="w-50">Opis</th>
+        <th class="w-15 right"><i class="fas fa-cogs"></i></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for dok in karton.dokumenti() %}
+      <tr>
+        <td>
+          <em>{{ dok.tip }}</em>
+        </td>
+        <td>{{ dok.datum() }}</td>
+        <td>{{ dok.opis | nl2br }}</td>
+        <td class="right">
+          <a href="{{ dok.veza }}" class="btn btn-s" target="_blank"><i class="fas fa-file-contract"></i></a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
 <h2>Transakcije</h2>
 <div class="table-responsive">
-	<table>
-		<thead>
-			<tr>
-				<th class="w-15 success-bg">Tip</th>
-				<th class="w-15 success-bg">Godina</th>
-				<th class="w-15 success-bg">Datum</th>
-				<th class="w-25 success-bg right">Iznos</th>
-				<th class="w-20 success-bg">Priznanica</th>
-				<th class="w-10 success-bg">Razd</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for tran in karton.transakcije() %}
-			<tr>
-				<td><em>{{ tran.tip_transakcije().tip }}</em></td>
-				<td>{{ tran.tip_transakcije().godina }}</td>
-				<td>{{ tran.datum() }}</td>
-				<td class="right">{{ (tran.iznos)|number_format(2, '.', ',') }}</td>
-				<td>{{ tran.priznanica }}</td>
-				<td>{{ tran.razduzenoDisabled()|raw }}</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-		<tfoot>
-			<tr>
-				<td></td>
-				<td></td>
-				{% if saldo <= 0 %}
-				<td class="right success-bg"><strong>Saldo:</strong></td>
-				<td class="right success-bg">{{ saldo|number_format(2, '.', ',') }}</td>
-				{% else %}
-				<td class="right danger-bg"><strong>Saldo:</strong></td>
-				<td class="right danger-bg">{{ saldo|number_format(2, '.', ',') }}</td>
-				{% endif %}
-				<td></td>
-				<td></td>
-			</tr>
-		</tfoot>
-	</table>
+  <table>
+    <thead>
+      <tr>
+        <th class="w-15 success-bg">Tip</th>
+        <th class="w-15 success-bg">Godina</th>
+        <th class="w-15 success-bg">Datum</th>
+        <th class="w-25 success-bg right">Iznos</th>
+        <th class="w-20 success-bg">Priznanica</th>
+        <th class="w-10 success-bg">Razd</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for tran in karton.transakcije() %}
+      <tr>
+        <td>
+          <em>{{ tran.tip_transakcije().tip }}</em>
+        </td>
+        <td>{{ tran.tip_transakcije().godina }}</td>
+        <td>{{ tran.datum() }}</td>
+        <td class="right">{{ (tran.iznos)|number_format(2, '.', ',') }}</td>
+        <td>{{ tran.priznanica }}</td>
+        <td>{{ tran.razduzenoDisabled() | raw }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td></td>
+        <td></td>
+        {% if saldo <= 0 %} <td class="right success-bg"><strong>Saldo:</strong></td>
+          <td class="right success-bg">{{ saldo|number_format(2, '.', ',') }}</td>
+          {% else %}
+          <td class="right danger-bg"><strong>Saldo:</strong></td>
+          <td class="right danger-bg">{{ saldo|number_format(2, '.', ',') }}</td>
+          {% endif %}
+          <td></td>
+          <td></td>
+      </tr>
+    </tfoot>
+  </table>
 </div>
 {% endblock traka %}
