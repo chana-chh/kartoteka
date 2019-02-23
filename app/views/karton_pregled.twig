@@ -1,15 +1,16 @@
 {% extends "templates/app.twig" %} {% block sadrzaj %}
 
-<div class="flex-row">
-  <div class="flex-col-6">
-    <h1>
-      Karton
-      <span class="success-text"><small><em>[{{ karton.broj() }}]</em></small></span>
-    </h1>
-  </div>
-  <div class="flex-col-1 right">
-    <a href="#" class="btn" style="margin-top: 1.5rem">Mapa</a>
-  </div>
+<h1>
+  Karton
+  <span class="success-text"><small><em>[{{ karton.broj() }}]</em></small></span>
+</h1>
+{# Ovde idu dugmici za sve radnje sa kartonom #}
+<div class="well">
+  <button onclick="window.history.back();">
+    <i class="fas fa-angle-left"></i> Nazad
+  </button>
+  <a href="{{ path_for('kartoni') }}" class="btn"><i class="fas fa-angle-double-left"></i> Kartoni</a>
+  <a href="#" class="btn">Mapa</a>
 </div>
 
 <div class="well white-text primary-bg">
@@ -107,7 +108,7 @@
 </div>
 {% endblock sadrzaj %} {% block traka %}
 
-<h2>Dokumenta</h2>
+<h2>Dokumenti</h2>
 <div class="table-responsive">
   <table>
     <thead>
