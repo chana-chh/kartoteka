@@ -1,0 +1,92 @@
+{% extends "templates/app.twig" %}
+
+{% block naslov %}
+<h1 class="black-text">
+    Pokojnici
+    {% if data %}
+    <small class="warning-text">
+        <em>[filtrirano]</em>
+    </small>
+    {% else %}
+    <small class="success-text">
+        <em>[svi pokojnici]</em>
+    </small>
+    {% endif %}
+
+</h1>
+
+<div class="well">
+    <form action="{{ path_for('pokojnici.pretraga') }}" method="POST">
+        {{ csrf|raw }}
+        <div class="flex-row">
+            <div class="flex-col">
+                <input type="text" name="jmbg" id="jmbg" class="form-control" autocomplete="off" placeholder="JMBG">
+            </div>
+            <div class="flex-col">
+                <input type="text" name="prezime" id="prezime" class="form-control" autocomplete="off" placeholder="Prezime">
+            </div>
+            <div class="flex-col">
+                <input type="text" name="ime" id="ime" class="form-control" autocomplete="off" placeholder="Ime">
+            </div>
+            <div class="flex-col-4">
+                <input type="submit" value="Filtriraj">
+                <a href="{{ path_for('pokojnici') }}" class="btn btn-success">Svi pokojnici</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="table-responsive">
+    <table>
+        <thead>
+            <tr>
+                <th class="w-5 black-bg">Id</th>
+                <th class="w-10 black-bg"><i class="fas fa-link"> Karton</th>
+                <th class="w-5 black-bg">RB</th>
+                <th class="w-20 black-bg">Ime</th>
+                <th class="w-15 black-bg">JMBG</th>
+                <th class="w-15 black-bg">Mesto</th>
+                <th class="w-5 black-bg">Dupla</th>
+                <th class="w-5 black-bg">Pozicija</th>
+                <th class="w-5 black-bg">Datum rođenja</th>
+                <th class="w-5 black-bg">Datum smrti</th>
+                <th class="w-5 black-bg">Datum sahrane</th>
+                <th class="w-5 black-bg">Datum ekshumacije</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pok in pokojnici.data %}
+            <tr>
+                <td><em>{{ pok.id }}</em></td>
+                <td>
+                    <a href="{{ path_for('kartoni.pregled', { 'id': pok.karton_id }) }}">
+                        <strong>{{ pok.karton.broj() }}</strong>
+                    </a>
+                </td>
+                <td>{{ pok.redni_broj }}</td>
+                <td>{{ pok.punoIme() }}</td>
+                <td>{{ pok.jmbg }}</td>
+                <td>{{ pok.mesto }}</td>
+                <td>{{ pok.duplaRaka(true)|raw }}</td>
+                <td>{{ pok.pozicija }}</td>
+                <td>{{ pok.datum_rodjenja() }}</td>
+                <td>{{ pok.datum_smrti() }}</td>
+                <td>{{ pok.datum_sahrane() }}</td>
+                <td>{{ pok.datum_ekshumacije() }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="flex-row">
+    <div class="flex-col-4">{{ pokojnici.links.buttons|raw }}</div>
+    <div class="flex-col-1">Idi na stranu {{ pokojnici.links.select|raw }}</div>
+    <div class="flex-col-2" style="text-align: right;">
+        <p>
+            Prikazani redovi od
+            <strong>{{ pokojnici.links.row_from }}</strong> do <strong>{{ pokojnici.links.row_to }}</strong>
+            od ukupno <strong>{{ pokojnici.links.total_rows }}</strong>
+        </p>
+    </div>
+</div>
+{% endblock naslov %}

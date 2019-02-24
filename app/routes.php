@@ -16,14 +16,24 @@ use App\Middlewares\GuestMiddleware;
 $app->get('/', '\App\Controllers\HomeController:getHome')->setName('pocetna');
 
 $app->group('', function () {
-	$this->get('/prijava', '\App\Controllers\AuthController:getPrijava')->setName('prijava');
-	$this->post('/prijava', '\App\Controllers\AuthController:postPrijava');
+    $this->get('/prijava', '\App\Controllers\AuthController:getPrijava')->setName('prijava');
+    $this->post('/prijava', '\App\Controllers\AuthController:postPrijava');
 })->add(new GuestMiddleware($container));
 
 $app->group('', function () {
-	$this->get('/odjava', '\App\Controllers\AuthController:getOdjava')->setName('odjava');
-	$this->get('/kartoni', '\App\Controllers\KartoniController:getKartoni')->setName('kartoni');
-	$this->get('/kartoni/pretraga', '\App\Controllers\KartoniController:getKartoniPretraga')->setName('kartoni.pretraga');
-	$this->post('/kartoni/pretraga', '\App\Controllers\KartoniController:postKartoniPretraga');
-	$this->get('/kartoni/pregled/{id}', '\App\Controllers\KartoniController:getKartoniPregled')->setName('kartoni.pregled');
+    // Odjava
+    $this->get('/odjava', '\App\Controllers\AuthController:getOdjava')->setName('odjava');
+    // Kartoni
+    $this->get('/kartoni', '\App\Controllers\KartoniController:getKartoni')->setName('kartoni');
+    $this->get('/kartoni/pretraga', '\App\Controllers\KartoniController:getKartoniPretraga')->setName('kartoni.pretraga');
+    $this->post('/kartoni/pretraga', '\App\Controllers\KartoniController:postKartoniPretraga');
+    $this->get('/kartoni/pregled/{id}', '\App\Controllers\KartoniController:getKartoniPregled')->setName('kartoni.pregled');
+    // Staraoci
+    $this->get('/staraoci', '\App\Controllers\StaraociController:getStaraoci')->setName('staraoci');
+    $this->get('/staraoci/pretraga', '\App\Controllers\StaraociController:getStaraociPretraga')->setName('staraoci.pretraga');
+    $this->post('/staraoci/pretraga', '\App\Controllers\StaraociController:postStaraociPretraga');
+    // Pokojnici
+    $this->get('/pokojnici', '\App\Controllers\PokojniciController:getPokojnici')->setName('pokojnici');
+    $this->get('/pokojnici/pretraga', '\App\Controllers\PokojniciController:getPokojniciPretraga')->setName('pokojnici.pretraga');
+    $this->post('/pokojnici/pretraga', '\App\Controllers\PokojniciController:postPokojniciPretraga');
 })->add(new AuthMiddleware($container));

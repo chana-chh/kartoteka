@@ -1,0 +1,87 @@
+{% extends "templates/app.twig" %}
+
+{% block naslov %}
+<h1 class="danger-text">
+    Staraoci
+    {% if data %}
+    <small class="warning-text">
+        <em>[filtrirano]</em>
+    </small>
+    {% else %}
+    <small class="success-text">
+        <em>[svi staraoci]</em>
+    </small>
+    {% endif %}
+
+</h1>
+
+<div class="well">
+    <form action="{{ path_for('staraoci.pretraga') }}" method="POST">
+        {{ csrf|raw }}
+        <div class="flex-row">
+            <div class="flex-col">
+                <input type="text" name="jmbg" id="jmbg" class="form-control" autocomplete="off" placeholder="JMBG">
+            </div>
+            <div class="flex-col">
+                <input type="text" name="prezime" id="prezime" class="form-control" autocomplete="off" placeholder="Prezime">
+            </div>
+            <div class="flex-col">
+                <input type="text" name="ime" id="ime" class="form-control" autocomplete="off"
+                    placeholder="Ime">
+            </div>
+            <div class="flex-col-4">
+                <input type="submit" value="Filtriraj">
+                <a href="{{ path_for('staraoci') }}" class="btn btn-success">Svi staraoci</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="table-responsive">
+    <table>
+        <thead>
+            <tr>
+                <th class="w-5 danger-bg">Id</th>
+                <th class="w-10 danger-bg"><i class="fas fa-link"> Karton</th>
+                <th class="w-5 danger-bg">RB</th>
+                <th class="w-20 danger-bg">Ime</th>
+                <th class="w-10 danger-bg">JMBG</th>
+                <th class="w-25 danger-bg">Adresa</th>
+                <th class="w-15 danger-bg">Telefon</th>
+                <th class="w-5 danger-bg">Aktivan</th>
+                <th class="w-5 danger-bg">Prenos</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for st in staraoci.data %}
+            <tr>
+                <td><em>{{ st.id }}</em></td>
+                <td>
+                    <a href="{{ path_for('kartoni.pregled', { 'id': st.karton_id }) }}">
+                        <strong>{{ st.karton.broj() }}</strong>
+                    </a>
+                </td>
+                <td>{{ st.redni_broj }}</td>
+                <td>{{ st.punoIme() }}</td>
+                <td>{{ st.jmbg }}</td>
+                <td>{{ st.adresa() }}</td>
+                <td>{{ st.telefon }}</td>
+                <td>{{ st.aktivanDisabled()|raw }}</td>
+                <td>{{ st.prenosDisabled()|raw }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="flex-row">
+    <div class="flex-col-4">{{ staraoci.links.buttons|raw }}</div>
+    <div class="flex-col-1">Idi na stranu {{ staraoci.links.select|raw }}</div>
+    <div class="flex-col-2" style="text-align: right;">
+        <p>
+            Prikazani redovi od
+            <strong>{{ staraoci.links.row_from }}</strong> do <strong>{{ staraoci.links.row_to }}</strong>
+            od ukupno <strong>{{ staraoci.links.total_rows }}</strong>
+        </p>
+    </div>
+</div>
+{% endblock naslov %}

@@ -1,16 +1,18 @@
-{% extends "templates/app.twig" %} {% block sadrzaj %}
+{% extends "templates/app.twig" %}
 
-<h1>
+{% block sadrzaj %}
+<h1 class="primary-text">
   Karton
   <span class="success-text"><small><em>[{{ karton.broj() }}]</em></small></span>
 </h1>
-{# Ovde idu dugmici za sve radnje sa kartonom #}
 <div class="well">
   <button onclick="window.history.back();">
     <i class="fas fa-angle-left"></i> Nazad
   </button>
-  <a href="{{ path_for('kartoni') }}" class="btn"><i class="fas fa-angle-double-left"></i> Kartoni</a>
-  <a href="#" class="btn">Mapa</a>
+  <a href="{{ path_for('kartoni') }}" class="btn"><i class="fas fa-angle-double-left"></i> SVI Kartoni</a>
+  <a href="#" class="btn btn-warning">Izmeni karton</a>
+  <a href="#" class="btn btn-danger">Obriši karton</a>
+  <a href="#" class="btn btn-secondary">Mapa</a>
 </div>
 
 <div class="well white-text primary-bg">
@@ -43,7 +45,14 @@
   <strong>Napomene:</strong><br />
   {{ karton.napomena | nl2br }}<br />
 </div>
-<h2>Staraoci</h2>
+<div class="flex-row">
+  <div class="flex-col-5">
+    <h2 style="margin:0;">Staraoci</h2>
+  </div>
+  <div class="flex-col-2 right">
+    <a href="#" class="btn">dodaj staraoca</a>
+  </div>
+</div>
 <div class="table-responsive">
   <table>
     <thead>
@@ -75,7 +84,14 @@
   </table>
 </div>
 
-<h2>Pokojnici</h2>
+<div class="flex-row">
+  <div class="flex-col-5">
+    <h2 style="margin:0;">Pokojnici</h2>
+  </div>
+  <div class="flex-col-2 right">
+    <a href="#" class="btn">dodaj pokojnika</a>
+  </div>
+</div>
 <div class="table-responsive">
   <table>
     <thead>
@@ -106,9 +122,17 @@
     </tbody>
   </table>
 </div>
-{% endblock sadrzaj %} {% block traka %}
+{% endblock sadrzaj %}
 
-<h2>Dokumenti</h2>
+{% block traka %}
+<div class="flex-row">
+  <div class="flex-col-5">
+    <h2 style="margin:0;">Dokumenti</h2>
+  </div>
+  <div class="flex-col-5 right">
+    <a href="#" class="btn">dodaj dokument</a>
+  </div>
+</div>
 <div class="table-responsive">
   <table>
     <thead>
@@ -136,7 +160,14 @@
   </table>
 </div>
 
-<h2>Transakcije</h2>
+<div class="flex-row">
+  <div class="flex-col-5">
+    <h2 style="margin:0;">Transakcije</h2>
+  </div>
+  <div class="flex-col-5 right">
+    <a href="#" class="btn">dodaj transakciju</a>
+  </div>
+</div>
 <div class="table-responsive">
   <table>
     <thead>

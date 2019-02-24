@@ -12,7 +12,7 @@
   --color-secondary: #027cc5;
   --color-info: #5BC0EB;
   --color-success: #5C946E;
-  --color-warning: #FAA916;
+  --color-warning: #FE621D;
   --color-danger: #931621;
 }
 
@@ -159,7 +159,7 @@ nav ul li a:visited {
 
 nav ul li a:hover {
   color: var(--color-warning);
-  background-color: var(--color-grey);
+  background-color: #222;
 }
 
 nav ul li ul li {
@@ -224,6 +224,25 @@ input[type='reset']:disabled,
 input[type='submit']:disabled {
   cursor: default;
   opacity: .5;
+}
+
+.btn.btn-secondary,
+button.btn-secondary,
+input[type='button'].btn-secondary,
+input[type='reset'].btn-secondary,
+input[type='submit'].btn-secondary {
+  border-color: var(--color-secondary);
+  color: var(--color-secondary);
+}
+
+.btn.btn-secondary:hover,
+button.btn-secondary:hover,
+input[type='button'].btn-secondary:hover,
+input[type='reset'].btn-secondary:hover,
+input[type='submit'].btn-secondary:hover {
+  border-color: var(--color-secondary);
+  background-color: var(--color-secondary);
+  color: var(--color-white);
 }
 
 .btn.btn-info,
