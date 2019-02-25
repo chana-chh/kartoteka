@@ -27,4 +27,30 @@ class TransakcijeController extends Controller
 
         $this->render($response, 'transakcije.twig', compact('karton', 'transakcije', 'tipovi', 'saldo'));
     }
+
+    public function ajaxGET($request, $response)
+    {
+        if ($request->isXhr()) { // Da li je ajax
+            $txt = $request->getParam('test');
+            $res = [
+                'tekst' => "ajaxPOST = {$txt}",
+                'csrf_name' => $this->csrf->getTokenName(),
+                'csrf_value' => $this->csrf->getTokenValue(),
+            ];
+            return json_encode($res);
+        }
+    }
+
+    public function ajaxPOST($request, $response)
+    {
+        if ($request->isXhr()) { // Da li je ajax
+            $txt = $request->getParam('test');
+            $res = [
+                'tekst' => "ajaxPOST = {$txt}",
+                'csrf_name' => $this->csrf->getTokenName(),
+                'csrf_value' => $this->csrf->getTokenValue(),
+            ];
+            return json_encode($res);
+        }
+    }
 }

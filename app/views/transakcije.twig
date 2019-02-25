@@ -1,6 +1,7 @@
 {% extends "templates/app.twig" %}
 
 {% block sadrzaj %}
+<div class="well" id="ajax">AJAX</div>
 <h1>Transakcije za karton <span class="success-text"><small><em>[{{ karton.broj() }}]</em></small></span></h1>
 <div class="well">
     <button onclick="window.history.back();">
@@ -8,10 +9,12 @@
     </button>
     <a href="{{ path_for('kartoni.pregled',{'id':karton.id}) }}" class="btn">Karton {{ karton.broj() }}</a>
     <button id="otvori_modal" class="btn-warning">Modal</button>
+    <button id="pokreni_ajax" class="btn-danger">AJAX</button>
 </div>
 <div class="well white-bg">
     <div class="flex-row">
         <div class="flex-col">
+
             <select name="tip_transakcije_id" id="tip_transakcije_id" class="form-control">
                 <option value=""></option>
                 {% for tip in tipovi %}
@@ -38,129 +41,140 @@
     </div>
 </div>
 
-{% if saldo <= 0 %}
-<div class="well success-bg white-text">
+{% if saldo <= 0 %} <div class="well success-bg white-text">
     <h2>Saldo: {{ saldo|number_format(2, '.', ',') }}</h2>
-</div>
-{% else %}
-<div class="well danger-bg white-text">
-    <h2>Saldo: {{ saldo|number_format(2, '.', ',') }}</h2>
-</div>
-{% endif %}
-
-<div class="table-responsive">
-    <table>
-        <thead>
-            <tr>
-                <th class="w-15 success-bg">Tip</th>
-                <th class="w-15 success-bg">Godina</th>
-                <th class="w-15 success-bg">Datum</th>
-                <th class="w-25 success-bg right">Iznos</th>
-                <th class="w-20 success-bg">Priznanica</th>
-                <th class="w-10 success-bg">Razduženo</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for tran in transakcije.data %}
-            <tr>
-                <td>
-                    <em>{{ tran.tip_transakcije().tip }}</em>
-                </td>
-                <td>{{ tran.tip_transakcije().godina }}</td>
-                <td>{{ tran.datum() }}</td>
-                <td class="right">{{ (tran.iznos)|number_format(2, '.', ',') }}</td>
-                <td>{{ tran.priznanica }}</td>
-                <td>{{ tran.razduzenoDisabled() | raw }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-
-<div class="flex-row">
-    <div class="flex-col-4">{{ transakcije.links.buttons|raw }}</div>
-    <div class="flex-col-1">Idi na stranu {{ transakcije.links.select|raw }}</div>
-    <div class="flex-col-2" style="text-align: right;">
-        <p>
-            Prikazani redovi od
-            <strong>{{ transakcije.links.row_from }}</strong> do <strong>{{ transakcije.links.row_to }}</strong>
-            od ukupno <strong>{{ transakcije.links.total_rows }}</strong>
-        </p>
     </div>
-</div>
+    {% else %}
+    <div class="well danger-bg white-text">
+        <h2>Saldo: {{ saldo|number_format(2, '.', ',') }}</h2>
+    </div>
+    {% endif %}
 
-<div class="modal" id="modal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Modal naslov</h2>
-                <button class="close">&times;</button>
-            </div>
-            <div class="modal-body">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reiciendis repellat minima accusantium deleniti praesentium esse
-                perspiciatis illo fugiat ratione et.
-            </div>
-            <div class="modal-footer cf" id="exampleModal" tabindex="-1">
-                <div class="move-right">
-                    <button class="btn-success" id="modalOk">OK</button>
-                    <button class="btn-danger" id="modalClose">Cancel</button>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th class="w-15 success-bg">Tip</th>
+                    <th class="w-15 success-bg">Godina</th>
+                    <th class="w-15 success-bg">Datum</th>
+                    <th class="w-25 success-bg right">Iznos</th>
+                    <th class="w-20 success-bg">Priznanica</th>
+                    <th class="w-10 success-bg">Razduženo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tran in transakcije.data %}
+                <tr>
+                    <td>
+                        <em>{{ tran.tip_transakcije().tip }}</em>
+                    </td>
+                    <td>{{ tran.tip_transakcije().godina }}</td>
+                    <td>{{ tran.datum() }}</td>
+                    <td class="right">{{ (tran.iznos)|number_format(2, '.', ',') }}</td>
+                    <td>{{ tran.priznanica }}</td>
+                    <td>{{ tran.razduzenoDisabled() | raw }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="flex-row">
+        <div class="flex-col-4">{{ transakcije.links.buttons|raw }}</div>
+        <div class="flex-col-1">Idi na stranu {{ transakcije.links.select|raw }}</div>
+        <div class="flex-col-2" style="text-align: right;">
+            <p>
+                Prikazani redovi od
+                <strong>{{ transakcije.links.row_from }}</strong> do <strong>{{ transakcije.links.row_to }}</strong>
+                od ukupno <strong>{{ transakcije.links.total_rows }}</strong>
+            </p>
+        </div>
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Modal naslov</h2>
+                    <button class="close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reiciendis repellat minima accusantium
+                    deleniti praesentium esse
+                    perspiciatis illo fugiat ratione et.
+                </div>
+                <div class="modal-footer cf" id="exampleModal" tabindex="-1">
+                    <div class="move-right">
+                        <button class="btn-success" id="modalOk">OK</button>
+                        <button class="btn-danger" id="modalClose">Cancel</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-{% endblock sadrzaj %}
+    {% endblock sadrzaj %}
 
-{% block traka %}
-<h1>Nerazdužene transakcije</h1>
-<div class="table-responsive">
-    <table>
-        <thead>
-            <tr>
-                <th class="w-15 danger-bg">Tip</th>
-                <th class="w-15 danger-bg">Godina</th>
-                <th class="w-15 danger-bg">Datum</th>
-                <th class="w-25 danger-bg right">Iznos</th>
-                <th class="w-10 danger-bg">Razduženo</th>
-                <th class="w-20 danger-bg right"><i class="fas fa-cogs"></i></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for tran in karton.nerazduzeneTransakcije() %}
-            <tr>
-                <td>
-                    <em>{{ tran.tip_transakcije().tip }}</em>
-                </td>
-                <td>{{ tran.tip_transakcije().godina }}</td>
-                <td>{{ tran.datum() }}</td>
-                <td class="right">{{ (tran.iznos)|number_format(2, '.', ',') }}</td>
-                <td>{{ tran.razduzenoDisabled() | raw }}</td>
-                <td class="right"><a href="#" class="btn btn-warning btn-s">Razduži</a></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-{% endblock traka %}
+    {% block traka %}
+    <h1>Nerazdužene transakcije</h1>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th class="w-15 danger-bg">Tip</th>
+                    <th class="w-15 danger-bg">Godina</th>
+                    <th class="w-15 danger-bg">Datum</th>
+                    <th class="w-25 danger-bg right">Iznos</th>
+                    <th class="w-10 danger-bg">Razduženo</th>
+                    <th class="w-20 danger-bg right"><i class="fas fa-cogs"></i></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tran in karton.nerazduzeneTransakcije() %}
+                <tr>
+                    <td>
+                        <em>{{ tran.tip_transakcije().tip }}</em>
+                    </td>
+                    <td>{{ tran.tip_transakcije().godina }}</td>
+                    <td>{{ tran.datum() }}</td>
+                    <td class="right">{{ (tran.iznos)|number_format(2, '.', ',') }}</td>
+                    <td>{{ tran.razduzenoDisabled() | raw }}</td>
+                    <td class="right"><a href="#" class="btn btn-warning btn-s">Razduži</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endblock traka %}
 
-{% block skripta %}
-<script>
-    var modal = document.getElementById("modal");
-    var dugme = document.getElementById("otvori_modal");
-    var dugmeModalOk = document.getElementById("modalOk");
-    var dugmeModalCancel = document.getElementById("modalClose");
+    {% block skripta %}
+    <script>
+        var modal = document.getElementById("modal");
+        var dugme = document.getElementById("otvori_modal");
+        var dugmeModalOk = document.getElementById("modalOk");
+        var dugmeModalCancel = document.getElementById("modalClose");
 
-    dugme.addEventListener("click", function () {
-        modal.style.display = "block";
-    });
+        dugme.addEventListener("click", function () {
+            modal.style.display = "block";
+        });
 
-    dugmeModalOk.addEventListener("click", function () {
-        alert("Bice sve OK");
-    });
+        dugmeModalOk.addEventListener("click", function () {
+            alert("Bice sve OK");
+        });
 
-    dugmeModalCancel.addEventListener("click", function () {
-        modal.style.display = "none";
-    });
-
-</script>
-{% endblock skripta %}
+        dugmeModalCancel.addEventListener("click", function () {
+            modal.style.display = "none";
+        });
+        // AJAX
+        document.getElementById("pokreni_ajax").addEventListener("click", function () {
+            ajaxRequest({
+                // "method": "POST",
+                "url": "http://localhost/kartoteka/pub/ajax/get",
+                // "async": true,
+                "element": "ajax",
+                "params": {
+                    "test": "tes"
+                }
+            });
+        });
+    </script>
+    {% endblock skripta %}

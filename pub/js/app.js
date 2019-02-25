@@ -48,3 +48,42 @@ close.forEach(function (el) {
 		this.parentElement.parentElement.parentElement.parentElement.style.display = "none";
 	});
 });
+
+// AJAX
+function ajaxRequest(data) {
+	var method = (typeof data.method !== 'undefined') ? data.method : "GET";
+	var url = data.url;
+	var async = (typeof data.async !== 'undefined') ? data.async : true;
+	var element = data.element;
+	var params = (method === "GET") ? "?" : "";
+	if (typeof data.params !== 'undefined') {
+		params = params + Object.keys(data.params).map(function (k) {
+			return encodeURIComponent(k) + '=' + encodeURIComponent(data.params[k])
+		}).join('&');
+	}
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function () {
+		if (xhr.readyState === 4 && xhr.status === 200) {
+			result = JSON.parse(xhr.responseText);
+			document.getElementById("csrf_name").value = result.csrf_name;
+			document.getElementById("csrf_value").value = result.csrf_value;
+			if (typeof element !== 'undefined') {
+				document.getElementById(element).innerHTML = result.tekst;
+			} else {
+				// Izvrseno uspesno ali bez rezultata
+				alert("AJAX IZVRSEN");
+			}
+		}
+	};
+	if (method === "POST") {
+		xhr.open(method, url, async);
+		xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		xhr.send(params);
+	}
+	if (method === "GET") {
+		xhr.open(method, url + params, async);
+		xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+		xhr.send();
+	}
+}
