@@ -63,4 +63,15 @@ class Karton extends Model
         $sql = "SELECT SUM(iznos) AS saldo FROM transakcije WHERE karton_id = {$this->id};";
         return (float)Db::fetch($sql)[0]->saldo;
     }
+
+    public function nerazduzeneTransakcije()
+    {
+        $pk = $this->getPrimaryKey();
+        $sql = "SELECT * FROM transakcije
+                WHERE karton_id = {$this->$pk}
+                AND tip_transakcije_id > 1
+                AND razduzeno = 0
+                ORDER BY datum DESC;";
+        return $this->fetch($sql, null, 'App\Models\Transakcija');
+    }
 }

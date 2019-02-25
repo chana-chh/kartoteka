@@ -45,6 +45,7 @@
   <strong>Napomene:</strong><br />
   {{ karton.napomena | nl2br }}<br />
 </div>
+<hr>
 <div class="flex-row">
   <div class="flex-col-5">
     <h2 style="margin:0;">Staraoci</h2>
@@ -59,31 +60,36 @@
       <tr>
         <th class="w-5 danger-bg">Id</th>
         <th class="w-5 danger-bg">RB</th>
-        <th class="w-15 danger-bg">Prezime</th>
-        <th class="w-15 danger-bg">Ime</th>
+        <th class="w-20 danger-bg">Ime</th>
         <th class="w-10 danger-bg">JMBG</th>
-        <th class="w-50 danger-bg">Mesto</th>
+        <th class="w-25 danger-bg">Adresa</th>
+        <th class="w-15 danger-bg">Telefon</th>
+        <th class="w-5 danger-bg">Aktivan</th>
+        <th class="w-5 danger-bg">Prenos</th>
+        <th class="w-10 danger-bg right"><i class="fas fa-cogs"></i></th>
       </tr>
     </thead>
     <tbody>
       {% for st in karton.staraoci() %}
       <tr>
-        <td>
-          <em>{{ st.id }}</em>
-        </td>
+        <td><em>{{ st.id }}</em></td>
         <td>{{ st.redni_broj }}</td>
-        <td>{{ st.prezime }}</td>
-        <td>{{ st.ime }}</td>
-        <td>
-          <span class="secondary-text">{{ st.jmbg }}</span>
+        <td>{{ st.punoIme() }}</td>
+        <td>{{ st.jmbg }}</td>
+        <td>{{ st.adresa() }}</td>
+        <td>{{ st.telefon }}</td>
+        <td>{{ st.aktivanDisabled()|raw }}</td>
+        <td>{{ st.prenosDisabled()|raw }}</td>
+        <td class="right">
+          <a href="#" class="btn btn-warning btn-s"><i class="fas fa-pen"></i></a>
+          <a href="#" class="btn btn-danger btn-s"><i class="fas fa-trash"></i></a>
         </td>
-        <td>{{ st.mesto }}</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
-
+<hr>
 <div class="flex-row">
   <div class="flex-col-5">
     <h2 style="margin:0;">Pokojnici</h2>
@@ -98,25 +104,36 @@
       <tr>
         <th class="w-5 black-bg">Id</th>
         <th class="w-5 black-bg">RB</th>
-        <th class="w-15 black-bg">Prezime</th>
-        <th class="w-15 black-bg">Ime</th>
-        <th class="w-10 black-bg">JMBG</th>
-        <th class="w-50 black-bg">Mesto</th>
+        <th class="w-20 black-bg">Ime</th>
+        <th class="w-15 black-bg">JMBG</th>
+        <th class="w-15 black-bg">Mesto</th>
+        <th class="w-5 black-bg">Dupla</th>
+        <th class="w-5 black-bg">Pozicija</th>
+        <th class="w-5 black-bg">Datum rođenja</th>
+        <th class="w-5 black-bg">Datum smrti</th>
+        <th class="w-5 black-bg">Datum sahrane</th>
+        <th class="w-5 black-bg">Datum ekshumacije</th>
+        <th class="w-10 black-bg right"><i class="fas fa-cogs"></i></th>
       </tr>
     </thead>
     <tbody>
       {% for pok in karton.pokojnici() %}
       <tr>
-        <td>
-          <em>{{ pok.id }}</em>
-        </td>
+        <td><em>{{ pok.id }}</em></td>
         <td>{{ pok.redni_broj }}</td>
-        <td>{{ pok.prezime }}</td>
-        <td>{{ pok.ime }}</td>
-        <td>
-          <span class="secondary-text">{{ pok.jmbg }}</span>
-        </td>
+        <td>{{ pok.punoIme() }}</td>
+        <td>{{ pok.jmbg }}</td>
         <td>{{ pok.mesto }}</td>
+        <td>{{ pok.duplaRaka(true)|raw }}</td>
+        <td>{{ pok.pozicija }}</td>
+        <td>{{ pok.datum_rodjenja() }}</td>
+        <td>{{ pok.datum_smrti() }}</td>
+        <td>{{ pok.datum_sahrane() }}</td>
+        <td>{{ pok.datum_ekshumacije() }}</td>
+        <td class="right">
+          <a href="#" class="btn btn-warning btn-s"><i class="fas fa-pen"></i></a>
+          <a href="#" class="btn btn-danger btn-s"><i class="fas fa-trash"></i></a>
+        </td>
       </tr>
       {% endfor %}
     </tbody>
@@ -152,7 +169,7 @@
         <td>{{ dok.datum() }}</td>
         <td>{{ dok.opis | nl2br }}</td>
         <td class="right">
-          <a href="{{ dok.veza }}" class="btn btn-s" target="_blank"><i class="fas fa-file-contract"></i></a>
+          <a href="{{ dok.veza }}" class="btn btn-success btn-s" target="_blank"><i class="fas fa-eye"></i></a>
         </td>
       </tr>
       {% endfor %}
@@ -165,7 +182,7 @@
     <h2 style="margin:0;">Transakcije</h2>
   </div>
   <div class="flex-col-5 right">
-    <a href="#" class="btn">dodaj transakciju</a>
+    <a href="{{ path_for('kartoni.transakcije',{'id':karton.id}) }}" class="btn">dodaj transakciju</a>
   </div>
 </div>
 <div class="table-responsive">
@@ -199,13 +216,13 @@
         <td></td>
         <td></td>
         {% if saldo <= 0 %} <td class="right success-bg"><strong>Saldo:</strong></td>
-          <td class="right success-bg">{{ saldo|number_format(2, '.', ',') }}</td>
-          {% else %}
-          <td class="right danger-bg"><strong>Saldo:</strong></td>
-          <td class="right danger-bg">{{ saldo|number_format(2, '.', ',') }}</td>
-          {% endif %}
-          <td></td>
-          <td></td>
+        <td class="right success-bg">{{ saldo|number_format(2, '.', ',') }}</td>
+        {% else %}
+        <td class="right danger-bg"><strong>Saldo:</strong></td>
+        <td class="right danger-bg">{{ saldo|number_format(2, '.', ',') }}</td>
+        {% endif %}
+        <td></td>
+        <td></td>
       </tr>
     </tfoot>
   </table>
