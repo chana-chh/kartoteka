@@ -1,8 +1,2 @@
 
-U tabeli dokumenta popuniti enum "tip"
-
-CSS je u haosu
-
-Dodati modal
-
-Napraviti template bez sidebar-a
+https://plainjs.com/javascript/ajax/send-ajax-get-and-post-requests-47/
