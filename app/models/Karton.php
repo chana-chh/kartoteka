@@ -39,11 +39,6 @@ class Karton extends Model
         return $this->hasMany('App\Models\Transakcija', 'karton_id', 'datum DESC');
     }
 
-    public function mapa()
-    {
-        return $this->hasOne('App\Models\Mapa', 'karton_id');
-    }
-
     public function aktivan()
     {
         $chk = $this->aktivan === 1 ? ' checked' : '';

@@ -12,7 +12,7 @@
   <a href="{{ path_for('kartoni') }}" class="btn"><i class="fas fa-angle-double-left"></i> SVI Kartoni</a>
   <a href="#" class="btn btn-warning">Izmeni karton</a>
   <a href="#" class="btn btn-danger">Obriši karton</a>
-  <a href="#" class="btn btn-secondary">Mapa</a>
+  <a href="{{ path_for('kartoni.mapa', { 'id': karton.id }) }}" class="btn btn-secondary">Mapa</a>
 </div>
 
 <div class="well white-text primary-bg">

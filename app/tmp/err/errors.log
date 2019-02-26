@@ -38,3 +38,35 @@
 [25-Feb-2019 19:34:36 Europe/Belgrade] PHP  34. Slim\Handlers\Strategies\RequestResponse->__invoke() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Route.php:356
 [25-Feb-2019 19:34:36 Europe/Belgrade] PHP  35. call_user_func:{D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41}() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41
 [25-Feb-2019 19:34:36 Europe/Belgrade] PHP  36. App\Controllers\TransakcijeController->ajaxGET() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41
+[26-Feb-2019 15:00:48 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Mapa::$groblje_id in D:\xampp\htdocs\kartoteka\app\classes\Model.php on line 141
+[26-Feb-2019 15:00:48 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Mapa::$parcela in D:\xampp\htdocs\kartoteka\app\classes\Model.php on line 141
+[26-Feb-2019 15:02:34 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Mapa::$groblje_id in D:\xampp\htdocs\kartoteka\app\classes\Model.php on line 141
+[26-Feb-2019 15:02:37 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Mapa::$groblje_id in D:\xampp\htdocs\kartoteka\app\classes\Model.php on line 141
+[26-Feb-2019 15:02:42 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Mapa::$groblje_id in D:\xampp\htdocs\kartoteka\app\classes\Model.php on line 141
+[26-Feb-2019 15:02:43 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Mapa::$groblje_id in D:\xampp\htdocs\kartoteka\app\classes\Model.php on line 141
+[26-Feb-2019 15:02:43 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Mapa::$groblje_id in D:\xampp\htdocs\kartoteka\app\classes\Model.php on line 141
+[26-Feb-2019 15:02:47 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Mapa::$groblje_id in D:\xampp\htdocs\kartoteka\app\classes\Model.php on line 141
+[26-Feb-2019 15:04:31 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Mapa::$groblje_id in D:\xampp\htdocs\kartoteka\app\classes\Model.php on line 141
+[26-Feb-2019 15:04:32 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Mapa::$groblje_id in D:\xampp\htdocs\kartoteka\app\classes\Model.php on line 141
+[26-Feb-2019 15:04:32 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Mapa::$groblje_id in D:\xampp\htdocs\kartoteka\app\classes\Model.php on line 141
+[26-Feb-2019 15:04:33 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Mapa::$groblje_id in D:\xampp\htdocs\kartoteka\app\classes\Model.php on line 141
+[26-Feb-2019 15:04:34 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Mapa::$groblje_id in D:\xampp\htdocs\kartoteka\app\classes\Model.php on line 141
+[26-Feb-2019 15:05:06 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Mapa::$groblje_id in D:\xampp\htdocs\kartoteka\app\classes\Model.php on line 141
+[26-Feb-2019 15:05:07 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Mapa::$groblje_id in D:\xampp\htdocs\kartoteka\app\classes\Model.php on line 141
+[26-Feb-2019 15:05:08 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Mapa::$groblje_id in D:\xampp\htdocs\kartoteka\app\classes\Model.php on line 141
+[26-Feb-2019 15:05:10 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Mapa::$groblje_id in D:\xampp\htdocs\kartoteka\app\classes\Model.php on line 141
+[26-Feb-2019 15:06:38 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Mapa::$groblje_id in D:\xampp\htdocs\kartoteka\app\models\Mapa.php on line 29
+[26-Feb-2019 15:06:39 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Mapa::$groblje_id in D:\xampp\htdocs\kartoteka\app\models\Mapa.php on line 29
+[26-Feb-2019 15:06:40 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Mapa::$groblje_id in D:\xampp\htdocs\kartoteka\app\models\Mapa.php on line 29
+[26-Feb-2019 15:11:40 Europe/Belgrade] PHP Notice:  Trying to get property of non-object in D:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 78
+[26-Feb-2019 15:13:29 Europe/Belgrade] PHP Notice:  Trying to get property of non-object in D:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 78
+[26-Feb-2019 15:13:30 Europe/Belgrade] PHP Notice:  Trying to get property of non-object in D:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 78
+[26-Feb-2019 15:13:31 Europe/Belgrade] PHP Notice:  Trying to get property of non-object in D:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 78
+[26-Feb-2019 15:14:08 Europe/Belgrade] PHP Notice:  Trying to get property of non-object in D:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 79
+[26-Feb-2019 15:14:14 Europe/Belgrade] PHP Notice:  Trying to get property of non-object in D:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 79
+[26-Feb-2019 15:16:27 Europe/Belgrade] PHP Notice:  Trying to get property of non-object in D:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 79
+[26-Feb-2019 15:16:28 Europe/Belgrade] PHP Notice:  Trying to get property of non-object in D:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 79
+[26-Feb-2019 15:16:30 Europe/Belgrade] PHP Notice:  Trying to get property of non-object in D:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 79
+[26-Feb-2019 15:30:54 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Mapa::$groblje_id in D:\xampp\htdocs\kartoteka\app\models\Mapa.php on line 29
+[26-Feb-2019 15:34:32 Europe/Belgrade] PHP Recoverable fatal error:  Object of class App\Models\Mapa could not be converted to string in D:\xampp\htdocs\kartoteka\app\models\Mapa.php on line 29
+[26-Feb-2019 16:35:59 Europe/Belgrade] PHP Notice:  Undefined variable: modelKarton in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 18

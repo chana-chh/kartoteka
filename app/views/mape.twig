@@ -1,0 +1,80 @@
+{% extends "templates/app.twig" %}
+
+{% block sadrzaj %}
+<h1 class="primary-text">
+Mape u upotrebi
+</h1>
+
+<div class="table-responsive">
+    <table>
+        <thead>
+            <tr>
+                <th class="w-5">Id</th>
+                <th class="w-15">Groblje</th>
+                <th class="w-25">Parcela</th>
+                <th class="w-25">Naziv mape</th>
+                <th class="w-30">Mapa</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mapa in mape.data %}
+            <tr>
+                <td><em>{{ mapa.id }}</em></td>
+                <td>{{ mapa.groblje.naziv }}</td>
+                <td>{{ mapa.parcela }}</td>
+                <td><strong>{{ mapa.veza }}</strong></td>
+                <td><img src="{{ base_url() }}/img/Mape/{{ mapa.veza }}" alt="Mapa" style="border: 1px solid #000; border-radius: 4px; padding: 5px; width: 150px"></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="flex-row">
+    <div class="flex-col-4">{{ mape.links.buttons|raw }}</div>
+    <div class="flex-col-1">Idi na stranu {{ mape.links.select|raw }}</div>
+    <div class="flex-col-2" style="text-align: right;">
+        <p>
+            Prikazani redovi od
+            <strong>{{ mape.links.row_from }}</strong> do <strong>{{ mape.links.row_to }}</strong>
+            od ukupno <strong>{{ mape.links.total_rows }}</strong>
+        </p>
+    </div>
+</div>
+{% endblock sadrzaj %}
+
+{% block traka %}
+    <div class="flex-row" style="margin-top: 30px">
+  <div class="flex-col-5">
+    <h2 style="margin:0;">Dodavanje nove mape</h2>
+  </div>
+</div>
+<div class="well">
+    <form action="" method="POST" enctype="multipart/form-data">
+        {{ csrf|raw }}
+        <div class="flex-row">
+         <div class="flex-col">
+                <select name="groblje_id" id="groblje_id" class="form-control">
+                    {% for groblje in groblja %}
+                    <option value="{{ groblje.id }}">{{ groblje.naziv }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="flex-row">
+            <div class="flex-col">
+                <input type="file" name="slika"/>
+            </div>
+        </div>
+        <hr>
+        <div class="flex-row">
+            <div class="flex-col">
+                <input type="submit" value="Sačuvaj odabranu mapu">
+            </div>
+            <div class="flex-col-1 right">
+                <a href="{{ path_for('mape')}}" class="btn">Otkaži</a>
+            </div>
+        </div>
+        </div>
+    </form>
+</div>
+{% endblock traka %}

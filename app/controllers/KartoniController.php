@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\Karton;
 use App\Models\Groblje;
+use App\Models\Mapa;
 
 class KartoniController extends Controller
 {
@@ -65,4 +66,29 @@ class KartoniController extends Controller
         $saldo = $karton->saldo();
         $this->render($response, 'karton_pregled.twig', compact('karton', 'saldo'));
     }
+
+    public function getKartoniMapa($request, $response, $args)
+    {
+        $id = $args['id'];
+        $modelKarton = new Karton();
+        $karton = $modelKarton->find($id);
+        $grobno_mesto = $karton->grobno_mesto;
+        $modelMapa = new Mapa();
+        $mapaM = $modelMapa->pronadjiMapu($karton->groblje_id, $karton->parcela);
+        $mapa = (string)($mapaM->veza);
+        $this->render($response, 'karton_mapa.twig', compact('karton', 'grobno_mesto', 'mapa'));
+    }
+
+     public function postKartoniMapa($request, $response)
+     {
+        $modelKarton = new Karton();
+        $id_kartona = $request->getParam('id_kartona');
+        $karton = $modelKarton->update([
+            'x_pozicija' => $request->getParam('x_pozicija'), 
+            'y_pozicija' => $request->getParam('y_pozicija')], 
+            $id_kartona);
+
+        $this->flash->addMessage('success', 'Koordinate za mapu su uspesno dodati/izmenjene.');
+        return $response->withRedirect($this->router->pathFor('kartoni.mapa', ['id' => $id_kartona]));
+     }
 }

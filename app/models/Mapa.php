@@ -17,4 +17,17 @@ class Mapa extends Model
 	{
 		return $this->belongsTo('App\Models\Groblje', 'groblje_id');
 	}
+
+	/**
+     * Pronalazi mapu na osnovu Groblja i parcele
+     *
+     * @param $id_groblja i naziv parcele
+     * @return \App\Classes\Model\Mapa
+     */
+    public function pronadjiMapu(int $id_groblja, string $parecela_naziv)
+    {
+        $sql = "SELECT * FROM {$this->table} WHERE groblje_id = :id_groblja AND parcela LIKE :parecela_naziv LIMIT 1;";
+        $params = [":id_groblja" => $id_groblja, ":parecela_naziv" => '%'.$parecela_naziv.'%'];
+        return $this->fetch($sql, $params) === [] ? null : $this->fetch($sql, $params)[0];
+    }
 }
