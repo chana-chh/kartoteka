@@ -30,22 +30,26 @@ class TransakcijeController extends Controller
 
     public function ajaxGET($request, $response)
     {
-        if ($request->isXhr()) { // Da li je ajax
-            $txt = $request->getParam('test');
-            $res = [
-                'tekst' => "ajaxGET = {$txt}",
-                'csrf_name' => $this->csrf->getTokenName(),
-                'csrf_value' => $this->csrf->getTokenValue(),
-            ];
-            return json_encode($res);
-        }
+        $txt = $request->getParams();
+        $res = [
+            'data' => $txt,
+            'csrf_name' => $this->csrf->getTokenName(),
+            'csrf_value' => $this->csrf->getTokenValue(),
+        ];
+        return json_encode($res);
     }
 
     public function ajaxPOST($request, $response)
     {
-        $txt = $request->getParam('test');
+        $id = (int)$request->getParam('id');
+        $model = new Transakcija();
+        $transakcija = $model->find($id);
+        if ($transakcija->razduzeno === 0) {
+            $transakcija->update(['razduzeno' => 1], $id);
+        } else {
+            $transakcija->update(['razduzeno' => 0], $id);
+        }
         $res = [
-            'tekst' => "ajaxPOST = {$txt}",
             'csrf_name' => $this->csrf->getTokenName(),
             'csrf_value' => $this->csrf->getTokenValue(),
         ];

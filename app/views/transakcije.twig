@@ -9,7 +9,6 @@
     </button>
     <a href="{{ path_for('kartoni.pregled',{'id':karton.id}) }}" class="btn">Karton {{ karton.broj() }}</a>
     <button id="otvori_modal" class="btn-warning">Modal</button>
-    <button id="pokreni_ajax" class="btn-danger">AJAX</button>
 </div>
 <div class="well white-bg">
     <form action="#" method="POST" id="search_form">
@@ -119,7 +118,7 @@
 {% block traka %}
 <h1>Nerazdužene transakcije</h1>
 <div class="table-responsive">
-    <table>
+    <table id="tabela">
         <thead>
             <tr>
                 <th class="w-15 danger-bg">Tip</th>
@@ -139,8 +138,8 @@
                 <td>{{ tran.tip_transakcije().godina }}</td>
                 <td>{{ tran.datum() }}</td>
                 <td class="right">{{ (tran.iznos)|number_format(2, '.', ',') }}</td>
-                <td>{{ tran.razduzenoDisabled() | raw }}</td>
-                <td class="right"><a href="#" class="btn btn-warning btn-s">Razduži</a></td>
+                <td>{{ tran.razduzeno() | raw }}</td>
+                <td class="right"><a href="#" class="btn btn-warning btn-s" data-id="{{ tran.id }}">Razduži</a></td>
             </tr>
             {% endfor %}
         </tbody>
@@ -168,15 +167,33 @@
     });
 
     // AJAX
-    document.getElementById("pokreni_ajax").addEventListener("click", function () {
-        ajaxFetch("http://localhost/kartoteka/pub/ajax/get", {
-            method: "POST",
-            body: csrfFormData("#search_form")
-        })
-            .then(function (data) {
-                console.log(data);
-                document.getElementById("ajax").innerHTML = data.tekst;
-            });
+    var tabela = document.getElementById("tabela");
+    var r = tabela.querySelectorAll("[data-id]");
+    r.forEach(function (el) {
+        el.addEventListener("click", function () {
+            id = el.getAttribute("data-id");
+            var fd = formData();
+            fd.append('id', id);
+            ajaxFetch("{{ path_for('ajax.post') }}", { // http://localhost/kartoteka/pub/ajax/post
+                method: "POST",
+                body: fd
+            })
+                .then(function (data) {
+                    location.reload();
+                    document.getElementById("csrf_name").value = data.csrf_name;
+                    document.getElementById("csrf_value").value = data.csrf_value;
+                });
+        });
     });
 </script>
 {% endblock skripta %}
+
+{# ajaxFetch("http://localhost/kartoteka/pub/ajax/post", {
+            method: "POST",
+            body: formData()
+        })
+            .then(function (data) {
+                // document.getElementById("ajax").innerHTML = data.data.priznanica;
+                document.getElementById("csrf_name").value = data.csrf_name;
+                document.getElementById("csrf_value").value = data.csrf_value;
+            }); #}
