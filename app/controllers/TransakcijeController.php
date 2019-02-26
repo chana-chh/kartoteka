@@ -33,7 +33,7 @@ class TransakcijeController extends Controller
         if ($request->isXhr()) { // Da li je ajax
             $txt = $request->getParam('test');
             $res = [
-                'tekst' => "ajaxPOST = {$txt}",
+                'tekst' => "ajaxGET = {$txt}",
                 'csrf_name' => $this->csrf->getTokenName(),
                 'csrf_value' => $this->csrf->getTokenValue(),
             ];
@@ -43,14 +43,12 @@ class TransakcijeController extends Controller
 
     public function ajaxPOST($request, $response)
     {
-        if ($request->isXhr()) { // Da li je ajax
-            $txt = $request->getParam('test');
-            $res = [
-                'tekst' => "ajaxPOST = {$txt}",
-                'csrf_name' => $this->csrf->getTokenName(),
-                'csrf_value' => $this->csrf->getTokenValue(),
-            ];
-            return json_encode($res);
-        }
+        $txt = $request->getParam('test');
+        $res = [
+            'tekst' => "ajaxPOST = {$txt}",
+            'csrf_name' => $this->csrf->getTokenName(),
+            'csrf_value' => $this->csrf->getTokenValue(),
+        ];
+        return json_encode($res);
     }
 }
