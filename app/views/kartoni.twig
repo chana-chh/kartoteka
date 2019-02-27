@@ -20,7 +20,7 @@
         {{ csrf|raw }}
         <div class="flex-row">
             <div class="flex-col">
-                <select name="groblje_id" id="groblje_id" class="form-control">
+                <select name="groblje_id" id="groblje_id" class="form-control" autofocus>
                     {% for groblje in groblja %}
                     <option value="{{ groblje.id }}">{{ groblje.naziv }}</option>
                     {% endfor %}
@@ -30,8 +30,7 @@
                 <input type="text" name="parcela" id="parcela" class="form-control" autocomplete="off" placeholder="Parcela">
             </div>
             <div class="flex-col">
-                <input type="text" name="grobno_mesto" id="grobno_mesto" class="form-control" autocomplete="off"
-                    placeholder="Grobno mesto">
+                <input type="text" name="grobno_mesto" id="grobno_mesto" class="form-control" autocomplete="off" placeholder="Grobno mesto">
             </div>
             <div class="flex-col-4">
                 <input type="submit" value="Filtriraj">
@@ -50,11 +49,13 @@
         <thead>
             <tr>
                 <th class="w-5">Id</th>
-                <th class="w-15"><i class="fas fa-link"> Broj</i></th>
-                <th class="w-10">Broj mesta</th>
+                <th class="w-10"><i class="fas fa-link"> Broj</i></th>
+                <th class="w-5">Br mesta</th>
                 <th class="w-10">Tip groba</th>
                 <th class="w-5">Aktivan</th>
-                <th class="w-55">Napomena</th>
+                <th class="w-50">Napomena</th>
+                <th class="w-10 right">Stanje</th>
+                <th class="w-5 right"><i class="fas fa-cogs"></i></th>
             </tr>
         </thead>
         <tbody>
@@ -68,8 +69,14 @@
                 </td>
                 <td>{{ karton.broj_mesta }}</td>
                 <td>{{ karton.tip_groba }}</td>
-                <td>{{ karton.aktivan()|raw }}</td>
+                <td>{{ karton.aktivanDisabled()|raw }}</td>
                 <td>{{ karton.napomena|nl2br }}</td>
+                <td class="right">{{ karton.stanje|number_format(2, '.', ',') }}</td>
+                <td class="right">
+                    <a href="{{ path_for('kartoni.transakcije',{id: karton.id}) }}" class="btn btn-success btn-s">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>

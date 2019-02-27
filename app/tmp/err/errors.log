@@ -41,3 +41,4 @@
 [26-Feb-2019 14:36:49 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Transakcija::$reseno in C:\xampp\htdocs\kartoteka\app\controllers\TransakcijeController.php on line 47
 [26-Feb-2019 14:38:33 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Transakcija::$reseno in C:\xampp\htdocs\kartoteka\app\controllers\TransakcijeController.php on line 47
 [27-Feb-2019 09:12:51 Europe/Belgrade] PHP Notice:  Trying to get property 'veza' of non-object in C:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 78
+[27-Feb-2019 12:50:29 Europe/Belgrade] PHP Recoverable fatal error:  Object of class App\Models\Karton could not be converted to string in C:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Router.php on line 403
