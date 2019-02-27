@@ -174,7 +174,7 @@
             id = el.getAttribute("data-id");
             var fd = formData();
             fd.append('id', id);
-            ajaxFetch("{{ path_for('ajax.post') }}", { // http://localhost/kartoteka/pub/ajax/post
+            ajaxFetch("{{ path_for('transakcije.razduzivanje.ajax') }}", {
                 method: "POST",
                 body: fd
             })
@@ -187,13 +187,3 @@
     });
 </script>
 {% endblock skripta %}
-
-{# ajaxFetch("http://localhost/kartoteka/pub/ajax/post", {
-            method: "POST",
-            body: formData()
-        })
-            .then(function (data) {
-                // document.getElementById("ajax").innerHTML = data.data.priznanica;
-                document.getElementById("csrf_name").value = data.csrf_name;
-                document.getElementById("csrf_value").value = data.csrf_value;
-            }); #}

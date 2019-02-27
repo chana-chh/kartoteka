@@ -51,7 +51,7 @@ close.forEach(function (el) {
 
 // AJAX
 function ajaxFetch(url, options) {
-	return fetch("http://localhost/kartoteka/pub/ajax/post", options)
+	return fetch(url, options)
 		.then(function (response) {
 			if (!response.ok) {
 				throw new Error('Fetch nije OK!');

@@ -42,7 +42,5 @@ $app->group('', function () {
     $this->post('/pokojnici/pretraga', '\App\Controllers\PokojniciController:postPokojniciPretraga');
     // Transakcije
     $this->get('/kartoni/transakcije/{id}', '\App\Controllers\TransakcijeController:getTransakcijeKarton')->setName('kartoni.transakcije');
-    // Ajax test
-    $this->get('/ajax/get', '\App\Controllers\TransakcijeController:ajaxGET')->setName('ajax.get');
-    $this->post('/ajax/post', '\App\Controllers\TransakcijeController:ajaxPOST')->setName('ajax.post');
+    $this->post('/kartoni/transakcije/razduzivanje/ajax', '\App\Controllers\TransakcijeController:ajaxRazduzivanje')->setName('transakcije.razduzivanje.ajax');
 })->add(new AuthMiddleware($container));
