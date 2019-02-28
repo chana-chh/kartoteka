@@ -41,8 +41,14 @@ final class Config
         'cyrillic' => false, // da li je aplikacija cirilicna
         'pagination' => [
             // Podesavanja za stranicenje
-            'per_page' => 15,
+            'per_page' => 10,
             'page_span' => 3,
+            'css' => [
+                'buttons_container' => 'uk-pagination',
+                'button_active' => 'uk-active',
+                'button_disabled' => 'uk-disabled',
+                'goto' => 'uk-select uk-form-width-xsmall uk-form-small uk-text-primary',
+            ],
         ],
         'db' => [
             // Podesavanja za PDO MySQL konekciju
@@ -54,7 +60,7 @@ final class Config
                 \PDO::ATTR_EMULATE_PREPARES => false, // [true] za php verzije manje od 5.1.17 ?
                 \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
                 \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ,
-			    // PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4', // za php verzije manje od 5.3.6 ?
+                // PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4', // za php verzije manje od 5.3.6 ?
                 \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
             ],
         ],
@@ -83,14 +89,11 @@ final class Config
         static::$container = $container;
     }
     private function __clone()
-    {
-    }
+    { }
     private function __sleep()
-    {
-    }
+    { }
     private function __wakeup()
-    {
-    }
+    { }
 
     /**
      * Vraca ceo kontejner ili instancu iz kontejnera
@@ -144,5 +147,4 @@ final class Config
         }
         return $data === null ? $default : $data;
     }
-
 }

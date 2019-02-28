@@ -1,34 +1,29 @@
 {% extends "templates/app.twig" %}
 
 {% block naslov %}
-
-<div class="center">
-    <br>
-    <h1>Prijava</h1>
-    <br>
-    <div class="flex-row">
-        <div class="flex-col-3"></div>
-        <div class="flex-col-2">
-            <hr>
-            <form action="{{ path_for('prijava') }}" method="POST">
-                {{ csrf|raw }}
-                <div class="form-group">
-                    <label for="korisnicko_ime">Korisničko ime</label>
-                    <input type="text" name="korisnicko_ime" id="korisnicko_ime" value="{{ old.korisnicko_ime }}" class="form-control"
-                        autocomplete="off">
-                    <small class="form-text">Form text</small>
-                </div>
-                <div class="form-group">
-                    <label for="lozinka">Lozinka</label>
-                    <input type="password" name="lozinka" id="lozinka" class="form-control" autocomplete="off">
-                </div>
-                <input type="submit" value="Prijavi se" class="btn-success">
-                <a href="{{ path_for('pocetna') }}" class="btn btn-danger">Otkaži prijavu</a>
-            </form>
+<h1>Prijava</h1>
+<hr>
+<div class="uk-flex uk-flex-center">
+    <form action="{{ path_for('prijava') }}" method="POST" class="uk-form-stacked uk-width-1-5">
+        {{ csrf|raw }}
+        <div class="uk-margin">
+            <label for="korisnicko_ime" class="uk-form-label">Korisničko ime</label>
+            <div class="uk-form-controls">
+                <input type="text" name="korisnicko_ime" id="korisnicko_ime" value="{{ old.korisnicko_ime }}" class="uk-input"
+                    autocomplete="off">
+            </div>
         </div>
-        <div class="flex-col-3"></div>
-    </div>
-
-
+        <div class="uk-margin">
+            <label for="lozinka" class="uk-form-label">Lozinka</label>
+            <div class="uk-form-controls">
+                <input type="password" name="lozinka" id="lozinka" class="uk-input" autocomplete="off">
+            </div>
+        </div>
+        <div class="uk-button-group uk-width-1-1">
+            <input type="submit" value="Prijavi se" class="uk-button uk-button-primary uk-width-1-2">
+            <a href="{{ path_for('pocetna') }}" class="uk-button uk-button-secondary uk-width-1-2">Otkaži prijavu</a>
+        </div>
+    </form>
 </div>
+
 {% endblock naslov %}

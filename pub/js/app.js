@@ -1,6 +1,3 @@
-/*
-
-*/
 // Navbar dropdown
 var dropdowns = document.querySelectorAll("nav ul li a:not(:only-child)");
 dropdowns.forEach(function (elem) {

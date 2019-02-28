@@ -1,45 +1,58 @@
 <!DOCTYPE html>
 <html lang="sr>
 <head>
-<meta charset="UTF-8">
+<meta charset=" UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <title>Kartoteka-Gradska groblja Kragujevac</title>
 <link rel="shortcut icon" href="{{base_url()}}/favicon.ico">
-<link rel="stylesheet" href="{{base_url()}}/css/normalize.css">
 <link rel="stylesheet" href="{{base_url()}}/css/fontawesome.css">
 <link rel="stylesheet" href="{{base_url()}}/css/solid.css">
+<link rel="stylesheet" href="{{base_url()}}/css/uikit.css">
 <link rel="stylesheet" href="{{base_url()}}/css/app.css">
 </head>
 
 <body>
-	<header class="row">
-		<div class="col">
-			{% include 'templates/inc/navigation.twig' %}
-		</div>
+	<header>
+		{% include 'templates/inc/navigation.twig' %}
 	</header>
-	<div class="row">{% include 'templates/inc/flash.twig' %}</div>
-	<main class="container">
-		<div class="row">
-			<div class="col naslov">
-				{% block naslov %}{% endblock naslov %}
+	<div>
+		<div class="uk-child-width-1" uk-grid>
+			<div>
+				{% include 'templates/inc/flash.twig' %}
 			</div>
 		</div>
-		<div class="row">
-			<div class="col content">
-				{% block sadrzaj %}{% endblock sadrzaj %}
+	</div>
+	<main class="container">
+		<div class="uk-container uk-container-expand">
+			<div class="uk-child-width-1" uk-grid>
+				<div>
+					{% block naslov %}{% endblock naslov %}
+				</div>
 			</div>
-			<div class="col sidebar">
-				{% block traka %}{% endblock traka %}
+		</div>
+		<div class="uk-container uk-container-expand">
+			<div uk-grid>
+				<div class="uk-width-3-4">
+					{% block sadrzaj %}{% endblock sadrzaj %}
+				</div>
+				<div class="uk-width-1-4">
+					{% block traka %}{% endblock traka %}
+				</div>
 			</div>
 		</div>
 	</main>
-
-	<footer>
-		<div class="col">
-			{% include 'templates/inc/footer.twig' %}
+	<footer class="uk-background-muted uk-margin-top">
+		<div class="uk-child-width-1" uk-grid>
+			<div>
+				<div class="uk-margin-left">
+					{% include 'templates/inc/footer.twig' %}
+				</div>
+			</div>
 		</div>
 	</footer>
+	<script src="{{base_url()}}/js/uikit.js"></script>
+	<script src="{{base_url()}}/js/uikit-icons.js"></script>
 	<script src="{{base_url()}}/js/app.js"></script>
 	{% block skripta %}{% endblock skripta %}
 </body>

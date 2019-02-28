@@ -1,52 +1,9 @@
 {% extends "templates/app.twig" %}
 
 {% block naslov %}
-<div class="center">
+<div class="uk-text-center">
 	<img src="{{ base_url() }}/img/jkp_sumadija.jpg" alt="JKP Sumadija Kragujevac">
 	<h1>Gradska groblja</h1>
 	<img src="{{ base_url() }}/img/logo.png" alt="Gradska groblja">
-	<br><br><br>
-	<button id="otvori_modal">MODAL</button>
 </div>
-
-<div class="modal" id="modal">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h2>Modal naslov</h2>
-				<button class="close">&times;</button>
-			</div>
-			<div class="modal-body">
-				Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reiciendis repellat minima accusantium deleniti praesentium esse
-				perspiciatis illo fugiat ratione et.
-			</div>
-			<div class="modal-footer cf" id="exampleModal" tabindex="-1">
-				<div class="move-right">
-					<button class="btn-success" id="modalOk">OK</button>
-					<button class="btn-danger" id="modalClose">Cancel</button>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-<script>
-	var modal = document.getElementById("modal");
-	var dugme = document.getElementById("otvori_modal");
-	var dugmeModalOk = document.getElementById("modalOk");
-	var dugmeModalCancel = document.getElementById("modalClose");
-
-	dugme.addEventListener("click", function () {
-		modal.style.display = "block";
-	});
-
-	dugmeModalOk.addEventListener("click", function () {
-		alert("Bice sve OK");
-	});
-
-	dugmeModalCancel.addEventListener("click", function () {
-		modal.style.display = "none";
-	});
-
-</script>
 {% endblock naslov %}

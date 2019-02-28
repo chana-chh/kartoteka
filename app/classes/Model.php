@@ -291,6 +291,7 @@ abstract class Model
 	 */
     protected function pageLinks(int $page, int $perpage = null)
     {
+        $css = $this->pagination_config['css'];
         $links = [];
         $links['current_page'] = $page;
         if ($perpage === null) {
@@ -324,36 +325,37 @@ abstract class Model
             $start = 1;
             $end = $pages;
         }
-        $disabled_begin = ($page === 1) ? " pgn-btn-disabled" : "";
-        $disabled_end = ($page === $pages) ? " pgn-btn-disabled" : "";
+        $disabled_begin = ($page === 1) ? $css['button_disabled'] : "";
+        $disabled_end = ($page === $pages) ? $css['button_disabled'] : "";
         $zapis_od = (($page - 1) * $perpage) + 1;
         $zapis_do = ($zapis_od + $perpage) - 1;
         $zapis_do = $zapis_do >= $count ? $count : $zapis_do;
         $links['row_from'] = $zapis_od;
         $links['row_to'] = $zapis_do;
 
-        $buttons = "";
-        $buttons .= '<a class="pgn-btn pgn-first' . $disabled_begin . '" href="' . $url . '?page=1" tabindex="-1">1</a>';
-        $buttons .= '<a class="pgn-btn' . $disabled_begin . '" href="' . $url . '?page=' . $prev . '" tabindex="-1"><i class="fas fa-angle-left"></i></a>';
+        $buttons = "<ul class=\"{$css['buttons_container']}\">";
+        $buttons .= "<li><a class=\"{$disabled_begin}\" href=\"{$url}?page=1\" tabindex=\"-1\">1</a></li>";
+        $buttons .= "<li><a class=\"{$disabled_begin}\" href=\"{$url}?page={$prev}\" tabindex=\"-1\"><span uk-icon=\"chevron-left\"></span></a></li>";
         for ($i = $start; $i <= $end; $i++) {
             $current = '';
             if ($page === $i) {
-                $current = " pgn-btn-disabled pgn-cur-btn";
+                $current = $css['button_active'] . ' ' . $css['button_disabled'];
             }
-            $buttons .= '<a class="pgn-btn' . $current . '" href="' . $url . '?page=' . $i . '" tabindex="-1">' . $i . '</a>';
+            $buttons .= "<li><a class=\"{$current}\" href=\"{$url}?page={$i}\" tabindex=\"-1\">{$i}</a></li>";
         }
-        $buttons .= '<a class="pgn-btn' . $disabled_end . '" href="' . $url . '?page=' . $next . '" tabindex="-1"><i class="fas fa-angle-right"></i></a>';
-        $buttons .= '<a class="pgn-btn pgn-last' . $disabled_end . '" href="' . $url . '?page=' . $pages . '" tabindex="-1">' . $pages . '</a>';
+        $buttons .= "<li><a class=\"{$disabled_end}\" href=\"{$url}?page={$next}\" tabindex=\"-1\"><span uk-icon=\"chevron-right\"></span></a></li>";
+        $buttons .= "<li><a class=\"{$disabled_end}\" href=\"{$url}?page={$pages}\" tabindex=\"-1\">{$pages}</a></li>";
+        $buttons .= "</ul>";
         $links['buttons'] = $buttons;
-        $goto = '<select class="pgn-goto" name="pgn-goto" id="pgn-goto">';
+        $goto = "<select class=\"{$css['goto']}\" name=\"pgn-goto\" id=\"pgn-goto\">";
         for ($i = 1; $i <= $pages; $i++) {
             $selected = '';
             if ($page === $i) {
                 $selected = ' selected';
             }
-            $goto .= '<option value="' . $url . '?page=' . $i . '"' . $selected . '>' . $i . '</option>';
+            $goto .= "<option value=\"{$url}?page={$i}\"{$selected}>{$i}</option>";
         }
-        $goto .= '</select>';
+        $goto .= "</select>";
         $links['select'] = $goto;
 
         return $links;
@@ -387,10 +389,10 @@ abstract class Model
 	 * @param string $foreign_table_fk
 	 * @return array \App\Classes\Model Niz instanci dece
 	 */
-    public function hasMany($model_class, $foreign_table_fk, $order=null) 
+    public function hasMany($model_class, $foreign_table_fk, $order = null)
     {
         $m = new $model_class();
-        $o = $order===null?'':' ORDER BY '.$order;
+        $o = $order === null ? '' : ' ORDER BY ' . $order;
         $sql = "SELECT * FROM {$m->getTable()} WHERE {$foreign_table_fk} = :{$foreign_table_fk}{$o};";
         $pk = $this->getPrimaryKey();
         $params = [":{$foreign_table_fk}" => $this->$pk];
@@ -428,11 +430,11 @@ abstract class Model
 	 * @param string $pt_foreign_table_fk FK druge strane u pivot tabeli
 	 * @return array \App\Classes\Model Niz instanci druge strane
 	 */
-    public function belongsToMany($model_class, $pivot_table, $pt_this_table_fk, $pt_foreign_table_fk, $order=null)
+    public function belongsToMany($model_class, $pivot_table, $pt_this_table_fk, $pt_foreign_table_fk, $order = null)
     {
         $m = new $model_class();
         $tbl = $m->getTable();
-        $o = $order===null?'':' ORDER BY '.$order;
+        $o = $order === null ? '' : ' ORDER BY ' . $order;
         $pk = $this->getPrimaryKey();
         $params = [":{$pk}" => $this->$pk];
         $sql = "SELECT {$tbl}.* FROM {$tbl} JOIN {$pivot_table} ON {$tbl}.{$m->getPrimaryKey()} = {$pivot_table}.{$pt_foreign_table_fk} WHERE {$pivot_table}.{$pt_this_table_fk} = :{$pk}{$o};";

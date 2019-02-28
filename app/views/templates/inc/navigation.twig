@@ -1,67 +1,70 @@
-<nav class="cf">
-	<ul class="move-left">
-		<li>
-			<a class="logo" href="{{ path_for('pocetna') }}">Kartoteka - Gradska groblja</a>
-		</li>
-	</ul>
-	<ul class="move-right">
-		<li>
-			<a href="{{ path_for('pocetna') }}">
-				<i class="fas fa-home"></i> Pocetna
-			</a>
-		</li>
-		<li>
-			<a href="{{ path_for('kartoni') }}">
-				<i class="fas fa-file"></i> Kartoni
-			</a>
-		</li>
-		<li>
-			<a href="{{ path_for('staraoci') }}">
-				<i class="fas fa-user"></i> Staraoci
-			</a>
-		</li>
-		<li>
-			<a href="{{ path_for('pokojnici') }}">
-				<i class="fas fa-user-plus"></i> Pokojnici
-			</a>
-		</li>
-		<li>
-			<a href="{{ path_for('mape') }}">
-				<i class="fas fa-map-marked"></i> Mape
-			</a>
-		</li>
-		{# <li>
-			<a><i class="fas fa-question-circle"></i> Tutorijali <i class="fas fa-caret-down"></i></a>
-			<ul class="nav-dropdown">
-				<li>
-					<a href="https://mariadb.org/" target="_blank">
-						<i class="fas fa-home"></i> MariaDB
-					</a>
-				</li>
-				<li>
-					<a href="http://www.mysqltutorial.org/" target="_blank">
-						<i class="fas fa-home"></i> MySQL tutorial
-					</a>
-				</li>
-			</ul>
-		</li> #}
-		{% if auth.logged %}
-		<li>
-			<a href="{{ path_for('odjava') }}">
-				<i class="fas fa-sign-out-alt"></i> Odjava
-			</a>
-		</li>
-		{% else %}
-		{# <li>
-			<a href="{{ path_for('registracija') }}">
-				<i class="fas fa-user-plus"></i> Registracija
-			</a>
-		</li> #}
-		<li>
-			<a href="{{ path_for('prijava') }}">
-				<i class="fas fa-sign-in-alt"></i> Prijava
-			</a>
-		</li>
-		{% endif %}
-	</ul>
+<nav class="uk-navbar-container" uk-navbar="mode: click">
+	<div class="uk-navbar-left">
+		<a class="uk-navbar-item uk-logo" href="{{ path_for('pocetna') }}">Kartoteka - Gradska groblja</a>
+	</div>
+	<div class="uk-navbar-right">
+		<ul class="uk-navbar-nav">
+			<li class="uk-active">
+				<a href="{{ path_for('pocetna') }}">
+					<span uk-icon="home" class="uk-margin-small-right"></span>
+					Početna
+				</a>
+			</li>
+			<li>
+				<a href="{{ path_for('kartoni') }}">
+					<span uk-icon="file" class="uk-margin-small-right"></span>
+					Kartoni
+				</a>
+			</li>
+			<li>
+				<a href="{{ path_for('staraoci') }}">
+					<span uk-icon="users" class="uk-margin-small-right"></span>
+					Staraoci
+				</a>
+			</li>
+			<li>
+				<a href="{{ path_for('pokojnici') }}">
+					<span uk-icon="plus" class="uk-margin-small-right"></span>
+					Pokojnici
+				</a>
+			</li>
+			<li>
+				<a href="{{ path_for('mape') }}">
+					<span uk-icon="location" class="uk-margin-small-right"></span>
+					Mape
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<span uk-icon="database" class="uk-margin-small-right"></span>
+					Administracija
+					<span uk-icon="chevron-down"></span>
+				</a>
+				<div class="uk-navbar-dropdown">
+					<ul class="uk-nav uk-navbar-dropdown-nav">
+						<li class="uk-active"><a href="#">Active</a></li>
+						<li><a href="#">Item</a></li>
+						<li><a href="#">Item</a></li>
+					</ul>
+				</div>
+			</li>
+
+
+			{% if auth.logged %}
+			<li>
+				<a href="{{ path_for('odjava') }}">
+					<span uk-icon="sign-out" class="uk-margin-small-right"></span>
+					Odjava
+				</a>
+			</li>
+			{% else %}
+			<li>
+				<a href="{{ path_for('prijava') }}">
+					<span uk-icon="sign-in" class="uk-margin-small-right"></span>
+					Prijava
+				</a>
+			</li>
+			{% endif %}
+		</ul>
+	</div>
 </nav>
