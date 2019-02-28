@@ -1,72 +1,87 @@
 {% extends "templates/app.twig" %}
 
 {% block sadrzaj %}
-<h1 class="primary-text">
+<h1 class="uk-text-primary">
   Karton
-  <span class="success-text"><small><em>[{{ karton.broj() }}]</em></small></span>
+  <small><em class="uk-text-success">[{{ karton.broj() }}]</em></small>
 </h1>
-<div class="well">
-  <button onclick="window.history.back();">
-    <i class="fas fa-angle-left"></i> Nazad
-  </button>
-  <a href="{{ path_for('kartoni') }}" class="btn"><i class="fas fa-angle-double-left"></i> SVI Kartoni</a>
-  <a href="#" class="btn btn-warning">Izmeni karton</a>
-  <a href="#" class="btn btn-danger">Obriši karton</a>
-  <a href="{{ path_for('kartoni.mapa', { 'id': karton.id }) }}" class="btn btn-secondary">Mapa</a>
+<div class="uk-panel uk-background-muted uk-padding-small">
+  <div class="uk-clearfix">
+    <div class="uk-float-left">
+      <div class="uk-button-group">
+        <button onclick="window.history.back();" class="uk-button uk-button-primary uk-button-small">
+          <span uk-icon="chevron-left"></span> Nazad
+        </button>
+        <a href="{{ path_for('kartoni') }}" class="uk-button uk-button-primary uk-button-small">
+          <span uk-icon="chevron-double-left"></span> SVI Kartoni
+        </a>
+      </div>
+    </div>
+    <div class="uk-float-right">
+      <div class="uk-button-group">
+        <a href="#" class="uk-button uk-button-secondary uk-button-small">
+          <span uk-icon="pencil"></span> Izmeni karton
+        </a>
+        <a href="#" class="uk-button uk-button-danger uk-button-small">
+          <span uk-icon="trash"></span> Obriši karton
+        </a>
+        <a href="{{ path_for('kartoni.mapa', { 'id': karton.id }) }}" class="uk-button uk-button-primary uk-button-small">
+          <span uk-icon="location"></span> Mapa
+        </a>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div class="well white-text primary-bg">
-  <div class="flex-row">
-    <div class="flex-col">
-      <strong>Groblje:</strong>
-      {{ karton.groblje().naziv }}
+<div class="uk-panel uk-background-primary uk-light uk-padding-small uk-margin-small-top">
+  <div class="uk-flex uk-flex-between">
+    <div>
+      <strong class="uk-text-primary">Groblje:</strong> {{ karton.groblje().naziv }}
     </div>
-    <div class="flex-col">
-      <strong>Parcela:</strong>
-      {{ karton.parcela }}
+    <div>
+      <strong>Parcela:</strong> {{ karton.parcela }}
     </div>
-    <div class="flex-col">
-      <strong>Grobno mesto:</strong>
-      {{ karton.grobno_mesto }}
+    <div>
+      <strong>Grobno mesto:</strong> {{ karton.grobno_mesto }}
     </div>
-    <div class="flex-col">
-      <strong>Broj mesta:</strong>
-      {{ karton.broj_mesta }}
+    <div>
+      <strong>Broj mesta:</strong> {{ karton.broj_mesta }}
     </div>
-    <div class="flex-col">
-      <strong>Tip groba:</strong>
-      {{ karton.tip_groba }}
+    <div>
+      <strong>Tip groba:</strong> {{ karton.tip_groba }}
     </div>
-    <div class="flex-col">
-      <strong>Aktivan karton:</strong>
-      {{ karton.aktivanDisabled() | raw }}
+    <div>
+      <strong>Aktivan:</strong> {{ karton.aktivanDisabled() | raw }}
+    </div>
+    <div>
+      <strong>Stanje:</strong> {{ karton.stanje|number_format(2, '.', ',') }}
     </div>
   </div>
-  <strong>Napomene:</strong><br />
-  {{ karton.napomena | nl2br }}<br />
+  <strong>Napomene:</strong><br>
+  {{ karton.napomena | nl2br }}<br>
 </div>
-<hr>
-<div class="flex-row">
-  <div class="flex-col-5">
-    <h2 style="margin:0;">Staraoci</h2>
+<hr class="uk-divider-icon">
+<div class="uk-clearfix">
+  <div class="uk-float-left">
+    <h2 class="uk-text-danger">Staraoci</h2>
   </div>
-  <div class="flex-col-2 right">
-    <a href="#" class="btn">dodaj staraoca</a>
+  <div class="uk-float-right uk-margin-small-top">
+    <a href="#" class="uk-button uk-button-primary uk-button-small">Dodaj staraoca</a>
   </div>
 </div>
-<div class="table-responsive">
-  <table>
+<div class="uk-overflow-auto">
+  <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
     <thead>
       <tr>
-        <th class="w-5 danger-bg">Id</th>
-        <th class="w-5 danger-bg">RB</th>
-        <th class="w-20 danger-bg">Ime</th>
-        <th class="w-10 danger-bg">JMBG</th>
-        <th class="w-25 danger-bg">Adresa</th>
-        <th class="w-15 danger-bg">Telefon</th>
-        <th class="w-5 danger-bg">Aktivan</th>
-        <th class="w-5 danger-bg">Prenos</th>
-        <th class="w-10 danger-bg right"><i class="fas fa-cogs"></i></th>
+        <th class="w-5">Id</th>
+        <th class="w-5">RB</th>
+        <th class="w-20">Ime</th>
+        <th class="w-15">JMBG</th>
+        <th class="w-20">Adresa</th>
+        <th class="w-15">Telefon</th>
+        <th class="w-5">Aktivan</th>
+        <th class="w-5">Prenos</th>
+        <th class="w-10 uk-text-right"><span uk-icon="cog"></span></th>
       </tr>
     </thead>
     <tbody>
@@ -80,40 +95,40 @@
         <td>{{ st.telefon }}</td>
         <td>{{ st.aktivanDisabled()|raw }}</td>
         <td>{{ st.prenosDisabled()|raw }}</td>
-        <td class="right">
-          <a href="#" class="btn btn-warning btn-s"><i class="fas fa-pen"></i></a>
-          <a href="#" class="btn btn-danger btn-s"><i class="fas fa-trash"></i></a>
+        <td class="uk-text-right">
+          <a href="#" title="Izmena"><span uk-icon="pencil"></span></a>
+          <a href="#" title="Brisanje"><span uk-icon="trash"></span></a>
         </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
-<hr>
-<div class="flex-row">
-  <div class="flex-col-5">
-    <h2 style="margin:0;">Pokojnici</h2>
+<hr class="uk-divider-icon">
+<div class="uk-clearfix">
+  <div class="uk-float-left">
+    <h2>Pokojnici</h2>
   </div>
-  <div class="flex-col-2 right">
-    <a href="#" class="btn">dodaj pokojnika</a>
+  <div class="uk-float-right uk-margin-small-top">
+    <a href="#" class="uk-button uk-button-primary uk-button-small">Dodaj pokojnika</a>
   </div>
 </div>
-<div class="table-responsive">
-  <table>
+<div class="uk-overflow-auto">
+  <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
     <thead>
       <tr>
-        <th class="w-5 black-bg">Id</th>
-        <th class="w-5 black-bg">RB</th>
-        <th class="w-20 black-bg">Ime</th>
-        <th class="w-15 black-bg">JMBG</th>
-        <th class="w-15 black-bg">Mesto</th>
-        <th class="w-5 black-bg">Dupla</th>
-        <th class="w-5 black-bg">Pozicija</th>
-        <th class="w-5 black-bg">Datum rođenja</th>
-        <th class="w-5 black-bg">Datum smrti</th>
-        <th class="w-5 black-bg">Datum sahrane</th>
-        <th class="w-5 black-bg">Datum ekshumacije</th>
-        <th class="w-10 black-bg right"><i class="fas fa-cogs"></i></th>
+        <th class="w-5">Id</th>
+        <th class="w-5">RB</th>
+        <th class="w-20">Ime</th>
+        <th class="w-15">JMBG</th>
+        <th class="w-15">Mesto</th>
+        <th class="w-5">Dupla</th>
+        <th class="w-5">Pozicija</th>
+        <th class="w-5">Datum rođenja</th>
+        <th class="w-5">Datum smrti</th>
+        <th class="w-5">Datum sahrane</th>
+        <th class="w-5">Datum ekshumacije</th>
+        <th class="w-10 uk-text-right"><span uk-icon="cog"></span></th>
       </tr>
     </thead>
     <tbody>
@@ -130,9 +145,9 @@
         <td>{{ pok.datum_smrti() }}</td>
         <td>{{ pok.datum_sahrane() }}</td>
         <td>{{ pok.datum_ekshumacije() }}</td>
-        <td class="right">
-          <a href="#" class="btn btn-warning btn-s"><i class="fas fa-pen"></i></a>
-          <a href="#" class="btn btn-danger btn-s"><i class="fas fa-trash"></i></a>
+        <td class="uk-text-right">
+          <a href="#" title="Izmena"><span uk-icon="pencil"></span></a>
+          <a href="#" title="Brisanje"><span uk-icon="trash"></span></a>
         </td>
       </tr>
       {% endfor %}
@@ -142,22 +157,22 @@
 {% endblock sadrzaj %}
 
 {% block traka %}
-<div class="flex-row">
-  <div class="flex-col-5">
-    <h2 style="margin:0;">Dokumenti</h2>
+<div class="uk-clearfix">
+  <div class="uk-float-left">
+    <h2 class="uk-text-primary">Dokumenti</h2>
   </div>
-  <div class="flex-col-5 right">
-    <a href="#" class="btn">dodaj dokument</a>
+  <div class="uk-float-right uk-margin-small-top">
+    <a href="#" class="uk-button uk-button-primary uk-button-small">Dodaj dokument</a>
   </div>
 </div>
-<div class="table-responsive">
-  <table>
+<div class="uk-overflow-auto">
+  <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
     <thead>
       <tr>
-        <th class="w-20">Tip</th>
-        <th class="w-15">Datum</th>
-        <th class="w-50">Opis</th>
-        <th class="w-15 right"><i class="fas fa-cogs"></i></th>
+        <th class="w-15">Tip</th>
+        <th class="w-20">Datum</th>
+        <th class="w-45">Opis</th>
+        <th class="w-20 uk-text-right"><span uk-icon="cog"></span></th>
       </tr>
     </thead>
     <tbody>
@@ -168,31 +183,34 @@
         </td>
         <td>{{ dok.datum() }}</td>
         <td>{{ dok.opis | nl2br }}</td>
-        <td class="right">
-          <a href="{{ dok.veza }}" class="btn btn-success btn-s" target="_blank"><i class="fas fa-eye"></i></a>
+        <td class="uk-text-right">
+          <a href="{{ dok.veza }}" title="Pregled" target="_blank"><span uk-icon="search"></span></a>
+          <a href="#" title="Brisanje"><span uk-icon="trash"></span></a>
         </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
-
-<div class="flex-row">
-  <div class="flex-col-5">
-    <h2 style="margin:0;">Transakcije</h2>
+<hr class="uk-divider-icon">
+<div class="uk-clearfix">
+  <div class="uk-float-left">
+    <h2 class="uk-text-success">Transakcije</h2>
   </div>
-  <div class="flex-col-5 right">
-    <a href="{{ path_for('kartoni.transakcije',{'id':karton.id}) }}" class="btn">dodaj transakciju</a>
+  <div class="uk-float-right uk-margin-small-top">
+    <a href="{{ path_for('kartoni.transakcije',{'id':karton.id}) }}" class="uk-button uk-button-primary uk-button-small">
+      Dodaj transakciju
+    </a>
   </div>
 </div>
-<div class="table-responsive">
-  <table>
+<div class="uk-overflow-auto">
+  <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
     <thead>
       <tr>
         <th class="w-15 success-bg">Tip</th>
         <th class="w-15 success-bg">Godina</th>
         <th class="w-15 success-bg">Datum</th>
-        <th class="w-25 success-bg right">Iznos</th>
+        <th class="w-25 success-bg uk-text-right">Iznos</th>
         <th class="w-20 success-bg">Priznanica</th>
         <th class="w-10 success-bg">Razd</th>
       </tr>
@@ -205,26 +223,12 @@
         </td>
         <td>{{ tran.tip_transakcije().godina }}</td>
         <td>{{ tran.datum() }}</td>
-        <td class="right">{{ (tran.iznos)|number_format(2, '.', ',') }}</td>
+        <td class="uk-text-right">{{ (tran.iznos)|number_format(2, '.', ',') }}</td>
         <td>{{ tran.priznanica }}</td>
         <td>{{ tran.razduzenoDisabled() | raw }}</td>
       </tr>
       {% endfor %}
     </tbody>
-    <tfoot>
-      <tr>
-        <td></td>
-        <td></td>
-        {% if saldo <= 0 %} <td class="right success-bg"><strong>Saldo:</strong></td>
-        <td class="right success-bg">{{ saldo|number_format(2, '.', ',') }}</td>
-        {% else %}
-        <td class="right danger-bg"><strong>Saldo:</strong></td>
-        <td class="right danger-bg">{{ saldo|number_format(2, '.', ',') }}</td>
-        {% endif %}
-        <td></td>
-        <td></td>
-      </tr>
-    </tfoot>
   </table>
 </div>
 {% endblock traka %}
