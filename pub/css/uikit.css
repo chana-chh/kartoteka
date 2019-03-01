@@ -99,7 +99,7 @@ strong {
   color: #f0506e;
   white-space: nowrap;
   padding: 2px 6px;
-  background: #f8f8f8;
+  background: #EEEEEE;
 }
 
 /*
@@ -842,7 +842,7 @@ a.uk-link-reset:hover,
 }
 
 .uk-list-striped>li:nth-of-type(odd) {
-  background: #f8f8f8;
+  background: #EEEEEE;
 }
 
 .uk-list-striped>li:nth-child(n+2) {
@@ -1024,7 +1024,7 @@ a.uk-link-reset:hover,
  */
 .uk-table-striped>tr:nth-of-type(odd),
 .uk-table-striped tbody tr:nth-of-type(odd) {
-  background: #f8f8f8;
+  background: #EEEEEE;
   border-top: 1px solid #e5e5e5;
   border-bottom: 1px solid #e5e5e5;
 }
@@ -1261,7 +1261,7 @@ button.uk-icon:not(:disabled) {
   width: 36px;
   height: 36px;
   border-radius: 500px;
-  background: #f8f8f8;
+  background: #EEEEEE;
   color: #999;
   vertical-align: middle;
   /* 1 */
@@ -1626,7 +1626,7 @@ button.uk-icon:not(:disabled) {
 .uk-input:disabled,
 .uk-select:disabled,
 .uk-textarea:disabled {
-  background-color: #f8f8f8;
+  background-color: #EEEEEE;
   color: #999;
   border-color: #e5e5e5;
 }
@@ -1864,7 +1864,7 @@ select.uk-form-width-xsmall {
  */
 .uk-radio:disabled,
 .uk-checkbox:disabled {
-  background-color: #f8f8f8;
+  background-color: #EEEEEE;
   border-color: #e5e5e5;
 }
 
@@ -2466,7 +2466,7 @@ select.uk-form-width-xsmall {
  * Muted
  */
 .uk-section-muted {
-  background: #f8f8f8;
+  background: #EEEEEE;
 }
 
 /*
@@ -3159,7 +3159,7 @@ select.uk-form-width-xsmall {
  * Muted
  */
 .uk-tile-muted {
-  background: #f8f8f8;
+  background: #EEEEEE;
 }
 
 /*
@@ -3598,7 +3598,7 @@ select.uk-form-width-xsmall {
   position: relative;
   margin-bottom: 20px;
   padding: 15px 29px 15px 15px;
-  background: #f8f8f8;
+  background: #EEEEEE;
   color: #666;
 }
 
@@ -3958,7 +3958,7 @@ select.uk-form-width-xsmall {
  ========================================================================== */
 .uk-comment-primary {
   padding: 30px;
-  background-color: #f8f8f8;
+  background-color: #EEEEEE;
 }
 
 /* ========================================================================
@@ -4436,7 +4436,7 @@ ul.uk-nav-sub {
 /* Container
  ========================================================================== */
 .uk-navbar-container:not(.uk-navbar-transparent) {
-  background: #f8f8f8;
+  background: #EEEEEE;
 }
 
 /*
@@ -4941,13 +4941,13 @@ ul.uk-nav-sub {
 /* Hover + Focus */
 .uk-subnav-pill>*>a:hover,
 .uk-subnav-pill>*>a:focus {
-  background-color: #f8f8f8;
+  background-color: #EEEEEE;
   color: #666;
 }
 
 /* OnClick */
 .uk-subnav-pill>*>a:active {
-  background-color: #f8f8f8;
+  background-color: #EEEEEE;
   color: #666;
 }
 
@@ -6674,7 +6674,7 @@ ul.uk-nav-sub {
 .uk-notification-message {
   position: relative;
   padding: 15px;
-  background: #f8f8f8;
+  background: #EEEEEE;
   color: #666;
   font-size: 1.25rem;
   line-height: 1.4;
@@ -6824,7 +6824,7 @@ ul.uk-nav-sub {
   /* 4 */
   border: 0;
   /* 5 */
-  background-color: #f8f8f8;
+  background-color: #EEEEEE;
   /* 6 */
   margin-bottom: 20px;
   height: 15px;
@@ -6849,7 +6849,7 @@ ul.uk-nav-sub {
  * 2. Remove progress bar for indeterminate state in Firefox
  */
 .uk-progress::-webkit-progress-bar {
-  background-color: #f8f8f8;
+  background-color: #EEEEEE;
   border-radius: 500px;
   overflow: hidden;
 }
@@ -8561,7 +8561,7 @@ iframe.uk-cover {
 }
 
 .uk-background-muted {
-  background-color: #f8f8f8;
+  background-color: #EEEEEE;
 }
 
 .uk-background-primary {
@@ -12188,7 +12188,7 @@ iframe.uk-cover {
 .uk-card-secondary> :not([class*='uk-card-media']) .uk-marker,
 .uk-overlay-primary .uk-marker,
 .uk-offcanvas-bar .uk-marker {
-  background: #f8f8f8;
+  background: #EEEEEE;
   color: #666;
 }
 

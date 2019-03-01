@@ -120,3 +120,5 @@
 [28-Feb-2019 15:52:00 Europe/Belgrade] PHP  34. Slim\Handlers\Strategies\RequestResponse->__invoke() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Route.php:356
 [28-Feb-2019 15:52:00 Europe/Belgrade] PHP  35. call_user_func:{D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41}() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41
 [28-Feb-2019 15:52:00 Europe/Belgrade] PHP  36. App\Controllers\KartoniController->getKartoniMapa() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41
+[28-Feb-2019 19:48:04 Europe/Belgrade] PHP Warning:  PDO::__construct(): MySQL server has gone away in D:\xampp\htdocs\kartoteka\app\classes\Db.php on line 86
+[28-Feb-2019 19:51:51 Europe/Belgrade] PHP Warning:  PDO::__construct(): MySQL server has gone away in D:\xampp\htdocs\kartoteka\app\classes\Db.php on line 86

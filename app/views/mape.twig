@@ -1,19 +1,19 @@
 {% extends "templates/app.twig" %}
 
 {% block sadrzaj %}
-<h1 class="primary-text">
+<h1 class="uk-heading-divider">
 Mape u upotrebi
 </h1>
 
-<div class="table-responsive">
-    <table>
+
+    <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
         <thead>
             <tr>
-                <th class="w-5">Id</th>
-                <th class="w-15">Groblje</th>
-                <th class="w-25">Parcela</th>
-                <th class="w-25">Naziv mape</th>
-                <th class="w-30">Mapa</th>
+                <th class="uk-table-shrink">Id</th>
+                <th>Groblje</th>
+                <th>Parcela</th>
+                <th class="uk-table-expand">Naziv mape</th>
+                <th>Mapa</th>
             </tr>
         </thead>
         <tbody>
@@ -23,12 +23,12 @@ Mape u upotrebi
                 <td>{{ mapa.groblje.naziv }}</td>
                 <td>{{ mapa.parcela }}</td>
                 <td><strong>{{ mapa.veza }}</strong></td>
-                <td><img src="{{ base_url() }}/img/Mape/{{ mapa.veza }}" alt="Mapa" style="border: 1px solid #000; border-radius: 4px; padding: 5px; width: 150px"></td>
+                <td><img class="uk-border-rounded" src="{{ base_url() }}/img/Mape/{{ mapa.veza }}" width="150" alt="Mapa"></td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-</div>
+
 <div class="flex-row">
     <div class="flex-col-4">{{ mape.links.buttons|raw }}</div>
     <div class="flex-col-1">Idi na stranu {{ mape.links.select|raw }}</div>
@@ -43,38 +43,32 @@ Mape u upotrebi
 {% endblock sadrzaj %}
 
 {% block traka %}
-    <div class="flex-row" style="margin-top: 30px">
-  <div class="flex-col-5">
-    <h2 style="margin:0;">Dodavanje nove mape</h2>
-  </div>
-</div>
-<div class="well">
+<div uk-grid class="uk-background-muted uk-margin-top">
     <form action="" method="POST" enctype="multipart/form-data">
         {{ csrf|raw }}
-        <div class="flex-row">
-         <div class="flex-col">
-                <select name="groblje_id" id="groblje_id" class="form-control">
-                    {% for groblje in groblja %}
+    <fieldset class="uk-fieldset">
+
+        <legend class="uk-legend">Dodavanje nove mape</legend>
+
+        <div class="uk-margin">
+            <select name="groblje_id" id="groblje_id" class="uk-select uk-form-width-medium">
+               {% for groblje in groblja %}
                     <option value="{{ groblje.id }}">{{ groblje.naziv }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+                {% endfor %}
+            </select>
         </div>
-        <div class="flex-row">
-            <div class="flex-col">
-                <input type="file" name="slika"/>
-            </div>
+
+        <div uk-form-custom="target: true">
+            <input type="file" id="slika">
+            <input class="uk-input uk-form-width-medium" type="text" placeholder="Odaberi mapu" disabled>
         </div>
-        <hr>
-        <div class="flex-row">
-            <div class="flex-col">
-                <input type="submit" value="Sačuvaj odabranu mapu">
-            </div>
-            <div class="flex-col-1 right">
-                <a href="{{ path_for('mape')}}" class="btn">Otkaži</a>
-            </div>
+        <hr class="uk-margin">
+        <div class="uk-margin uk-float-right">
+        <input type="submit" value="Sačuvaj" class="uk-button uk-button-primary uk-button-small">
+        <a href="{{ path_for('mape')}}" class="uk-button uk-button-secondary uk-button-small">Otkaži</a>
         </div>
-        </div>
-    </form>
+
+    </fieldset>
+</form>
 </div>
 {% endblock traka %}
