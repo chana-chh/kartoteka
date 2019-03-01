@@ -4,7 +4,7 @@
 	</div>
 	<div class="uk-navbar-right">
 		<ul class="uk-navbar-nav">
-			<li class="uk-active">
+			<li>
 				<a href="{{ path_for('pocetna') }}">
 					<span uk-icon="home" class="uk-margin-small-right"></span>
 					Početna
@@ -34,21 +34,36 @@
 					Mape
 				</a>
 			</li>
+
 			<li>
-				<a href="#">
+				<a href="">
 					<span uk-icon="database" class="uk-margin-small-right"></span>
 					Administracija
 					<span uk-icon="chevron-down"></span>
 				</a>
 				<div class="uk-navbar-dropdown">
 					<ul class="uk-nav uk-navbar-dropdown-nav">
-						<li class="uk-active"><a href="#">Active</a></li>
+						<li><a href="#">Item</a></li>
 						<li><a href="#">Item</a></li>
 						<li><a href="#">Item</a></li>
 					</ul>
 				</div>
 			</li>
 
+			<li>
+				<a href="">
+					<span uk-icon="question" class="uk-margin-small-right"></span>
+					Pomoć
+					<span uk-icon="chevron-down"></span>
+				</a>
+				<div class="uk-navbar-dropdown">
+					<ul class="uk-nav uk-navbar-dropdown-nav">
+						<li><a href="#">Item</a></li>
+						<li><a href="#">Item</a></li>
+						<li><a href="#">Item</a></li>
+					</ul>
+				</div>
+			</li>
 
 			{% if auth.logged %}
 			<li>

@@ -1,87 +1,141 @@
-{% extends "templates/app.twig" %}
-
-{% block naslov %}
+{% extends "templates/app.twig" %} {% block naslov %}
 <h1 class="uk-text-primary">
-    Kartoni
-    {% if data %}
-    <small><em class="uk-text-warning">[filtrirano]</em></small>
-    {% else %}
-    <small><em class="uk-text-success">[svi kartoni]</em></small>
-    {% endif %}
+  Kartoni {% if data %}
+  <small><em class="uk-text-warning">[filtrirano]</em></small>
+  {% else %}
+  <small><em class="uk-text-success">[svi kartoni]</em></small>
+  {% endif %}
 </h1>
 
 <div class="uk-panel uk-background-muted uk-padding-small">
-    <form action="{{ path_for('kartoni.pretraga') }}" method="POST" class="uk-clearfix">
-        {{ csrf|raw }}
-        <div class="uk-float-left">
-            <select name="groblje_id" id="groblje_id" class="uk-select uk-form-width-small uk-form-small" autofocus>
-                {% for groblje in groblja %}
-                <option value="{{ groblje.id }}">{{ groblje.naziv }}</option>
-                {% endfor %}
-            </select>
-            <input type="text" name="parcela" id="parcela" class="uk-input uk-form-width-small uk-form-small"
-                autocomplete="off" placeholder="Parcela">
-            <input type="text" name="grobno_mesto" id="grobno_mesto" class="uk-input uk-form-width-small uk-form-small"
-                autocomplete="off" placeholder="Grobno mesto">
+  <div class="uk-clearfix">
+    <div class="uk-float-left">
+      <form action="{{ path_for('kartoni.pretraga') }}" method="POST">
+        {{ csrf | raw }}
+        <select
+          name="groblje_id"
+          id="groblje_id"
+          class="uk-select uk-form-width-small uk-form-small"
+          autofocus
+        >
+          {% for groblje in groblja %}
+          <option value="{{ groblje.id }}">{{ groblje.naziv }}</option>
+          {% endfor %}
+        </select>
+        <input
+          type="text"
+          name="parcela"
+          id="parcela"
+          class="uk-input uk-form-width-small uk-form-small"
+          autocomplete="off"
+          placeholder="Parcela"
+        />
+        <input
+          type="text"
+          name="grobno_mesto"
+          id="grobno_mesto"
+          class="uk-input uk-form-width-small uk-form-small"
+          autocomplete="off"
+          placeholder="Grobno mesto"
+        />
 
-            <div class="uk-button-group">
-                <input type="submit" value="Filtriraj" class="uk-button uk-button-primary uk-button-small">
-                <a href="{{ path_for('kartoni') }}" class="uk-button uk-button-secondary uk-button-small">Svi kartoni</a>
-            </div>
+        <div class="uk-button-group">
+          <input
+            type="submit"
+            value="Filtriraj"
+            class="uk-button uk-button-primary uk-button-small"
+          />
+          <a
+            href="{{ path_for('kartoni') }}"
+            class="uk-button uk-button-secondary uk-button-small"
+            >Svi kartoni</a
+          >
         </div>
-        <div class="uk-float-right">
-            <a href="#" class="uk-button uk-button-primary uk-button-small">Dodaj karton</a>
-        </div>
-    </form>
+      </form>
+    </div>
+    <div class="uk-float-right">
+      <a href="#" class="uk-button uk-button-primary uk-button-small"
+        >Dodaj karton</a
+      >
+    </div>
+  </div>
 </div>
 
 <div class="uk-overflow-auto">
-    <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
-        <thead>
-            <tr>
-                <th class="w-5">Id</th>
-                <th class="w-10">Broj <span uk-icon="link"></span></th>
-                <th class="w-5">Br mesta</th>
-                <th class="w-10">Tip groba</th>
-                <th class="w-5">Aktivan</th>
-                <th class="uk-table-expand">Napomena</th>
-                <th class="w-10 uk-text-right">Stanje</th>
-                <th class="w-10 uk-text-right"><span uk-icon="cog"></span></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for karton in kartoni.data %}
-            <tr>
-                <td><em>{{ karton.id }}</em></td>
-                <td>
-                    <a href="{{ path_for('kartoni.pregled', { 'id': karton.id }) }}">
-                        <strong>{{ karton.broj() }}</strong>
-                    </a>
-                </td>
-                <td>{{ karton.broj_mesta }}</td>
-                <td>{{ karton.tip_groba }}</td>
-                <td>{{ karton.aktivanDisabled()|raw }}</td>
-                <td>{{ karton.napomena|nl2br }}</td>
-                <td class="uk-text-right">{{ karton.stanje|number_format(2, '.', ',') }}</td>
-                <td class="uk-text-right">
-                    <a href="{{ path_for('kartoni.mapa', { 'id': karton.id }) }}" title="Lokacija"><span uk-icon="location"></span></a>
-                    <a href="{{ path_for('kartoni.transakcije',{id: karton.id}) }}" title="Transakcije"><span uk-icon="credit-card"></span></a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+  <table
+    class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small"
+  >
+    <thead>
+      <tr>
+        <th class="w-5">Id</th>
+        <th class="w-10">Broj <span uk-icon="link"></span></th>
+        <th class="w-5">Br mesta</th>
+        <th class="w-10">Tip groba</th>
+        <th class="w-5">Aktivan</th>
+        <th class="uk-table-expand">Napomena</th>
+        <th class="w-10 uk-text-right">Stanje</th>
+        <th class="w-10 uk-text-right"><span uk-icon="cog"></span></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for karton in kartoni.data %}
+      <tr>
+        <td>
+          <em>{{ karton.id }}</em>
+        </td>
+        <td>
+          <a href="{{ path_for('kartoni.pregled', { id: karton.id }) }}">
+            <strong>{{ karton.broj() }}</strong>
+          </a>
+        </td>
+        <td>{{ karton.broj_mesta }}</td>
+        <td>{{ karton.tip_groba }}</td>
+        <td>{{ karton.aktivanDisabled() | raw }}</td>
+        <td>{{ karton.napomena | nl2br }}</td>
+        <td class="uk-text-right">
+          {{ karton.stanje|number_format(2, '.', ',') }}
+        </td>
+        <td class="uk-clearfix">
+          <ul class="uk-iconnav uk-float-right">
+            <li>
+              <a
+                href="{{ path_for('kartoni.pregled', { id: karton.id }) }}"
+                title="Pregled"
+                ><span uk-icon="search"></span
+              ></a>
+            </li>
+            <li>
+              <a
+                href="{{ path_for('kartoni.mapa', { id: karton.id }) }}"
+                title="Lokacija"
+                ><span uk-icon="location"></span
+              ></a>
+            </li>
+            <li>
+              <a
+                href="{{ path_for('kartoni.transakcije', { id: karton.id }) }}"
+                title="Transakcije"
+                ><span uk-icon="credit-card"></span
+              ></a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 
-<div class="uk-panel uk-background-muted uk-padding-small">
-    <div class="flex-col-4">{{ kartoni.links.buttons|raw }}</div>
-    <div class="flex-col-1">Idi na stranu {{ kartoni.links.select|raw }}</div>
-    <div class="flex-col-2" style="text-align: right;">
-        <p>
-            Prikazani redovi od
-            <strong>{{ kartoni.links.row_from }}</strong> do <strong>{{ kartoni.links.row_to }}</strong>
-            od ukupno <strong>{{ kartoni.links.total_rows }}</strong>
-        </p>
-    </div>
+<div class="uk-flex uk-flex-between uk-margin-top">
+  <div>{{ kartoni.links.buttons | raw }}</div>
+  <div>Idi na stranu {{ kartoni.links.select | raw }}</div>
+  <div>
+    <p>
+      Prikazani redovi od
+      <em>{{ kartoni.links.row_from }}</em> do
+      <em>{{ kartoni.links.row_to }}</em> od ukupno
+      <em>{{ kartoni.links.total_rows }}</em>
+    </p>
+  </div>
 </div>
 {% endblock naslov %}
