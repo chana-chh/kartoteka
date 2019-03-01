@@ -6,44 +6,47 @@
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <title>Kartoteka-Gradska groblja Kragujevac</title>
 <link rel="shortcut icon" href="{{base_url()}}/favicon.ico">
-<link rel="stylesheet" href="{{base_url()}}/css/uikit.css">
+<link rel="stylesheet" href="{{base_url()}}/css/tes.css">
 <link rel="stylesheet" href="{{base_url()}}/css/app.css">
 </head>
 
 <body>
-	<header>
-		{% include 'templates/inc/navigation.twig' %}
-	</header>
-	<div>
-		<div class="uk-child-width-1" uk-grid>
-			<div>
-				{% include 'templates/inc/flash.twig' %}
-			</div>
-		</div>
-	</div>
-	<main class="container">
-		<div class="uk-container uk-container-expand">
+	<div class="wrapper">
+		<header>
+			{% include 'templates/inc/navigation.twig' %}
+		</header>
+		<div>
 			<div class="uk-child-width-1" uk-grid>
 				<div>
-					{% block naslov %}{% endblock naslov %}
+					{% include 'templates/inc/flash.twig' %}
 				</div>
 			</div>
 		</div>
-		<div class="uk-container uk-container-expand">
-			<div uk-grid>
-				<div class="uk-width-3-4 uk-padding">
-					{% block sadrzaj %}{% endblock sadrzaj %}
-				</div>
-				<div class="uk-width-1-3">
-					{% block traka %}{% endblock traka %}
+		<main class="container">
+			<div class="uk-container uk-container-expand">
+				<div class="uk-child-width-1" uk-grid>
+					<div>
+						{% block naslov %}{% endblock naslov %}
+					</div>
 				</div>
 			</div>
-		</div>
-	</main>
-	<footer class="uk-background-secondary uk-margin-top uk-position-bottom">
+			<div class="uk-container uk-container-expand">
+				<div uk-grid>
+					<div class="uk-width-2-3">
+						{% block sadrzaj %}{% endblock sadrzaj %}
+					</div>
+					<div class="uk-width-1-3">
+						{% block traka %}{% endblock traka %}
+					</div>
+				</div>
+			</div>
+		</main>
+		<div class="push"></div>
+	</div>
+	<footer class="footer">
 		<div class="uk-child-width-1" uk-grid>
-			<div>
-				<div class="uk-margin-left">
+			<div class="uk-clearfix">
+				<div class="uk-float-right uk-margin-right uk-margin-small-top">
 					{% include 'templates/inc/footer.twig' %}
 				</div>
 			</div>

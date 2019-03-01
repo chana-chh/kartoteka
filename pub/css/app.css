@@ -1,15 +1,42 @@
-.uk-pagination>li>.uk-active {
-  color: #1e87f0 !important;
+html,
+body {
+  height: 100%;
+  margin: 0;
 }
 
+.wrapper {
+  min-height: 100%;
+  margin-bottom: -36px;
+}
+
+.footer,
+.push {
+  height: 36px;
+}
+
+.footer {
+  color: #aaa;
+  background-color: #000;
+}
+
+
+.uk-pagination>li>.uk-active {
+  color: #1673cf !important;
+  font-weight: bolder;
+}
 
 .uk-pagination>li>.uk-disabled {
   color: #ccc;
 }
 
 .uk-pagination>*>* {
-  color: #666;
+  color: #555;
 }
+
+
+.uk-text-white {
+  color: #fff !important;
+} 
 
 .w-5 {
   width: 5%;
