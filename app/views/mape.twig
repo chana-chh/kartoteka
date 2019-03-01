@@ -28,30 +28,30 @@ Mape u upotrebi
             {% endfor %}
         </tbody>
     </table>
-
-<div class="flex-row">
-    <div class="flex-col-4">{{ mape.links.buttons|raw }}</div>
-    <div class="flex-col-1">Idi na stranu {{ mape.links.select|raw }}</div>
-    <div class="flex-col-2" style="text-align: right;">
-        <p>
-            Prikazani redovi od
-            <strong>{{ mape.links.row_from }}</strong> do <strong>{{ mape.links.row_to }}</strong>
-            od ukupno <strong>{{ mape.links.total_rows }}</strong>
-        </p>
-    </div>
+<div class="uk-flex uk-flex-between uk-margin-top">
+  <div>{{ mape.links.buttons | raw }}</div>
+  <div>Idi na stranu {{ mape.links.select | raw }}</div>
+  <div>
+    <p>
+      Prikazani redovi od
+      <em>{{ mape.links.row_from }}</em> do
+      <em>{{ mape.links.row_to }}</em> od ukupno
+      <em>{{ mape.links.total_rows }}</em>
+    </p>
+  </div>
 </div>
 {% endblock sadrzaj %}
 
 {% block traka %}
-<div uk-grid class="uk-background-muted uk-margin-top">
-    <form action="" method="POST" enctype="multipart/form-data">
+
+    <form action="" method="POST" enctype="multipart/form-data" class="uk-background-muted uk-margin-top uk-padding-small">
         {{ csrf|raw }}
     <fieldset class="uk-fieldset">
 
         <legend class="uk-legend">Dodavanje nove mape</legend>
 
         <div class="uk-margin">
-            <select name="groblje_id" id="groblje_id" class="uk-select uk-form-width-medium">
+            <select name="groblje_id" id="groblje_id" class="uk-select uk-width-2-3">
                {% for groblje in groblja %}
                     <option value="{{ groblje.id }}">{{ groblje.naziv }}</option>
                 {% endfor %}
@@ -59,8 +59,8 @@ Mape u upotrebi
         </div>
 
         <div uk-form-custom="target: true">
-            <input type="file" id="slika">
-            <input class="uk-input uk-form-width-medium" type="text" placeholder="Odaberi mapu" disabled>
+            <input type="file" id="slika" class="uk-width-1-3">
+            <input class="uk-input uk-width-2-3" type="text" placeholder="Odaberi mapu" disabled>
         </div>
         <hr class="uk-margin">
         <div class="uk-margin uk-float-right">
@@ -70,5 +70,4 @@ Mape u upotrebi
 
     </fieldset>
 </form>
-</div>
 {% endblock traka %}
