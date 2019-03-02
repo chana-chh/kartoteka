@@ -234,7 +234,7 @@ abstract class Model
                 )
             );
             if (is_array($list) && !empty($list)) {
-                return (object)$list;
+                return $list;
             }
         } else {
             return null;

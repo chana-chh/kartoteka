@@ -46,9 +46,10 @@ class Validator
         'minlen',
         'maxlen',
         'email',
-        'alnum', // + space
+        'alnum', // alphanumeric + space
         'match_field',
         'unique',
+        'multi_unique',
         'min',
         'max',
         'equal',
@@ -67,6 +68,7 @@ class Validator
         'alnum' => "Polje :field sme da sadrži samo slova i brojeve",
         'match_field' => "Polja :field i :option moraju da budu ista",
         'unique' => "U bazi već postoji :field sa istom vrednošću",
+        'multi_unique' => "U bazi već postoji ovakav zapis",
         'max' => "Polje :field mora da bude broj ne veći od :option",
         'min' => "Polje :field mora da bude broj ne manji od :option",
         'equal' => "Polje :field mora da bude jednako :option",
@@ -227,9 +229,32 @@ class Validator
     {
         // $option - tabela.kolona
         $option = explode('.', $option);
-        $sql = "SELECT COUNT(*) AS broj FROM {$option[0]} WHERE {$option[1]} = :{$option[1]}";
+        $sql = "SELECT COUNT(*) AS broj FROM {$option[0]} WHERE {$option[1]} = :{$option[1]};";
         $params = [":{$option[1]}" => $value];
-        // dd([$sql, $params],true);
+        $res = Db::fetch($sql, $params);
+        return (int)$res[0]->broj > 0 ? false : true;
+    }
+
+    /**
+     * Pravilo - kombinacija polja mora da bude jedinstvena u bazi
+     *
+     * Stavlja se na prvo polje
+     *
+     * @param string $field Naziv podatka
+     * @param string $field Vrednost podatka
+     * @param mixed $option Vrednost parametra za zadovoljavanje pravila
+     */
+    protected function multi_unique($field, $value, $option)
+    {
+        // $option - tabela.kolona1,kolona2... - moraju da budu navedene sve kolone koje se porede
+        // $this->items su polja sa forme
+        $tmp = explode('.', $option);
+        $table = $tmp[0];
+        $columns = explode(',', $tmp[1]);
+        $wheres = [];
+        $where = implode(' AND ', $wheres);
+        $sql = "SELECT COUNT(*) AS broj FROM {$table} WHERE {$where};";
+        $params = [];
         $res = Db::fetch($sql, $params);
         return (int)$res[0]->broj > 0 ? false : true;
     }
@@ -321,5 +346,4 @@ class Validator
     {
         return isset($this->errors[$key][0]) ? $this->errors[$key][0] : null;
     }
-
 }

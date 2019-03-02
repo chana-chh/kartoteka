@@ -28,6 +28,22 @@ class KartoniController extends Controller
         return $response->withRedirect($this->router->pathFor('kartoni.pretraga'));
     }
 
+    public function getKartoniDodavanje($request, $response)
+    {
+        $modelGroblje = new Groblje();
+        $modelKarton = new Karton();
+        $groblja = $modelGroblje->all();
+        $tipovi = $modelKarton->enumOrSetList('tip_groba');
+
+        $this->render($response, 'karton_dodavanje.twig', compact('groblja', 'tipovi'));
+    }
+
+    public function postKartoniDodavanje($request, $response)
+    {
+
+        return $response->withRedirect($this->router->pathFor('kartoni'));
+    }
+
     public function getKartoniPretraga($request, $response)
     {
         $data = $_SESSION['DATA_KARTONI_PRETRAGA'];
@@ -79,16 +95,19 @@ class KartoniController extends Controller
         $this->render($response, 'karton_mapa.twig', compact('karton', 'grobno_mesto', 'mapa'));
     }
 
-     public function postKartoniMapa($request, $response)
-     {
+    public function postKartoniMapa($request, $response)
+    {
         $modelKarton = new Karton();
         $id_kartona = $request->getParam('id_kartona');
-        $karton = $modelKarton->update([
-            'x_pozicija' => $request->getParam('x_pozicija'), 
-            'y_pozicija' => $request->getParam('y_pozicija')], 
-            $id_kartona);
+        $karton = $modelKarton->update(
+            [
+                'x_pozicija' => $request->getParam('x_pozicija'),
+                'y_pozicija' => $request->getParam('y_pozicija')
+            ],
+            $id_kartona
+        );
 
         $this->flash->addMessage('success', 'Koordinate za mapu su uspesno dodati/izmenjene.');
         return $response->withRedirect($this->router->pathFor('kartoni.mapa', ['id' => $id_kartona]));
-     }
+    }
 }
