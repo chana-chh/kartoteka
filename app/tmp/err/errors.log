@@ -77,3 +77,18 @@
 [01-Mar-2019 13:55:12 Europe/Belgrade] PHP  36. App\Controllers\AuthController->postPrijava() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41
 [01-Mar-2019 13:55:12 Europe/Belgrade] PHP  37. App\Classes\Auth->login() D:\xampp\htdocs\kartoteka\app\controllers\AuthController.php:60
 [01-Mar-2019 13:55:12 Europe/Belgrade] PHP  38. App\Models\Korisnik->findByUsername() D:\xampp\htdocs\kartoteka\app\classes\Auth.php:52
+[01-Mar-2019 18:12:13 Europe/Belgrade] PHP Notice:  Undefined variable: container in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 38
+[01-Mar-2019 19:47:09 Europe/Belgrade] PHP Notice:  Undefined index: slika in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 37
+[01-Mar-2019 19:49:41 Europe/Belgrade] PHP Notice:  Undefined index: slika in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 39
+[01-Mar-2019 20:00:09 Europe/Belgrade] PHP Notice:  Undefined variable: uploadedFiles in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 35
+[01-Mar-2019 20:13:41 Europe/Belgrade] PHP Warning:  copy(http://localhost/kartoteka/pub/img/Mape/\bf8152d3a2a41a1f.jpg): failed to open stream: HTTP wrapper does not support writeable connections in D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Http\UploadedFile.php on line 235
+[01-Mar-2019 20:22:14 Europe/Belgrade] PHP Warning:  copy(http://localhost/kartoteka/pub/img/Mape/): failed to open stream: HTTP wrapper does not support writeable connections in D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Http\UploadedFile.php on line 235
+[01-Mar-2019 20:29:12 Europe/Belgrade] PHP Warning:  copy(http://localhost/kartoteka/pub/img/Mape/43c30296f06b173e.jpg): failed to open stream: HTTP wrapper does not support writeable connections in D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Http\UploadedFile.php on line 235
+[01-Mar-2019 20:53:18 Europe/Belgrade] PHP Warning:  require_once(D:\xampp\htdocs\kartoteka\app\controllers/vendor/autoload.php): failed to open stream: No such file or directory in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 5
+[01-Mar-2019 20:53:18 Europe/Belgrade] PHP Fatal error:  require_once(): Failed opening required 'D:\xampp\htdocs\kartoteka\app\controllers/vendor/autoload.php' (include_path='D:\xampp\php\PEAR') in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 5
+[01-Mar-2019 20:55:27 Europe/Belgrade] PHP Warning:  require_once(D:\xampp\htdocs\kartoteka\app\controllers../vendor/autoload.php): failed to open stream: No such file or directory in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 5
+[01-Mar-2019 20:55:27 Europe/Belgrade] PHP Fatal error:  require_once(): Failed opening required 'D:\xampp\htdocs\kartoteka\app\controllers../vendor/autoload.php' (include_path='D:\xampp\php\PEAR') in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 5
+[02-Mar-2019 10:21:56 Europe/Belgrade] PHP Warning:  getimagesize() expects parameter 1 to be string, object given in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 46
+[02-Mar-2019 10:56:54 Europe/Belgrade] PHP Warning:  getimagesize(): Filename cannot be empty in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 48
+[02-Mar-2019 17:55:01 Europe/Belgrade] PHP Warning:  getimagesize(img/MapePalilulskoIII): failed to open stream: No such file or directory in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 63
+[02-Mar-2019 18:45:42 Europe/Belgrade] PHP Notice:  Undefined index: slika in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 38
