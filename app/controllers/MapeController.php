@@ -55,6 +55,15 @@ class MapeController extends Controller
 
         $this->resize(200, $targetFile, $originalFile);
 
+        $modelMape = new Mapa();
+        $karton = $modelMape->insert(
+            [
+                'groblje_id' => $request->getParam('groblje_id'),
+                'parcela' => $request->getParam('parcela'),
+                'veza' => $filename
+            ]
+        );
+
 
         $this->flash->addMessage('success', 'Mapa '. $filename. ' je uspešno sačuvana');
         return $response->withRedirect($this->router->pathFor('mape'));

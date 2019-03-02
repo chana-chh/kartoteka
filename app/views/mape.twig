@@ -55,10 +55,10 @@ Mape u upotrebi
         <legend class="uk-legend">Dodavanje nove mape</legend>
 
         <div class="uk-margin">
-            <legend for="groblje">Groblje:</legend>
-            <select name="groblje" id="groblje" class="uk-select uk-width-2-3">
+            <legend for="groblje_id">Groblje:</legend>
+            <select name="groblje_id" id="groblje_id" class="uk-select uk-width-2-3">
                {% for groblje in groblja %}
-                    <option value="{{ groblje.naziv }}">{{ groblje.naziv }}</option>
+                    <option value="{{ groblje.id }}">{{ groblje.naziv }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -71,6 +71,8 @@ Mape u upotrebi
                 {% endfor %}
             </select>
         </div>
+
+        <input type="hidden" id="groblje" name="groblje" value="">
 
         <div class="uk-margin">
         <div uk-form-custom id="up">
@@ -93,6 +95,22 @@ Mape u upotrebi
 <script>
 var light = document.getElementById("light");
 var up = document.getElementById("up");
+var sakriven = document.getElementById("groblje");
+
+document.getElementById("groblje_id").onchange = function(){
+    var value = this.value;
+    var tekst = getSelectedText('groblje_id');
+    sakriven.value = tekst;
+ };
+
+ function getSelectedText(elementId) {
+    var elt = document.getElementById(elementId);
+
+    if (elt.selectedIndex == -1)
+        return null;
+
+    return elt.options[elt.selectedIndex].text;
+}
 
 UIkit.lightbox(light);
 UIkit.formCustom(up);
