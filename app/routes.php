@@ -30,6 +30,7 @@ $app->group('', function () {
     $this->get('/kartoni/pregled/{id}', '\App\Controllers\KartoniController:getKartoniPregled')->setName('kartoni.pregled');
     $this->get('/kartoni/dodavanje', '\App\Controllers\KartoniController:getKartoniDodavanje')->setName('kartoni.dodavanje');
     $this->post('/kartoni/dodavanje', '\App\Controllers\KartoniController:postKartoniDodavanje');
+    $this->post('/kartoni/brisanje','\App\Controllers\KartoniController:postKartoniBrisanje')->setName('kartoni.brisanje');
     //Mape
     $this->get('/mape', '\App\Controllers\MapeController:getMape')->setName('mape');
     $this->get('/kartoni/mapa/{id}', '\App\Controllers\KartoniController:getKartoniMapa')->setName('kartoni.mapa');

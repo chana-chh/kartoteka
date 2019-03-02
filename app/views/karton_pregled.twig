@@ -2,8 +2,7 @@
 
 {% block sadrzaj %}
 <h1 class="uk-text-primary">
-  Karton
-  <small><em class="uk-text-success">[{{ karton.broj() }}]</em></small>
+  Karton <small><em class="uk-text-success">[{{ karton.broj() }}]</em></small>
 </h1>
 <div class="uk-panel uk-background-muted uk-padding-small">
   <div class="uk-clearfix">
@@ -22,9 +21,10 @@
         <a href="#" class="uk-button uk-button-secondary uk-button-small">
           <span uk-icon="pencil"></span> Izmeni karton
         </a>
-        <a href="#" class="uk-button uk-button-danger uk-button-small">
-          <span uk-icon="trash"></span> Obriši karton
-        </a>
+
+        <a class="uk-button uk-button-danger uk-button-small" href="#modal-brisanje" uk-toggle><span uk-icon="trash"></span>
+          Obriši karton</a>
+
         <a href="{{ path_for('kartoni.mapa', { 'id': karton.id }) }}" class="uk-button uk-button-primary uk-button-small">
           <span uk-icon="location"></span> Mapa
         </a>
@@ -32,8 +32,28 @@
     </div>
   </div>
 </div>
-
-<div class="uk-panel uk-background-primary uk-text-white uk-padding-small uk-margin-small-top">
+<!-- MODAL BRISANJE POCETAK -->
+<div id="modal-brisanje" uk-modal>
+  <div class="uk-modal-dialog">
+    <button class="uk-modal-close-default" type="button" uk-close></button>
+    <div class="uk-modal-header">
+      <h2 class="uk-modal-title uk-text-danger">Brisanje kartona</h2>
+    </div>
+    <div class="uk-modal-body">
+      <p>Da li ste sigurni da želite da obrišete ovaj karton?</p>
+      <form action="{{ path_for('kartoni.brisanje') }}" method="POST" id="forma_brisanje">
+        {{ csrf|raw }}
+        <input type="hidden" name="brisanje_id" id="brisanje_id" value="{{ karton.id }}">
+      </form>
+    </div>
+    <div class="uk-modal-footer uk-text-right">
+      <button class="uk-button uk-button-primary" type="button" id="modal_dugme_brisi">Obriši</button>
+      <button class="uk-button uk-button-secondary uk-modal-close" type="button">Otkaži</button>
+    </div>
+  </div>
+</div>
+<!-- MODAL BRISANJE KRAJ -->
+<div class="uk-panel uk-background-secondary uk-text-white uk-padding-small uk-margin-small-top">
   <div class="uk-flex uk-flex-between">
     <div>
       <strong>Groblje:</strong> {{ karton.groblje().naziv }}
@@ -51,14 +71,20 @@
       <strong>Tip groba:</strong> {{ karton.tip_groba }}
     </div>
     <div>
-      <strong>Aktivan:</strong> {{ karton.aktivanDisabled() | raw }}
+      <strong>Aktivan:</strong> {{ karton.aktivan == 1 ? 'DA' : 'NE' }}
     </div>
     <div>
       <strong>Stanje:</strong> {{ karton.stanje|number_format(2, '.', ',') }}
     </div>
   </div>
-  <strong>Napomene:</strong><br>
-  {{ karton.napomena | nl2br }}<br>
+  <div class="uk-flex uk-flex-between uk-margin-small-top">
+    <div class="uk-width-1-6">
+      <strong>Napomene:</strong><br>
+    </div>
+    <div class="uk-width-5-6">
+      {{ karton.napomena | nl2br }}<br>
+    </div>
+  </div>
 </div>
 <hr class="uk-divider-icon">
 <div class="uk-clearfix">
@@ -95,9 +121,19 @@
         <td>{{ st.telefon }}</td>
         <td>{{ st.aktivanDisabled()|raw }}</td>
         <td>{{ st.prenosDisabled()|raw }}</td>
-        <td class="uk-text-right">
-          <a href="#" title="Izmena"><span uk-icon="pencil"></span></a>
-          <a href="#" title="Brisanje"><span uk-icon="trash"></span></a>
+        <td class="uk-clearfix">
+          <ul class="uk-iconnav uk-float-right">
+            <li>
+              <a href="#" title="Izmena">
+                <span uk-icon="pencil"></span>
+              </a>
+            </li>
+            <li>
+              <a href="#" title="Brisanje">
+                <span uk-icon="trash"></span>
+              </a>
+            </li>
+          </ul>
         </td>
       </tr>
       {% endfor %}
@@ -145,9 +181,19 @@
         <td>{{ pok.datum_smrti() }}</td>
         <td>{{ pok.datum_sahrane() }}</td>
         <td>{{ pok.datum_ekshumacije() }}</td>
-        <td class="uk-text-right">
-          <a href="#" title="Izmena"><span uk-icon="pencil"></span></a>
-          <a href="#" title="Brisanje"><span uk-icon="trash"></span></a>
+        <td class="uk-clearfix">
+          <ul class="uk-iconnav uk-float-right">
+            <li>
+              <a href="#" title="Izmena">
+                <span uk-icon="pencil"></span>
+              </a>
+            </li>
+            <li>
+              <a href="#" title="Brisanje">
+                <span uk-icon="trash"></span>
+              </a>
+            </li>
+          </ul>
         </td>
       </tr>
       {% endfor %}
@@ -183,9 +229,17 @@
         </td>
         <td>{{ dok.datum() }}</td>
         <td>{{ dok.opis | nl2br }}</td>
-        <td class="uk-text-right">
-          <a href="{{ dok.veza }}" title="Pregled" target="_blank"><span uk-icon="search"></span></a>
-          <a href="#" title="Brisanje"><span uk-icon="trash"></span></a>
+        <td class="uk-clearfix">
+          <ul class="uk-iconnav uk-float-right">
+            <li>
+              <a href="{{ dok.veza }}" title="Pregled" target="_blank"><span uk-icon="search"></span></a>
+            </li>
+            <li>
+              <a href="#" title="Brisanje">
+                <span uk-icon="trash"></span>
+              </a>
+            </li>
+          </ul>
         </td>
       </tr>
       {% endfor %}
@@ -232,3 +286,11 @@
   </table>
 </div>
 {% endblock traka %}
+
+{% block skripta %}
+<script>
+  document.getElementById("modal_dugme_brisi").addEventListener("click", function () {
+    document.getElementById("forma_brisanje").submit();
+  });
+</script>
+{% endblock skripta %}

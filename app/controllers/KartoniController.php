@@ -79,10 +79,25 @@ class KartoniController extends Controller
             $modelKarton = new Karton();
             $modelKarton->insert($data);
             $this->flash->addMessage('success', 'Novi korisnik je uspešno registrovan.');
-            return $response->withRedirect($this->router->pathFor( 'kartoni'));
+            return $response->withRedirect($this->router->pathFor('kartoni'));
         }
 
         return $response->withRedirect($this->router->pathFor('kartoni'));
+    }
+
+    public function postKartoniBrisanje($request, $response)
+    {
+        $id = (int)$request->getParam('brisanje_id');
+        $modelKarton = new Karton();
+        $broj = $modelKarton->find($id)->broj();
+        $success = $modelKarton->deleteOne($id);
+        if ($success) {
+            $this->flash->addMessage('success', "Karton broj [{$broj}] je uspešno obrisan.");
+            return $response->withRedirect($this->router->pathFor('kartoni'));
+        } else {
+            $this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja kartona.");
+            return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $id]));
+        }
     }
 
     public function getKartoniPretraga($request, $response)
