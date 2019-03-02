@@ -252,9 +252,13 @@ class Validator
         $table = $tmp[0];
         $columns = explode(',', $tmp[1]);
         $wheres = [];
+        $params = [];
+        foreach ($columns as $col) {
+            $wheres[] = "$col = :{$col}";
+            $params[":{$col}"] = $this->items[$col];
+        }
         $where = implode(' AND ', $wheres);
         $sql = "SELECT COUNT(*) AS broj FROM {$table} WHERE {$where};";
-        $params = [];
         $res = Db::fetch($sql, $params);
         return (int)$res[0]->broj > 0 ? false : true;
     }
