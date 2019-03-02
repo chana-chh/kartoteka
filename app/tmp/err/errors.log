@@ -529,3 +529,6 @@
 [02-Mar-2019 13:30:32 Europe/Belgrade] PHP  34. Slim\Handlers\Strategies\RequestResponse->__invoke() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Route.php:356
 [02-Mar-2019 13:30:32 Europe/Belgrade] PHP  35. call_user_func:{D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41}() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41
 [02-Mar-2019 13:30:32 Europe/Belgrade] PHP  36. App\Controllers\KartoniController->postKartoniDodavanje() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41
+[02-Mar-2019 20:33:51 Europe/Belgrade] PHP Notice:  iconv(): Detected an illegal character in input string in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 49
+[02-Mar-2019 20:33:51 Europe/Belgrade] PHP Warning:  move_uploaded_file(): The second argument to copy() function cannot be a directory in D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Http\UploadedFile.php on line 246
+[02-Mar-2019 20:33:51 Europe/Belgrade] PHP Warning:  move_uploaded_file(): Unable to move 'D:\xampp\tmp\php6C7.tmp' to 'img/Mape/' in D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Http\UploadedFile.php on line 246

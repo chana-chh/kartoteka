@@ -69,4 +69,14 @@ class Karton extends Model
                 ORDER BY datum DESC;";
         return $this->fetch($sql, null, 'App\Models\Transakcija');
     }
+
+    /**
+    * Vraca sve parcele iz kartona
+    */
+
+    public function vratiParcele()
+    {
+        $sql = "SELECT parcela FROM {$this->table} GROUP BY parcela";
+        return $this->fetch($sql);
+    } 
 }
