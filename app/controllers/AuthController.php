@@ -27,7 +27,7 @@ class AuthController extends Controller
                 'minlen' => 3,
                 'maxlen' => 50,
                 'alnum' => true,
-                'unique' => 'korisnici.username', // tabela.kolona
+                'unique' => 'korisnici.korisnicko_ime', // tabela.kolona
             ],
             'lozinka' => [
                 'required' => true,
@@ -37,14 +37,13 @@ class AuthController extends Controller
                 'match_field' => 'lozinka',
             ],
         ];
-
         $this->validator->validate($data, $validation_rules);
-        // TODO: Upisati novog korisnika
         die();
         if ($this->validator->hasErrors()) {
             $this->flash->addMessage('danger', 'Došlo je do greške prilikom registracije korisnika.');
             return $response->withRedirect($this->router->pathFor('registracija'));
         } else {
+            // TODO: Upisati novog korisnika
             $this->flash->addMessage('success', 'Novi korisnik je uspešno registrovan.');
             return $response->withRedirect($this->router->pathFor('prijava'));
         }
