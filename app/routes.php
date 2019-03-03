@@ -35,8 +35,6 @@ $app->group('', function () {
     $this->get('/mape', '\App\Controllers\MapeController:getMape')->setName('mape');
     $this->get('/kartoni/mapa/{id}', '\App\Controllers\KartoniController:getKartoniMapa')->setName('kartoni.mapa');
     $this->post('/kartoni/mapa/dodavanje', '\App\Controllers\KartoniController:postKartoniMapa')->setName('kartoni.mapa.dodavanje');
-    //Mape
-    $this->get('/mape', '\App\Controllers\MapeController:getMape')->setName('mape');
     $this->post('/mapa/dodavanje', '\App\Controllers\MapeController:postUpload')->setName('mapa.dodavanje');
     // Staraoci
     $this->get('/staraoci', '\App\Controllers\StaraociController:getStaraoci')->setName('staraoci');
