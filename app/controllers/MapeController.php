@@ -44,9 +44,6 @@ class MapeController extends Controller
             ],
             'parcela' => [
                 'required' => true,
-            ],
-            'veza' => [
-                'required' => true,
             ]
         ];
 
