@@ -2,54 +2,89 @@
 
 {% block sadrzaj %}
 <h1 class="uk-heading-divider">
-Mape u upotrebi
+    Mape u upotrebi
 </h1>
 
 
-    <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small uk-table-middle">
-        <thead>
-            <tr>
-                <th class="uk-table-shrink">Id</th>
-                <th>Groblje</th>
-                <th>Parcela</th>
-                <th class="uk-table-expand">Naziv mape</th>
-                <th>Mapa</th>
-                <th><span uk-icon="cog"></span></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for mapa in mape.data %}
-            <tr>
-                <td><em>{{ mapa.id }}</em></td>
-                <td>{{ mapa.groblje.naziv }}</td>
-                <td>{{ mapa.parcela }}</td>
-                <td><strong>{{ mapa.veza }}</strong></td>
-                <td><div uk-lightbox id="light">
-    <a href="{{ base_url() }}/img/Mape/{{ mapa.veza }}" data-caption="{{ mapa.groblje.naziv }} {{ mapa.parcela }}"><img class="uk-border-rounded" src="{{ base_url() }}/img/Mape/Thumb/{{ mapa.veza }}" width="200" alt="Mapa thumb"></a>
-</div></td>
-                <td><span uk-icon="link"></span></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small uk-table-middle">
+    <thead>
+        <tr>
+            <th class="uk-table-shrink">Id</th>
+            <th>Groblje</th>
+            <th>Parcela</th>
+            <th class="uk-table-expand">Naziv mape</th>
+            <th>Mapa</th>
+            <th><span uk-icon="cog"></span></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for mapa in mape.data %}
+        <tr>
+            <td><em>{{ mapa.id }}</em></td>
+            <td>{{ mapa.groblje.naziv }}</td>
+            <td>{{ mapa.parcela }}</td>
+            <td><strong>{{ mapa.veza }}</strong></td>
+            <td>
+                <div uk-lightbox id="light">
+                    <a href="{{ base_url() }}/img/Mape/{{ mapa.veza }}" data-caption="{{ mapa.groblje.naziv }} {{ mapa.parcela }}"><img
+                            class="uk-border-rounded" src="{{ base_url() }}/img/Mape/Thumb/{{ mapa.veza }}" width="200"
+                            alt="Mapa thumb"></a>
+                </div>
+            </td>
+            <td>     
+      <div class="uk-button-group">
+        <a href="#" class="uk-icon-link uk-margin-small-right" uk-icon="link"></a>
+        <a href="#" class="uk-icon-link uk-margin-small-right" uk-icon="pencil"></a>
+        <a href="#modal-brisanje" id="brisanje" class="uk-icon-link uk-margin-small-right" onClick="postaviID({{ mapa.id }})" uk-icon="trash" uk-toggle></a>
+
+      </div>
+                </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 <div class="uk-flex uk-flex-between uk-margin-top">
-  <div>{{ mape.links.buttons | raw }}</div>
-  <div>Idi na stranu {{ mape.links.select | raw }}</div>
-  <div>
-    <p>
-      Prikazani redovi od
-      <em>{{ mape.links.row_from }}</em> do
-      <em>{{ mape.links.row_to }}</em> od ukupno
-      <em>{{ mape.links.total_rows }}</em>
-    </p>
+    <div>{{ mape.links.buttons | raw }}</div>
+    <div>Idi na stranu {{ mape.links.select | raw }}</div>
+    <div>
+        <p>
+            Prikazani redovi od
+            <em>{{ mape.links.row_from }}</em> do
+            <em>{{ mape.links.row_to }}</em> od ukupno
+            <em>{{ mape.links.total_rows }}</em>
+        </p>
+    </div>
+</div>
+
+<!-- MODAL BRISANJE POCETAK -->
+<div id="modal-brisanje" uk-modal>
+  <div class="uk-modal-dialog">
+    <button class="uk-modal-close-default" type="button" uk-close></button>
+    <div class="uk-modal-header">
+      <h2 class="uk-modal-title uk-text-danger">Brisanje mape</h2>
+    </div>
+    <div class="uk-modal-body">
+      <p>Da li ste sigurni da želite da obrišete ovau mapu?</p>
+      <form action="{{ path_for('mapa.brisanje') }}" method="POST" id="forma_brisanje">
+        {{ csrf|raw }}
+        <input type="hidden" name="brisanje_id" id="brisanje_id" value="">
+      </form>
+    </div>
+    <div class="uk-modal-footer uk-text-right">
+      <div class="uk-button-group">
+        <button class="uk-button uk-button-primary" type="button" id="modal_dugme_brisi">Obriši</button>
+        <button class="uk-button uk-button-secondary uk-modal-close" type="button">Otkaži</button>
+      </div>
+    </div>
   </div>
 </div>
+<!-- MODAL BRISANJE KRAJ -->
+
 {% endblock sadrzaj %}
 
 {% block traka %}
-
-    <form action="{{path_for('mapa.dodavanje')}}" method="POST" enctype="multipart/form-data" class="uk-background-muted uk-margin-top uk-padding-small">
-        {{ csrf|raw }}
+<form action="{{path_for('mapa.dodavanje')}}" method="POST" enctype="multipart/form-data" class="uk-background-muted uk-margin-top uk-padding-small">
+    {{ csrf|raw }}
     <fieldset class="uk-fieldset">
 
         <legend class="uk-legend">Dodavanje nove mape</legend>
@@ -57,8 +92,8 @@ Mape u upotrebi
         <div class="uk-margin">
             <legend for="groblje_id">Groblje:</legend>
             <select name="groblje_id" id="groblje_id" class="uk-select uk-width-2-3">
-               {% for groblje in groblja %}
-                    <option value="{{ groblje.id }}">{{ groblje.naziv }}</option>
+                {% for groblje in groblja %}
+                <option value="{{ groblje.id }}">{{ groblje.naziv }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -66,8 +101,8 @@ Mape u upotrebi
         <div class="uk-margin">
             <legend for="parcela">Parcela:</legend>
             <select name="parcela" id="parcela" class="uk-select uk-width-2-3">
-               {% for par in parcele %}
-                    <option value="{{ par.parcela }}">{{ par.parcela }}</option>
+                {% for par in parcele %}
+                <option value="{{ par.parcela }}">{{ par.parcela }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -75,17 +110,17 @@ Mape u upotrebi
         <input type="hidden" id="groblje" name="groblje" value="">
 
         <div class="uk-margin">
-        <div uk-form-custom id="up">
-            <input type="file" name="slika" id="slika">
-            <button class="uk-button uk-button-default" type="button" tabindex="-1">Odaberi novu mapu <span uk-icon="image"></span></button>
+            <div uk-form-custom id="up">
+                <input type="file" name="slika" id="slika">
+                <button class="uk-button uk-button-default" type="button" tabindex="-1">Odaberi novu mapu <span uk-icon="image"></span></button>
+            </div>
         </div>
-    </div>
 
 
         <hr class="uk-margin">
         <div class="uk-margin uk-float-right">
-        <input type="submit" value="Sačuvaj" class="uk-button uk-button-primary uk-button-small">
-        <a href="{{ path_for('mape')}}" class="uk-button uk-button-secondary uk-button-small">Otkaži</a>
+            <input type="submit" value="Sačuvaj" class="uk-button uk-button-primary uk-button-small">
+            <a href="{{ path_for('mape')}}" class="uk-button uk-button-secondary uk-button-small">Otkaži</a>
         </div>
 
     </fieldset>
@@ -96,20 +131,31 @@ Mape u upotrebi
 var light = document.getElementById("light");
 var up = document.getElementById("up");
 var sakriven = document.getElementById("groblje");
+var brisanje = document.getElementById("brisanje");
+var brisanje_id = document.getElementById("brisanje_id");
+
+function postaviID(kliknut_id)
+{
+    brisanje_id.value = kliknut_id;
+}
+
+document.getElementById("modal_dugme_brisi").addEventListener("click", function () {
+    document.getElementById("forma_brisanje").submit();
+  });
 
 document.getElementById("groblje_id").onchange = function(){
-    var value = this.value;
-    var tekst = getSelectedText('groblje_id');
-    sakriven.value = tekst;
- };
+var value = this.value;
+var tekst = getSelectedText('groblje_id');
+sakriven.value = tekst;
+};
 
- function getSelectedText(elementId) {
-    var elt = document.getElementById(elementId);
+function getSelectedText(elementId) {
+var elt = document.getElementById(elementId);
 
-    if (elt.selectedIndex == -1)
-        return null;
+if (elt.selectedIndex == -1)
+return null;
 
-    return elt.options[elt.selectedIndex].text;
+return elt.options[elt.selectedIndex].text;
 }
 
 UIkit.lightbox(light);

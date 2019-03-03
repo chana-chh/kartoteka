@@ -33,39 +33,61 @@ class MapeController extends Controller
 
     public function postUpload($request, $response)
     {
-        $uploadedFiles = $request->getUploadedFiles();
+        $data = $request->getParams();
+        unset($data['csrf_name']);
+        unset($data['csrf_value']);
 
-        $uploadedFile = $uploadedFiles['slika'];
+        $validation_rules = [
+            'groblje_id' => [
+                'required' => true,
+                'multi_unique' => 'mape.groblje_id,parcela'
+            ],
+            'parcela' => [
+                'required' => true,
+            ],
+            'veza' => [
+                'required' => true,
+            ]
+        ];
+
+        $this->validator->validate($data, $validation_rules);
+
+        if ($this->validator->hasErrors()) {
+            $this->flash->addMessage('danger', 'Došlo je do greške prilikom dodavanja nove mape.');
+            return $response->withRedirect($this->router->pathFor('mape'));
+        } else {
+            $uploadedFiles = $request->getUploadedFiles();
+            $uploadedFile = $uploadedFiles['slika'];
 
         if ($uploadedFile->getError() != UPLOAD_ERR_OK) {
-        $this->flash->addMessage('danger', 'Došlo je do greške prilikom prebacivanja mape.');
-        return $response->withRedirect($this->router->pathFor('mape'));
-     }
+            $this->flash->addMessage('danger', 'Došlo je do greške prilikom dodavanja nove mape.');
+            return $response->withRedirect($this->router->pathFor('mape'));
+        }
         else {
-        $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
-        $filename = $request->getParam('groblje_id').'-'.$request->getParam('parcela').'.'.$extension;
-        $filenameThumb = $request->getParam('groblje_id').'-'.$request->getParam('parcela');
+            $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
+            $filename = $request->getParam('groblje_id').'-'.$request->getParam('parcela').'.'.$extension;
+            $filenameThumb = $request->getParam('groblje_id').'-'.$request->getParam('parcela');
 
-        $uploadedFile->moveTo('img/Mape/' . $filename);
+            $uploadedFile->moveTo('img/Mape/' . $filename);
 
-        $targetFile = 'img/Mape/Thumb/'.$filenameThumb;
-        $originalFile = 'img/Mape/'.$filename;
+            $targetFile = 'img/Mape/Thumb/'.$filenameThumb;
+            $originalFile = 'img/Mape/'.$filename;
 
-        $this->resize(200, $targetFile, $originalFile);
+            $this->resize(200, $targetFile, $originalFile);
 
-        $modelMape = new Mapa();
-        $karton = $modelMape->insert(
-            [
-                'groblje_id' => $request->getParam('groblje_id'),
-                'parcela' => $request->getParam('parcela'),
-                'veza' => $filename
-            ]
+            $modelMape = new Mapa();
+            $karton = $modelMape->insert(
+                [
+                    'groblje_id' => $data['groblje_id'],
+                    'parcela' => $data['parcela'],
+                    'veza' => $filename
+                ]
         );
 
-
-        $this->flash->addMessage('success', 'Mapa '. $filename. ' je uspešno sačuvana');
-        return $response->withRedirect($this->router->pathFor('mape'));
-    }
+            $this->flash->addMessage('success', 'Mapa '. $filename. ' je uspešno sačuvana');
+            return $response->withRedirect($this->router->pathFor('mape'));
+            }
+        }
     }
 
     private function resize($newWidth, $targetFile, $originalFile) {
@@ -73,40 +95,68 @@ class MapeController extends Controller
     $info = getimagesize($originalFile);
     $mime = $info['mime'];
 
-    switch ($mime) {
-            case 'image/jpeg':
-                    $image_create_func = 'imagecreatefromjpeg';
-                    $image_save_func = 'imagejpeg';
-                    $new_image_ext = 'jpg';
-                    break;
+        switch ($mime) {
+                    case 'image/jpeg':
+                            $image_create_func = 'imagecreatefromjpeg';
+                            $image_save_func = 'imagejpeg';
+                            $new_image_ext = 'jpg';
+                            break;
 
-            case 'image/png':
-                    $image_create_func = 'imagecreatefrompng';
-                    $image_save_func = 'imagepng';
-                    $new_image_ext = 'png';
-                    break;
+                    case 'image/png':
+                            $image_create_func = 'imagecreatefrompng';
+                            $image_save_func = 'imagepng';
+                            $new_image_ext = 'png';
+                            break;
 
-            case 'image/gif':
-                    $image_create_func = 'imagecreatefromgif';
-                    $image_save_func = 'imagegif';
-                    $new_image_ext = 'gif';
-                    break;
+                    case 'image/gif':
+                            $image_create_func = 'imagecreatefromgif';
+                            $image_save_func = 'imagegif';
+                            $new_image_ext = 'gif';
+                            break;
 
-            default: 
-                    throw new Exception('Unknown image type.');
+                    default: 
+                            throw new Exception('Grafički format nije podržan.');
+                    }
+
+            $img = $image_create_func($originalFile);
+            list($width, $height) = getimagesize($originalFile);
+
+            $newHeight = ($height / $width) * $newWidth;
+            $tmp = imagecreatetruecolor($newWidth, $newHeight);
+            imagecopyresampled($tmp, $img, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+
+            if (file_exists($targetFile)) {
+                    unlink($targetFile);
+            }
+            $image_save_func($tmp, "$targetFile.$new_image_ext");
     }
 
-    $img = $image_create_func($originalFile);
-    list($width, $height) = getimagesize($originalFile);
+    public function postMapaBrisanje($request, $response)
+    {
+        $id = (int)$request->getParam('brisanje_id');
+        $modelMape = new Mapa();
+        $veza = $modelMape->find($id)->veza;
+        $success = $modelMape->deleteOne($id);
 
-    $newHeight = ($height / $width) * $newWidth;
-    $tmp = imagecreatetruecolor($newWidth, $newHeight);
-    imagecopyresampled($tmp, $img, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+        $thumb = 'img/Mape/Thumb/'.$veza;  
 
-    if (file_exists($targetFile)) {
-            unlink($targetFile);
+        if (file_exists($thumb)) {
+                $success_thumb = unlink($thumb);
+        }
+
+        $mapa = 'img/Mape/'.$veza;
+
+        if (file_exists($mapa)) {
+                $success_mapa = unlink($mapa);
+        }
+
+        if ($success and $success_thumb and $success_mapa) {
+            $this->flash->addMessage('success', "Mapa sa nazivom [{$veza}] je uspešno obrisana.");
+            return $response->withRedirect($this->router->pathFor('mape'));
+        } else {
+            $this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja mape.");
+            return $response->withRedirect($this->router->pathFor('mape'));
+        }
     }
-    $image_save_func($tmp, "$targetFile.$new_image_ext");
-}
 
 }
