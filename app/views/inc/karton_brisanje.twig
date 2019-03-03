@@ -1,0 +1,21 @@
+<div id="modal-brisanje" uk-modal>
+	<div class="uk-modal-dialog">
+		<button class="uk-modal-close-default" type="button" uk-close></button>
+		<div class="uk-modal-header">
+			<h2 class="uk-modal-title uk-text-danger">Brisanje kartona</h2>
+		</div>
+		<div class="uk-modal-body">
+			<p>Da li ste sigurni da želite da obrišete ovaj karton?</p>
+			<form action="{{ path_for('kartoni.brisanje') }}" method="POST" id="forma_brisanje">
+				{{ csrf|raw }}
+				<input type="hidden" name="brisanje_id" id="brisanje_id" value="{{ karton.id }}">
+			</form>
+		</div>
+		<div class="uk-modal-footer uk-text-right">
+			<div class="uk-button-group">
+				<button class="uk-button uk-button-primary" type="button" id="modal_dugme_brisi">Obriši</button>
+				<button class="uk-button uk-button-secondary uk-modal-close" type="button">Otkaži</button>
+			</div>
+		</div>
+	</div>
+</div>

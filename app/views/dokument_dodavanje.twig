@@ -1,0 +1,36 @@
+{% extends "templates/app.twig" %}
+
+{% block naslov %}
+<h1 class="uk-text-primary">
+	Dodavanje dokumenta za karton <small><em class="uk-text-success">[{{ karton.broj() }}]</em></small>
+</h1>
+
+<!-- MODAL DODAVANJE DOKUMENTA POCETAK -->
+<div id="modal-dodavanje-dokumenta" uk-modal>
+	<div class="uk-modal-dialog">
+		<button class="uk-modal-close-default" type="button" uk-close></button>
+		<div class="uk-modal-header">
+			<h2 class="uk-modal-title uk-text-primary">Dodavanje novog dokumenta</h2>
+		</div>
+		<div class="uk-modal-body">
+			<form action="{{ path_for('dokumenti.dodavanje') }}" method="POST" id="forma_dodavanje_dokumenta" enctype="multipart/form-data">
+				{{ csrf|raw }}
+				<input type="hidden" name="dok_dodavanje_id" id="dok_dodavanje_id" value="{{ karton.id }}">
+				<div uk-form-custom id="dodavanje_dokumenta">
+					<input type="file" name="dokument" id="dokument">
+					<button class="uk-button uk-button-default" type="button" tabindex="-1">
+						Odaberi novi dokument <span uk-icon="file-pdf"></span>
+					</button>
+				</div>
+			</form>
+		</div>
+		<div class="uk-modal-footer uk-text-right">
+			<div class="uk-button-group">
+				<button class="uk-button uk-button-primary" type="button" id="modal_dugme_dodaj_dokument">Dodaj dokument</button>
+				<button class="uk-button uk-button-secondary uk-modal-close" type="button">Otkaži</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- MODAL DODAVANJE DOKUMENTA KRAJ -->
+{% endblock naslov %}

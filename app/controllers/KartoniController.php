@@ -142,8 +142,6 @@ class KartoniController extends Controller
             $this->flash->addMessage('success', 'Izmene u kartonu su uspešno upisane.');
             return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $id]));
         }
-
-        return $response->withRedirect($this->router->pathFor('kartoni'));
     }
 
     public function postKartoniBrisanje($request, $response)
