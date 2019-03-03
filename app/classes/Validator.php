@@ -143,7 +143,7 @@ class Validator
      */
     protected function required($field, $value, $option)
     {
-        return !empty(trim($value));
+        return trim($value) !== '';
     }
 
     /**
@@ -246,16 +246,34 @@ class Validator
      */
     protected function multi_unique($field, $value, $option)
     {
-        // $option - tabela.kolona1,kolona2... - moraju da budu navedene sve kolone koje se porede
+        // $option - tab.col1,col2,col3#id_col:id_val
+        // moraju da budu navedene sve kolone koje se porede
+        // ako se izostavlja trenutni id unosi se #id_col:id_val
+        // id_col = naziv pk, id_val = vrednost pk
         // $this->items su polja sa forme
-        $tmp = explode('.', $option);
-        $table = $tmp[0];
-        $columns = explode(',', $tmp[1]);
+        $id_val = null;
+        if (strpos($option, '#') === false) {
+            $tmp = explode('.', $option);
+            $table = $tmp[0];
+            $columns = explode(',', $tmp[1]);
+        } else {
+            $tmp = explode('.', $option);
+            $tmp1 = explode('#', $tmp[1]);
+            $table = $tmp[0];
+            $columns = explode(',', $tmp1[0]);
+            $tmp2 = explode(':',  $tmp1[1]);
+            $id_col = $tmp2[0];
+            $id_val = (int)$tmp2[1];
+        }
         $wheres = [];
         $params = [];
         foreach ($columns as $col) {
             $wheres[] = "$col = :{$col}";
             $params[":{$col}"] = $this->items[$col];
+        }
+        if ($id_val !== null) {
+            $wheres[] = "{$id_col} <> :{$id_col}";
+            $params[":{$id_col}"] = $id_val;
         }
         $where = implode(' AND ', $wheres);
         $sql = "SELECT COUNT(*) AS broj FROM {$table} WHERE {$where};";

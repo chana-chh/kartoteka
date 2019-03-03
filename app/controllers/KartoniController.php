@@ -78,8 +78,69 @@ class KartoniController extends Controller
             $data['aktivan'] = $aktivan;
             $modelKarton = new Karton();
             $modelKarton->insert($data);
-            $this->flash->addMessage('success', 'Novi korisnik je uspešno registrovan.');
+            $this->flash->addMessage('success', 'Novi karton je uspešno upisan.');
             return $response->withRedirect($this->router->pathFor('kartoni'));
+        }
+
+        return $response->withRedirect($this->router->pathFor('kartoni'));
+    }
+
+    public function getKartoniIzmena($request, $response, $args)
+    {
+        $id = (int)$args['id'];
+        $modelGroblje = new Groblje();
+        $modelKarton = new Karton();
+        $karton = $modelKarton->find($id);
+        $groblja = $modelGroblje->all();
+        $tipovi = $modelKarton->enumOrSetList('tip_groba');
+        $this->render($response, 'karton_izmena.twig', compact('karton', 'groblja', 'tipovi'));
+    }
+
+    public function postKartoniIzmena($request, $response)
+    {
+        $data = $request->getParams();
+        $id = $data['id'];
+        unset($data['id']);
+        unset($data['csrf_name']);
+        unset($data['csrf_value']);
+
+
+        $validation_rules = [
+            'groblje_id' => [
+                'required' => true,
+                'multi_unique' => 'kartoni.groblje_id,parcela,grobno_mesto#id:' . $id,
+            ],
+            'parcela' => [
+                'required' => true,
+            ],
+            'grobno_mesto' => [
+                'required' => true,
+            ],
+            'broj_mesta' => [
+                'required' => true,
+                'min' => 1,
+            ],
+            'tip_groba' => [
+                'required' => true,
+            ],
+            'stanje' => [
+                'required' => true,
+                'min' => 0,
+            ],
+        ];
+
+        $this->validator->validate($data, $validation_rules);
+
+        if ($this->validator->hasErrors()) {
+            $this->flash->addMessage('danger', 'Došlo je do greške prilikom izmene podataka u kartonu.');
+            return $response->withRedirect($this->router->pathFor('kartoni.izmena', ['id' => $id]));
+        } else {
+            $aktivan = isset($data['aktivan']) ? 1 : 0;
+            $data['aktivan'] = $aktivan;
+            $modelKarton = new Karton();
+            $modelKarton->update($data, $id);
+            $this->flash->addMessage('success', 'Izmene u kartonu su uspešno upisane.');
+            return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $id]));
         }
 
         return $response->withRedirect($this->router->pathFor('kartoni'));
