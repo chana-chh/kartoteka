@@ -31,29 +31,10 @@
     </div>
   </div>
 </div>
-<!-- MODAL BRISANJE POCETAK -->
-<div id="modal-brisanje" uk-modal>
-  <div class="uk-modal-dialog">
-    <button class="uk-modal-close-default" type="button" uk-close></button>
-    <div class="uk-modal-header">
-      <h2 class="uk-modal-title uk-text-danger">Brisanje kartona</h2>
-    </div>
-    <div class="uk-modal-body">
-      <p>Da li ste sigurni da želite da obrišete ovaj karton?</p>
-      <form action="{{ path_for('kartoni.brisanje') }}" method="POST" id="forma_brisanje">
-        {{ csrf|raw }}
-        <input type="hidden" name="brisanje_id" id="brisanje_id" value="{{ karton.id }}">
-      </form>
-    </div>
-    <div class="uk-modal-footer uk-text-right">
-      <div class="uk-button-group">
-        <button class="uk-button uk-button-primary" type="button" id="modal_dugme_brisi">Obriši</button>
-        <button class="uk-button uk-button-secondary uk-modal-close" type="button">Otkaži</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- MODAL BRISANJE KRAJ -->
+
+<!-- MODAL BRISANJE -->
+{% include 'inc/karton_brisanje.twig' %}
+
 <div class="uk-panel uk-background-secondary uk-text-white uk-padding-small uk-margin-small-top">
   <div class="uk-flex uk-flex-between">
     <div>
@@ -209,7 +190,9 @@
     <h2 class="uk-text-primary">Dokumenti</h2>
   </div>
   <div class="uk-float-right uk-margin-small-top">
-    <a href="#" class="uk-button uk-button-primary uk-button-small">Dodaj dokument</a>
+    <a class="uk-button uk-button-primary uk-button-small" href="{{ path_for('dokumenti.dodavanje', { 'id': karton.id }) }}">
+      Dodaj dokument
+    </a>
   </div>
 </div>
 <div class="uk-overflow-auto">
