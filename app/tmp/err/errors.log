@@ -724,3 +724,4 @@
 [03-Mar-2019 15:35:55 Europe/Belgrade] PHP  34. Slim\Handlers\Strategies\RequestResponse->__invoke() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Route.php:356
 [03-Mar-2019 15:35:55 Europe/Belgrade] PHP  35. call_user_func:{D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41}() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41
 [03-Mar-2019 15:35:55 Europe/Belgrade] PHP  36. App\Controllers\DokumentiController->postDokumentiDodavanje() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41
+[04-Mar-2019 08:19:48 Europe/Belgrade] PHP Notice:  Trying to get property 'veza' of non-object in C:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 209
