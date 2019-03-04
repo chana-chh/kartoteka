@@ -219,7 +219,8 @@
               <a href="{{ dok.veza }}" title="Pregled" target="_blank"><span uk-icon="search"></span></a>
             </li>
             <li>
-              <a href="#" title="Brisanje">
+              <a href="#modal-brisanje-dokumenta" title="Brisanje" data-id="{{ dok.id }}" onclick="setDocId(this);"
+                uk-toggle>
                 <span uk-icon="trash"></span>
               </a>
             </li>
@@ -230,6 +231,10 @@
     </tbody>
   </table>
 </div>
+
+<!-- MODAL BRISANJE -->
+{% include 'inc/dokument_brisanje.twig' %}
+
 <hr class="uk-divider-icon">
 <div class="uk-clearfix">
   <div class="uk-float-left">
@@ -276,5 +281,12 @@
   document.getElementById("modal_dugme_brisi").addEventListener("click", function () {
     document.getElementById("forma_brisanje").submit();
   });
+  document.getElementById("modal_dugme_brisi_dokument").addEventListener("click", function () {
+    document.getElementById("forma_brisanje_dokumenta").submit();
+  });
+
+  function setDocId(el) {
+    document.getElementById("modal_dokument_id").value = el.dataset.id;
+  }
 </script>
 {% endblock skripta %}

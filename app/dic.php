@@ -56,6 +56,8 @@ $container['view'] = function ($container) {
         'logged' => $container->auth->isLoggedIn(),
         'user' => $container->auth->user(),
     ]);
+    $view->getEnvironment()->addGlobal('URL', URL);
+    $view->getEnvironment()->addGlobal('DIR', DIR);
     $view->addExtension(new Knlv\Slim\Views\TwigMessages(new Slim\Flash\Messages));
     $view->addExtension(new Twig_Extension_Debug);
     return $view;

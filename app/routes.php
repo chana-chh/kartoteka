@@ -36,6 +36,7 @@ $app->group('', function () {
     // Dokumenti
     $this->get('/karton/dokumenti/dodavanje/{id}', '\App\Controllers\DokumentiController:getDokumentiDodavanje')->setName('dokumenti.dodavanje');
     $this->post('/karton/dokumenti/dodavanje', '\App\Controllers\DokumentiController:postDokumentiDodavanje')->setName('dokumenti.dodavanje.post');
+    $this->post('/karton/dokumenti/brisanje', '\App\Controllers\DokumentiController:postDokumentiBrisanje')->setName('dokumenti.brisanje');
     //Mape
     $this->get('/mape', '\App\Controllers\MapeController:getMape')->setName('mape');
     $this->get('/kartoni/mapa/{id}', '\App\Controllers\KartoniController:getKartoniMapa')->setName('kartoni.mapa');

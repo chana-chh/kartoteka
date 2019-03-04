@@ -50,20 +50,38 @@ class DokumentiController extends Controller
 
         if ($this->validator->hasErrors()) {
             $this->flash->addMessage('danger', 'Došlo je do greške prilikom dodavanja dokumenta.');
-            return $response->withRedirect($this->router->pathFor('dokumenti.dodavanje',['id'=>$id_kartona]));
+            return $response->withRedirect($this->router->pathFor('dokumenti.dodavanje', ['id' => $id_kartona]));
         } else {
             $unique = bin2hex(random_bytes(8));
             $extension = pathinfo($dokument->getClientFilename(), PATHINFO_EXTENSION);
             $name = "{$id_kartona}_{$data['tip']}_{$data['datum']}_{$unique}";
             $filename = "{$name}.{$extension}";
-            $uri = $request->getUri();
-            $veza = $uri->getScheme() . "://" . $uri->getHost() . $uri->getBasePath() . "/doc/{$filename}";
+            $veza = URL . "/doc/{$filename}";
             $data['veza'] = $veza;
             $dokument->moveTo('doc/' . $filename);
             $modelDokument = new Dokument();
             $modelDokument->insert($data);
             $this->flash->addMessage('success', 'Dokument je uspešno sačuvan.');
             return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $id_kartona]));
+        }
+    }
+
+    public function postDokumentiBrisanje($request, $response)
+    {
+        $id = (int)$request->getParam('modal_dokument_id');
+        $karton_id = (int)$request->getParam('modal_dokument_karton_id');
+        $modelDokument = new Dokument();
+        $dok = $modelDokument->find($id);
+        $tmp = explode('/', $dok->veza);
+        $file = DIR . 'pub' . DS . 'doc' . DS . end($tmp);
+        $success = $modelDokument->deleteOne($id);
+        if ($success) {
+            unlink($file);
+            $this->flash->addMessage('success', "Dokument je uspešno obrisan.");
+            return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $karton_id]));
+        } else {
+            $this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja dokumenta.");
+            return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $karton_id]));
         }
     }
 }
