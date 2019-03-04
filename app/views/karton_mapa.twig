@@ -1,57 +1,82 @@
 {% extends "templates/app.twig" %}
 
 {% block sadrzaj %}
-<h1 class="primary-text">
+<h1 class="uk-heading-divider">
   Mapa kartona {{x_pozicija}} {{y_pozicija}}
   <span class="success-text"><small><em>[{{ karton.broj() }}]</em></small></span>
 </h1>
-<div class="well">
-  <button onclick="window.history.back();">
-    <i class="fas fa-angle-left"></i> Nazad
-  </button>
-  <a href="{{ path_for('kartoni') }}" class="btn"><i class="fas fa-angle-double-left"></i>Kartoni</a>
-</div>
 
-<div class="well white-text primary-bg">
-  <div class="flex-row">
-    <div class="flex-col">
-      <strong>Groblje:</strong>
-      {{ karton.groblje().naziv }}
-    </div>
-    <div class="flex-col">
-      <strong>Parcela:</strong>
-      {{ karton.parcela }}
-    </div>
-    <div class="flex-col">
-      <strong>Grobno mesto:</strong>
-      {{ karton.grobno_mesto }}
-    </div>
-    <div class="flex-col">
-      <strong>Broj mesta:</strong>
-      {{ karton.broj_mesta }}
-    </div>
-    <div class="flex-col">
-      <strong>Tip groba:</strong>
-      {{ karton.tip_groba }}
-    </div>
-    <div class="flex-col">
-      <strong>Aktivan karton:</strong>
-      {{ karton.aktivanDisabled() | raw }}
+<div class="uk-panel uk-background-muted uk-padding-small">
+  <div class="uk-clearfix">
+    <div class="uk-float-left">
+      <div class="uk-button-group">
+        <button onclick="window.history.back();" class="uk-button uk-button-primary uk-button-small">
+          <span uk-icon="chevron-left"></span> Nazad
+        </button>
+        <a href="{{ path_for('kartoni') }}" class="uk-button uk-button-primary uk-button-small">
+          <span uk-icon="chevron-double-left"></span> SVI Kartoni
+        </a>
+      </div>
     </div>
   </div>
-  <strong>Napomene:</strong><br />
-  {{ karton.napomena | nl2br }}<br />
 </div>
-<div class="flex-row">
-<div class="canvas">
-<canvas id="canvas" width="1260" height="840" style="padding: 0; margin: auto; display: block;">
-</canvas>
+<div style="max-height: 800px; max-width:1200px; overflow: scroll;" class="uk-margin">
+    <canvas id="canvas" width="100%" height="100%" class="uk-preserve-width"></canvas>
+</div>   
+{% endblock sadrzaj %}
+
+{% block traka %}
+<div class="uk-card uk-card-default uk-card-body uk-margin-top">
+    <h3 class="uk-card-title">Podaci iz kartona</h3>
+
+    <ul class="uk-list uk-list-striped">
+    <li><strong>Groblje:</strong> {{ karton.groblje().naziv }}</li>
+    <li><strong>Parcela:</strong> {{ karton.parcela }}</li>
+    <li><strong>Grobno mesto:</strong> {{ karton.grobno_mesto }}</li>
+    <li><strong>Broj mesta:</strong> {{ karton.broj_mesta }}</li>
+    <li><strong>Tip groba:</strong> {{ karton.tip_groba }}</li>
+    <li><strong>Aktivan karton:</strong> {{ karton.aktivanDisabled() | raw }}</li>
+    <article class="uk-article uk-margin-top">
+    <h4>Napomene:</h4>
+    <p class="uk-article-meta">{{ karton.napomena | nl2br }}</p>
+</article>
+</ul>
 </div>
-</div>
-<script type="text/javascript">
+
+<p class="uk-margin-top uk-text-center">Trenutna x koordinata grobnog mesta: <span class="uk-badge">{{ karton.x_pozicija }}</span></p>
+<p class="uk-margin-top uk-text-center">Trenutna y koordinata grobnog mesta: <span class="uk-badge">{{ karton.y_pozicija }}</span></p>
+
+<form action="{{path_for('kartoni.mapa.dodavanje')}}" method="POST" class="uk-background-muted uk-margin-top uk-padding-small">
+    {{ csrf|raw }}
+    <fieldset class="uk-fieldset">
+
+        <legend class="uk-legend">Postavljanje novih koordinata</legend>
+
+        <div class="uk-margin">
+            <legend for="x_pozicija">X koordinata:</legend>
+            <input type="number" name="x_pozicija" id="x_pozicija" class="form-control" autocomplete="off" >
+        </div>
+
+        <div class="uk-margin">
+            <legend for="y_pozicija">Y koordinata:</legend>
+            <input type="number" name="y_pozicija" id="y_pozicija" class="form-control" autocomplete="off" >
+        </div>
+
+        <input type="hidden" name="id_kartona" id="id_kartona" class="form-control" value="{{ karton.id }}">
+        <hr class="uk-margin">
+        <div class="uk-margin uk-float-right">
+            <input type="submit" value="Sačuvaj" class="uk-button uk-button-primary uk-button-small">
+            <a href="{{ path_for('kartoni.mapa', { 'id': karton.id })}}" class="uk-button uk-button-secondary uk-button-small">Otkaži</a>
+        </div>
+
+    </fieldset>
+</form>
+{% endblock traka %}
+
+{% block skripta %}
+<script>
 var canvas = document.getElementById("canvas");
 ctx = canvas.getContext("2d");
-126
 var mapa = ["{{mapa}}"];
 canvas.width = 1260;
 canvas.height = 840;
@@ -92,38 +117,4 @@ background.onload = function(){
         ctx.fillText(g, x_osa, y_osa + 2*radius);
   };
 </script>
-{% endblock sadrzaj %}
-
-{% block traka %}
-<div class="flex-row" style="margin-top: 30px">
-  <div class="flex-col-5">
-    <h2 style="margin:0;">Koordinate</h2>
-  </div>
-</div>
-<div class="well">
-    <form action="{{ path_for('kartoni.mapa.dodavanje') }}" method="POST">
-        {{ csrf|raw }}
-        <div class="flex-row">
-            <div class="flex-col-4">
-                <input type="number" name="x_pozicija" id="x_pozicija" class="form-control" autocomplete="off" placeholder="X koordinata">
-            </div>
-            <div class="flex-col-4">
-                <input type="number" name="y_pozicija" id="y_pozicija" class="form-control" autocomplete="off"
-                    placeholder="Y koordinata">
-            </div>
-        </div>
-
-        <input type="hidden" name="id_kartona" id="id_kartona" class="form-control" value="{{ karton.id }}">
-
-        <div class="flex-row">
-            <div class="flex-col-4">
-                <input type="submit" value="Sačuvaj koordinate">
-            </div>
-            <div class="flex-col-1 right">
-                <a href="{{ path_for('kartoni.mapa', { 'id': karton.id }) }}" class="btn">Otkaži</a>
-            </div>
-        </div>
-        </div>
-    </form>
-</div>
-{% endblock traka %}
+{% endblock skripta %}
