@@ -138,7 +138,7 @@ class Validator
      * Pravilo - obavezan podatak
      *
      * @param string $field Naziv podatka
-     * @param string $field Vrednost podatka
+     * @param string $value Vrednost podatka
      * @param mixed $option Vrednost parametra za zadovoljavanje pravila
      */
     protected function required($field, $value, $option)

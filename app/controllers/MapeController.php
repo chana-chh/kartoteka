@@ -47,12 +47,13 @@ class MapeController extends Controller
             ]
         ];
 
+
         $this->validator->validate($data, $validation_rules);
 
-        if ($this->validator->hasErrors()) {
-            $this->flash->addMessage('danger', 'Došlo je do greške prilikom dodavanja nove mape.');
-            return $response->withRedirect($this->router->pathFor('mape'));
-        } else {
+        // if ($this->validator->hasErrors()) {
+        //     $this->flash->addMessage('danger', 'Došlo je do greške prilikom dodavanja nove mape. Podaci nisu validni.');
+        //     return $response->withRedirect($this->router->pathFor('mape'));
+        // } else {
             $uploadedFiles = $request->getUploadedFiles();
             $uploadedFile = $uploadedFiles['slika'];
 
@@ -72,19 +73,21 @@ class MapeController extends Controller
 
             $this->resize(200, $targetFile, $originalFile);
 
-            $modelMape = new Mapa();
-            $karton = $modelMape->insert(
+            foreach ($data['parcela'] as $parcela) {
+                $modelMape = new Mapa();
+                $karton = $modelMape->insert(
                 [
                     'groblje_id' => $data['groblje_id'],
-                    'parcela' => $data['parcela'],
+                    'parcela' => $parcela,
                     'veza' => $filename
                 ]
-        );
+                );
+            }
 
             $this->flash->addMessage('success', 'Mapa '. $filename. ' je uspešno sačuvana');
             return $response->withRedirect($this->router->pathFor('mape'));
             }
-        }
+        // }
     }
 
     private function resize($newWidth, $targetFile, $originalFile) {

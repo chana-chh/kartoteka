@@ -994,3 +994,11 @@
 [04-Mar-2019 18:46:32 Europe/Belgrade] PHP  34. Slim\Handlers\Strategies\RequestResponse->__invoke() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Route.php:356
 [04-Mar-2019 18:46:32 Europe/Belgrade] PHP  35. call_user_func:{D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41}() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41
 [04-Mar-2019 18:46:32 Europe/Belgrade] PHP  36. App\Controllers\DokumentiController->postDokumentiBrisanje() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41
+[04-Mar-2019 21:39:55 Europe/Belgrade] PHP Warning:  trim() expects parameter 1 to be string, array given in D:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 99
+[04-Mar-2019 21:41:12 Europe/Belgrade] PHP Warning:  trim() expects parameter 1 to be string, array given in D:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 99
+[04-Mar-2019 21:42:51 Europe/Belgrade] PHP Warning:  trim() expects parameter 1 to be string, array given in D:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 99
+[04-Mar-2019 22:14:29 Europe/Belgrade] PHP Warning:  trim() expects parameter 1 to be string, array given in D:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 99
+[04-Mar-2019 22:14:29 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 66
+[04-Mar-2019 22:14:29 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 67
+[04-Mar-2019 22:15:26 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 153
+[04-Mar-2019 22:15:29 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 153

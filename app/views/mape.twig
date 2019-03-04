@@ -100,7 +100,7 @@
 
         <div class="uk-margin">
             <legend for="parcela">Parcela:</legend>
-            <select name="parcela" id="parcela" class="uk-select uk-width-2-3">
+            <select name="parcela[]" id="parcela" multiple class="uk-select uk-width-2-3">
                 {% for par in parcele %}
                 <option value="{{ par.parcela }}">{{ par.parcela }}</option>
                 {% endfor %}
