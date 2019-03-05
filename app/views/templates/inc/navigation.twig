@@ -34,7 +34,7 @@
 					Mape
 				</a>
 			</li>
-			{% if user.nivo == 0 %}
+			{% if auth.logged and user.nivo == 0 %}
 			<li>
 				<a href="">
 					<span uk-icon="database" class="uk-margin-small-right"></span>
