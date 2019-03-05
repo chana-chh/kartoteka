@@ -259,12 +259,11 @@
   <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
     <thead>
       <tr>
-        <th class="w-15 success-bg">Tip</th>
-        <th class="w-15 success-bg">Godina</th>
-        <th class="w-15 success-bg">Datum</th>
-        <th class="w-25 success-bg uk-text-right">Iznos</th>
-        <th class="w-20 success-bg">Priznanica</th>
-        <th class="w-10 success-bg">Razd</th>
+        <th class="w-15">Tip</th>
+        <th class="w-20">Godina</th>
+        <th class="w-15">Datum</th>
+        <th class="w-25 uk-text-right">Iznos</th>
+        <th class="w-15">Razduženo</th>
       </tr>
     </thead>
     <tbody>
@@ -273,10 +272,9 @@
         <td>
           <em>{{ tran.tip_transakcije().tip }}</em>
         </td>
-        <td>{{ tran.tip_transakcije().godina }}</td>
+        <td>{{ tran.tip_transakcije().godina_od }}-{{ tran.tip_transakcije().godina_do }}</td>
         <td>{{ tran.datum() }}</td>
         <td class="uk-text-right">{{ (tran.iznos)|number_format(2, '.', ',') }}</td>
-        <td>{{ tran.priznanica }}</td>
         <td>{{ tran.razduzenoDisabled() | raw }}</td>
       </tr>
       {% endfor %}
