@@ -14,6 +14,8 @@ use App\Middlewares\AuthMiddleware;
 use App\Middlewares\GuestMiddleware;
 
 $app->get('/', '\App\Controllers\HomeController:getHome')->setName('pocetna');
+$app->get('/o-programu', '\App\Controllers\HomeController:getAbout')->setName('o_programu');
+$app->get('/uputstvo', '\App\Controllers\HomeController:getHelp')->setName('uputstvo');
 
 $app->group('', function () {
     $this->get('/prijava', '\App\Controllers\AuthController:getPrijava')->setName('prijava');

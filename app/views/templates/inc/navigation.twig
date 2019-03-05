@@ -34,7 +34,7 @@
 					Mape
 				</a>
 			</li>
-
+			{% if user.nivo == 0 %}
 			<li>
 				<a href="">
 					<span uk-icon="database" class="uk-margin-small-right"></span>
@@ -43,13 +43,17 @@
 				</a>
 				<div class="uk-navbar-dropdown">
 					<ul class="uk-nav uk-navbar-dropdown-nav">
-						<li><a href="#">Item</a></li>
-						<li><a href="#">Item</a></li>
-						<li><a href="#">Item</a></li>
+						<li><a href="#">Istekli zakupi</a></li>
+						<li class="uk-nav-divider"></li>
+						<li><a href="#">Masovno zaduživanje zakupa</a></li>
+						<li><a href="#">Masovno zaduživanje taksi</a></li>
+						<li class="uk-nav-divider"></li>
+						<li><a href="#">Korisnici</a></li>
+						<li><a href="{{ path_for('mape') }}">Mape</a></li>
 					</ul>
 				</div>
 			</li>
-
+			{% endif %}
 			<li>
 				<a href="">
 					<span uk-icon="question" class="uk-margin-small-right"></span>
@@ -58,9 +62,9 @@
 				</a>
 				<div class="uk-navbar-dropdown">
 					<ul class="uk-nav uk-navbar-dropdown-nav">
-						<li><a href="#">Item</a></li>
-						<li><a href="#">Item</a></li>
-						<li><a href="#">Item</a></li>
+						<li><a href="{{ path_for('uputstvo') }}">Uputstvo za korišćenje programa</a></li>
+						<li class="uk-nav-divider"></li>
+						<li><a href="{{ path_for('o_programu') }}">O programu</a></li>
 					</ul>
 				</div>
 			</li>

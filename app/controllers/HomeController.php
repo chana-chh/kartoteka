@@ -10,4 +10,14 @@ class HomeController extends Controller
 	{
 		$this->render($response, 'home.twig');
 	}
+
+	public function getAbout($request, $response)
+	{
+		$this->render($response, 'about.twig');
+	}
+
+	public function getHelp($request, $response)
+	{
+		$this->render($response, 'help.twig');
+	}
 }

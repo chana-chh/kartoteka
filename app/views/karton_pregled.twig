@@ -8,9 +8,9 @@
   <div class="uk-clearfix">
     <div class="uk-float-left">
       <div class="uk-button-group">
-        <button onclick="window.history.back();" class="uk-button uk-button-primary uk-button-small">
+        <a href="{{ path_for('kartoni') }}" class="uk-button uk-button-primary uk-button-small">
           <span uk-icon="chevron-left"></span> Nazad
-        </button>
+        </a>
         <a href="{{ path_for('kartoni') }}" class="uk-button uk-button-primary uk-button-small">
           <span uk-icon="chevron-double-left"></span> SVI Kartoni
         </a>
@@ -71,7 +71,10 @@
 <hr class="uk-divider-icon">
 <div class="uk-clearfix">
   <div class="uk-float-left">
-    <h2 class="uk-text-danger">Staraoci</h2>
+    <h2 class="uk-text-danger">
+      Staraoci
+      <a href="{{ path_for('staraoci') }}"><span uk-icon="link"></span></a>
+    </h2>
   </div>
   <div class="uk-float-right uk-margin-small-top">
     <a href="#" class="uk-button uk-button-primary uk-button-small">Dodaj staraoca</a>
@@ -125,7 +128,10 @@
 <hr class="uk-divider-icon">
 <div class="uk-clearfix">
   <div class="uk-float-left">
-    <h2>Pokojnici</h2>
+    <h2>
+      Pokojnici
+      <a href="{{ path_for('pokojnici') }}"><span uk-icon="link"></span></a>
+    </h2>
   </div>
   <div class="uk-float-right uk-margin-small-top">
     <a href="#" class="uk-button uk-button-primary uk-button-small">Dodaj pokojnika</a>
