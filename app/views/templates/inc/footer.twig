@@ -1,1 +1,6 @@
-<p class="uk-margin-remove">Korisnik: {{ auth.logged ? auth.user.ime : "Gost" }}</p>
+<div class="uk-float-left uk-margin-left uk-margin-small-top">
+	<p class="uk-margin-remove"><small><em>&copy; {{ 'now'|date('Y') }} ChaSha All Rights Reserved</em></small></p>
+</div>
+<div class="uk-float-right uk-margin-right uk-margin-small-top">
+	<p class="uk-margin-remove">Korisnik: {{ auth.logged ? auth.user.ime : "Gost" }}</p>
+</div>

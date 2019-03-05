@@ -994,36 +994,73 @@
 [04-Mar-2019 18:46:32 Europe/Belgrade] PHP  34. Slim\Handlers\Strategies\RequestResponse->__invoke() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Route.php:356
 [04-Mar-2019 18:46:32 Europe/Belgrade] PHP  35. call_user_func:{D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41}() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41
 [04-Mar-2019 18:46:32 Europe/Belgrade] PHP  36. App\Controllers\DokumentiController->postDokumentiBrisanje() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41
-[04-Mar-2019 21:39:55 Europe/Belgrade] PHP Warning:  trim() expects parameter 1 to be string, array given in D:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 99
-[04-Mar-2019 21:41:12 Europe/Belgrade] PHP Warning:  trim() expects parameter 1 to be string, array given in D:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 99
-[04-Mar-2019 21:42:51 Europe/Belgrade] PHP Warning:  trim() expects parameter 1 to be string, array given in D:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 99
-[04-Mar-2019 22:14:29 Europe/Belgrade] PHP Warning:  trim() expects parameter 1 to be string, array given in D:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 99
-[04-Mar-2019 22:14:29 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 66
-[04-Mar-2019 22:14:29 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 67
-[04-Mar-2019 22:15:26 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 153
-[04-Mar-2019 22:15:29 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 153
-[05-Mar-2019 09:40:34 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 153
-[05-Mar-2019 09:41:00 Europe/Belgrade] PHP Warning:  trim() expects parameter 1 to be string, array given in D:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 99
-[05-Mar-2019 09:41:00 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 66
-[05-Mar-2019 09:41:00 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 67
-[05-Mar-2019 09:41:32 Europe/Belgrade] PHP Notice:  Undefined index: parcela in D:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 280
-[05-Mar-2019 09:41:32 Europe/Belgrade] PHP Notice:  Undefined index: parcela in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 76
-[05-Mar-2019 09:41:32 Europe/Belgrade] PHP Warning:  Invalid argument supplied for foreach() in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 76
-[05-Mar-2019 09:49:13 Europe/Belgrade] PHP Notice:  Undefined index: parcela in D:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 274
-[05-Mar-2019 09:51:07 Europe/Belgrade] PHP Notice:  Undefined index: parcela in D:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 274
-[05-Mar-2019 09:53:14 Europe/Belgrade] PHP Notice:  Undefined index: parcela in D:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 274
-[05-Mar-2019 09:54:37 Europe/Belgrade] PHP Notice:  Undefined index: parcela in D:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 275
-[05-Mar-2019 10:48:25 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 68
-[05-Mar-2019 10:48:25 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 69
-[05-Mar-2019 10:51:26 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 68
-[05-Mar-2019 10:51:26 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 69
-[05-Mar-2019 10:55:08 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 67
-[05-Mar-2019 10:55:08 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 68
-[05-Mar-2019 10:55:52 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 67
-[05-Mar-2019 10:55:52 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 68
-[05-Mar-2019 11:30:32 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 67
-[05-Mar-2019 11:30:32 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 68
-[05-Mar-2019 14:10:34 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 68
-[05-Mar-2019 14:10:34 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 69
-[05-Mar-2019 14:13:08 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 68
-[05-Mar-2019 14:13:08 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 69
+[04-Mar-2019 21:39:55 Europe/Belgrade] PHP Warning:  trim() expects parameter 1 to be string, array given in D:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 99
+
+[04-Mar-2019 21:41:12 Europe/Belgrade] PHP Warning:  trim() expects parameter 1 to be string, array given in D:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 99
+
+[04-Mar-2019 21:42:51 Europe/Belgrade] PHP Warning:  trim() expects parameter 1 to be string, array given in D:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 99
+
+[04-Mar-2019 22:14:29 Europe/Belgrade] PHP Warning:  trim() expects parameter 1 to be string, array given in D:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 99
+
+[04-Mar-2019 22:14:29 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 66
+
+[04-Mar-2019 22:14:29 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 67
+
+[04-Mar-2019 22:15:26 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 153
+
+[04-Mar-2019 22:15:29 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 153
+
+[05-Mar-2019 11:57:08 Europe/Belgrade] PHP Notice:  Undefined index: karton_id in C:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 272
+[05-Mar-2019 11:57:40 Europe/Belgrade] PHP Notice:  Undefined index: karton_id in C:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 272
+[05-Mar-2019 12:01:10 Europe/Belgrade] PHP Notice:  Undefined index: karton_id in C:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 272
+[05-Mar-2019 12:01:10 Europe/Belgrade] PHP Warning:  end() expects parameter 1 to be array, null given in C:\xampp\htdocs\kartoteka\app\controllers\DokumentiController.php on line 130
+[05-Mar-2019 12:01:10 Europe/Belgrade] PHP Warning:  unlink(C:\xampp\htdocs\kartoteka\pub\doc\): Permission denied in C:\xampp\htdocs\kartoteka\app\controllers\DokumentiController.php on line 131
+[05-Mar-2019 12:02:45 Europe/Belgrade] PHP Notice:  Undefined index: karton_id in C:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 272
+[05-Mar-2019 12:02:45 Europe/Belgrade] PHP Warning:  end() expects parameter 1 to be array, null given in C:\xampp\htdocs\kartoteka\app\controllers\DokumentiController.php on line 130
+[05-Mar-2019 12:04:12 Europe/Belgrade] PHP Notice:  Undefined index: karton_id in C:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 272
+[05-Mar-2019 12:04:12 Europe/Belgrade] PHP Notice:  Undefined property: Slim\Http\UploadedFile::$veza in C:\xampp\htdocs\kartoteka\app\controllers\DokumentiController.php on line 130
+[05-Mar-2019 12:05:43 Europe/Belgrade] PHP Notice:  Undefined property: Slim\Http\UploadedFile::$veza in C:\xampp\htdocs\kartoteka\app\controllers\DokumentiController.php on line 129
+[05-Mar-2019 13:54:25 Europe/Belgrade] PHP Notice:  Trying to get property 'veza' of non-object in C:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 207
+[05-Mar-2019 14:03:04 Europe/Belgrade] PHP Notice:  Trying to get property 'veza' of non-object in C:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 207
+[05-Mar-2019 14:03:23 Europe/Belgrade] PHP Notice:  Trying to get property 'veza' of non-object in C:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 207
+[05-Mar-2019 14:03:32 Europe/Belgrade] PHP Notice:  Trying to get property 'veza' of non-object in C:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 207
+[05-Mar-2019 14:03:37 Europe/Belgrade] PHP Notice:  Trying to get property 'veza' of non-object in C:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 207
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP Warning:  unlink(D:\xampp\htdocs\kartoteka\pub\doc\odluka.pdf): No such file or directory in D:\xampp\htdocs\kartoteka\app\controllers\DokumentiController.php on line 79
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP Stack trace:
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP   1. {main}() D:\xampp\htdocs\kartoteka\pub\index.php:0
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP   2. Slim\App->run() D:\xampp\htdocs\kartoteka\pub\index.php:16
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP   3. Slim\App->process() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\App.php:314
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP   4. Slim\App->callMiddlewareStack() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\App.php:406
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP   5. Slim\App->Slim\{closure}() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\MiddlewareAwareTrait.php:117
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP   6. call_user_func:{D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\MiddlewareAwareTrait.php:70}() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\MiddlewareAwareTrait.php:70
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP   7. Slim\DeferredCallable->__invoke() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\MiddlewareAwareTrait.php:70
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP   8. call_user_func_array:{D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\DeferredCallable.php:43}() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\DeferredCallable.php:43
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP   9. Slim\Csrf\Guard->__invoke() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\DeferredCallable.php:43
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  10. Slim\App->Slim\{closure}() D:\xampp\htdocs\kartoteka\vendor\slim\csrf\src\Guard.php:171
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  11. call_user_func:{D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\MiddlewareAwareTrait.php:70}() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\MiddlewareAwareTrait.php:70
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  12. Slim\DeferredCallable->__invoke() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\MiddlewareAwareTrait.php:70
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  13. call_user_func_array:{D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\DeferredCallable.php:43}() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\DeferredCallable.php:43
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  14. App\Middlewares\CsrfMiddleware->__invoke() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\DeferredCallable.php:43
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  15. Slim\App->Slim\{closure}() D:\xampp\htdocs\kartoteka\app\middlewares\CsrfMiddleware.php:14
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  16. call_user_func:{D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\MiddlewareAwareTrait.php:70}() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\MiddlewareAwareTrait.php:70
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  17. Slim\DeferredCallable->__invoke() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\MiddlewareAwareTrait.php:70
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  18. call_user_func_array:{D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\DeferredCallable.php:43}() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\DeferredCallable.php:43
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  19. App\Middlewares\OldMiddleware->__invoke() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\DeferredCallable.php:43
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  20. Slim\App->Slim\{closure}() D:\xampp\htdocs\kartoteka\app\middlewares\OldMiddleware.php:13
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  21. call_user_func:{D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\MiddlewareAwareTrait.php:70}() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\MiddlewareAwareTrait.php:70
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  22. Slim\DeferredCallable->__invoke() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\MiddlewareAwareTrait.php:70
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  23. call_user_func_array:{D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\DeferredCallable.php:43}() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\DeferredCallable.php:43
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  24. App\Middlewares\ValidationErrorsMiddleware->__invoke() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\DeferredCallable.php:43
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  25. Slim\App->__invoke() D:\xampp\htdocs\kartoteka\app\middlewares\ValidationErrorsMiddleware.php:15
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  26. Slim\Route->run() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\App.php:515
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  27. Slim\Route->callMiddlewareStack() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Route.php:334
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  28. Slim\Route->Slim\{closure}() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\MiddlewareAwareTrait.php:117
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  29. call_user_func:{D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\MiddlewareAwareTrait.php:70}() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\MiddlewareAwareTrait.php:70
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  30. Slim\DeferredCallable->__invoke() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\MiddlewareAwareTrait.php:70
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  31. call_user_func_array:{D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\DeferredCallable.php:43}() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\DeferredCallable.php:43
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  32. App\Middlewares\AuthMiddleware->__invoke() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\DeferredCallable.php:43
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  33. Slim\Route->__invoke() D:\xampp\htdocs\kartoteka\app\middlewares\AuthMiddleware.php:18
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  34. Slim\Handlers\Strategies\RequestResponse->__invoke() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Route.php:356
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  35. call_user_func:{D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41}() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  36. App\Controllers\DokumentiController->postDokumentiBrisanje() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41
+[05-Mar-2019 17:01:05 Europe/Belgrade] PHP  37. unlink() D:\xampp\htdocs\kartoteka\app\controllers\DokumentiController.php:79
