@@ -37,23 +37,25 @@ class MapeController extends Controller
         unset($data['csrf_name']);
         unset($data['csrf_value']);
 
+        if (!isset($data['parcela'])) {
+            $this->flash->addMessage('danger', 'Morate odabrati bar jednu parcelu sa liste.');
+            return $response->withRedirect($this->router->pathFor('mape'));
+        }
+
         $validation_rules = [
             'groblje_id' => [
                 'required' => true,
                 'multi_unique' => 'mape.groblje_id,parcela'
-            ],
-            'parcela' => [
-                'required' => true,
             ]
         ];
 
+        foreach ($data['parcela'] as $parcela) {
+            $this->validator->validate(['groblje_id' => $data['groblje_id'], 'parcela' => $parcela], $validation_rules);
 
-        $this->validator->validate($data, $validation_rules);
-
-        // if ($this->validator->hasErrors()) {
-        //     $this->flash->addMessage('danger', 'Došlo je do greške prilikom dodavanja nove mape. Podaci nisu validni.');
-        //     return $response->withRedirect($this->router->pathFor('mape'));
-        // } else {
+            if ($this->validator->hasErrors()) {
+            $this->flash->addMessage('danger', 'Došlo je do greške prilikom dodavanja nove mape. Podaci nisu validni. Problematična parcela:  '.$parcela);
+            return $response->withRedirect($this->router->pathFor('mape'));
+        }}
             $uploadedFiles = $request->getUploadedFiles();
             $uploadedFile = $uploadedFiles['slika'];
 
@@ -63,8 +65,8 @@ class MapeController extends Controller
         }
         else {
             $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
-            $filename = $request->getParam('groblje_id').'-'.$request->getParam('parcela').'.'.$extension;
-            $filenameThumb = $request->getParam('groblje_id').'-'.$request->getParam('parcela');
+            $filename = $request->getParam('groblje_id').'-'.implode("-",$data['parcela']).'.'.$extension;
+            $filenameThumb = $request->getParam('groblje_id').'-'.implode("-",$data['parcela']);
 
             $uploadedFile->moveTo('img/Mape/' . $filename);
 
@@ -87,7 +89,6 @@ class MapeController extends Controller
             $this->flash->addMessage('success', 'Mapa '. $filename. ' je uspešno sačuvana');
             return $response->withRedirect($this->router->pathFor('mape'));
             }
-        // }
     }
 
     private function resize($newWidth, $targetFile, $originalFile) {
