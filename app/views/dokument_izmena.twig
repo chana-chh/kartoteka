@@ -1,0 +1,65 @@
+{% extends "templates/app.twig" %}
+
+{% block naslov %}
+<h1 class="uk-text-primary">Izmena dokumenta</h1>
+
+<form action="{{ path_for('dokumenti.izmena.post') }}" method="POST" id="forma_izmena_dokumenta" enctype="multipart/form-data"
+	class="uk-form-stacked" uk-grid>
+	{{ csrf|raw }}
+	<input type="hidden" name="karton_id" id="karton_id" value="{{ dokument.karton_id }}">
+	<input type="hidden" name="id" id="id" value="{{ dokument.id }}">
+	<div class="uk-width-1-6">
+		<label for="tip" class="uk-form-label">Tip dokumenta</label>
+		<div class="uk-form-controls">
+			<select name="tip" id="tip" class="uk-select{{ errors.tip[0] ? ' uk-form-danger': ''}}" required>
+				{% for tip in tipovi %}
+				<option value="{{ tip }}" {{ old.tip == tip or dokument.tip == tip ? ' selected' : '' }}>{{ tip }}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<small class="uk-text-danger">{{ errors.tip[0] ? :'' }}</small>
+	</div>
+
+	<div class="uk-width-1-6">
+		<label for="datum" class="uk-form-label">Datum</label>
+		<div class="uk-form-controls">
+			<input type="date" name="datum" id="datum" value="{{ old.datum ? : dokument.datum }}"
+				class="uk-input{{ errors.datum[0] ? ' uk-form-danger': ''}}" autocomplete="off" required>
+		</div>
+		<small class=" uk-text-danger">{{ errors.datum[0] ? : '' }}</small>
+	</div>
+
+	<div class="uk-width-1-3">
+		<label for="opis" class="uk-form-label">Naziv</label>
+		<div class="uk-form-controls">
+			<input type="text" name="opis" id="opis" value="{{ old.opis ? : dokument.opis }}"
+				class="uk-input{{ errors.opis[0] ? ' uk-form-danger': ''}}">
+		</div>
+		<small class="uk-text-danger">{{ errors.opis[0] ? :'' }}</small>
+	</div>
+
+	<div class="uk-width-1-6">
+		<label for="dodavanje_dokumenta" class="uk-form-label">Novi dokument</label>
+		<div uk-form-custom id="dodavanje_dokumenta">
+			<input type="file" name="dokument" id="dokument">
+			<button class="uk-button uk-button-default" type="button" tabindex="-1">
+				Odaberi novi dokument <span uk-icon="file-pdf"></span>
+			</button>
+		</div>
+	</div>
+	<div class="uk-width-1-6">
+		<label class="uk-form-label">Pregled postojećeg dokumenta</label>
+		<a href="{{ dokument.veza }}" class="uk-button uk-button-default" target="_blank">
+			Vidi dokument
+		</a>
+	</div>
+	<div class="uk-width-1-3">
+		<div class="uk-button-group">
+			<input class="uk-button uk-button-primary" type="submit" value="Snimi dokument">
+			<a href="{{ path_for('kartoni.pregled',{'id' : dokument.karton_id}) }}" class="uk-button uk-button-secondary">
+				Otkaži
+			</a>
+		</div>
+	</div>
+</form>
+{% endblock naslov %}

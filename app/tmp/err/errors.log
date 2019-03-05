@@ -1002,3 +1002,13 @@
 [04-Mar-2019 22:14:29 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 67
 [04-Mar-2019 22:15:26 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 153
 [04-Mar-2019 22:15:29 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 153
+[05-Mar-2019 11:57:08 Europe/Belgrade] PHP Notice:  Undefined index: karton_id in C:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 272
+[05-Mar-2019 11:57:40 Europe/Belgrade] PHP Notice:  Undefined index: karton_id in C:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 272
+[05-Mar-2019 12:01:10 Europe/Belgrade] PHP Notice:  Undefined index: karton_id in C:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 272
+[05-Mar-2019 12:01:10 Europe/Belgrade] PHP Warning:  end() expects parameter 1 to be array, null given in C:\xampp\htdocs\kartoteka\app\controllers\DokumentiController.php on line 130
+[05-Mar-2019 12:01:10 Europe/Belgrade] PHP Warning:  unlink(C:\xampp\htdocs\kartoteka\pub\doc\): Permission denied in C:\xampp\htdocs\kartoteka\app\controllers\DokumentiController.php on line 131
+[05-Mar-2019 12:02:45 Europe/Belgrade] PHP Notice:  Undefined index: karton_id in C:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 272
+[05-Mar-2019 12:02:45 Europe/Belgrade] PHP Warning:  end() expects parameter 1 to be array, null given in C:\xampp\htdocs\kartoteka\app\controllers\DokumentiController.php on line 130
+[05-Mar-2019 12:04:12 Europe/Belgrade] PHP Notice:  Undefined index: karton_id in C:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 272
+[05-Mar-2019 12:04:12 Europe/Belgrade] PHP Notice:  Undefined property: Slim\Http\UploadedFile::$veza in C:\xampp\htdocs\kartoteka\app\controllers\DokumentiController.php on line 130
+[05-Mar-2019 12:05:43 Europe/Belgrade] PHP Notice:  Undefined property: Slim\Http\UploadedFile::$veza in C:\xampp\htdocs\kartoteka\app\controllers\DokumentiController.php on line 129

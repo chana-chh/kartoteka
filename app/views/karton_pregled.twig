@@ -219,6 +219,9 @@
               <a href="{{ dok.veza }}" title="Pregled" target="_blank"><span uk-icon="search"></span></a>
             </li>
             <li>
+              <a href="{{ path_for('dokumenti.izmena', { 'id': dok.id }) }}" title="Izmena"><span uk-icon="pencil"></span></a>
+            </li>
+            <li>
               <a href="#modal-brisanje-dokumenta" title="Brisanje" data-id="{{ dok.id }}" onclick="setDocId(this);"
                 uk-toggle>
                 <span uk-icon="trash"></span>
