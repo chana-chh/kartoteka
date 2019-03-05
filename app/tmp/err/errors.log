@@ -1012,3 +1012,8 @@
 [05-Mar-2019 12:04:12 Europe/Belgrade] PHP Notice:  Undefined index: karton_id in C:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 272
 [05-Mar-2019 12:04:12 Europe/Belgrade] PHP Notice:  Undefined property: Slim\Http\UploadedFile::$veza in C:\xampp\htdocs\kartoteka\app\controllers\DokumentiController.php on line 130
 [05-Mar-2019 12:05:43 Europe/Belgrade] PHP Notice:  Undefined property: Slim\Http\UploadedFile::$veza in C:\xampp\htdocs\kartoteka\app\controllers\DokumentiController.php on line 129
+[05-Mar-2019 13:54:25 Europe/Belgrade] PHP Notice:  Trying to get property 'veza' of non-object in C:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 207
+[05-Mar-2019 14:03:04 Europe/Belgrade] PHP Notice:  Trying to get property 'veza' of non-object in C:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 207
+[05-Mar-2019 14:03:23 Europe/Belgrade] PHP Notice:  Trying to get property 'veza' of non-object in C:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 207
+[05-Mar-2019 14:03:32 Europe/Belgrade] PHP Notice:  Trying to get property 'veza' of non-object in C:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 207
+[05-Mar-2019 14:03:37 Europe/Belgrade] PHP Notice:  Trying to get property 'veza' of non-object in C:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 207

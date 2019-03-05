@@ -1,44 +1,32 @@
 {% extends "templates/app.twig" %}
 
 {% block naslov %}
-<h1 class="danger-text">
+<h1 class="uk-text-primary">
     Staraoci
     {% if data %}
-    <small class="warning-text">
-        <em>[filtrirano]</em>
-    </small>
+    <small><em class="uk-text-warning">[filtrirano]</em></small>
     {% else %}
-    <small class="success-text">
-        <em>[svi staraoci]</em>
-    </small>
+    <small><em class="uk-text-success">[svi staraoci]</em></small>
     {% endif %}
 
 </h1>
 
-<div class="well">
+<div class="uk-panel uk-background-muted uk-padding-small">
     <form action="{{ path_for('staraoci.pretraga') }}" method="POST">
         {{ csrf|raw }}
-        <div class="flex-row">
-            <div class="flex-col">
-                <input type="text" name="jmbg" id="jmbg" class="form-control" autocomplete="off" placeholder="JMBG">
-            </div>
-            <div class="flex-col">
-                <input type="text" name="prezime" id="prezime" class="form-control" autocomplete="off" placeholder="Prezime">
-            </div>
-            <div class="flex-col">
-                <input type="text" name="ime" id="ime" class="form-control" autocomplete="off"
-                    placeholder="Ime">
-            </div>
-            <div class="flex-col-4">
-                <input type="submit" value="Filtriraj">
-                <a href="{{ path_for('staraoci') }}" class="btn btn-success">Svi staraoci</a>
-            </div>
+        <input type="text" name="jmbg" id="jmbg" class="uk-input uk-form-width-small uk-form-small" autocomplete="off" placeholder="JMBG">
+        <input type="text" name="prezime" id="prezime" class="uk-input uk-form-width-small uk-form-small" autocomplete="off"
+            placeholder="Prezime">
+        <input type="text" name="ime" id="ime" class="uk-input uk-form-width-small uk-form-small" autocomplete="off" placeholder="Ime">
+        <div class="uk-button-group">
+            <input type="submit" value="Filtriraj" class="uk-button uk-button-primary uk-button-small">
+            <a href="{{ path_for('staraoci') }}" class="uk-button uk-button-secondary uk-button-small">Svi staraoci</a>
         </div>
     </form>
 </div>
 
-<div class="table-responsive">
-    <table>
+<div class="uk-overflow-auto">
+    <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
         <thead>
             <tr>
                 <th class="w-5 danger-bg">Id</th>
@@ -46,10 +34,11 @@
                 <th class="w-5 danger-bg">RB</th>
                 <th class="w-20 danger-bg">Ime</th>
                 <th class="w-10 danger-bg">JMBG</th>
-                <th class="w-25 danger-bg">Adresa</th>
+                <th class="w-20 danger-bg">Adresa</th>
                 <th class="w-15 danger-bg">Telefon</th>
                 <th class="w-5 danger-bg">Aktivan</th>
                 <th class="w-5 danger-bg">Prenos</th>
+                <th class="w-10 uk-text-right"><span uk-icon="cog"></span></th>
             </tr>
         </thead>
         <tbody>
@@ -68,19 +57,28 @@
                 <td>{{ st.telefon }}</td>
                 <td>{{ st.aktivanDisabled()|raw }}</td>
                 <td>{{ st.prenosDisabled()|raw }}</td>
+                <td class="uk-clearfix">
+                    <ul class="uk-iconnav uk-float-right">
+                        <li>
+                            <a href="{{ path_for('kartoni.transakcije', { id: st.karton_id }) }}" title="Transakcije"><span
+                                    uk-icon="credit-card"></span></a>
+                        </li>
+                    </ul>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
-<div class="flex-row">
-    <div class="flex-col-4">{{ staraoci.links.buttons|raw }}</div>
-    <div class="flex-col-1">Idi na stranu {{ staraoci.links.select|raw }}</div>
-    <div class="flex-col-2" style="text-align: right;">
+<div class="uk-flex uk-flex-between uk-margin-top">
+    <div>{{ staraoci.links.buttons|raw }}</div>
+    <div>Idi na stranu {{ staraoci.links.select|raw }}</div>
+    <div class="uk-text-right">
         <p>
             Prikazani redovi od
-            <strong>{{ staraoci.links.row_from }}</strong> do <strong>{{ staraoci.links.row_to }}</strong>
-            od ukupno <strong>{{ staraoci.links.total_rows }}</strong>
+            <em>{{ staraoci.links.row_from }}</em> do
+            <em>{{ staraoci.links.row_to }}</em> od ukupno
+            <em>{{ staraoci.links.total_rows }}</em>
         </p>
     </div>
 </div>
