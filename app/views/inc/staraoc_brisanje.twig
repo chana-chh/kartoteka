@@ -1,0 +1,22 @@
+<div id="modal-brisanje-staraoca" uk-modal>
+	<div class="uk-modal-dialog">
+		<button class="uk-modal-close-default" type="button" uk-close></button>
+		<div class="uk-modal-header">
+			<h2 class="uk-modal-title uk-text-danger">Brisanje staraoca</h2>
+		</div>
+		<div class="uk-modal-body">
+			<p>Da li ste sigurni da želite da obrišete ovg staraoca?</p>
+			<form action="{{ path_for('staraoci.brisanje') }}" method="POST" id="forma_brisanje_staraoca">
+				{{ csrf|raw }}
+				<input type="hidden" name="modal_staraoc_id" id="modal_staraoc_id" value="">
+				<input type="hidden" name="modal_staraoc_karton_id" id="modal_staraoc_karton_id" value="{{ karton.id }}">
+			</form>
+		</div>
+		<div class="uk-modal-footer uk-text-right">
+			<div class="uk-button-group">
+				<button class="uk-button uk-button-primary" type="button" id="modal_dugme_brisi_staraoca">Obriši</button>
+				<button class="uk-button uk-button-secondary uk-modal-close" type="button">Otkaži</button>
+			</div>
+		</div>
+	</div>
+</div>

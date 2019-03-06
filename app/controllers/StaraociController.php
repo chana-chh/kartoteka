@@ -114,7 +114,71 @@ class StaraociController extends Controller
             $model = new Staraoc();
             $model->insert($data);
             $this->flash->addMessage('success', 'Novi staraoc je uspešno upisan.');
-            return $response->withRedirect($this->router->pathFor('kartoni.pregled',['id' => $data['karton_id']]));
+            return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $data['karton_id']]));
+        }
+    }
+
+    public function postStaraociBrisanje($request, $response)
+    {
+        $id = (int)$request->getParam('modal_staraoc_id');
+        $karton_id = (int)$request->getParam('modal_staraoc_karton_id');
+        $modelStaraoc = new Staraoc();
+        $success = $modelStaraoc->deleteOne($id);
+        if ($success) {
+            $this->flash->addMessage('success', "Staraoc je uspešno obrisan.");
+            return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $karton_id]));
+        } else {
+            $this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja staraoca.");
+            return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $karton_id]));
+        }
+    }
+
+    public function getStaraociIzmena($request, $response, $args)
+    {
+        $id = (int)$args['id'];
+        $modelStaraoc = new Staraoc();
+        $staraoc = $modelStaraoc->find($id);
+        $this->render($response, 'staraoc_izmena.twig', compact('staraoc'));
+    }
+
+    public function postStaraociIzmena($request, $response)
+    {
+        $id = (int)$request->getParam('id');
+        $id_kartona = (int)$request->getParam('karton_id');
+        $data = $request->getParams();
+        unset($data['csrf_name']);
+        unset($data['csrf_value']);
+        unset($data['id']);
+        $validation_rules = [
+            'redni_broj' => [
+                'required' => true,
+                'multi_unique' => 'staraoci.karton_id,redni_broj#id:' . $id,
+            ],
+            'prezime' => [
+                'required' => true,
+            ],
+            'ime' => [
+                'required' => true,
+            ],
+            'jmbg' => [
+                'required' => true,
+                'jmbg' => true,
+            ],
+        ];
+        $this->validator->validate($data, $validation_rules);
+        if ($this->validator->hasErrors()) {
+            $this->flash->addMessage('danger', 'Došlo je do greške prilikom izmene dokumenta.');
+            return $response->withRedirect($this->router->pathFor('staraoci.izmena', ['id' => $id_kartona]));
+        } else {
+            $modelStaraoc = new Staraoc();
+            unset($data['karton_id']);
+            $aktivan = isset($data['aktivan']) ? 1 : 0;
+            $data['aktivan'] = $aktivan;
+            $prenos = isset($data['prenos']) ? 1 : 0;
+            $data['prenos'] = $prenos;
+            $modelStaraoc->update($data, $id);
+            $this->flash->addMessage('success', 'Izmene staraoca su uspešno sačuvane.');
+            return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $id_kartona]));
         }
     }
 }

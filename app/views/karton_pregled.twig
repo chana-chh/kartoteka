@@ -109,12 +109,12 @@
         <td class="uk-clearfix">
           <ul class="uk-iconnav uk-float-right">
             <li>
-              <a href="#" title="Izmena">
+              <a href="{{ path_for('staraoci.izmena',{id:st.id}) }}" title="Izmena">
                 <span uk-icon="pencil"></span>
               </a>
             </li>
             <li>
-              <a href="#" title="Brisanje">
+              <a title="Brisanje" href="#modal-brisanje-staraoca" data-id="{{ st.id }}" onclick="setStarId(this);" uk-toggle>
                 <span uk-icon="trash"></span>
               </a>
             </li>
@@ -125,6 +125,10 @@
     </tbody>
   </table>
 </div>
+
+<!-- MODAL BRISANJE STARAOCA -->
+{% include 'inc/staraoc_brisanje.twig' %}
+
 <hr>
 <div class="uk-clearfix">
   <div class="uk-float-left">
@@ -292,9 +296,14 @@
   document.getElementById("modal_dugme_brisi_dokument").addEventListener("click", function () {
     document.getElementById("forma_brisanje_dokumenta").submit();
   });
-
+  document.getElementById("modal_dugme_brisi_staraoca").addEventListener("click", function () {
+    document.getElementById("forma_brisanje_staraoca").submit();
+  });
   function setDocId(el) {
     document.getElementById("modal_dokument_id").value = el.dataset.id;
+  }
+  function setStarId(el) {
+    document.getElementById("modal_staraoc_id").value = el.dataset.id;
   }
 </script>
 {% endblock skripta %}

@@ -1091,3 +1091,8 @@
 [06-Mar-2019 10:26:52 Europe/Belgrade] PHP Notice:  Undefined variable: n in C:\xampp\htdocs\kartoteka\app\fje.php on line 83
 [06-Mar-2019 10:28:25 Europe/Belgrade] PHP Warning:  Use of undefined constant ostatak - assumed 'ostatak' (this will throw an Error in a future version of PHP) in C:\xampp\htdocs\kartoteka\app\fje.php on line 88
 [06-Mar-2019 10:28:25 Europe/Belgrade] PHP Warning:  A non-numeric value encountered in C:\xampp\htdocs\kartoteka\app\fje.php on line 88
+[06-Mar-2019 13:06:45 Europe/Belgrade] PHP Notice:  Undefined index: karton_id in C:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 274
+[06-Mar-2019 13:07:18 Europe/Belgrade] PHP Notice:  Undefined index: karton_id in C:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 274
+[06-Mar-2019 13:07:48 Europe/Belgrade] PHP Notice:  Undefined index: karton_id in C:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 274
+[06-Mar-2019 13:08:38 Europe/Belgrade] PHP Notice:  Undefined index: karton_id in C:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 274
+[06-Mar-2019 13:11:58 Europe/Belgrade] PHP Notice:  Undefined index: karton_id in C:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 274
