@@ -30,4 +30,18 @@ class Mapa extends Model
         $params = [":id_groblja" => $id_groblja, ":parecela_naziv" => '%'.$parecela_naziv.'%'];
         return $this->fetch($sql, $params) === [] ? null : $this->fetch($sql, $params)[0];
     }
+
+
+    /**
+     * Pronalazi mape sa istom vezom
+     *
+     * @param naziv mape odnosno ime slike
+     * @return \App\Classes\Model\Mapa
+     */
+    public function isteMape(string $veza_naziv)
+    {
+        $sql = "SELECT * FROM {$this->table} WHERE veza LIKE :veza_naziv;";
+        $params = [":veza_naziv" => '%'.$veza_naziv.'%'];
+        return $this->fetch($sql, $params) === [] ? null : $this->fetch($sql, $params);
+    }
 }

@@ -12,7 +12,7 @@
             <th class="uk-table-shrink">Id</th>
             <th>Groblje</th>
             <th>Parcela</th>
-            <th class="uk-table-expand">Naziv mape</th>
+            <th class="uk-table-expand">Opis mape</th>
             <th>Mapa</th>
             <th><span uk-icon="cog"></span></th>
         </tr>
@@ -23,7 +23,7 @@
             <td><em>{{ mapa.id }}</em></td>
             <td>{{ mapa.groblje.naziv }}</td>
             <td>{{ mapa.parcela }}</td>
-            <td><strong>{{ mapa.veza }}</strong></td>
+            <td><strong>{{ mapa.opis_mape }}</strong></td>
             <td>
                 <div uk-lightbox id="light">
                     <a href="{{ base_url() }}/img/Mape/{{ mapa.veza }}" data-caption="{{ mapa.groblje.naziv }} {{ mapa.parcela }}"><img
@@ -107,8 +107,15 @@
             </select>
         </div>
 
-        <input type="hidden" id="groblje" name="groblje" value="">
+        <div class="uk-margin">
+        <label class="uk-form-label" for="opis">Opis mape:</label>
+        <div class="uk-form-controls">
+            <input class="uk-input" id="opis" name="opis" type="text" placeholder="Opis mape ...">
+        </div>
+        </div>
 
+        <input type="hidden" id="groblje" name="groblje" value="">
+        <label class="uk-form-label" for="slika">Dodavanje slike/mape:</label>
         <div class="uk-margin">
             <div uk-form-custom id="up">
                 <input type="file" name="slika" id="slika">

@@ -1064,3 +1064,14 @@
 [05-Mar-2019 17:01:05 Europe/Belgrade] PHP  35. call_user_func:{D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41}() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41
 [05-Mar-2019 17:01:05 Europe/Belgrade] PHP  36. App\Controllers\DokumentiController->postDokumentiBrisanje() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41
 [05-Mar-2019 17:01:05 Europe/Belgrade] PHP  37. unlink() D:\xampp\htdocs\kartoteka\app\controllers\DokumentiController.php:79
+[05-Mar-2019 21:25:20 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 164
+[05-Mar-2019 21:30:33 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 164
+[05-Mar-2019 21:33:18 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 164
+[05-Mar-2019 21:33:18 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 167
+[05-Mar-2019 21:33:18 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 167
+[05-Mar-2019 21:36:46 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 164
+[05-Mar-2019 21:36:46 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 167
+[05-Mar-2019 21:36:46 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 167
+[05-Mar-2019 21:36:51 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 164
+[05-Mar-2019 21:36:51 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 167
+[05-Mar-2019 21:36:51 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 167

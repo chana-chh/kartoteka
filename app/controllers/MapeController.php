@@ -37,10 +37,7 @@ class MapeController extends Controller
         unset($data['csrf_name']);
         unset($data['csrf_value']);
 
-        if (!isset($data['parcela'])) {
-            $this->flash->addMessage('danger', 'Morate odabrati bar jednu parcelu sa liste.');
-            return $response->withRedirect($this->router->pathFor('mape'));
-        }
+        //Validacija
 
         $validation_rules = [
             'groblje_id' => [
@@ -49,6 +46,11 @@ class MapeController extends Controller
             ]
         ];
 
+        if (!isset($data['parcela'])) {
+            $this->flash->addMessage('danger', 'Morate odabrati bar jednu parcelu sa liste.');
+            return $response->withRedirect($this->router->pathFor('mape'));
+        }
+
         foreach ($data['parcela'] as $parcela) {
             $this->validator->validate(['groblje_id' => $data['groblje_id'], 'parcela' => $parcela], $validation_rules);
 
@@ -56,11 +58,14 @@ class MapeController extends Controller
             $this->flash->addMessage('danger', 'Došlo je do greške prilikom dodavanja nove mape. Podaci nisu validni. Problematična parcela:  '.$parcela);
             return $response->withRedirect($this->router->pathFor('mape'));
         }}
+
+        //Kraj validacije
+
             $uploadedFiles = $request->getUploadedFiles();
             $uploadedFile = $uploadedFiles['slika'];
 
         if ($uploadedFile->getError() != UPLOAD_ERR_OK) {
-            $this->flash->addMessage('danger', 'Došlo je do greške prilikom dodavanja nove mape.');
+            $this->flash->addMessage('danger', 'Došlo je do greške prilikom dodavanja nove mape. Slika/mapa nije izabrana.');
             return $response->withRedirect($this->router->pathFor('mape'));
         }
         else {
@@ -81,7 +86,8 @@ class MapeController extends Controller
                 [
                     'groblje_id' => $data['groblje_id'],
                     'parcela' => $parcela,
-                    'veza' => $filename
+                    'veza' => $filename,
+                    'opis_mape' => $data['opis']
                 ]
                 );
             }
@@ -139,22 +145,29 @@ class MapeController extends Controller
         $veza = $modelMape->find($id)->veza;
         $success = $modelMape->deleteOne($id);
 
-        $thumb = 'img/Mape/Thumb/'.$veza;  
+        $broj = count($modelMape->isteMape($veza));
 
-        if (file_exists($thumb)) {
-                $success_thumb = unlink($thumb);
-        }
+        if ($broj < 1) {
+            $thumb = 'img/Mape/Thumb/'.$veza;  
 
-        $mapa = 'img/Mape/'.$veza;
+            if (file_exists($thumb)) {
+                    $success_thumb = unlink($thumb);
+            }
 
-        if (file_exists($mapa)) {
-                $success_mapa = unlink($mapa);
+            $mapa = 'img/Mape/'.$veza;
+
+            if (file_exists($mapa)) {
+                    $success_mapa = unlink($mapa);
+            }
         }
 
         if ($success and $success_thumb and $success_mapa) {
             $this->flash->addMessage('success', "Mapa sa nazivom [{$veza}] je uspešno obrisana.");
             return $response->withRedirect($this->router->pathFor('mape'));
-        } else {
+        } elseif($success and !$success_thumb and !$success_thumb) {
+            $this->flash->addMessage('warning', "Mapa sa nazivom [{$veza}] je uspešno obrisana, ali samo iz baze.");
+            return $response->withRedirect($this->router->pathFor('mape'));
+        }else {
             $this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja mape.");
             return $response->withRedirect($this->router->pathFor('mape'));
         }
