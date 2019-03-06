@@ -53,6 +53,7 @@ class Validator
         'min',
         'max',
         'equal',
+        'jmbg',
     ];
 
     /**
@@ -72,6 +73,7 @@ class Validator
         'max' => "Polje :field mora da bude broj ne veći od :option",
         'min' => "Polje :field mora da bude broj ne manji od :option",
         'equal' => "Polje :field mora da bude jednako :option",
+        'jmbg' => "Polje :field mora da bude ispravan JMBG",
     ];
 
     /**
@@ -314,8 +316,51 @@ class Validator
      */
     protected function equal($field, $value, $option)
     {
-        // dd(gettype($option));
         return (string)$value === (string)$option;
+    }
+
+    /**
+     * Pravilo - validan JMBG
+     */
+    protected function jmbg($field, $value, $option)
+    {
+        $len = strlen($value);
+        if ($len != 13) {
+            return false;
+        }
+        $niz = str_split($value);
+        $ok = true;
+        $zbir = 0;
+        foreach($niz as $k=>$v) {
+            if(!is_numeric($v)) {
+                return false;
+            }
+            $niz[$k]=(int)$v;
+        }
+        $zbir = $niz[0] * 7
+        + $niz[1] * 6
+        + $niz[2] * 5
+        + $niz[3] * 4
+        + $niz[4] * 3
+        + $niz[5] * 2
+        + $niz[6] * 7
+        + $niz[7] * 6
+        + $niz[8] * 5
+        + $niz[9] * 4
+        + $niz[10] * 3
+        + $niz[11] * 2;
+        $ostatak = $zbir % 11;
+        if ($ostatak === 1) {
+            return false;
+        }
+        $kontrolni = 11 - $ostatak;
+        if ($ostatak == 0) {
+            $kontrolni = 0;
+        }
+        if ($kontrolni != $niz[12]) {
+            return false;
+        }
+        return true;
     }
 
     /**
