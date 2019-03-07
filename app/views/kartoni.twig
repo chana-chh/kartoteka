@@ -14,12 +14,12 @@
         {{ csrf | raw }}
         <select name="groblje_id" id="groblje_id" class="uk-select uk-form-width-small uk-form-small" autofocus>
           {% for groblje in groblja %}
-          <option value="{{ groblje.id }}">{{ groblje.naziv }}</option>
+          <option value="{{ groblje.id }}" {{ data.groblje_id == groblje.id ? ' selected' : '' }}>{{ groblje.naziv }}</option>
           {% endfor %}
         </select>
-        <input type="text" name="parcela" id="parcela" class="uk-input uk-form-width-small uk-form-small" autocomplete="off"
+        <input type="text" name="parcela" id="parcela" class="uk-input uk-form-width-small uk-form-small" value="{{ data.parcela }}" autocomplete="off"
           placeholder="Parcela" />
-        <input type="text" name="grobno_mesto" id="grobno_mesto" class="uk-input uk-form-width-small uk-form-small" autocomplete="off"
+        <input type="text" name="grobno_mesto" id="grobno_mesto" class="uk-input uk-form-width-small uk-form-small" value="{{ data.grobno_mesto }}" autocomplete="off"
           placeholder="Grobno mesto" />
 
         <div class="uk-button-group">

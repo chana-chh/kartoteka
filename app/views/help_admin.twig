@@ -1,0 +1,25 @@
+{% extends "templates/app.twig" %}
+
+{% block sadrzaj %}
+<h1>Uputstvo za korišćenje programa</h1>
+<hr>
+<h2>Administracija</h2>
+<h3 id="korisnici">Korisnici programa</h3>
+<p>
+    Korisnici programa
+</p>
+{% endblock sadrzaj %}
+
+{% block traka %}
+<div uk-sticky="offset: 60" class="uk-sticky uk-active uk-sticky-fixed uk-sticky-below" style="position: fixed; top: 60px; width: 100px;">
+    <ul uk-scrollspy-nav="closest: li; scroll: true; offset: 60" class="uk-nav uk-nav-default uk-nav-parent-icon uk-padding-large">
+        <li><a href="{{ path_for('uputstvo') }}">Uputstvo</a></li>
+        <li><a href="{{ path_for('uputstvo.kartoni') }}">Kartoni</a></li>
+        <li><a href="{{ path_for('uputstvo.staraoci') }}">Staraoci</a></li>
+        <li><a href="{{ path_for('uputstvo.pokojnici') }}">Pokojnici</a></li>
+        <li><a href="{{ path_for('uputstvo.admin') }}">Administracija</a></li>
+        <li class="uk-nav-divider"></li>
+        <li><a href="#korisnici">Korisnici programa</a></li>
+    </ul>
+</div>
+{% endblock traka %}

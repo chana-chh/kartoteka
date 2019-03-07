@@ -22,12 +22,6 @@ class KartoniController extends Controller
         $this->render($response, 'kartoni.twig', compact('kartoni', 'groblja'));
     }
 
-    public function postKartoniPretraga($request, $response)
-    {
-        $_SESSION['DATA_KARTONI_PRETRAGA'] = $request->getParams();
-        return $response->withRedirect($this->router->pathFor('kartoni.pretraga'));
-    }
-
     public function getKartoniDodavanje($request, $response)
     {
         $modelGroblje = new Groblje();
@@ -157,10 +151,15 @@ class KartoniController extends Controller
         }
     }
 
+    public function postKartoniPretraga($request, $response)
+    {
+        $_SESSION['DATA_KARTONI_PRETRAGA'] = $request->getParams();
+        return $response->withRedirect($this->router->pathFor('kartoni.pretraga'));
+    }
+
     public function getKartoniPretraga($request, $response)
     {
         $data = $_SESSION['DATA_KARTONI_PRETRAGA'];
-        // unset($_SESSION['DATA']);
         array_shift($data);
         array_shift($data);
         $query = [];
