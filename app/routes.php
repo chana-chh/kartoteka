@@ -60,6 +60,11 @@ $app->group('', function () {
     $this->get('/pokojnici', '\App\Controllers\PokojniciController:getPokojnici')->setName('pokojnici');
     $this->get('/pokojnici/pretraga', '\App\Controllers\PokojniciController:getPokojniciPretraga')->setName('pokojnici.pretraga');
     $this->post('/pokojnici/pretraga', '\App\Controllers\PokojniciController:postPokojniciPretraga');
+    $this->get('/pokojnici/dodavanje/{id}', '\App\Controllers\PokojniciController:getPokojniciDodavanje')->setName('pokojnici.dodavanje');
+    $this->post('/pokojnici/dodavanje', '\App\Controllers\PokojniciController:postPokojniciDodavanje')->setName('pokojnici.dodavanje.post');
+    $this->post('/pokojnici/brisanje', '\App\Controllers\PokojniciController:postPokojniciBrisanje')->setName('pokojnici.brisanje');
+    $this->get('/pokojnici/izmena/{id}', '\App\Controllers\PokojniciController:getPokojniciIzmena')->setName('pokojnici.izmena');
+    $this->post('/pokojnici/izmena', '\App\Controllers\PokojniciController:postPokojniciIzmena')->setName('pokojnici.izmena.post');
     // Transakcije
     $this->get('/kartoni/transakcije/{id}', '\App\Controllers\TransakcijeController:getTransakcijeKarton')->setName('kartoni.transakcije');
     $this->post('/kartoni/transakcije/razduzivanje/ajax', '\App\Controllers\TransakcijeController:ajaxRazduzivanje')->setName('transakcije.razduzivanje.ajax');

@@ -1,7 +1,7 @@
 {% extends "templates/app.twig" %}
 
 {% block naslov %}
-<h1>Dodavanje novog staraoca</h1>
+<h1>Izmena podataka staraoca</h1>
 <hr>
 <form action="{{ path_for('staraoci.izmena.post') }}" method="POST" class="uk-form-stacked" uk-grid>
 	{{ csrf|raw }}
