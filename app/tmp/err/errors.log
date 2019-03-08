@@ -1064,16 +1064,46 @@
 [05-Mar-2019 17:01:05 Europe/Belgrade] PHP  35. call_user_func:{D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41}() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41
 [05-Mar-2019 17:01:05 Europe/Belgrade] PHP  36. App\Controllers\DokumentiController->postDokumentiBrisanje() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41
 [05-Mar-2019 17:01:05 Europe/Belgrade] PHP  37. unlink() D:\xampp\htdocs\kartoteka\app\controllers\DokumentiController.php:79
-[05-Mar-2019 21:25:20 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 164
-[05-Mar-2019 21:30:33 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 164
-[05-Mar-2019 21:33:18 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 164
-[05-Mar-2019 21:33:18 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 167
-[05-Mar-2019 21:33:18 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 167
-[05-Mar-2019 21:36:46 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 164
-[05-Mar-2019 21:36:46 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 167
-[05-Mar-2019 21:36:46 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 167
-[05-Mar-2019 21:36:51 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 164
-[05-Mar-2019 21:36:51 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 167
-[05-Mar-2019 21:36:51 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 167
-[07-Mar-2019 14:23:06 Europe/Belgrade] PHP Notice:  Undefined variable: image_create_func in D:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 211
-[07-Mar-2019 14:24:41 Europe/Belgrade] PHP Notice:  Undefined variable: image_create_func in D:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 211
+[05-Mar-2019 21:25:20 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 164
+
+[05-Mar-2019 21:30:33 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 164
+
+[05-Mar-2019 21:33:18 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 164
+
+[05-Mar-2019 21:33:18 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 167
+
+[05-Mar-2019 21:33:18 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 167
+
+[05-Mar-2019 21:36:46 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 164
+
+[05-Mar-2019 21:36:46 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 167
+
+[05-Mar-2019 21:36:46 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 167
+
+[05-Mar-2019 21:36:51 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 164
+
+[05-Mar-2019 21:36:51 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 167
+
+[05-Mar-2019 21:36:51 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 167
+
+[06-Mar-2019 08:53:40 Europe/Belgrade] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in C:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 148
+[06-Mar-2019 08:53:43 Europe/Belgrade] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in C:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 148
+[06-Mar-2019 10:26:52 Europe/Belgrade] PHP Notice:  Undefined variable: n in C:\xampp\htdocs\kartoteka\app\fje.php on line 72
+[06-Mar-2019 10:26:52 Europe/Belgrade] PHP Notice:  Undefined variable: n in C:\xampp\htdocs\kartoteka\app\fje.php on line 73
+[06-Mar-2019 10:26:52 Europe/Belgrade] PHP Notice:  Undefined variable: n in C:\xampp\htdocs\kartoteka\app\fje.php on line 74
+[06-Mar-2019 10:26:52 Europe/Belgrade] PHP Notice:  Undefined variable: n in C:\xampp\htdocs\kartoteka\app\fje.php on line 75
+[06-Mar-2019 10:26:52 Europe/Belgrade] PHP Notice:  Undefined variable: n in C:\xampp\htdocs\kartoteka\app\fje.php on line 76
+[06-Mar-2019 10:26:52 Europe/Belgrade] PHP Notice:  Undefined variable: n in C:\xampp\htdocs\kartoteka\app\fje.php on line 77
+[06-Mar-2019 10:26:52 Europe/Belgrade] PHP Notice:  Undefined variable: n in C:\xampp\htdocs\kartoteka\app\fje.php on line 78
+[06-Mar-2019 10:26:52 Europe/Belgrade] PHP Notice:  Undefined variable: n in C:\xampp\htdocs\kartoteka\app\fje.php on line 79
+[06-Mar-2019 10:26:52 Europe/Belgrade] PHP Notice:  Undefined variable: n in C:\xampp\htdocs\kartoteka\app\fje.php on line 80
+[06-Mar-2019 10:26:52 Europe/Belgrade] PHP Notice:  Undefined variable: n in C:\xampp\htdocs\kartoteka\app\fje.php on line 81
+[06-Mar-2019 10:26:52 Europe/Belgrade] PHP Notice:  Undefined variable: n in C:\xampp\htdocs\kartoteka\app\fje.php on line 82
+[06-Mar-2019 10:26:52 Europe/Belgrade] PHP Notice:  Undefined variable: n in C:\xampp\htdocs\kartoteka\app\fje.php on line 83
+[06-Mar-2019 10:28:25 Europe/Belgrade] PHP Warning:  Use of undefined constant ostatak - assumed 'ostatak' (this will throw an Error in a future version of PHP) in C:\xampp\htdocs\kartoteka\app\fje.php on line 88
+[06-Mar-2019 10:28:25 Europe/Belgrade] PHP Warning:  A non-numeric value encountered in C:\xampp\htdocs\kartoteka\app\fje.php on line 88
+[06-Mar-2019 13:06:45 Europe/Belgrade] PHP Notice:  Undefined index: karton_id in C:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 274
+[06-Mar-2019 13:07:18 Europe/Belgrade] PHP Notice:  Undefined index: karton_id in C:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 274
+[06-Mar-2019 13:07:48 Europe/Belgrade] PHP Notice:  Undefined index: karton_id in C:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 274
+[06-Mar-2019 13:08:38 Europe/Belgrade] PHP Notice:  Undefined index: karton_id in C:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 274
+[06-Mar-2019 13:11:58 Europe/Belgrade] PHP Notice:  Undefined index: karton_id in C:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 274

@@ -14,10 +14,10 @@
 <div class="uk-panel uk-background-muted uk-padding-small">
     <form action="{{ path_for('pokojnici.pretraga') }}" method="POST">
         {{ csrf|raw }}
-        <input type="text" name="jmbg" id="jmbg" class="uk-input uk-form-width-small uk-form-small" autocomplete="off" placeholder="JMBG">
-        <input type="text" name="prezime" id="prezime" class="uk-input uk-form-width-small uk-form-small" autocomplete="off"
+        <input type="text" name="jmbg" id="jmbg" class="uk-input uk-form-width-small uk-form-small" value="{{ data.jmbg }}" maxlength="13" autocomplete="off" placeholder="JMBG">
+        <input type="text" name="prezime" id="prezime" class="uk-input uk-form-width-small uk-form-small" value="{{ data.prezime }}" autocomplete="off"
             placeholder="Prezime">
-        <input type="text" name="ime" id="ime" class="uk-input uk-form-width-small uk-form-small" autocomplete="off" placeholder="Ime">
+        <input type="text" name="ime" id="ime" class="uk-input uk-form-width-small uk-form-small" value="{{ data.ime }}" autocomplete="off" placeholder="Ime">
         <div class="uk-button-group">
             <input type="submit" value="Filtriraj" class="uk-button uk-button-primary uk-button-small">
             <a href="{{ path_for('pokojnici') }}" class="uk-button uk-button-secondary uk-button-small">Svi pokojnici</a>

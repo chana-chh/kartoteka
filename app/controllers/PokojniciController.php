@@ -71,12 +71,118 @@ class PokojniciController extends Controller
         $this->render($response, 'pokojnici.twig', compact('pokojnici', 'data'));
     }
 
-    public function getPokojniciPregled($request, $response, $args)
+    public function getPokojniciDodavanje($request, $response, $args)
     {
-        // $id = $args['id'];
-        // $modelKarton = new Karton();
-        // $karton = $modelKarton->find($id);
-        // $saldo = $karton->saldo();
-        // $this->render($response, 'karton_pregled.twig', compact('karton', 'saldo'));
+        $karton_id = $args['id'];
+        $this->render($response, 'pokojnik_dodavanje.twig', compact('karton_id'));
+    }
+
+    public function postPokojniciDodavanje($request, $response)
+    {
+        $data = $request->getParams();
+        unset($data['csrf_name']);
+        unset($data['csrf_value']);
+        $validation_rules = [
+            'karton_id' => [
+                'required' => true,
+                'min' => 1,
+            ],
+            'redni_broj' => [
+                'required' => true,
+                'multi_unique' => 'pokojnici.karton_id,redni_broj',
+            ],
+            'prezime' => [
+                'required' => true,
+            ],
+            'ime' => [
+                'required' => true,
+            ],
+            'jmbg' => [
+                'required' => true,
+                'jmbg' => true,
+            ],
+        ];
+        $this->validator->validate($data, $validation_rules);
+        if ($this->validator->hasErrors()) {
+            $this->flash->addMessage('danger', 'Došlo je do greške prilikom dodavanja novog pokojnika.');
+            return $response->withRedirect($this->router->pathFor('pokojnici.dodavanje', ['id' => $data['karton_id']]));
+        } else {
+            $dupla_raka = isset($data['dupla_raka']) ? 1 : 0;
+            $data['dupla_raka'] = $dupla_raka;
+            $data['datum_rodjenja'] = strlen($data['datum_rodjenja']) === 0 ? null : $data['datum_rodjenja'];
+            $data['datum_smrti'] = strlen($data['datum_smrti']) === 0 ? null : $data['datum_smrti'];
+            $data['datum_sahrane'] = strlen($data['datum_sahrane']) === 0 ? null : $data['datum_sahrane'];
+            $data['datum_ekshumacije'] = strlen($data['datum_ekshumacije']) === 0 ? null : $data['datum_ekshumacije'];
+            $model = new Pokojnik();
+            $model->insert($data);
+            $this->flash->addMessage('success', 'Novi pokojnik je uspešno upisan.');
+            return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $data['karton_id']]));
+        }
+    }
+
+    public function postPokojniciBrisanje($request, $response)
+    {
+        $id = (int)$request->getParam('modal_pokojnik_id');
+        $karton_id = (int)$request->getParam('modal_pokojnik_karton_id');
+        $model = new Pokojnik();
+        $success = $model->deleteOne($id);
+        if ($success) {
+            $this->flash->addMessage('success', "Pokojnik je uspešno obrisan.");
+            return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $karton_id]));
+        } else {
+            $this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja pokojnika.");
+            return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $karton_id]));
+        }
+    }
+
+    public function getPokojniciIzmena($request, $response, $args)
+    {
+        $id = (int)$args['id'];
+        $model = new Pokojnik();
+        $pokojnik = $model->find($id);
+        $this->render($response, 'pokojnik_izmena.twig', compact('pokojnik'));
+    }
+
+    public function postPokojniciIzmena($request, $response)
+    {
+        $id = (int)$request->getParam('id');
+        $id_kartona = (int)$request->getParam('karton_id');
+        $data = $request->getParams();
+        unset($data['csrf_name']);
+        unset($data['csrf_value']);
+        unset($data['id']);
+        $validation_rules = [
+            'redni_broj' => [
+                'required' => true,
+                'multi_unique' => 'pokojnici.karton_id,redni_broj#id:' . $id,
+            ],
+            'prezime' => [
+                'required' => true,
+            ],
+            'ime' => [
+                'required' => true,
+            ],
+            'jmbg' => [
+                'required' => true,
+                'jmbg' => true,
+            ],
+        ];
+        $this->validator->validate($data, $validation_rules);
+        if ($this->validator->hasErrors()) {
+            $this->flash->addMessage('danger', 'Došlo je do greške prilikom izmene pokojnika.');
+            return $response->withRedirect($this->router->pathFor('pokojnici.izmena', ['id' => $id_kartona]));
+        } else {
+            $model = new Pokojnik();
+            unset($data['karton_id']);
+            $dupla_raka = isset($data['dupla_raka']) ? 1 : 0;
+            $data['dupla_raka'] = $dupla_raka;
+            $data['datum_rodjenja'] = strlen($data['datum_rodjenja']) === 0 ? null : $data['datum_rodjenja'];
+            $data['datum_smrti'] = strlen($data['datum_smrti']) === 0 ? null : $data['datum_smrti'];
+            $data['datum_sahrane'] = strlen($data['datum_sahrane']) === 0 ? null : $data['datum_sahrane'];
+            $data['datum_ekshumacije'] = strlen($data['datum_ekshumacije']) === 0 ? null : $data['datum_ekshumacije'];
+            $model->update($data, $id);
+            $this->flash->addMessage('success', 'Izmene pokojnika su uspešno sačuvane.');
+            return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $id_kartona]));
+        }
     }
 }

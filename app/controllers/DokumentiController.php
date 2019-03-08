@@ -102,6 +102,7 @@ class DokumentiController extends Controller
         unset($data['csrf_name']);
         unset($data['csrf_value']);
         unset($data['id']);
+        unset($data['karton_id']);
         $dokument = $request->getUploadedFiles()['dokument'];
         $novi_dok = ($dokument->getError() === UPLOAD_ERR_NO_FILE) ? false : true;
         if ($novi_dok && $dokument->getError() !== UPLOAD_ERR_OK) {
@@ -122,8 +123,8 @@ class DokumentiController extends Controller
         ];
         $this->validator->validate($data, $validation_rules);
         if ($this->validator->hasErrors()) {
-            $this->flash->addMessage('danger', 'Došlo je do greške prilikom dodavanja dokumenta.');
-            return $response->withRedirect($this->router->pathFor('dokumenti.dodavanje', ['id' => $id_kartona]));
+            $this->flash->addMessage('danger', 'Došlo je do greške prilikom izmene dokumenta.');
+            return $response->withRedirect($this->router->pathFor('dokumenti.izmena', ['id' => $id_kartona]));
         } else {
             $modelDokument = new Dokument();
             $dok = $modelDokument->find($id);
@@ -139,7 +140,6 @@ class DokumentiController extends Controller
                 $data['veza'] = $veza;
                 $dokument->moveTo('doc/' . $filename);
             }
-            unset($data['karton_id']);
             $modelDokument->update($data, $id);
             $this->flash->addMessage('success', 'Izmene dokumenta su uspešno sačuvane.');
             return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $id_kartona]));

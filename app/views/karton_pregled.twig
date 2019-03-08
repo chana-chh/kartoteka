@@ -68,7 +68,7 @@
     </div>
   </div>
 </div>
-<hr class="uk-divider-icon">
+<hr class="uk-margin-large">
 <div class="uk-clearfix">
   <div class="uk-float-left">
     <h2 class="uk-text-danger">
@@ -77,7 +77,7 @@
     </h2>
   </div>
   <div class="uk-float-right uk-margin-small-top">
-    <a href="#" class="uk-button uk-button-primary uk-button-small">Dodaj staraoca</a>
+    <a href="{{ path_for('staraoci.dodavanje', {id:karton.id}) }}" class="uk-button uk-button-primary uk-button-small">Dodaj staraoca</a>
   </div>
 </div>
 <div class="uk-overflow-auto">
@@ -109,12 +109,12 @@
         <td class="uk-clearfix">
           <ul class="uk-iconnav uk-float-right">
             <li>
-              <a href="#" title="Izmena">
+              <a href="{{ path_for('staraoci.izmena',{id:st.id}) }}" title="Izmena">
                 <span uk-icon="pencil"></span>
               </a>
             </li>
             <li>
-              <a href="#" title="Brisanje">
+              <a title="Brisanje" href="#modal-brisanje-staraoca" data-id="{{ st.id }}" onclick="setStarId(this);" uk-toggle>
                 <span uk-icon="trash"></span>
               </a>
             </li>
@@ -125,7 +125,11 @@
     </tbody>
   </table>
 </div>
-<hr class="uk-divider-icon">
+
+<!-- MODAL BRISANJE STARAOCA -->
+{% include 'inc/staraoc_brisanje.twig' %}
+
+<hr class="uk-margin-large">
 <div class="uk-clearfix">
   <div class="uk-float-left">
     <h2>
@@ -134,7 +138,7 @@
     </h2>
   </div>
   <div class="uk-float-right uk-margin-small-top">
-    <a href="#" class="uk-button uk-button-primary uk-button-small">Dodaj pokojnika</a>
+    <a href="{{ path_for('pokojnici.dodavanje',{'id':karton.id}) }}" class="uk-button uk-button-primary uk-button-small">Dodaj pokojnika</a>
   </div>
 </div>
 <div class="uk-overflow-auto">
@@ -143,11 +147,9 @@
       <tr>
         <th class="w-5">Id</th>
         <th class="w-5">RB</th>
-        <th class="w-20">Ime</th>
+        <th class="w-25">Ime</th>
         <th class="w-15">JMBG</th>
-        <th class="w-15">Mesto</th>
-        <th class="w-5">Dupla</th>
-        <th class="w-5">Pozicija</th>
+        <th class="w-20">Mesto</th>
         <th class="w-5">Datum rođenja</th>
         <th class="w-5">Datum smrti</th>
         <th class="w-5">Datum sahrane</th>
@@ -163,8 +165,6 @@
         <td>{{ pok.punoIme() }}</td>
         <td>{{ pok.jmbg }}</td>
         <td>{{ pok.mesto }}</td>
-        <td>{{ pok.duplaRaka(true)|raw }}</td>
-        <td>{{ pok.pozicija }}</td>
         <td>{{ pok.datum_rodjenja() }}</td>
         <td>{{ pok.datum_smrti() }}</td>
         <td>{{ pok.datum_sahrane() }}</td>
@@ -172,12 +172,12 @@
         <td class="uk-clearfix">
           <ul class="uk-iconnav uk-float-right">
             <li>
-              <a href="#" title="Izmena">
+              <a href="{{ path_for('pokojnici.izmena',{'id':pok.id}) }}" title="Izmena">
                 <span uk-icon="pencil"></span>
               </a>
             </li>
             <li>
-              <a href="#" title="Brisanje">
+              <a title="Brisanje" href="#modal-brisanje-pokojnika" data-id="{{ pok.id }}" onclick="setPokId(this);" uk-toggle>
                 <span uk-icon="trash"></span>
               </a>
             </li>
@@ -188,6 +188,9 @@
     </tbody>
   </table>
 </div>
+
+<!-- MODAL BRISANJE STARAOCA -->
+{% include 'inc/pokojnik_brisanje.twig' %}
 {% endblock sadrzaj %}
 
 {% block traka %}
@@ -228,8 +231,7 @@
               <a href="{{ path_for('dokumenti.izmena', { 'id': dok.id }) }}" title="Izmena"><span uk-icon="pencil"></span></a>
             </li>
             <li>
-              <a href="#modal-brisanje-dokumenta" title="Brisanje" data-id="{{ dok.id }}" onclick="setDocId(this);"
-                uk-toggle>
+              <a href="#modal-brisanje-dokumenta" title="Brisanje" data-id="{{ dok.id }}" onclick="setDocId(this);" uk-toggle>
                 <span uk-icon="trash"></span>
               </a>
             </li>
@@ -244,7 +246,7 @@
 <!-- MODAL BRISANJE -->
 {% include 'inc/dokument_brisanje.twig' %}
 
-<hr class="uk-divider-icon">
+<hr class="uk-margin-large">
 <div class="uk-clearfix">
   <div class="uk-float-left">
     <h2 class="uk-text-success">Transakcije</h2>
@@ -272,7 +274,9 @@
         <td>
           <em>{{ tran.tip_transakcije().tip }}</em>
         </td>
-        <td>{{ tran.tip_transakcije().godina_od }}-{{ tran.tip_transakcije().godina_do }}</td>
+        <td>
+          {{ tran.tip_transakcije().godina_od ? : '' }}{{ tran.tip_transakcije().godina_do ? '-' ~ tran.tip_transakcije().godina_do : '' }}
+        </td>
         <td>{{ tran.datum() }}</td>
         <td class="uk-text-right">{{ (tran.iznos)|number_format(2, '.', ',') }}</td>
         <td>{{ tran.razduzenoDisabled() | raw }}</td>
@@ -291,9 +295,20 @@
   document.getElementById("modal_dugme_brisi_dokument").addEventListener("click", function () {
     document.getElementById("forma_brisanje_dokumenta").submit();
   });
-
+  document.getElementById("modal_dugme_brisi_staraoca").addEventListener("click", function () {
+    document.getElementById("forma_brisanje_staraoca").submit();
+  });
+  document.getElementById("modal_dugme_brisi_pokojnika").addEventListener("click", function () {
+    document.getElementById("forma_brisanje_pokojnika").submit();
+  });
   function setDocId(el) {
     document.getElementById("modal_dokument_id").value = el.dataset.id;
+  }
+  function setStarId(el) {
+    document.getElementById("modal_staraoc_id").value = el.dataset.id;
+  }
+  function setPokId(el) {
+    document.getElementById("modal_pokojnik_id").value = el.dataset.id;
   }
 </script>
 {% endblock skripta %}

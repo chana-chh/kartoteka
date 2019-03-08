@@ -6,8 +6,8 @@
 <form action="{{ path_for('dokumenti.izmena.post') }}" method="POST" id="forma_izmena_dokumenta" enctype="multipart/form-data"
 	class="uk-form-stacked" uk-grid>
 	{{ csrf|raw }}
-	<input type="hidden" name="karton_id" id="karton_id" value="{{ dokument.karton_id }}">
-	<input type="hidden" name="id" id="id" value="{{ dokument.id }}">
+	<input type="hidden" name="karton_id" id="karton_id" value="{{ dokument.karton_id }}" required>
+	<input type="hidden" name="id" id="id" value="{{ dokument.id }}" required>
 	<div class="uk-width-1-6">
 		<label for="tip" class="uk-form-label">Tip dokumenta</label>
 		<div class="uk-form-controls">

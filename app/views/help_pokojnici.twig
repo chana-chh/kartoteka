@@ -1,0 +1,28 @@
+{% extends "templates/app.twig" %}
+
+{% block sadrzaj %}
+<h1 id="top">Uputstvo za korišćenje programa</h1>
+<hr>
+<h2>Pokojnici</h2>
+<h3 id="pregled">Pregled svih pokojnika</h3>
+<p>
+    Pregled svih pokojnika
+</p>
+{% endblock sadrzaj %}
+
+{% block traka %}
+<div uk-sticky="offset: 60" class="uk-sticky uk-active uk-sticky-fixed uk-sticky-below" style="position: fixed; top: 60px; width: 100px;">
+    <ul uk-scrollspy-nav="closest: li; scroll: true; offset: 60" class="uk-nav uk-nav-default uk-nav-parent-icon uk-padding-large">
+        <li><a href="{{ path_for('uputstvo') }}"><span uk-icon="question"></span> Uputstvo</a></li>
+        <li><a href="{{ path_for('uputstvo.kartoni') }}"><span uk-icon="file"></span> Kartoni</a></li>
+        <li><a href="{{ path_for('uputstvo.staraoci') }}"><span uk-icon="users"></span> Staraoci</a></li>
+        <li><a href="{{ path_for('uputstvo.pokojnici') }}"><span uk-icon="plus"></span> Pokojnici</a></li>
+        <li><a href="{{ path_for('uputstvo.transakcije') }}"><span uk-icon="credit-card"></span> Transakcije</a></li>
+        <li><a href="{{ path_for('uputstvo.admin') }}"><span uk-icon="database"></span> Administracija</a></li>
+        <li class="uk-nav-divider"></li>
+        <li><a href="#pregled">Pregled svih pokojnika</a></li>
+        <li class="uk-nav-divider"></li>
+        <li><a href="#top"><span uk-icon="arrow-up"></span> Vrh strane</a></li>
+    </ul>
+</div>
+{% endblock traka %}

@@ -1,0 +1,108 @@
+{% extends "templates/app.twig" %}
+
+{% block naslov %}
+<h1>Dodavanje novog pokojnika</h1>
+<hr>
+<form action="{{ path_for('pokojnici.dodavanje.post') }}" method="POST" class="uk-form-stacked" uk-grid>
+	{{ csrf|raw }}
+	<input type="hidden" name="karton_id" step="1" id="karton_id" value="{{ karton_id }}" required>
+	<div class="uk-width-1-6">
+		<label for="redni_broj" class="uk-form-label">Redni broj</label>
+		<div class="uk-form-controls">
+			<input type="number" name="redni_broj" step="1" id="redni_broj" value="{{ old.redni_broj ? : '' }}"
+				class="uk-input{{ errors.redni_broj[0] ? ' uk-form-danger': ''}}" autocomplete="off" min="1" autofocus required>
+		</div>
+		<small class=" uk-text-danger">{{ errors.redni_broj[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-6">
+		<label for="prezime" class="uk-form-label">Prezime</label>
+		<div class="uk-form-controls">
+			<input type="text" name="prezime" id="prezime" class="uk-input{{ errors.prezime[0] ? ' uk-form-danger': ''}}"
+				value="{{ old.prezime ? : '' }}" autocomplete="off" required>
+		</div>
+		<small class="uk-text-danger">{{ errors.prezime[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-6">
+		<label for="ime" class="uk-form-label">Ime</label>
+		<div class="uk-form-controls">
+			<input type="text" name="ime" id="ime" class="uk-input{{ errors.ime[0] ? ' uk-form-danger': ''}}" value="{{ old.ime ? : '' }}"
+				autocomplete="off" required>
+		</div>
+		<small class="uk-text-danger">{{ errors.ime[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-6">
+		<label for="srednje_ime" class="uk-form-label">Srednje ime</label>
+		<div class="uk-form-controls">
+			<input type="text" name="srednje_ime" id="srednje_ime" class="uk-input{{ errors.srednje_ime[0] ? ' uk-form-danger': ''}}"
+				value="{{ old.srednje_ime ? : '' }}" autocomplete="off">
+		</div>
+		<small class="uk-text-danger">{{ errors.srednje_ime[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-6">
+		<label for="jmbg" class="uk-form-label">JMBG</label>
+		<div class="uk-form-controls">
+			<input type="text" name="jmbg" id="jmbg" class="uk-input{{ errors.jmbg[0] ? ' uk-form-danger': ''}}"
+				value="{{ old.jmbg ? : '' }}" autocomplete="off" maxlength="13" required>
+		</div>
+		<small class="uk-text-danger">{{ errors.jmbg[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-6">
+		<label for="mesto" class="uk-form-label">Mesto</label>
+		<div class="uk-form-controls">
+			<input type="text" name="mesto" id="mesto" class="uk-input{{ errors.mesto[0] ? ' uk-form-danger': ''}}"
+				value="{{ old.mesto ? : 'Kragujevac' }}" autocomplete="off">
+		</div>
+		<small class="uk-text-danger">{{ errors.mesto[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-6">
+		<label for="datum_rodjenja" class="uk-form-label">Datum rođenja</label>
+		<div class="uk-form-controls">
+			<input type="date" name="datum_rodjenja" id="datum_rodjenja" value="{{ old.datum_rodjenja }}"
+				class="uk-input{{ errors.datum_rodjenja[0] ? ' uk-form-danger': ''}}" autocomplete="off">
+		</div>
+		<small class=" uk-text-danger">{{ errors.datum_rodjenja[0] ? : '' }}</small>
+	</div>
+	<div class="uk-width-1-6">
+		<label for="datum_smrti" class="uk-form-label">Datum smrti</label>
+		<div class="uk-form-controls">
+			<input type="date" name="datum_smrti" id="datum_smrti" value="{{ old.datum_smrti ? : '' }}"
+				class="uk-input{{ errors.datum_smrti[0] ? ' uk-form-danger': ''}}" autocomplete="off">
+		</div>
+		<small class=" uk-text-danger">{{ errors.datum_smrti[0] ? : '' }}</small>
+	</div>
+	<div class="uk-width-1-6">
+		<label for="datum_sahrane" class="uk-form-label">Datum sahrane</label>
+		<div class="uk-form-controls">
+			<input type="date" name="datum_sahrane" id="datum_sahrane" value="{{ old.datum_sahrane ? : '' }}"
+				class="uk-input{{ errors.datum_sahrane[0] ? ' uk-form-danger': ''}}" autocomplete="off">
+		</div>
+		<small class=" uk-text-danger">{{ errors.datum_sahrane[0] ? : '' }}</small>
+	</div>
+	<div class="uk-width-1-6">
+		<label for="datum_ekshumacije" class="uk-form-label">Datum ekshumacije</label>
+		<div class="uk-form-controls">
+			<input type="date" name="datum_ekshumacije" id="datum_ekshumacije" value="{{ old.datum_ekshumacije ? : '' }}"
+				class="uk-input{{ errors.datum_ekshumacije[0] ? ' uk-form-danger': ''}}" autocomplete="off">
+		</div>
+		<small class=" uk-text-danger">{{ errors.datum_ekshumacije[0] ? : '' }}</small>
+	</div>
+	<div class="uk-width-1-6">
+		<label for="pozicija" class="uk-form-label">Pozicija</label>
+		<div class="uk-form-controls">
+			<input type="text" name="pozicija" id="pozicija" class="uk-input{{ errors.pozicija[0] ? ' uk-form-danger': ''}}"
+				value="{{ old.pozicija ? : '' }}" autocomplete="off">
+		</div>
+		<small class="uk-text-danger">{{ errors.pozicija[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-6">
+		<div class="uk-form-controls uk-margin-top">
+			<label><input class="uk-checkbox{{ errors.dupla_raka[0] ? ' uk-form-danger': ''}}" type="checkbox" name="dupla_raka"
+					{{ old.dupla_raka ? ' checked' : '' }}> Dupla raka</label>
+		</div>
+	</div>
+	<div class="uk-button-group uk-width-1-6">
+		<button class="uk-button uk-button-primary uk-width-1-2">Snimi</button>
+		<a href="{{ path_for('kartoni.pregled',{id:karton_id}) }}" class="uk-button uk-button-secondary uk-width-1-2">Otkaži</a>
+	</div>
+</form>
+{% endblock naslov %}

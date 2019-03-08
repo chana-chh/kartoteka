@@ -54,6 +54,47 @@ function latinicaUCirilicu(string $tekst, bool $cirilica_u_latinicu = false)
     }
 }
 
+function isValidJMBG(string $jmbg)
+{
+    $len = strlen($jmbg);
+    if ($len != 13) {
+        return false;
+    }
+    $niz = str_split($jmbg);
+    $ok = true;
+    $zbir = 0;
+    foreach($niz as $k=>$v) {
+        if(!is_numeric($v)) {
+            return false;
+        }
+        $niz[$k]=(int)$v;
+    }
+    $zbir = $niz[0] * 7
+    + $niz[1] * 6
+    + $niz[2] * 5
+    + $niz[3] * 4
+    + $niz[4] * 3
+    + $niz[5] * 2
+    + $niz[6] * 7
+    + $niz[7] * 6
+    + $niz[8] * 5
+    + $niz[9] * 4
+    + $niz[10] * 3
+    + $niz[11] * 2;
+    $ostatak = $zbir % 11;
+    if ($ostatak === 1) {
+        return false;
+    }
+    $kontrolni = 11 - $ostatak;
+    if ($ostatak == 0) {
+        $kontrolni = 0;
+    }
+    if ($kontrolni != $niz[12]) {
+        return false;
+    }
+    return true;
+}
+
 /**
  * Prikaz greske
  *

@@ -16,6 +16,11 @@ use App\Middlewares\GuestMiddleware;
 $app->get('/', '\App\Controllers\HomeController:getHome')->setName('pocetna');
 $app->get('/o-programu', '\App\Controllers\HomeController:getAbout')->setName('o_programu');
 $app->get('/uputstvo', '\App\Controllers\HomeController:getHelp')->setName('uputstvo');
+$app->get('/uputstvo-kartoni', '\App\Controllers\HomeController:getHelpKartoni')->setName('uputstvo.kartoni');
+$app->get('/uputstvo-staraoci', '\App\Controllers\HomeController:getHelpStaraoci')->setName('uputstvo.staraoci');
+$app->get('/uputstvo-pokojnici', '\App\Controllers\HomeController:getHelpPokojnici')->setName('uputstvo.pokojnici');
+$app->get('/uputstvo-administracija', '\App\Controllers\HomeController:getHelpAdmin')->setName('uputstvo.admin');
+$app->get('/uputstvo-transakcije', '\App\Controllers\HomeController:getHelpTransakcije')->setName('uputstvo.transakcije');
 
 $app->group('', function () {
     $this->get('/prijava', '\App\Controllers\AuthController:getPrijava')->setName('prijava');
@@ -51,10 +56,20 @@ $app->group('', function () {
     $this->get('/staraoci', '\App\Controllers\StaraociController:getStaraoci')->setName('staraoci');
     $this->get('/staraoci/pretraga', '\App\Controllers\StaraociController:getStaraociPretraga')->setName('staraoci.pretraga');
     $this->post('/staraoci/pretraga', '\App\Controllers\StaraociController:postStaraociPretraga');
+    $this->get('/staraoci/dodavanje/{id}', '\App\Controllers\StaraociController:getStaraociDodavanje')->setName('staraoci.dodavanje');
+    $this->post('/staraoci/dodavanje', '\App\Controllers\StaraociController:postStaraociDodavanje')->setName('staraoci.dodavanje.post');
+    $this->post('/staraoci/brisanje', '\App\Controllers\StaraociController:postStaraociBrisanje')->setName('staraoci.brisanje');
+    $this->get('/staraoci/izmena/{id}', '\App\Controllers\StaraociController:getStaraociIzmena')->setName('staraoci.izmena');
+    $this->post('/staraoci/izmena', '\App\Controllers\StaraociController:postStaraociIzmena')->setName('staraoci.izmena.post');
     // Pokojnici
     $this->get('/pokojnici', '\App\Controllers\PokojniciController:getPokojnici')->setName('pokojnici');
     $this->get('/pokojnici/pretraga', '\App\Controllers\PokojniciController:getPokojniciPretraga')->setName('pokojnici.pretraga');
     $this->post('/pokojnici/pretraga', '\App\Controllers\PokojniciController:postPokojniciPretraga');
+    $this->get('/pokojnici/dodavanje/{id}', '\App\Controllers\PokojniciController:getPokojniciDodavanje')->setName('pokojnici.dodavanje');
+    $this->post('/pokojnici/dodavanje', '\App\Controllers\PokojniciController:postPokojniciDodavanje')->setName('pokojnici.dodavanje.post');
+    $this->post('/pokojnici/brisanje', '\App\Controllers\PokojniciController:postPokojniciBrisanje')->setName('pokojnici.brisanje');
+    $this->get('/pokojnici/izmena/{id}', '\App\Controllers\PokojniciController:getPokojniciIzmena')->setName('pokojnici.izmena');
+    $this->post('/pokojnici/izmena', '\App\Controllers\PokojniciController:postPokojniciIzmena')->setName('pokojnici.izmena.post');
     // Transakcije
     $this->get('/kartoni/transakcije/{id}', '\App\Controllers\TransakcijeController:getTransakcijeKarton')->setName('kartoni.transakcije');
     $this->post('/kartoni/transakcije/razduzivanje/ajax', '\App\Controllers\TransakcijeController:ajaxRazduzivanje')->setName('transakcije.razduzivanje.ajax');

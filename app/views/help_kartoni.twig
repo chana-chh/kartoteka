@@ -1,0 +1,66 @@
+{% extends "templates/app.twig" %}
+
+{% block sadrzaj %}
+<h1 id="top">Uputstvo za korišćenje programa</h1>
+<hr>
+<h2>Kartoni</h2>
+<h3 id="pregled">Pregled svih kartona</h3>
+<p>
+    Biranjem stavke menija <code>KARTONI</code> korisnik dobija pregled svih kartona.
+</p>
+<figure>
+    <img data-src="{{ base_url() }}/img/help/meni_auth_kartoni.png" alt="Meni - kartoni" uk-img>
+    <figcaption>Slika 1. Meni - kartoni</figcaption>
+</figure>
+<figure>
+    <img data-src="{{ base_url() }}/img/help/kartoni.png" alt="Ekran - kartoni" uk-img>
+    <figcaption>Slika 2. Ekran - kartoni</figcaption>
+</figure>
+<h3 id="pretraga">Pretraživanje kartona</h3>
+<p>
+    Na ekranu kartoni vrši se pretraga (filtriranje) kartona po tri parametra: groblju, parceli i grobnom mestu. Unosom
+    bilo koje kombinacije ovatri parametra i kljikom na dugme <code>FILTRIRAJ</code> prelazi se na ekran koji je skoro identičan
+    ekranu sa svim kartonima s tom razlikom sto sardži samo one kartone koji odgovaraju zadatim parametrima.
+</p>
+<figure>
+    <img data-src="{{ base_url() }}/img/help/kartoni_pretraga.png" alt="Ekran - kartoni pretraga" uk-img>
+    <figcaption>Slika 3. Ekran - kartoni pretraga</figcaption>
+</figure>
+<figure>
+    <img data-src="{{ base_url() }}/img/help/kartoni_filter.png" alt="Ekran - filtrirani kartoni" uk-img>
+    <figcaption>Slika 4. Ekran - filtrirani kartoni</figcaption>
+</figure>
+<h3 id="dodavanje">Dodavanje novog kartona</h3>
+<p>
+    Sa ekrana kartoni može se dodati novi karton klikom na dugme <code>DODAJ KARTON</code> čime se prelazi na ekran za dodavanje novog
+    kartona.
+</p>
+<figure>
+    <img data-src="{{ base_url() }}/img/help/kartoni_dodavanje_dugme.png" alt="Dugme za dodavanje novog kartona" uk-img>
+    <figcaption>Slika 5. Dugme za dodavanje novog kartona</figcaption>
+</figure>
+<figure>
+    <img data-src="{{ base_url() }}/img/help/kartoni_dodavanje.png" alt="Ekran - dodavanje novog kartona" uk-img>
+    <figcaption>Slika 6. Ekran - dodavanje novog kartona</figcaption>
+</figure>
+
+{% endblock sadrzaj %}
+
+{% block traka %}
+<div uk-sticky="offset: 60" class="uk-sticky uk-active uk-sticky-fixed uk-sticky-below" style="position: fixed; top: 60px; width: 100px;">
+    <ul uk-scrollspy-nav="closest: li; scroll: true; offset: 60" class="uk-nav uk-nav-default uk-nav-parent-icon uk-padding-large">
+        <li><a href="{{ path_for('uputstvo') }}"><span uk-icon="question"></span> Uputstvo</a></li>
+        <li><a href="{{ path_for('uputstvo.kartoni') }}"><span uk-icon="file"></span> Kartoni</a></li>
+        <li><a href="{{ path_for('uputstvo.staraoci') }}"><span uk-icon="users"></span> Staraoci</a></li>
+        <li><a href="{{ path_for('uputstvo.pokojnici') }}"><span uk-icon="plus"></span> Pokojnici</a></li>
+        <li><a href="{{ path_for('uputstvo.transakcije') }}"><span uk-icon="credit-card"></span> Transakcije</a></li>
+        <li><a href="{{ path_for('uputstvo.admin') }}"><span uk-icon="database"></span> Administracija</a></li>
+        <li class="uk-nav-divider"></li>
+        <li><a href="#pregled">Pregled svih kartona</a></li>
+        <li><a href="#pretraga">Pretraživanje kartona</a></li>
+        <li><a href="#dodavanje">Dodavanje novog kartona</a></li>
+        <li class="uk-nav-divider"></li>
+        <li><a href="#top"><span uk-icon="arrow-up"></span> Vrh strane</a></li>
+    </ul>
+</div>
+{% endblock traka %}
