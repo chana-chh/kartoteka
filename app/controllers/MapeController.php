@@ -70,8 +70,8 @@ class MapeController extends Controller
         }
         else {
             $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
-            $filename = $request->getParam('groblje_id').'-'.implode("-",$data['parcela']).'.'.$extension;
-            $filenameThumb = $request->getParam('groblje_id').'-'.implode("-",$data['parcela']);
+            $filename = $request->getParam('groblje_id').'_'.implode("_",$data['parcela']).'.'.$extension;
+            $filenameThumb = $request->getParam('groblje_id').'_'.implode("_",$data['parcela']);
 
             $uploadedFile->moveTo('img/Mape/' . $filename);
 

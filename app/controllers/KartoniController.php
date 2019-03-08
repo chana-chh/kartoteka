@@ -205,7 +205,11 @@ class KartoniController extends Controller
         $modelMapa = new Mapa();
         $mapaM = $modelMapa->pronadjiMapu($karton->groblje_id, $karton->parcela);
         $mapa = (string)($mapaM->veza);
-        $this->render($response, 'karton_mapa.twig', compact('karton', 'grobno_mesto', 'mapa'));
+
+        $slika = 'img/Mape/'.$mapa;
+        list($sirina, $visina) = getimagesize($slika);
+
+        $this->render($response, 'karton_mapa.twig', compact('karton', 'grobno_mesto', 'mapa', 'sirina', 'visina'));
     }
 
     public function postKartoniMapa($request, $response)

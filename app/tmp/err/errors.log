@@ -1075,3 +1075,5 @@
 [05-Mar-2019 21:36:51 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 164
 [05-Mar-2019 21:36:51 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 167
 [05-Mar-2019 21:36:51 Europe/Belgrade] PHP Notice:  Undefined variable: success_thumb in D:\xampp\htdocs\kartoteka\app\controllers\MapeController.php on line 167
+[07-Mar-2019 14:23:06 Europe/Belgrade] PHP Notice:  Undefined variable: image_create_func in D:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 211
+[07-Mar-2019 14:24:41 Europe/Belgrade] PHP Notice:  Undefined variable: image_create_func in D:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 211
