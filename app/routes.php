@@ -17,9 +17,10 @@ $app->get('/', '\App\Controllers\HomeController:getHome')->setName('pocetna');
 $app->get('/o-programu', '\App\Controllers\HomeController:getAbout')->setName('o_programu');
 $app->get('/uputstvo', '\App\Controllers\HomeController:getHelp')->setName('uputstvo');
 $app->get('/uputstvo-kartoni', '\App\Controllers\HomeController:getHelpKartoni')->setName('uputstvo.kartoni');
-$app->get('/uputstvo/staraoci', '\App\Controllers\HomeController:getHelpStaraoci')->setName('uputstvo.staraoci');
+$app->get('/uputstvo-staraoci', '\App\Controllers\HomeController:getHelpStaraoci')->setName('uputstvo.staraoci');
 $app->get('/uputstvo-pokojnici', '\App\Controllers\HomeController:getHelpPokojnici')->setName('uputstvo.pokojnici');
 $app->get('/uputstvo-administracija', '\App\Controllers\HomeController:getHelpAdmin')->setName('uputstvo.admin');
+$app->get('/uputstvo-transakcije', '\App\Controllers\HomeController:getHelpTransakcije')->setName('uputstvo.transakcije');
 
 $app->group('', function () {
     $this->get('/prijava', '\App\Controllers\AuthController:getPrijava')->setName('prijava');

@@ -36,4 +36,9 @@ class HomeController extends Controller
 	{
 		$this->render($response, 'help_admin.twig');
 	}
+
+	public function getHelpTransakcije($request, $response)
+	{
+		$this->render($response, 'help_transakcije.twig');
+	}
 }
