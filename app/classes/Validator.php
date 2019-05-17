@@ -229,7 +229,7 @@ class Validator
      */
     protected function unique($field, $value, $option)
     {
-            // $option - tabela.kolona#id_col:id_val
+            // $option - tabela.kolona#id_col:id_val dodatni komentar zbog gita
             $id_val = null;
         if (strpos($option, '#') === false) {
             $tmp = explode('.', $option);
