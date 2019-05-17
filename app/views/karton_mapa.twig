@@ -100,20 +100,20 @@ document.getElementById('canvas').onclick = function getCursorPosition(event){
 background.onload = function(){
     ctx.drawImage(background,0,0);
 
-    var radius = 5;
+    var radius = 7;
     var period = 2000;
     
 
         ctx.beginPath();
         ctx.arc(x_osa, y_osa, radius, 0, 2 * Math.PI, false);
         ctx.lineWidth = 2;
-        ctx.strokeStyle = 'red';
+        ctx.strokeStyle = '#f0506e';
         ctx.stroke();
-        ctx.fillStyle = "red";
+        ctx.fillStyle = '#f0506e';
         ctx.fill();
         ctx.textAlign = "center";
         ctx.textBaseline="top";
-        ctx.font = "14px Arial";
+        ctx.font = "16px Arial";
         ctx.fillText(g, x_osa, y_osa + 2*radius);
   };
 </script>

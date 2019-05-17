@@ -1,0 +1,125 @@
+{% extends "templates/app.twig" %}
+
+{% block sadrzaj %}
+<h1 id="top">Pregled groblja</h1>
+<hr>
+<div class="uk-overflow-auto">
+  <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+    <thead>
+      <tr>
+        <th class="w-10">Id</th>
+        <th class="w-20">Naziv</th>
+        <th class="w-20">Adresa</th>
+        <th class="w-20">Mesto</th>
+        <th class="w-20">Poštanski broj</th>
+        <th class="w-10 uk-text-right"><span uk-icon="cog"></span></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for groblje in groblja.data %}
+      <tr>
+        <td>
+          <em>{{ groblje.id }}</em>
+        </td>
+        <td>
+            <strong>{{ groblje.naziv }}</strong>
+        </td>
+        <td>{{ groblje.adresa }}</td>
+        <td>{{ groblje.mesto }}</td>
+        <td>{{ groblje.ptt }}</td>
+        <td class="uk-clearfix">
+          <ul class="uk-iconnav uk-float-right">
+            <li>
+              <a href="{{ path_for('groblja.izmena', { id: groblje.id }) }}" title="Izmena">
+                <span uk-icon="pencil"></span>
+              </a>
+            </li>
+            <li>
+              <a title="Brisanje" href="#modal-brisanje" data-id="{{ groblje.id }}" onclick="setGrobljeId(this);" uk-toggle>
+                <span uk-icon="trash"></span>
+              </a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="uk-flex uk-flex-between uk-margin-top">
+  <div>{{ groblja.links.buttons | raw }}</div>
+  <div>Idi na stranu {{ groblja.links.select | raw }}</div>
+  <div>
+    <p>
+      Prikazani redovi od
+      <em>{{ groblja.links.row_from }}</em> do
+      <em>{{ groblja.links.row_to }}</em> od ukupno
+      <em>{{ groblja.links.total_rows }}</em>
+    </p>
+  </div>
+</div>
+<!-- MODAL BRISANJE KORISNIKA -->
+{% include 'inc/groblje_brisanje.twig' %}
+{% endblock sadrzaj %}
+
+{% block traka %}
+<form action="{{ path_for('groblja.dodavanje') }}" method="POST" class="uk-background-muted uk-margin-top uk-padding-small" onSubmit = "return checkPassword(this)">
+    {{ csrf|raw }}
+    <fieldset class="uk-fieldset">
+
+        <legend class="uk-legend">Dodavanje groblja</legend>
+
+        <div class="uk-margin">
+            <label class="uk-form-label" for="naziv">Naziv:</label>
+            <div class="uk-form-controls">
+            <input type="text" name="naziv" id="naziv" class="uk-input{{ errors.naziv[0] ? ' uk-form-danger': ''}}" value="{{ old.naziv ? : '' }}" autocomplete="off" required>
+        </div>
+        <small class="uk-text-danger">{{ errors.naziv[0] ? :'' }}</small>
+        </div>
+
+        <div class="uk-margin">
+            <label class="uk-form-label" for="adresa">Adresa:</label>
+            <div class="uk-form-controls">
+            <input type="text" name="adresa" id="adresa" class="uk-input{{ errors.adresa[0] ? ' uk-form-danger': ''}}" required>
+        </div>
+        <small class="uk-text-danger">{{ errors.adresa[0] ? :'' }}</small>
+        </div>
+        
+        <div class="uk-margin">
+            <label class="uk-form-label" for="mesto">Mesto:</label>
+            <div class="uk-form-controls">
+            <input type="text" name="mesto" id="mesto" class="uk-input{{ errors.mesto[0] ? ' uk-form-danger': ''}}" value="{{ old.mesto ? : '' }}" autocomplete="off" required>
+        </div>
+        <small class="uk-text-danger">{{ errors.mesto[0] ? :'' }}</small>
+        </div>
+
+        <div class="uk-margin">
+            <label class="uk-form-label" for="ptt">Poštanski broj:</label>
+            <div class="uk-form-controls">
+            <input type="text" name="ptt" id="ptt" class="uk-input{{ errors.ptt[0] ? ' uk-form-danger': ''}}" value="{{ old.ptt ? : '' }}" autocomplete="off" required>
+        </div>
+        <small class="uk-text-danger">{{ errors.ptt[0] ? :'' }}</small>
+        </div>
+
+        <hr class="uk-margin">
+        <div class="uk-margin uk-float-right">
+            <input type="submit" value="Sačuvaj" class="uk-button uk-button-primary uk-button-small">
+            <a href="{{ path_for('groblja') }}" class="uk-button uk-button-secondary uk-button-small">Otkaži</a>
+        </div>
+
+    </fieldset>
+</form>
+{% endblock traka %}
+{% block skripta %}
+<script>
+
+document.getElementById("modal_dugme_brisi").addEventListener("click", function () {
+    document.getElementById("forma_brisanje").submit();
+  });
+
+  function setGrobljeId(el) {
+    document.getElementById("modal_groblje_id").value = el.dataset.id;
+  }
+</script>
+{% endblock skripta %}

@@ -70,6 +70,17 @@ $app->group('', function () {
     $this->post('/pokojnici/brisanje', '\App\Controllers\PokojniciController:postPokojniciBrisanje')->setName('pokojnici.brisanje');
     $this->get('/pokojnici/izmena/{id}', '\App\Controllers\PokojniciController:getPokojniciIzmena')->setName('pokojnici.izmena');
     $this->post('/pokojnici/izmena', '\App\Controllers\PokojniciController:postPokojniciIzmena')->setName('pokojnici.izmena.post');
+    // Korisnici
+    $this->get('/administracija/korisnici', '\App\Controllers\KorisniciController:getKorisnici')->setName('korisnici');
+    $this->post('/administracija/korisnici/dodavanje', '\App\Controllers\KorisniciController:postKorisniciDodavanje')->setName('korisnici.dodavanje');
+    $this->post('/administracija/korisnici/brisanje', '\App\Controllers\KorisniciController:postKorisniciBrisanje')->setName('korisnici.brisanje');
+    $this->get('/administracija/korisnici/izmena/{id}', '\App\Controllers\KorisniciController:getKorisniciIzmena')->setName('korisnici.izmena');
+    $this->post('/administracija/korisnici/izmena', '\App\Controllers\KorisniciController:postKorisniciIzmena')->setName('korisnici.izmena.post');// Groblja
+    $this->get('/administracija/groblja', '\App\Controllers\GrobljaController:getGroblja')->setName('groblja');
+    $this->post('/administracija/groblja/dodavanje', '\App\Controllers\GrobljaController:postGrobljaDodavanje')->setName('groblja.dodavanje');
+    $this->post('/administracija/groblja/brisanje', '\App\Controllers\GrobljaController:postGrobljaBrisanje')->setName('groblja.brisanje');
+    $this->get('/administracija/groblja/izmena/{id}', '\App\Controllers\GrobljaController:getGrobljaIzmena')->setName('groblja.izmena');
+    $this->post('/administracija/groblja/izmena', '\App\Controllers\GrobljaController:postGrobljaIzmena')->setName('groblja.izmena.post');
     // Transakcije
     $this->get('/kartoni/transakcije/{id}', '\App\Controllers\TransakcijeController:getTransakcijeKarton')->setName('kartoni.transakcije');
     $this->post('/kartoni/transakcije/razduzivanje/ajax', '\App\Controllers\TransakcijeController:ajaxRazduzivanje')->setName('transakcije.razduzivanje.ajax');

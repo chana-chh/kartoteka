@@ -1,0 +1,143 @@
+{% extends "templates/app.twig" %}
+
+{% block sadrzaj %}
+<h1 id="top">Pregled korisnika kartoteke i njihovih prava</h1>
+<hr>
+<div class="uk-overflow-auto">
+  <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+    <thead>
+      <tr>
+        <th class="w-10">Id</th>
+        <th class="w-30">Ime i prezime</th>
+        <th class="w-30">Nalog</th>
+        <th class="w-20">Nivo</th>
+        <th class="w-10 uk-text-right"><span uk-icon="cog"></span></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for korisnik in korisnici.data %}
+      <tr>
+        <td>
+          <em>{{ korisnik.id }}</em>
+        </td>
+        <td>
+            <strong>{{ korisnik.ime }}</strong>
+        </td>
+        <td>{{ korisnik.korisnicko_ime }}</td>
+        <td>{{ korisnik.nivo }}</td>
+        <td class="uk-clearfix">
+          <ul class="uk-iconnav uk-float-right">
+            <li>
+              <a href="{{ path_for('korisnici.izmena', { id: korisnik.id }) }}" title="Izmena">
+                <span uk-icon="pencil"></span>
+              </a>
+            </li>
+            <li>
+              <a title="Brisanje" href="#modal-brisanje" data-id="{{ korisnik.id }}" onclick="setKorisnikId(this);" uk-toggle>
+                <span uk-icon="trash"></span>
+              </a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="uk-flex uk-flex-between uk-margin-top">
+  <div>{{ korisnici.links.buttons | raw }}</div>
+  <div>Idi na stranu {{ korisnici.links.select | raw }}</div>
+  <div>
+    <p>
+      Prikazani redovi od
+      <em>{{ korisnici.links.row_from }}</em> do
+      <em>{{ korisnici.links.row_to }}</em> od ukupno
+      <em>{{ korisnici.links.total_rows }}</em>
+    </p>
+  </div>
+</div>
+<!-- MODAL BRISANJE KORISNIKA -->
+{% include 'inc/korisnik_brisanje.twig' %}
+{% endblock sadrzaj %}
+
+{% block traka %}
+<form action="{{ path_for('korisnici.dodavanje') }}" method="POST" class="uk-background-muted uk-margin-top uk-padding-small" onSubmit = "return checkPassword(this)">
+    {{ csrf|raw }}
+    <fieldset class="uk-fieldset">
+
+        <legend class="uk-legend">Dodavanje korisnika</legend>
+
+        <div class="uk-margin">
+            <label class="uk-form-label" for="ime">Ime i prezime:</label>
+            <div class="uk-form-controls">
+            <input type="text" name="ime" id="ime" class="uk-input{{ errors.ime[0] ? ' uk-form-danger': ''}}" value="{{ old.ime ? : '' }}" autocomplete="off" required>
+        </div>
+        <small class="uk-text-danger">{{ errors.ime[0] ? :'' }}</small>
+        </div>
+
+        <div class="uk-margin">
+            <label class="uk-form-label" for="korisnicko_ime">Nalog:</label>
+            <div class="uk-form-controls">
+            <input type="text" name="korisnicko_ime" id="korisnicko_ime" class="uk-input{{ errors.korisnicko_ime[0] ? ' uk-form-danger': ''}}" autocomplete="off" required>
+        </div>
+        <small class="uk-text-danger">{{ errors.korisnicko_ime[0] ? :'' }}</small>
+        </div>
+
+        <div class="uk-margin">
+            <label class="uk-form-label" for="lozinka">Lozinka:</label>
+            <div class="uk-form-controls">
+            <input type="password" placeholder="Lozinka" id="lozinka" name="lozinka" autocomplete="new-password" required>
+        </div>
+        </div>
+
+        <div class="uk-margin">
+            <label class="uk-form-label" for="lozinka_potvrda">Lozinka potvrda:</label>
+            <div class="uk-form-controls">
+            <input type="password" placeholder="Lozinka potvrda" id="lozinka_potvrda" name="lozinka_potvrda" autocomplete="new-password" required>
+            <span id='poruka'></span>
+        </div>
+        </div>
+
+        <div class="uk-margin">
+            <legend for="nivo">Prava korisnika:</legend>
+            <select name="nivo" id="nivo" class="uk-select uk-width-2-3" required>
+                <option value="10">Korisnik</option>
+                <option value="0">Administrator</option>
+            </select>
+        </div>
+
+        <hr class="uk-margin">
+        <div class="uk-margin uk-float-right">
+            <input type="submit" value="Sačuvaj" class="uk-button uk-button-primary uk-button-small">
+            <a href="{{ path_for('korisnici') }}" class="uk-button uk-button-secondary uk-button-small">Otkaži</a>
+        </div>
+
+    </fieldset>
+</form>
+{% endblock traka %}
+{% block skripta %}
+<script>
+
+document.getElementById("modal_dugme_brisi").addEventListener("click", function () {
+    document.getElementById("forma_brisanje").submit();
+  });
+
+  function setKorisnikId(el) {
+    document.getElementById("modal_korisnik_id").value = el.dataset.id;
+  }
+
+function checkPassword(form) { 
+                password1 = form.lozinka.value; 
+                password2 = form.lozinka_potvrda.value; 
+  
+                if (password1 != password2) { 
+                    alert ("\nLozika se ne poklapa: Pokusajte ponovo...") 
+                    return false; 
+                } 
+                else{ 
+                    return true; 
+                } 
+        } 
+</script>
+{% endblock skripta %}

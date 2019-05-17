@@ -229,10 +229,35 @@ class Validator
      */
     protected function unique($field, $value, $option)
     {
-        // $option - tabela.kolona
-        $option = explode('.', $option);
-        $sql = "SELECT COUNT(*) AS broj FROM {$option[0]} WHERE {$option[1]} = :{$option[1]};";
-        $params = [":{$option[1]}" => $value];
+            // $option - tabela.kolona#id_col:id_val
+            $id_val = null;
+        if (strpos($option, '#') === false) {
+            $tmp = explode('.', $option);
+            $table = $tmp[0];
+            $column = $tmp[1];
+        } else {
+            $tmp = explode('.', $option);
+            $tmp1 = explode('#', $tmp[1]);
+            $table = $tmp[0];
+            $column = $tmp1[0];
+            $tmp2 = explode(':',  $tmp1[1]);
+            $id_col = $tmp2[0];
+            $id_val = (int)$tmp2[1];
+        }
+
+        $wheres = [];
+        $params = [];
+
+            $wheres[] = "$column = :{$column}";
+            $params[":{$column}"] = $value;
+
+        if ($id_val !== null) {
+            $wheres[] = "{$id_col} <> :{$id_col}";
+            $params[":{$id_col}"] = $id_val;
+        }
+
+        $where = implode(' AND ', $wheres);
+        $sql = "SELECT COUNT(*) AS broj FROM $table WHERE {$where};";
         $res = Db::fetch($sql, $params);
         return (int)$res[0]->broj > 0 ? false : true;
     }

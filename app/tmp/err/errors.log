@@ -1107,3 +1107,11 @@
 [06-Mar-2019 13:07:48 Europe/Belgrade] PHP Notice:  Undefined index: karton_id in C:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 274
 [06-Mar-2019 13:08:38 Europe/Belgrade] PHP Notice:  Undefined index: karton_id in C:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 274
 [06-Mar-2019 13:11:58 Europe/Belgrade] PHP Notice:  Undefined index: karton_id in C:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 274
+[22-Mar-2019 09:29:36 Europe/Belgrade] PHP Warning:  getimagesize(img/Mape/BozmanA1.jpg): failed to open stream: No such file or directory in D:\xampp\htdocs\kartoteka\app\controllers\KartoniController.php on line 209
+[03-Apr-2019 11:01:00 Europe/Belgrade] PHP Notice:  Undefined offset: 0 in D:\xampp\htdocs\kartoteka\app\models\Korisnik.php on line 15
+[07-May-2019 08:19:17 Europe/Belgrade] PHP Notice:  Undefined offset: 0 in D:\xampp\htdocs\kartoteka\app\models\Korisnik.php on line 15
+[07-May-2019 09:34:33 Europe/Belgrade] PHP Notice:  Undefined index: id in D:\xampp\htdocs\kartoteka\app\controllers\KorisniciController.php on line 83
+[07-May-2019 09:34:54 Europe/Belgrade] PHP Notice:  Undefined index: id in D:\xampp\htdocs\kartoteka\app\controllers\KorisniciController.php on line 83
+[07-May-2019 09:36:08 Europe/Belgrade] PHP Notice:  Undefined index: id in D:\xampp\htdocs\kartoteka\app\controllers\KorisniciController.php on line 83
+[08-May-2019 11:02:36 Europe/Belgrade] PHP Warning:  call_user_func_array() expects parameter 1 to be a valid callback, second array member is not a valid method in D:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 127
+[08-May-2019 11:02:36 Europe/Belgrade] PHP Notice:  Undefined offset: 0 in D:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 131
