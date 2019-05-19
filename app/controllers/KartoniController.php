@@ -198,15 +198,19 @@ class KartoniController extends Controller
     public function getKartoniMapa($request, $response, $args)
     {
         $id = $args['id'];
+        $mapa = null;
+        $sirina = 0;
+        $visina = 0;
         $modelKarton = new Karton();
         $karton = $modelKarton->find($id);
         $grobno_mesto = $karton->grobno_mesto;
         $modelMapa = new Mapa();
         $mapaM = $modelMapa->pronadjiMapu($karton->groblje_id, $karton->parcela);
+        if ($mapaM) {
         $mapa = (string)($mapaM->veza);
-
         $slika = 'img/Mape/'.$mapa;
         list($sirina, $visina) = getimagesize($slika);
+        }
 
         $this->render($response, 'karton_mapa.twig', compact('karton', 'grobno_mesto', 'mapa', 'sirina', 'visina'));
     }

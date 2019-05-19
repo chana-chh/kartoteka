@@ -24,7 +24,7 @@
             <strong>{{ korisnik.ime }}</strong>
         </td>
         <td>{{ korisnik.korisnicko_ime }}</td>
-        <td>{{ korisnik.nivo }}</td>
+        <td>{% if korisnik.nivo > 0 %} Korisnik {% else %} <strong class="uk-text-primary"> Administrator</strong> {% endif %}</td>
         <td class="uk-clearfix">
           <ul class="uk-iconnav uk-float-right">
             <li>

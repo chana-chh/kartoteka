@@ -20,9 +20,13 @@
     </div>
   </div>
 </div>
+{% if mapa %}
 <div style="max-height: 800px; max-width:1200px; overflow: scroll;" class="uk-margin">
     <canvas id="canvas" width="100%" height="100%" class="uk-preserve-width"></canvas>
-</div>   
+</div>
+{% else %}
+<h3>Ne postoji mapa za ovo groblje i pripadajuće parcele!</h3>
+{% endif %}    
 {% endblock sadrzaj %}
 
 {% block traka %}
@@ -76,6 +80,7 @@
 {% block skripta %}
 <script>
 var canvas = document.getElementById("canvas");
+if (canvas) {
 ctx = canvas.getContext("2d");
 var mapa = ["{{mapa}}"];
 canvas.width = ["{{sirina}}"];
@@ -115,6 +120,6 @@ background.onload = function(){
         ctx.textBaseline="top";
         ctx.font = "16px Arial";
         ctx.fillText(g, x_osa, y_osa + 2*radius);
-  };
+  };}
 </script>
 {% endblock skripta %}
