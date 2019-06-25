@@ -173,4 +173,52 @@ class MapeController extends Controller
         }
     }
 
+    public function getMapaIzmena($request, $response, $args)
+    {
+        $id = (int)$args['id'];
+        $modelMape = new Mapa();
+        $mapa = $modelMape->find($id);
+        $modelGroblje = new Groblje();
+        $groblja = $modelGroblje->all();
+        $modelKarton = new Karton();
+        $parcele = $modelKarton->vratiParcele();
+
+        $ostale = $modelMape->isteMape($mapa->veza);
+
+        $this->render($response, 'mapa_izmena.twig', compact('mapa', 'groblja', 'parcele', 'ostale'));
+    }
+
+    public function postMapaIzmena($request, $response)
+    {
+        $data = $request->getParams();
+        $id = $data['id'];
+        unset($data['id']);
+        unset($data['csrf_name']);
+        unset($data['csrf_value']);
+
+       $validation_rules = [
+            'groblje_id' => [
+                'required' => true,
+                'multi_unique' => 'mape.groblje_id,parcela#id:' . $id
+            ]
+        ];
+
+        if (!isset($data['parcela'])) {
+            $this->flash->addMessage('danger', 'Morate odabrati bar jednu parcelu sa liste.');
+            return $response->withRedirect($this->router->pathFor('mapa.izmena', ['id' => $id]));
+        }
+
+        $this->validator->validate(['groblje_id' => $data['groblje_id'], 'parcela' => $data['parcela']], $validation_rules);
+
+        if ($this->validator->hasErrors()) {
+            $this->flash->addMessage('danger', 'Došlo je do greške prilikom izmene mape. Podaci nisu validni. Problematična parcela:  '.$data['parcela']);
+            return $response->withRedirect($this->router->pathFor('mapa.izmena', ['id' => $id]));
+        } else {
+            $this->flash->addMessage('success', 'Podaci o mapi su uspešno izmenjeni.');
+            $modelMape = new Mapa();
+            $modelMape->update($data, $id);
+            return $response->withRedirect($this->router->pathFor('mape'));
+        }
+    }
+
 }

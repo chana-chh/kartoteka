@@ -33,8 +33,7 @@
             </td>
             <td>     
       <div class="uk-button-group">
-        <a href="#" class="uk-icon-link uk-margin-small-right" uk-icon="link"></a>
-        <a href="#" class="uk-icon-link uk-margin-small-right" uk-icon="pencil"></a>
+        <a href="{{ path_for('mapa.izmena', { 'id': mapa.id }) }}" class="uk-icon-link uk-margin-small-right" uk-icon="pencil"></a>
         <a href="#modal-brisanje" id="brisanje" class="uk-icon-link uk-margin-small-right" onClick="postaviID({{ mapa.id }})" uk-icon="trash" uk-toggle></a>
 
       </div>

@@ -52,6 +52,8 @@ $app->group('', function () {
     $this->post('/kartoni/mapa/dodavanje', '\App\Controllers\KartoniController:postKartoniMapa')->setName('kartoni.mapa.dodavanje');
     $this->post('/mapa/dodavanje', '\App\Controllers\MapeController:postUpload')->setName('mapa.dodavanje');
     $this->post('/mapa/brisanje', '\App\Controllers\MapeController:postMapaBrisanje')->setName('mapa.brisanje');
+    $this->get('/mapa/izmena/{id}', '\App\Controllers\MapeController:getMapaIzmena')->setName('mapa.izmena');
+    $this->post('/mapa/izmena', '\App\Controllers\MapeController:postMapaIzmena')->setName('mapa.izmena.post');
     // Staraoci
     $this->get('/staraoci', '\App\Controllers\StaraociController:getStaraoci')->setName('staraoci');
     $this->get('/staraoci/pretraga', '\App\Controllers\StaraociController:getStaraociPretraga')->setName('staraoci.pretraga');

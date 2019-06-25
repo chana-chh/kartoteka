@@ -1,0 +1,76 @@
+{% extends "templates/app.twig" %}
+
+{% block naslov %}
+<h1>Izmena podataka mape</h1>
+<hr>
+<form action="{{ path_for('mapa.izmena.post') }}" method="POST" class="uk-form-stacked">
+	{{ csrf|raw }}
+	<input type="hidden" value="{{ mapa.id }}" name="id" id="id">
+	<div uk-grid>
+	<div class="uk-width-1-4">
+		<label for="groblje_id" class="uk-form-label">Groblje</label>
+		<div class="uk-form-controls">
+			<select name="groblje_id" id="groblje_id" class="uk-select{{ errors.groblje_id[0] ? ' uk-form-danger': ''}}"
+			 required>
+				{% for groblje in groblja %}
+				<option value="{{ groblje.id }}" {{ (old.groblje_id == groblje.id or mapa.groblje_id == groblje.id) ? ' selected' : '' }}>
+					{{ groblje.naziv }}
+				</option>
+				{% endfor %}
+			</select>
+		</div>
+		<small class="uk-text-danger">{{ errors.groblje_id[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-4">
+		<label for="parcela" class="uk-form-label">Parcela</label>
+		<div class="uk-form-controls">
+			<select name="parcela" id="parcela" class="uk-select{{ errors.parcela[0] ? ' uk-form-danger': ''}}"
+			 required>
+				{% for par in parcele %}
+				<option value="{{ par.parcela }}" {{ (old.parcela == par.parcela or mapa.parcela == par.parcela) ? ' selected' : '' }}>
+					{{ par.parcela }}
+				</option>
+				{% endfor %}
+			</select>
+		</div>
+		<small class="uk-text-danger">{{ errors.parcela[0] ? :'' }}</small>
+	</div>
+
+	<div class="uk-width-1-4">
+		<label for="opis_mape" class="uk-form-label">Opis</label>
+		<div class="uk-form-controls">
+			<input type="text" name="opis_mape" id="opis_mape" value="{{ old.opis_mape ? : mapa.opis_mape }}" class="uk-input{{ errors.opis_mape[0] ? ' uk-form-danger': ''}}"
+			 autocomplete="off" required>
+		</div>
+		<small class="uk-text-danger">{{ errors.opis_mape[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-4" uk-lightbox id="light">
+                    <a href="{{ base_url() }}/img/Mape/{{ mapa.veza }}" data-caption="{{ mapa.groblje.naziv }} {{ mapa.parcela }}"><img
+                            class="uk-border-rounded" src="{{ base_url() }}/img/Mape/Thumb/{{ mapa.veza }}" width="200"
+                            alt="Mapa thumb"></a>
+                    <p>Naziv fajla mape je <span class="uk-text-success">{{ mapa.veza }}</span> i nalazi se na lokaciji <span class="uk-text-success">{{base_url() }}/img/Mape/</span></p>
+    </div>
+	</div>
+	<div uk-grid>
+		<h4 class="uk-text-success">Sve parcele koje su zahvaćene mapom:</h4>
+		{% for ost in ostale %}
+				<p class="uk-text-danger"><strong>{{ost.parcela}}</strong></p>
+				{% endfor %}
+	</div>
+	<div uk-grid>
+	<div class="uk-button-group uk-width-1-5">
+		<button class="uk-button uk-button-primary uk-width-1-2"><span uk-icon="check"></span> Snimi</button>
+		<a href="{{ path_for('mape') }}" class="uk-button uk-button-secondary uk-width-1-2">
+			<span uk-icon="ban"></span> Otkaži
+		</a>
+	</div>
+</div>
+</form>
+{% endblock naslov %}
+
+{% block skripta %}
+<script>
+var light = document.getElementById("light");
+UIkit.lightbox(light);
+</script>
+{% endblock skripta %}
