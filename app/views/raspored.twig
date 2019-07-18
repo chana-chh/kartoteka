@@ -1,0 +1,35 @@
+{% extends "templates/app.twig" %} {% block naslov %}
+<h1 class="uk-text-primary">
+  Raspored termina
+</h1>
+
+<div class="uk-panel uk-background-muted uk-padding-small">
+  <div class="uk-float-right">
+      <a href="{{ path_for('raspored.dodavanje') }}" class="uk-button uk-button-primary uk-button-small">Zakazivanje termina</a>
+    </div>
+  
+</div>
+<div class="uk-padding" id='calendar'></div>
+{% endblock naslov %}
+{% block skripta %}
+<script src="{{base_url()}}/js/main.min.js"></script>
+<script src="{{base_url()}}/js/main.js"></script>
+<script src="{{base_url()}}/js/sr.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+        var doga = ["{{ dogadjaji }}"];
+        var dogs = doga.toString().replace(/&quot;/g,'"');
+        var dog = JSON.parse(dogs);
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          events: dog,
+          locale: 'sr',
+          plugins: [ 'dayGrid' ],
+          height: 670
+        });
+        calendar.render();
+      });
+
+</script>
+{% endblock skripta %}

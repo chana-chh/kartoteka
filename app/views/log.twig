@@ -1,0 +1,45 @@
+{% extends "templates/app.twig" %}
+
+{% block sadrzaj %}
+<h1 id="top">Logovi</h1>
+<hr>
+{% if logovi %}
+<div class="uk-overflow-auto">
+  <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+    <thead>
+      <tr>
+        <th class="w-10">Id</th>
+        <th class="w-60">Opis</th>
+        <th class="w-30">Vreme</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for log in logovi %}
+      <tr>
+        <td>
+          <em>{{ log.id }}</em>
+        </td>
+        <td>
+            <strong>{{ log.opis }}</strong>
+        </td>
+        <td>{{ log.datum }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="uk-flex uk-flex-between uk-margin-top">
+  <div>{{ logovi.links.buttons | raw }}</div>
+  <div>Idi na stranu {{ logovi.links.select | raw }}</div>
+  <div>
+    <p>
+      Prikazani redovi od
+      <em>{{ logovi.links.row_from }}</em> do
+      <em>{{ logovi.links.row_to }}</em> od ukupno
+      <em>{{ logovi.links.total_rows }}</em>
+    </p>
+  </div>
+</div>
+{% endif %}
+{% endblock sadrzaj %}

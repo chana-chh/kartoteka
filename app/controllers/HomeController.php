@@ -2,13 +2,16 @@
 
 namespace App\Controllers;
 
-use App\Models\Karton;
+use App\Models\Raspored;
 
 class HomeController extends Controller
 {
 	public function getHome($request, $response)
 	{
-		$this->render($response, 'home.twig');
+		$model = new Raspored();
+        $danasnji = $model->danas();
+
+		$this->render($response, 'home.twig', compact('danasnji'));
 	}
 
 	public function getAbout($request, $response)

@@ -1115,3 +1115,37 @@
 [07-May-2019 09:36:08 Europe/Belgrade] PHP Notice:  Undefined index: id in D:\xampp\htdocs\kartoteka\app\controllers\KorisniciController.php on line 83
 [08-May-2019 11:02:36 Europe/Belgrade] PHP Warning:  call_user_func_array() expects parameter 1 to be a valid callback, second array member is not a valid method in D:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 127
 [08-May-2019 11:02:36 Europe/Belgrade] PHP Notice:  Undefined offset: 0 in D:\xampp\htdocs\kartoteka\app\classes\Validator.php on line 131
+[29-Jun-2019 19:09:14 Europe/Belgrade] PHP Notice:  Undefined variable: sequential in D:\xampp\htdocs\kartoteka\app\controllers\RasporedController.php on line 13
+[29-Jun-2019 19:09:55 Europe/Belgrade] PHP Notice:  Undefined variable: sequential in D:\xampp\htdocs\kartoteka\app\controllers\RasporedController.php on line 13
+[29-Jun-2019 19:16:06 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\vendor\twig\twig\lib\Twig\Environment.php(378) : eval()'d code on line 43
+[29-Jun-2019 19:22:47 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\vendor\twig\twig\lib\Twig\Environment.php(378) : eval()'d code on line 43
+[29-Jun-2019 19:22:47 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\vendor\twig\twig\lib\Twig\Environment.php(378) : eval()'d code on line 67
+[29-Jun-2019 19:22:50 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\vendor\twig\twig\lib\Twig\Environment.php(378) : eval()'d code on line 43
+[29-Jun-2019 19:22:50 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\vendor\twig\twig\lib\Twig\Environment.php(378) : eval()'d code on line 67
+[29-Jun-2019 19:23:16 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\vendor\twig\twig\lib\Twig\Environment.php(378) : eval()'d code on line 43
+[29-Jun-2019 19:23:16 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\vendor\twig\twig\lib\Twig\Environment.php(378) : eval()'d code on line 67
+[29-Jun-2019 19:24:20 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\vendor\twig\twig\lib\Twig\Environment.php(378) : eval()'d code on line 43
+[29-Jun-2019 19:24:20 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\vendor\twig\twig\lib\Twig\Environment.php(378) : eval()'d code on line 67
+[29-Jun-2019 19:24:22 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\vendor\twig\twig\lib\Twig\Environment.php(378) : eval()'d code on line 43
+[29-Jun-2019 19:24:22 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\vendor\twig\twig\lib\Twig\Environment.php(378) : eval()'d code on line 67
+[29-Jun-2019 19:24:46 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\vendor\twig\twig\lib\Twig\Environment.php(378) : eval()'d code on line 43
+[29-Jun-2019 19:24:46 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\vendor\twig\twig\lib\Twig\Environment.php(378) : eval()'d code on line 67
+[29-Jun-2019 19:25:38 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\vendor\twig\twig\lib\Twig\Environment.php(378) : eval()'d code on line 43
+[29-Jun-2019 19:25:38 Europe/Belgrade] PHP Notice:  Array to string conversion in D:\xampp\htdocs\kartoteka\vendor\twig\twig\lib\Twig\Environment.php(378) : eval()'d code on line 67
+[30-Jun-2019 17:34:22 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Raspored::$id in D:\xampp\htdocs\kartoteka\app\controllers\RasporedController.php on line 30
+[30-Jun-2019 17:44:07 Europe/Belgrade] PHP Warning:  A non-numeric value encountered in D:\xampp\htdocs\kartoteka\app\controllers\RasporedController.php on line 35
+[30-Jun-2019 17:51:08 Europe/Belgrade] PHP Warning:  A non-numeric value encountered in D:\xampp\htdocs\kartoteka\app\controllers\RasporedController.php on line 33
+[01-Jul-2019 19:17:52 Europe/Belgrade] PHP Recoverable fatal error:  Object of class DateTime could not be converted to string in D:\xampp\htdocs\kartoteka\vendor\twig\twig\lib\Twig\Environment.php(378) : eval()'d code on line 55
+[01-Jul-2019 19:18:03 Europe/Belgrade] PHP Recoverable fatal error:  Object of class DateTime could not be converted to string in D:\xampp\htdocs\kartoteka\vendor\twig\twig\lib\Twig\Environment.php(378) : eval()'d code on line 55
+[01-Jul-2019 19:18:11 Europe/Belgrade] PHP Recoverable fatal error:  Object of class DateTime could not be converted to string in D:\xampp\htdocs\kartoteka\vendor\twig\twig\lib\Twig\Environment.php(378) : eval()'d code on line 55
+[16-Jul-2019 18:10:33 Europe/Belgrade] PHP Fatal error:  Illegal offset type in D:\xampp\htdocs\kartoteka\app\controllers\RasporedController.php on line 38
+[16-Jul-2019 18:11:08 Europe/Belgrade] PHP Fatal error:  Assignments can only happen to writable values in D:\xampp\htdocs\kartoteka\app\controllers\RasporedController.php on line 38
+[16-Jul-2019 18:12:02 Europe/Belgrade] PHP Notice:  Use of undefined constant opis - assumed 'opis' in D:\xampp\htdocs\kartoteka\app\controllers\RasporedController.php on line 38
+[16-Jul-2019 18:19:52 Europe/Belgrade] PHP Notice:  Use of undefined constant opis - assumed 'opis' in D:\xampp\htdocs\kartoteka\app\controllers\RasporedController.php on line 39
+[16-Jul-2019 18:19:52 Europe/Belgrade] PHP Notice:  Use of undefined constant auth - assumed 'auth' in D:\xampp\htdocs\kartoteka\app\controllers\RasporedController.php on line 39
+[16-Jul-2019 18:19:52 Europe/Belgrade] PHP Notice:  Use of undefined constant logged - assumed 'logged' in D:\xampp\htdocs\kartoteka\app\controllers\RasporedController.php on line 39
+[16-Jul-2019 18:19:52 Europe/Belgrade] PHP Notice:  Use of undefined constant auth - assumed 'auth' in D:\xampp\htdocs\kartoteka\app\controllers\RasporedController.php on line 39
+[16-Jul-2019 18:19:52 Europe/Belgrade] PHP Notice:  Use of undefined constant user - assumed 'user' in D:\xampp\htdocs\kartoteka\app\controllers\RasporedController.php on line 39
+[16-Jul-2019 18:19:52 Europe/Belgrade] PHP Notice:  Use of undefined constant ime - assumed 'ime' in D:\xampp\htdocs\kartoteka\app\controllers\RasporedController.php on line 39
+[16-Jul-2019 18:22:14 Europe/Belgrade] PHP Notice:  Use of undefined constant opis - assumed 'opis' in D:\xampp\htdocs\kartoteka\app\controllers\RasporedController.php on line 39
+[16-Jul-2019 18:27:37 Europe/Belgrade] PHP Notice:  Use of undefined constant opis - assumed 'opis' in D:\xampp\htdocs\kartoteka\app\controllers\RasporedController.php on line 41

@@ -46,6 +46,13 @@ $app->group('', function () {
     $this->post('/karton/dokument/brisanje', '\App\Controllers\DokumentiController:postDokumentiBrisanje')->setName('dokumenti.brisanje');
     $this->get('/karton/dokument/izmena/{id}', '\App\Controllers\DokumentiController:getDokumentiIzmena')->setName('dokumenti.izmena');
     $this->post('/kartoni/dokument/izmena', '\App\Controllers\DokumentiController:postDokumentiIzmena')->setName('dokumenti.izmena.post');
+    //Raspored
+    $this->get('/raspored', '\App\Controllers\RasporedController:getRaspored')->setName('raspored');
+    $this->get('/raspored/dodavanje', '\App\Controllers\RasporedController:getRasporedDodavanje')->setName('raspored.dodavanje');
+    $this->post('/raspored/dodavanje', '\App\Controllers\RasporedController:postRasporedDodavanje')->setName('raspored.dodavanje.post');
+    $this->post('/raspored/brisanje', '\App\Controllers\RasporedController:postRasporedBrisanje')->setName('raspored.brisanje');
+    $this->get('/raspored/izmena/{id}', '\App\Controllers\RasporedController:getRasporedIzmena')->setName('raspored.izmena');
+    $this->post('/raspored/izmena', '\App\Controllers\RasporedController:postRasporedIzmena')->setName('raspored.izmena.post');
     //Mape
     $this->get('/mape', '\App\Controllers\MapeController:getMape')->setName('mape');
     $this->get('/kartoni/mapa/{id}', '\App\Controllers\KartoniController:getKartoniMapa')->setName('kartoni.mapa');
@@ -72,6 +79,8 @@ $app->group('', function () {
     $this->post('/pokojnici/brisanje', '\App\Controllers\PokojniciController:postPokojniciBrisanje')->setName('pokojnici.brisanje');
     $this->get('/pokojnici/izmena/{id}', '\App\Controllers\PokojniciController:getPokojniciIzmena')->setName('pokojnici.izmena');
     $this->post('/pokojnici/izmena', '\App\Controllers\PokojniciController:postPokojniciIzmena')->setName('pokojnici.izmena.post');
+    // Logovi
+    $this->get('/administracija/logovi', '\App\Controllers\LogController:getLog')->setName('logovi');
     // Korisnici
     $this->get('/administracija/korisnici', '\App\Controllers\KorisniciController:getKorisnici')->setName('korisnici');
     $this->post('/administracija/korisnici/dodavanje', '\App\Controllers\KorisniciController:postKorisniciDodavanje')->setName('korisnici.dodavanje');

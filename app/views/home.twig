@@ -1,9 +1,21 @@
 {% extends "templates/app.twig" %}
 
 {% block naslov %}
-<div class="uk-text-center">
-	<img src="{{ base_url() }}/img/jkp_sumadija.jpg" alt="JKP Sumadija Kragujevac">
+	<div uk-grid>
+	<div class="uk-width-1-4"><div class="uk-text-center">
+	<img src="{{ base_url() }}/img/jkp_sumadija.jpg" alt="JKP Sumadija Kragujevac" height="300" width="300">
+</div></div>
+	<div class="uk-width-1-2"><div class="uk-card uk-card-default uk-card-body uk-margin-top uk-padding-small">
+		<h3 class="uk-card-title">Današnji termini:</h3>
+		<ul class="uk-list uk-list-striped">
+	{% for termin in danasnji %}
+		<li>početak {{ termin.start|date('H:i') }}, kraj {{ termin.end|date('H:i') }} - {{ termin.title }}</li>
+	{% endfor %}
+	</ul>
+	</div></div>
+	<div class="uk-width-1-4"><div class="uk-text-center">
 	<h1>Gradska groblja</h1>
 	<img src="{{ base_url() }}/img/logo.png" alt="Gradska groblja">
-</div>
+</div></div>
+	</div>
 {% endblock naslov %}
