@@ -1149,3 +1149,12 @@
 [16-Jul-2019 18:19:52 Europe/Belgrade] PHP Notice:  Use of undefined constant ime - assumed 'ime' in D:\xampp\htdocs\kartoteka\app\controllers\RasporedController.php on line 39
 [16-Jul-2019 18:22:14 Europe/Belgrade] PHP Notice:  Use of undefined constant opis - assumed 'opis' in D:\xampp\htdocs\kartoteka\app\controllers\RasporedController.php on line 39
 [16-Jul-2019 18:27:37 Europe/Belgrade] PHP Notice:  Use of undefined constant opis - assumed 'opis' in D:\xampp\htdocs\kartoteka\app\controllers\RasporedController.php on line 41
+[20-Jul-2019 20:11:03 Europe/Belgrade] PHP Warning:  session_start(): open(D:\xampp\htdocs\kartoteka\\app\tmp\ses\sess_46v17n2kvg7cmooeventtkl468ph9p8ncmfim7t0iv17b8a7rj9b6tpoo7bkt4su0euupfcvljfiape25h7jeicuv186qr76r1av1b3, O_RDWR) failed: No such file or directory (2) in D:\xampp\htdocs\kartoteka\app\ini.php on line 63
+[20-Jul-2019 20:11:03 Europe/Belgrade] PHP Fatal error:  Uncaught RuntimeException: Unexpected data in output buffer. Maybe you have characters before an opening <?php tag? in D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\App.php:624
+Stack trace:
+#0 D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\App.php(334): Slim\App->finalize(Object(Slim\Http\Response))
+#1 D:\xampp\htdocs\kartoteka\pub\index.php(16): Slim\App->run()
+#2 {main}
+  thrown in D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\App.php on line 624
+[20-Jul-2019 20:11:03 Europe/Belgrade] PHP Warning:  Unknown: open(D:\xampp\htdocs\kartoteka\\app\tmp\ses\sess_46v17n2kvg7cmooeventtkl468ph9p8ncmfim7t0iv17b8a7rj9b6tpoo7bkt4su0euupfcvljfiape25h7jeicuv186qr76r1av1b3, O_RDWR) failed: No such file or directory (2) in Unknown on line 0
+[20-Jul-2019 20:11:03 Europe/Belgrade] PHP Warning:  Unknown: Failed to write session data (files). Please verify that the current setting of session.save_path is correct (D:\xampp\htdocs\kartoteka\\app\tmp\ses) in Unknown on line 0

@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\Raspored;
+use App\Models\Karton;
+use App\Models\Groblje;
 use App\Models\Log;
 use App\Classes\Auth;
 
@@ -18,7 +20,13 @@ class RasporedController extends Controller
 
     public function getRasporedDodavanje($request, $response, $args)
     {
-        $this->render($response, 'raspored_dodavanje.twig');
+        $modelGroblje = new Groblje();
+        $groblja = $modelGroblje->all();
+
+        $modelKarton = new Karton();
+        $parcele = $modelKarton->vratiParcele();
+
+        $this->render($response, 'raspored_dodavanje.twig', compact('groblja', 'parcele'));
     }
 
     public function postRasporedDodavanje($request, $response)
