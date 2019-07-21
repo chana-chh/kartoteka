@@ -68,10 +68,26 @@
 {% endblock sadrzaj %}
 
 {% block traka %}
-<h1>Saldo kartona</h1>
-<div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
-    <h1 class="uk-text-danger">{{ (-9800.32) | number_format(2, '.', ',') }}</h1>
+<div uk-grid>
+    <div class="uk-width-1-2">
+        <h2 class="uk-text-right">Saldo kartona</h2>
+        <div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
+            <h1 class="uk-text-success">{{ (0) | number_format(2, '.', ',') }}</h1>
+        </div>
+    </div>
+    <div class="uk-width-1-2">
+        <h2 class="uk-text-right">Ukupan dug</h2>
+        <div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
+            <h1 class="uk-text-danger">{{ (9800.32) | number_format(2, '.', ',') }}</h1>
+        </div>
+    </div>
 </div>
+
+<h2 class="uk-text-right">Iznos razduženja</h2>
+<div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
+    <h1 class="uk-text-primary">{{ (5056.22) | number_format(2, '.', ',') }}</h1>
+</div>
+
 <h2>Uplata</h2>
 <form action="" method="POST" class="uk-form-stacked" uk-grid>
     {{ csrf | raw }}
@@ -91,17 +107,32 @@
         </div>
         <small class=" uk-text-danger">{{ errors.datum[0] ? : '' }}</small>
     </div>
-    <div class="uk-width-1-2"></div>
-    <div class="uk-button-group uk-width-1-2">
-        <input type="submit" value="Snimi uplatu" class="uk-button uk-button-primary uk-button-small" />
-        <input type="reset" value="Otkaži" class="uk-button uk-button-secondary uk-button-small" />
+    <div class="uk-width-1-2">
+        <label for="razduzenje-iznos" class="uk-form-label">Iznos razduženja</label>
+        <div class="uk-form-controls">
+            <input type="number" name="razduzenje-iznos" id="razduzenje-iznos" value="0" min="0" step="0.01"
+                class="uk-input uk-text-right" autocomplete="off" required readonly disabled>
+        </div>
+        <small class="uk-text-danger">{{ errors.opis[0] ? :'' }}</small>
+    </div>
+    <div class="uk-width-1-2 uk-flex uk-flex-bottom">
+        <div class="uk-button-group uk-width-1-1">
+            <input type="submit" value="Snimi uplatu" class="uk-button uk-button-primary uk-button-small uk-width-1-2">
+            <input type="reset" value="Otkaži" class="uk-button uk-button-secondary uk-button-small uk-width-1-2">
+        </div>
     </div>
 </form>
 
-<h2>Uplaćen iznos</h2>
-<div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
-    <h1 class="uk-text-success">{{ (5000.00) | number_format(2, '.', ',') }}</h1>
-</div>
+
+
+<h2>Opis</h2>
+<p>
+    Iznos razduženja se računa sabiranjem stavki koje se razdužuju iz tabela sa leve strane.
+</p>
+<p>
+    Kada se snimi uplata proveri se da li je iznos uplate i salda kartona veći ili jednak iznosu razduženja. Ako su
+    iznosi isti razduže se izabrana zaduženja, a ako je iznos uplate veći višak se prebacuje na saldo kartona.
+</p>
 {% endblock traka %}
 
 {% block skripta %}
