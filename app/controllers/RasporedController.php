@@ -25,8 +25,9 @@ class RasporedController extends Controller
 
         $modelKarton = new Karton();
         $parcele = $modelKarton->vratiParcele();
+        $kartoni = $modelKarton->all();
 
-        $this->render($response, 'raspored_dodavanje.twig', compact('groblja', 'parcele'));
+        $this->render($response, 'raspored_dodavanje.twig', compact('groblja', 'parcele', 'kartoni'));
     }
 
     public function postRasporedDodavanje($request, $response)
@@ -34,6 +35,19 @@ class RasporedController extends Controller
         $data = $request->getParams();
         unset($data['csrf_name']);
         unset($data['csrf_value']);
+
+        if (!empty($data['groblje_id']) && !empty($data['parcela']) && !empty($data['grobno_mesto'])) {
+            $where = "groblje_id = :groblje_id AND parcela = :parcela AND grobno_mesto = :grobno_mesto";
+            $params = [':groblje_id' => $data['groblje_id' ], ':parcela' => $data['parcela' ], ':grobno_mesto' => $data['grobno_mesto' ]];
+
+            $model = new Karton();
+            $sql = "SELECT * FROM {$model->getTable()} WHERE {$where} LIMIT 1;";
+            $karton = $model->fetch($sql, $params);
+        }
+
+        
+
+        dd($karton);
 
         $modelRaspored = new Raspored();
         $modelRaspored->insert($data);
