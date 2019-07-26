@@ -5,8 +5,10 @@ namespace App\Controllers;
 use App\Models\Raspored;
 use App\Models\Karton;
 use App\Models\Groblje;
+use App\Models\Pokojnik;
 use App\Models\Log;
 use App\Classes\Auth;
+use DateTime;
 
 class RasporedController extends Controller
 {
@@ -24,10 +26,9 @@ class RasporedController extends Controller
         $groblja = $modelGroblje->all();
 
         $modelKarton = new Karton();
-        $parcele = $modelKarton->vratiParcele();
-        $kartoni = $modelKarton->all();
+        $tipovi = $modelKarton->enumOrSetList('tip_groba');
 
-        $this->render($response, 'raspored_dodavanje.twig', compact('groblja', 'parcele', 'kartoni'));
+        $this->render($response, 'raspored_dodavanje.twig', compact('groblja', 'tipovi'));
     }
 
     public function postRasporedDodavanje($request, $response)
@@ -36,26 +37,101 @@ class RasporedController extends Controller
         unset($data['csrf_name']);
         unset($data['csrf_value']);
 
+        //Za sada ako su popunjena sva tri polja, koja će biti obavezna. Nigde nema validacije.
+
         if (!empty($data['groblje_id']) && !empty($data['parcela']) && !empty($data['grobno_mesto'])) {
-            $where = "groblje_id = :groblje_id AND parcela = :parcela AND grobno_mesto = :grobno_mesto";
-            $params = [':groblje_id' => $data['groblje_id' ], ':parcela' => $data['parcela' ], ':grobno_mesto' => $data['grobno_mesto' ]];
+            $parcela = '%' . filter_var($data['parcela'], FILTER_SANITIZE_STRING) . '%';
+            $where = "groblje_id = :groblje_id AND parcela LIKE :parcela AND grobno_mesto = :grobno_mesto";
+            $params = [':groblje_id' => $data['groblje_id' ], ':parcela' => $parcela, ':grobno_mesto' => $data['grobno_mesto' ]];
 
             $model = new Karton();
             $sql = "SELECT * FROM {$model->getTable()} WHERE {$where} LIMIT 1;";
             $karton = $model->fetch($sql, $params);
+            if(!empty($karton)){
+                $id_kartona = $karton[0]->id;
+            }else{
+                $modelKartona = new Karton();
+                $karton = $modelKartona->insert(
+                [
+                    'groblje_id' => $data['groblje_id'],
+                    'parcela' => $data['parcela'],
+                    'grobno_mesto' => $data['grobno_mesto'],
+                    'broj_mesta' => 1,
+                    'tip_groba' => $data['tip_groba']
+                ]
+                );
+
+                $id_kartona = $modelKartona->getLastId();
+            }
         }
 
-        
+            $modelKartonTitle = new Karton();
+            $karton_title = $modelKartonTitle->find($id_kartona);
+            $redni_broj = count($karton_title->pokojnici()) + 1;
 
-        dd($karton);
+            $dupla_raka = isset($data['dupla_raka']) ? 1 : 0;
+            $jmbg = filter_var($data['jmbg'], FILTER_SANITIZE_STRING);
+            $prezime = filter_var($data['prezime'], FILTER_SANITIZE_STRING);
+            $ime = filter_var($data['ime'], FILTER_SANITIZE_STRING);
+            $srednje_ime = filter_var($data['srednje_ime'], FILTER_SANITIZE_STRING);
+            $mesto = filter_var($data['mesto'], FILTER_SANITIZE_STRING);
+            $datum_rodjenja = strlen($data['datum_rodjenja']) === 0 ? null : $data['datum_rodjenja'];
+            $datum_smrti = strlen($data['datum_smrti']) === 0 ? null : $data['datum_smrti'];
+            $datum_ekshumacije = null;
+
+            $model_Pokojnika = new Pokojnik();
+            $pokojnik = $model_Pokojnika->insert(
+                [
+                    'karton_id' => $id_kartona,
+                    'redni_broj' => $redni_broj,
+                    'prezime' => $prezime,
+                    'ime' => $ime,
+                    'srednje_ime' => $srednje_ime,
+                    'jmbg' => $jmbg,
+                    'mesto' => $mesto,
+                    'dupla_raka' => $dupla_raka,
+                    'datum_rodjenja' => $datum_rodjenja,
+                    'datum_smrti' => $datum_smrti,
+                    'datum_sahrane' => $data['start'],
+                ]
+                );
+
+            $id_pokojnika = $model_Pokojnika->getLastId();
+
+        $prezime_prijavioca = filter_var($data['prezime_prijavioca'], FILTER_SANITIZE_STRING);
+        $ime_prijavioca = filter_var($data['ime_prijavioca'], FILTER_SANITIZE_STRING);
+        $jmbg_prijavioca = filter_var($data['jmbg_prijavioca'], FILTER_SANITIZE_STRING);
+        $mesto_prijavioca = filter_var($data['mesto_prijavioca'], FILTER_SANITIZE_STRING);
+        $mup = filter_var($data['mup'], FILTER_SANITIZE_STRING);
+        $telefon = filter_var($data['telefon'], FILTER_SANITIZE_STRING);
+
+        $pio = isset($data['pio']) ? 1 : 0;
 
         $modelRaspored = new Raspored();
-        $modelRaspored->insert($data);
+        $raspored = $modelRaspored->insert([
+                    'start' => $data['start'],
+                    'end' => $data['end'],
+                    'title' => $karton_title->broj().", ".$ime." ".$prezime,
+                    'karton_id' => $id_kartona,
+                    'pokojnik_id' => $id_pokojnika,
+                    'broj_lk' => $data['broj_lk'],
+                    'prezime_prijavioca' => $prezime_prijavioca,
+                    'ime_prijavioca' => $ime_prijavioca,
+                    'jmbg_prijavioca' => $jmbg_prijavioca,
+                    'mesto_prijavioca' => $mesto_prijavioca,
+                    'mup' => $mup,
+                    'telefon' => $telefon,
+                    'usluga_do' => $data['usluga_do'],
+                    'datum_prijave' => $data['datum_prijave'],
+                    'pio' => $pio,
+                    'napomena' => $data['napomena'],
+                    'prevoz' => $data['prevoz']
+                ]);
         $id_rasporeda = $modelRaspored->getLastId();
 
         $model = new Raspored();
-        $data['url'] = URL."/raspored/izmena/". $id_rasporeda;
-        $model->update($data, $id_rasporeda);
+        $dataU['url'] = URL."/raspored/izmena/". $id_rasporeda;
+        $model->update($dataU, $id_rasporeda);
         
         $modelLog= new Log();
         $k = new Auth();

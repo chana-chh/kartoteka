@@ -9,6 +9,16 @@ class Raspored extends Model
 {
 	protected $table = 'raspored';
 
+    public function karton()
+    {
+        return $this->belongsTo('App\Models\Karton', 'karton_id');
+    }
+
+    public function pokojnik()
+    {
+        return $this->belongsTo('App\Models\Pokojnik', 'pokojnik_id');
+    }
+
 	public function datum_start()
     {
     	$format = 'Y-m-d H:i:s';

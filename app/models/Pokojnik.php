@@ -28,6 +28,11 @@ class Pokojnik extends Model
         return $this->belongsTo('App\Models\Karton', 'karton_id');
     }
 
+    public function raspored()
+    {
+        return $this->hasOne('App\Models\Raspored', 'pokojnik_id');
+    }
+
     public function datum_rodjenja()
     {
         if ($this->datum_rodjenja === null) {

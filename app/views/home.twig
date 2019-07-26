@@ -5,7 +5,7 @@
 		<h3 class="uk-card-title">Današnji termini:</h3>
 		<ul class="uk-list uk-list-striped">
 	{% for termin in danasnji %}
-		<li>početak {{ termin.start|date('H:i') }}, kraj {{ termin.end|date('H:i') }} - {{ termin.title }}</li>
+		<li>početak {{ termin.start|date('H:i') }}, kraj {{ termin.end|date('H:i') }}, {{ termin.karton().broj() }} <strong>{{ termin.pokojnik().ime }} {{ termin.pokojnik().prezime }}</strong> </li>
 	{% endfor %}
 	</ul>
 	</div>
