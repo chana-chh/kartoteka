@@ -151,6 +151,15 @@ class RasporedController extends Controller
         $this->render($response, 'raspored_izmena.twig', compact('raspored'));
     }
 
+    public function getRasporedStampa($request, $response, $args){
+
+        $id = (int)$args['id'];
+        $modelRaspored = new Raspored();
+        $raspored = $modelRaspored->find($id);
+
+        $this->render($response, 'raspored_stampa.twig', compact('raspored'));
+    }
+
     public function postRasporedIzmena($request, $response){
 
         $id = (int)$request->getParam('id');
@@ -158,6 +167,9 @@ class RasporedController extends Controller
         unset($data['csrf_name']);
         unset($data['csrf_value']);
         unset($data['id']);
+
+        $pio = isset($data['pio']) ? 1 : 0;
+        $data['pio'] = $pio;
 
         $model = new Raspored();
         $model->update($data, $id);

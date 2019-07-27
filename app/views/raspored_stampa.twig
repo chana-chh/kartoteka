@@ -1,12 +1,36 @@
 {% extends "templates/app.twig" %}
 
 {% block naslov %}
-<h1>Izmena podataka ili uklanjanje termina</h1>
+<h2 class="uk-text-center">JKP Šumadija</h2>
+<h3 class="uk-text-center">FORMULAR ZA INTERNU UPOTREBU - ZAKAZIVANJE SAHRANE</h3>
 <hr>
+<label><input class="uk-checkbox{{ errors.pio[0] ? ' uk-form-danger': ''}}" type="checkbox" name="pio"
+					{{ (old.pio or raspored.pio == 1) ? ' checked' : '' }} disabled> PIO</label>
+<h3 class="uk-margin-medium-top uk-text-center">Podaci o pokojniku</h3>
+
+<div uk-grid class="uk-margin-medium-top">
+	<div class="uk-width-1-2">
+		<h4>Ime i prezime: {{ raspored.pokojnik().ime }} {{ raspored.pokojnik().prezime }}</h4>
+	</div>
+	<div class="uk-width-1-2">
+		<h4>JMBG: {{ raspored.pokojnik().jmbg }}</h4>
+	</div>
+</div>
+<div uk-grid>
+	<div class="uk-width-1-2">
+		<h4>sa poslednjim prebivalištem: {{ raspored.pokojnik().mesto }}</h4>
+	</div>
+</div>
+<div uk-grid>
+	<div class="uk-width-1-2">
+		<h4>Dan, mesec, godina i mesto rođenja: {{ raspored.pokojnik().datum_rodjenja }}, {{ raspored.pokojnik().mesto }}</h4>
+	</div>
+</div>
+
 <h2 class="uk-text-primary uk-margin-medium-bottom">
   Veza sa kartonom: <small><em class="uk-text-success">[{{ raspored.karton().broj() }}]</em></small>
 </h2>
-<h3 class="uk-margin-medium-bottom">Pokojnik: <em class="uk-text-muted">{{ raspored.pokojnik().ime }} {{ raspored.pokojnik().prezime }}</em></h3>
+
 <form action="{{ path_for('raspored.izmena.post') }}" method="POST" class="uk-form-stacked">
 	{{ csrf|raw }}
 	<input type="hidden" value="{{ raspored.id }}" name="id" id="id">
@@ -156,17 +180,6 @@
 	</div>
 </div>
 </form>
-
-<!-- MODAL BRISANJE -->
-{% include 'inc/termin_brisanje.twig' %}
 {% endblock naslov %}
 {% block skripta %}
-<script>
-var brisanje_id = document.getElementById("modal_id");
-
-  document.getElementById("modal_dugme_brisi").addEventListener("click", function () {
-  	brisanje_id.value = ["{{raspored.id}}"];
-    document.getElementById("forma_brisanje").submit();
-  });
-</script>
 {% endblock skripta %}
