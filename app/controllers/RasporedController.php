@@ -75,6 +75,7 @@ class RasporedController extends Controller
             $ime = filter_var($data['ime'], FILTER_SANITIZE_STRING);
             $srednje_ime = filter_var($data['srednje_ime'], FILTER_SANITIZE_STRING);
             $mesto = filter_var($data['mesto'], FILTER_SANITIZE_STRING);
+            $prebivaliste = filter_var($data['prebivaliste'], FILTER_SANITIZE_STRING);
             $datum_rodjenja = strlen($data['datum_rodjenja']) === 0 ? null : $data['datum_rodjenja'];
             $datum_smrti = strlen($data['datum_smrti']) === 0 ? null : $data['datum_smrti'];
             $datum_ekshumacije = null;
@@ -89,6 +90,7 @@ class RasporedController extends Controller
                     'srednje_ime' => $srednje_ime,
                     'jmbg' => $jmbg,
                     'mesto' => $mesto,
+                    'prebivaliste' => $prebivaliste,
                     'dupla_raka' => $dupla_raka,
                     'datum_rodjenja' => $datum_rodjenja,
                     'datum_smrti' => $datum_smrti,
@@ -100,8 +102,10 @@ class RasporedController extends Controller
 
         $prezime_prijavioca = filter_var($data['prezime_prijavioca'], FILTER_SANITIZE_STRING);
         $ime_prijavioca = filter_var($data['ime_prijavioca'], FILTER_SANITIZE_STRING);
-        $jmbg_prijavioca = filter_var($data['jmbg_prijavioca'], FILTER_SANITIZE_STRING);
-        $mesto_prijavioca = filter_var($data['mesto_prijavioca'], FILTER_SANITIZE_STRING);
+        $prezime_troskovi = filter_var($data['prezime_troskovi'], FILTER_SANITIZE_STRING);
+        $ime_troskovi = filter_var($data['ime_troskovi'], FILTER_SANITIZE_STRING);
+        $jmbg_troskovi = filter_var($data['jmbg_troskovi'], FILTER_SANITIZE_STRING);
+        $prebivaliste_troskovi = filter_var($data['prebivaliste_troskovi'], FILTER_SANITIZE_STRING);
         $mup = filter_var($data['mup'], FILTER_SANITIZE_STRING);
         $telefon = filter_var($data['telefon'], FILTER_SANITIZE_STRING);
 
@@ -117,11 +121,13 @@ class RasporedController extends Controller
                     'broj_lk' => $data['broj_lk'],
                     'prezime_prijavioca' => $prezime_prijavioca,
                     'ime_prijavioca' => $ime_prijavioca,
-                    'jmbg_prijavioca' => $jmbg_prijavioca,
-                    'mesto_prijavioca' => $mesto_prijavioca,
+                    'prezime_troskovi' => $prezime_prijavioca,
+                    'ime_troskovi' => $ime_prijavioca,
+                    'jmbg_troskovi' => $jmbg_troskovi,
+                    'prebivaliste_troskovi' => $prebivaliste_troskovi,
                     'mup' => $mup,
                     'telefon' => $telefon,
-                    'usluga_do' => $data['usluga_do'],
+                    'uplata_do' => $data['uplata_do'],
                     'datum_prijave' => $data['datum_prijave'],
                     'pio' => $pio,
                     'napomena' => $data['napomena'],

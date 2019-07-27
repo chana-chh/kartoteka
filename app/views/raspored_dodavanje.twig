@@ -9,24 +9,24 @@
 		<h3>Podaci o grobnom mestu</h3>
 	</div>
 	<div class="uk-width-1-5">
-            <legend for="groblje_id">Groblje:</legend>
-            <select name="groblje_id" id="groblje_id" class="uk-select">
-                {% for groblje in groblja %}
-                <option value="{{ groblje.id }}">{{ groblje.naziv }}</option>
-                {% endfor %}
-            </select>
-        </div>
+		<legend for="groblje_id">Groblje:</legend>
+		<select name="groblje_id" id="groblje_id" class="uk-select">
+			{% for groblje in groblja %}
+			<option value="{{ groblje.id }}">{{ groblje.naziv }}</option>
+			{% endfor %}
+		</select>
+	</div>
 
-        <div class="uk-width-1-5">
-            <label for="parcela" class="uk-form-label">Parcela:</label>
-            <div class="uk-form-controls">
-           <input type="text" name="parcela" id="parcela"  value="{{ old.parcela ? : '' }}" 
-           class="uk-input{{ errors.parcela[0] ? ' uk-form-danger': ''}}" autocomplete="off" required>
-            </div>
-			<small class=" uk-text-danger">{{ errors.parcela[0] ? :'' }}</small>
-        </div>
+	<div class="uk-width-1-5">
+		<label for="parcela" class="uk-form-label">Parcela:</label>
+		<div class="uk-form-controls">
+			<input type="text" name="parcela" id="parcela" value="{{ old.parcela ? : '' }}"
+				class="uk-input{{ errors.parcela[0] ? ' uk-form-danger': ''}}" autocomplete="off" required>
+		</div>
+		<small class=" uk-text-danger">{{ errors.parcela[0] ? :'' }}</small>
+	</div>
 
-        <div class="uk-width-1-5">
+	<div class="uk-width-1-5">
 		<label for="grobno_mesto" class="uk-form-label">Redni broj grobnog mesta</label>
 		<div class="uk-form-controls">
 			<input type="number" name="grobno_mesto" step="1" id="grobno_mesto" value="{{ old.grobno_mesto ? : '' }}"
@@ -34,27 +34,28 @@
 		</div>
 		<small class=" uk-text-danger">{{ errors.grobno_mesto[0] ? :'' }}</small>
 	</div>
-        <div class="uk-width-1-5">
-		<div class="uk-form-controls uk-margin-top">
-			<label><input class="uk-checkbox{{ errors.dupla_raka[0] ? ' uk-form-danger': ''}}" type="checkbox" name="dupla_raka"
-					{{ old.dupla_raka ? ' checked' : '' }}> Dupla raka</label>
-		</div>
-		</div>
-		<div class="uk-width-1-5">
+	<div class="uk-width-1-5">
 		<label for="tip_groba" class="uk-form-label">Tip groba</label>
 		<div class="uk-form-controls">
-			<select name="tip_groba" id="tip_groba" class="uk-select{{ errors.tip_groba[0] ? ' uk-form-danger': ''}}" required>
+			<select name="tip_groba" id="tip_groba" class="uk-select{{ errors.tip_groba[0] ? ' uk-form-danger': ''}}"
+				required>
 				{% for tip in tipovi %}
-				<option value="{{ tip }}"{{ old.tip_groba == tip ? ' selected' : '' }}>{{ tip }}</option>
+				<option value="{{ tip }}" {{ old.tip_groba == tip ? ' selected' : '' }}>{{ tip }}</option>
 				{% endfor %}
 			</select>
 		</div>
 		<small class="uk-text-danger">{{ errors.tip_groba[0] ? :'' }}</small>
 	</div>
+	<div class="uk-width-1-5">
+		<div class="uk-form-controls uk-margin-top">
+			<label><input class="uk-checkbox{{ errors.dupla_raka[0] ? ' uk-form-danger': ''}}" type="checkbox"
+					name="dupla_raka" {{ old.dupla_raka ? ' checked' : '' }}> Dupla raka</label>
+		</div>
+	</div>
 	<div class="uk-width-1-1">
 		<h3>Podaci o pokojniku</h3>
 	</div>
-		<div class="uk-width-1-6">
+	<div class="uk-width-1-6">
 		<div class="uk-form-controls uk-margin-top">
 			<label><input class="uk-checkbox{{ errors.pio[0] ? ' uk-form-danger': ''}}" type="checkbox" name="pio"
 					{{ old.pio ? ' checked' : '' }}> PIO</label>
@@ -103,6 +104,15 @@
 		<small class="uk-text-danger">{{ errors.mesto[0] ? :'' }}</small>
 	</div>
 	<div class="uk-width-1-6">
+		<label for="prebivaliste" class="uk-form-label">Prebivalište</label>
+		<div class="uk-form-controls">
+			<input type="text" name="prebivaliste" id="prebivaliste"
+				class="uk-input{{ errors.prebivaliste[0] ? ' uk-form-danger': ''}}"
+				value="{{ old.prebivaliste ? : 'Kragujevac' }}" autocomplete="off">
+		</div>
+		<small class="uk-text-danger">{{ errors.mesto[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-6">
 		<label for="datum_rodjenja" class="uk-form-label">Datum rođenja</label>
 		<div class="uk-form-controls">
 			<input type="date" name="datum_rodjenja" id="datum_rodjenja" value="{{ old.datum_rodjenja }}"
@@ -139,17 +149,48 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.ime_prijavioca[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-1-5">
-		<label for="jmbg_prijavioca" class="uk-form-label">JMBG</label>
+	<div class="uk-width-2-5">
+		<label for="ovlascen" class="uk-form-label">Ovlašćen od strane:</label>
 		<div class="uk-form-controls">
-			<input type="text" name="jmbg_prijavioca" id="jmbg_prijavioca"
-				class="uk-input{{ errors.jmbg_prijavioca[0] ? ' uk-form-danger': ''}}"
-				value="{{ old.jmbg_prijavioca ? : '' }}" autocomplete="off" maxlength="13" required>
+			<input type="text" name="ovlascen" id="ovlascen"
+				class="uk-input{{ errors.ovlascen[0] ? ' uk-form-danger': ''}}" value="{{ old.ovlascen ? : '' }}"
+				autocomplete="off" required>
 		</div>
-		<small class="uk-text-danger">{{ errors.jmbg_prijavioca[0] ? :'' }}</small>
+		<small class="uk-text-danger">{{ errors.ovlascen[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-2-5"></div>
+	<div class="uk-width-1-1">
+		<h3>Podaci potrebni za fakturisanje troškova</h3>
 	</div>
 	<div class="uk-width-1-5">
-		<label for="mesto_prijavioca" class="uk-form-label">Mesto</label>
+		<label for="prezime_troskovi" class="uk-form-label">Prezime</label>
+		<div class="uk-form-controls">
+			<input type="text" name="prezime_troskovi" id="prezime_troskovi"
+				class="uk-input{{ errors.prezime_troskovi[0] ? ' uk-form-danger': ''}}"
+				value="{{ old.prezime_troskovi ? : '' }}" autocomplete="off" required>
+		</div>
+		<small class="uk-text-danger">{{ errors.prezime_troskovi[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-5">
+		<label for="ime_troskovi" class="uk-form-label">Ime</label>
+		<div class="uk-form-controls">
+			<input type="text" name="ime_troskovi" id="ime_troskovi"
+				class="uk-input{{ errors.ime_troskovi[0] ? ' uk-form-danger': ''}}"
+				value="{{ old.ime_troskovi ? : '' }}" autocomplete="off" required>
+		</div>
+		<small class="uk-text-danger">{{ errors.ime_troskovi[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-5">
+		<label for="jmbg_troskovi" class="uk-form-label">JMBG</label>
+		<div class="uk-form-controls">
+			<input type="text" name="jmbg_troskovi" id="jmbg_troskovi"
+				class="uk-input{{ errors.jmbg_troskovi[0] ? ' uk-form-danger': ''}}"
+				value="{{ old.jmbg_troskovi ? : '' }}" autocomplete="off" maxlength="13" required>
+		</div>
+		<small class="uk-text-danger">{{ errors.jmbg_troskovi[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-5">
+		<label for="mesto_prijavioca" class="uk-form-label">Prebivalište:</label>
 		<div class="uk-form-controls">
 			<input type="text" name="mesto_prijavioca" id="mesto_prijavioca"
 				class="uk-input{{ errors.mesto_prijavioca[0] ? ' uk-form-danger': ''}}"
@@ -158,7 +199,7 @@
 		<small class="uk-text-danger">{{ errors.mesto_prijavioca[0] ? :'' }}</small>
 	</div>
 	<div class="uk-width-1-5">
-		<label for="telefon" class="uk-form-label">Telefon</label>
+		<label for="telefon" class="uk-form-label">Telefoni:</label>
 		<div class="uk-form-controls">
 			<input type="text" name="telefon" id="telefon"
 				class="uk-input{{ errors.telefon[0] ? ' uk-form-danger': ''}}" value="{{ old.telefon ? : '' }}"
@@ -182,17 +223,17 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.mup[0] ? :'' }}</small>
 	</div>
+	<div class="uk-width-1-5">
+		<label for="uplata_do" class="uk-form-label">Uplata će biti izvršena do:</label>
+		<div class="uk-form-controls">
+			<input type="date" name="uplata_do" id="uplata_do" value="{{ old.uplata_do ? : '' }}"
+				class="uk-input{{ errors.uplata_do[0] ? ' uk-form-danger': ''}}" autocomplete="off">
+		</div>
+		<small class=" uk-text-danger">{{ errors.uplata_do[0] ? : '' }}</small>
+	</div>
 	<div class="uk-width-3-5"></div>
 	<div class="uk-width-1-1">
-	<hr class="uk-divider-icon">
-	</div>
-	<div class="uk-width-1-5">
-		<label for="usluga_do" class="uk-form-label">Usluga će biti izvršena do:</label>
-		<div class="uk-form-controls">
-			<input type="date" name="usluga_do" id="usluga_do" value="{{ old.usluga_do ? : '' }}"
-				class="uk-input{{ errors.usluga_do[0] ? ' uk-form-danger': ''}}" autocomplete="off">
-		</div>
-		<small class=" uk-text-danger">{{ errors.usluga_do[0] ? : '' }}</small>
+		<hr class="uk-divider-icon">
 	</div>
 	<div class="uk-width-1-5">
 		<label for="start" class="uk-form-label">Datum i vreme obavljanja sahrane</label>
@@ -210,7 +251,7 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.end[0] ? :'' }}</small>
 	</div>
-		<div class="uk-width-1-5">
+	<div class="uk-width-1-5">
 		<label for="datum_prijave" class="uk-form-label">Datum prijave smrti:</label>
 		<div class="uk-form-controls">
 			<input type="date" name="datum_prijave" id="datum_prijave" value="{{ old.datum_prijave ? : '' }}"
@@ -218,18 +259,20 @@
 		</div>
 		<small class=" uk-text-danger">{{ errors.datum_prijave[0] ? : '' }}</small>
 	</div>
-        <div class="uk-width-1-5"></div>
+	<div class="uk-width-1-5"></div>
 	<div class="uk-width-1-2">
 		<label for="napomena" class="uk-form-label">Napomena</label>
 		<div class="uk-form-controls">
-			<textarea class="uk-textarea{{ errors.napomena[0] ? ' uk-form-danger': ''}}" rows="4" name="napomena" id="napomena">{{ old.napomena ? : '' }}</textarea>
+			<textarea class="uk-textarea{{ errors.napomena[0] ? ' uk-form-danger': ''}}" rows="4" name="napomena"
+				id="napomena">{{ old.napomena ? : '' }}</textarea>
 		</div>
 		<small class=" uk-text-danger">{{ errors.napomena[0] ? :'' }}</small>
 	</div>
-		<div class="uk-width-1-2">
+	<div class="uk-width-1-2">
 		<label for="prevoz" class="uk-form-label">Prevoz</label>
 		<div class="uk-form-controls">
-			<textarea class="uk-textarea{{ errors.prevoz[0] ? ' uk-form-danger': ''}}" rows="4" name="prevoz" id="prevoz">{{ old.prevoz ? : '' }}</textarea>
+			<textarea class="uk-textarea{{ errors.prevoz[0] ? ' uk-form-danger': ''}}" rows="4" name="prevoz"
+				id="prevoz">{{ old.prevoz ? : '' }}</textarea>
 		</div>
 		<small class=" uk-text-danger">{{ errors.prevoz[0] ? :'' }}</small>
 	</div>
