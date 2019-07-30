@@ -1,185 +1,112 @@
 {% extends "templates/app.twig" %}
 
 {% block naslov %}
+<style>
+p {
+  font-size: 1.2em;
+}
+
+@media print {
+	
+	p {
+  font-size: 0.875em;
+}
+    .ne_stampaj {
+        display: none !important;
+    }
+    a[href]:after {
+    content: none !important;
+  }
+}
+</style>
 <h2 class="uk-text-center">JKP Šumadija</h2>
-<h3 class="uk-text-center">FORMULAR ZA INTERNU UPOTREBU - ZAKAZIVANJE SAHRANE</h3>
+<h4 class="uk-text-center">FORMULAR ZA INTERNU UPOTREBU - ZAKAZIVANJE SAHRANE</h4>
 <hr>
+<br>
 <label><input class="uk-checkbox{{ errors.pio[0] ? ' uk-form-danger': ''}}" type="checkbox" name="pio"
 					{{ (old.pio or raspored.pio == 1) ? ' checked' : '' }} disabled> PIO</label>
+<br>
 <h3 class="uk-margin-medium-top uk-text-center">Podaci o pokojniku</h3>
-
 <div uk-grid class="uk-margin-medium-top">
 	<div class="uk-width-1-2">
-		<h4>Ime i prezime: {{ raspored.pokojnik().ime }} {{ raspored.pokojnik().prezime }}</h4>
+		<p>Ime i prezime: {{ raspored.pokojnik().ime }} {{ raspored.pokojnik().prezime }}</p>
+		<p>sa poslednjim prebivalištem: {{ raspored.pokojnik().prebivaliste }}</p>
+		<p>Datum i mesto rođenja: {{ raspored.pokojnik().datum_rodjenja }}, {{ raspored.pokojnik().mesto }}</p>
+		<p>Preminuo dana: {{ raspored.pokojnik().datum_smrti }}</p>
 	</div>
 	<div class="uk-width-1-2">
-		<h4>JMBG: {{ raspored.pokojnik().jmbg }}</h4>
+		<p>JMBG: {{ raspored.pokojnik().jmbg }}</p>
+	</div>
+</div>
+<h3 class="uk-margin-medium-top uk-text-center">Podaci o prijaviocu sahrane</h3>
+<div uk-grid>
+	<div class="uk-width-1-1">
+		<p>Neopozivo, pod punom krivičnom i materijalnom odgovornošću, izjavljujem da sam ovlašćen od strane porodice <u>  {{ raspored.ovlascen }}  </u>, da zakažem sahranu za pokojnika <u>  {{ raspored.pokojnik().ime }} {{ raspored.pokojnik().prezime }}  </u>. Sahranu prijavio <u>  {{ raspored.ime_prijavioca }} {{ raspored.prezime_prijavioca }}  </u>.</p>
+	</div>
+</div>
+<br>
+<div uk-grid>
+	<div class="uk-width-1-1">
+		<p>Troškove za celokupne pogrebne usluge JKP Šumadija Kragujevac, fakturisati na</p>
 	</div>
 </div>
 <div uk-grid>
 	<div class="uk-width-1-2">
-		<h4>sa poslednjim prebivalištem: {{ raspored.pokojnik().mesto }}</h4>
+		<p>Ime i prezime: {{ raspored.ime_troskovi }} {{ raspored.prezime_troskovi }}</p>
+		<p>sa prebivalištem u {{ raspored.prebivaliste_troskovi }};</p>
+		<p>br LK {{ raspored.broj_lk }};</p>
+	</div>
+	<div class="uk-width-1-2">
+		<p>JMBG: {{ raspored.jmbg_troskovi }}</p>
+		<p>brojevi telefona: {{ raspored.telefon }}</p>
+		<p>MUP: {{ raspored.mup }}</p>
 	</div>
 </div>
 <div uk-grid>
 	<div class="uk-width-1-2">
-		<h4>Dan, mesec, godina i mesto rođenja: {{ raspored.pokojnik().datum_rodjenja }}, {{ raspored.pokojnik().mesto }}</h4>
+		<p>Uplata će se izvršiti do: {{ raspored.uplata_do }};</p>
 	</div>
 </div>
-
-<h2 class="uk-text-primary uk-margin-medium-bottom">
-  Veza sa kartonom: <small><em class="uk-text-success">[{{ raspored.karton().broj() }}]</em></small>
-</h2>
-
-<form action="{{ path_for('raspored.izmena.post') }}" method="POST" class="uk-form-stacked">
-	{{ csrf|raw }}
-	<input type="hidden" value="{{ raspored.id }}" name="id" id="id">
-	<div uk-grid>
-	<div class="uk-width-1-4">
-		<label for="start" class="uk-form-label">Početak</label>
-		<div class="uk-form-controls">
-			<input type="datetime-local" name="start" id="start" value="{{ old.start ? : raspored.datum_start() }}"
-				class="uk-input{{ errors.start[0] ? ' uk-form-danger': ''}}" autocomplete="off" autofocus required>
-		</div>
-		<small class=" uk-text-danger">{{ errors.start[0] ? :'' }}</small>
-	</div>
-	<div class="uk-width-1-4">
-		<label for="end" class="uk-form-label">Kraj</label>
-		<div class="uk-form-controls">
-			<input type="datetime-local" name="end" id="end" value="{{ old.end ? : raspored.datum_end() }}"
-				class="uk-input{{ errors.end[0] ? ' uk-form-danger': ''}}" autocomplete="off" autofocus required>
-		</div>
-		<small class="uk-text-danger">{{ errors.end[0] ? :'' }}</small>
-	</div>
-
+<div uk-grid>
 	<div class="uk-width-1-2">
-		<label for="title" class="uk-form-label">Opis</label>
-		<div class="uk-form-controls">
-			<input type="text" name="title" id="title" value="{{ old.title ? : raspored.title }}" class="uk-input{{ errors.title[0] ? ' uk-form-danger': ''}}"
-			 autocomplete="off" required>
-		</div>
-		<small class="uk-text-danger">{{ errors.title[0] ? :'' }}</small>
-	</div>
-	</div>
-	<h3>Podaci o prijaviocu</h3>
-	<div uk-grid>
-		<div class="uk-width-1-5">
-		<label for="prezime_prijavioca" class="uk-form-label">Prezime</label>
-		<div class="uk-form-controls">
-			<input type="text" name="prezime_prijavioca" id="prezime_prijavioca" value="{{ old.prezime_prijavioca ? : raspored.prezime_prijavioca }}" class="uk-input{{ errors.prezime_prijavioca[0] ? ' uk-form-danger': ''}}"
-			 autocomplete="off" required>
-		</div>
-		<small class="uk-text-danger">{{ errors.prezime_prijavioca[0] ? :'' }}</small>
-	</div>
-	<div class="uk-width-1-5">
-		<label for="ime_prijavioca" class="uk-form-label">Ime</label>
-		<div class="uk-form-controls">
-			<input type="text" name="ime_prijavioca" id="ime_prijavioca" value="{{ old.ime_prijavioca ? : raspored.ime_prijavioca }}" class="uk-input{{ errors.ime_prijavioca[0] ? ' uk-form-danger': ''}}"
-			 autocomplete="off" required>
-		</div>
-		<small class="uk-text-danger">{{ errors.ime_prijavioca[0] ? :'' }}</small>
-	</div>
-	<div class="uk-width-1-5">
-		<label for="jmbg_prijavioca" class="uk-form-label">JMBG</label>
-		<div class="uk-form-controls">
-			<input type="text" name="jmbg_prijavioca" id="jmbg_prijavioca" value="{{ old.jmbg_prijavioca ? : raspored.jmbg_prijavioca }}" class="uk-input{{ errors.jmbg_prijavioca[0] ? ' uk-form-danger': ''}}"
-			 autocomplete="off">
-		</div>
-		<small class="uk-text-danger">{{ errors.jmbg_prijavioca[0] ? :'' }}</small>
-	</div>
-	<div class="uk-width-1-5">
-		<label for="mesto_prijavioca" class="uk-form-label">Mesto</label>
-		<div class="uk-form-controls">
-			<input type="text" name="mesto_prijavioca" id="mesto_prijavioca" value="{{ old.mesto_prijavioca ? : raspored.mesto_prijavioca }}" class="uk-input{{ errors.mesto_prijavioca[0] ? ' uk-form-danger': ''}}"
-			 autocomplete="off">
-		</div>
-		<small class="uk-text-danger">{{ errors.mesto_prijavioca[0] ? :'' }}</small>
-	</div>
-	<div class="uk-width-1-5">
-		<label for="telefon" class="uk-form-label">Telefon</label>
-		<div class="uk-form-controls">
-			<input type="text" name="telefon" id="telefon" value="{{ old.telefon ? : raspored.telefon }}" class="uk-input{{ errors.telefon[0] ? ' uk-form-danger': ''}}"
-			 autocomplete="off">
-		</div>
-		<small class="uk-text-danger">{{ errors.telefon[0] ? :'' }}</small>
-	</div>
-	</div>
-	<div uk-grid>
-			<div class="uk-width-1-5">
-		<label for="broj_lk" class="uk-form-label">Lična karta</label>
-		<div class="uk-form-controls">
-			<input type="number" name="broj_lk" step="1" id="broj_lk" value="{{ old.broj_lk ? : raspored.broj_lk }}" class="uk-input{{ errors.broj_lk[0] ? ' uk-form-danger': ''}}"
-			 autocomplete="off">
-		</div>
-		<small class=" uk-text-danger">{{ errors.broj_lk[0] ? :'' }}</small>
-	</div>
-		<div class="uk-width-1-5">
-		<label for="mup" class="uk-form-label">MUP</label>
-		<div class="uk-form-controls">
-			<input type="text" name="mup" id="mup" value="{{ old.mup ? : raspored.mup }}" class="uk-input{{ errors.mup[0] ? ' uk-form-danger': ''}}"
-			 autocomplete="off">
-		</div>
-		<small class="uk-text-danger">{{ errors.mup[0] ? :'' }}</small>
-	</div>
-	</div>
-	<hr>
-	<div uk-grid class="uk-margin-medium-top">
-		<div class="uk-width-1-6">
-		<div class="uk-form-controls uk-margin-top">
-			<label><input class="uk-checkbox{{ errors.pio[0] ? ' uk-form-danger': ''}}" type="checkbox" name="pio"
-					{{ (old.pio or raspored.pio == 1) ? ' checked' : '' }}> PIO</label>
-		</div>
-	</div>
-		<div class="uk-width-1-6">
-		<label for="datum_prijave" class="uk-form-label">Datum prijave</label>
-		<div class="uk-form-controls">
-			<input type="date" name="datum_prijave" id="datum_prijave" value="{{ old.datum_prijave ? : raspored.datum_prijave }}"
-				class="uk-input{{ errors.datum_prijave[0] ? ' uk-form-danger': ''}}" autocomplete="off">
-		</div>
-		<small class=" uk-text-danger">{{ errors.datum_prijave[0] ? : '' }}</small>
-	</div>
-			<div class="uk-width-1-6">
-		<label for="usluga_do" class="uk-form-label">Uslugu je trebalo izvršiti do</label>
-		<div class="uk-form-controls">
-			<input type="date" name="usluga_do" id="usluga_do" value="{{ old.usluga_do ? : raspored.usluga_do }}"
-				class="uk-input{{ errors.usluga_do[0] ? ' uk-form-danger': ''}}" autocomplete="off">
-		</div>
-		<small class=" uk-text-danger">{{ errors.usluga_do[0] ? : '' }}</small>
-	</div>
-	<div class="uk-width-3-6"></div>
-	</div>
-	<div uk-grid>
-		<div class="uk-width-1-2">
-		<label for="napomena" class="uk-form-label">Napomena</label>
-		<div class="uk-form-controls">
-			<textarea class="uk-textarea{{ errors.napomena[0] ? ' uk-form-danger': ''}}" rows="3" name="napomena" id="napomena">{{ old.napomena ? : raspored.napomena }}</textarea>
-		</div>
-		<small class=" uk-text-danger">{{ errors.napomena[0] ? :'' }}</small>
+		<p>Datum obavljanja sahrane: {{ raspored.start }};</p>
+		<p>Na groblju: {{ raspored.karton().groblje.naziv }};</p>
 	</div>
 	<div class="uk-width-1-2">
-		<label for="prevoz" class="uk-form-label">Prevoz</label>
-		<div class="uk-form-controls">
-			<textarea class="uk-textarea{{ errors.prevoz[0] ? ' uk-form-danger': ''}}" rows="3" name="prevoz" id="prevoz">{{ old.prevoz ? : raspored.prevoz }}</textarea>
-		</div>
-		<small class=" uk-text-danger">{{ errors.prevoz[0] ? :'' }}</small>
-	</div>
-	</div>
-
-	<div uk-grid>
-	<div class="uk-button-group uk-width-1-3 uk-margin-medium-bottom">
-		<button class="uk-button uk-button-primary uk-width-1-4"><span uk-icon="check"></span> Snimi</button>
-				<a class="uk-button uk-button-danger uk-width-1-4" href="#modal-brisanje" uk-toggle>
-          <span uk-icon="trash"></span> Obriši
-        </a>
-		<a href="{{ path_for('raspored') }}" class="uk-button uk-button-secondary uk-width-1-4">
-			<span uk-icon="ban"></span> Otkaži
-		</a>
-		<a href="{{ path_for('raspored.stampa', { 'id': raspored.id }) }}" class="uk-button uk-button-default uk-width-1-4">
-			<span uk-icon="print"></span> Štampaj
-		</a>
+		<p>Način: nisam još siguran, kako</p>
+		<p>Parcela i broj grobnog mesta: {{ raspored.karton().parcela }}/{{ raspored.karton().grobno_mesto }}</p>
 	</div>
 </div>
-</form>
+<div uk-grid class="uk-margin-small uk-margin-small-left">
+<div class="uk-card uk-card-default uk-card-small uk-card-body uk-width-1-1">
+    <p>Napomena:</p>
+    <p>{{ raspored.napomena }}</p>
+</div>
+	<div class="uk-card uk-card-default uk-card-small uk-card-body uk-width-1-1">
+    <p>Prevoz:</p>
+    <p>{{ raspored.prevoz }}</p>
+</div>
+</div>
+<div uk-grid>
+	<div class="uk-width-1-2">
+		<p>Datum prijave smrti: {{ raspored.datum_prijave }};</p>
+	</div>
+</div>
+<div uk-grid>
+	<div class="uk-width-1-3">
+		<h5>POTPIS STRANKE</h5>
+		<br>
+		<hr>
+	</div>
+	<div class="uk-width-1-3">
+
+	</div>
+	<div class="uk-width-1-3">
+		<h5>OVLAŠĆENO LICE</h5>
+		<br>
+		<hr>
+	</div>
+</div>
 {% endblock naslov %}
 {% block skripta %}
 {% endblock skripta %}

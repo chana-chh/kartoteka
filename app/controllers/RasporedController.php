@@ -106,6 +106,7 @@ class RasporedController extends Controller
         $ime_troskovi = filter_var($data['ime_troskovi'], FILTER_SANITIZE_STRING);
         $jmbg_troskovi = filter_var($data['jmbg_troskovi'], FILTER_SANITIZE_STRING);
         $prebivaliste_troskovi = filter_var($data['prebivaliste_troskovi'], FILTER_SANITIZE_STRING);
+        $ovlascen = filter_var($data['ovlascen'], FILTER_SANITIZE_STRING);
         $mup = filter_var($data['mup'], FILTER_SANITIZE_STRING);
         $telefon = filter_var($data['telefon'], FILTER_SANITIZE_STRING);
 
@@ -125,6 +126,7 @@ class RasporedController extends Controller
                     'ime_troskovi' => $ime_prijavioca,
                     'jmbg_troskovi' => $jmbg_troskovi,
                     'prebivaliste_troskovi' => $prebivaliste_troskovi,
+                    'ovlascen' => $ovlascen,
                     'mup' => $mup,
                     'telefon' => $telefon,
                     'uplata_do' => $data['uplata_do'],
