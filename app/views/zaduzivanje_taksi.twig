@@ -14,7 +14,7 @@
 		<label for="iznos" class="uk-form-label">Iznos zaduzenja</label>
 		<div class="uk-form-controls">
 			<input type="number" name="iznos" id="iznos" class="uk-input{{ errors.iznos[0] ? ' uk-form-danger': ''}}"
-				value="{{ taksa }}" min="0" step="0.01" autocomplete="off" required readonly disabled>
+				value="{{ taksa }}" min="0" step="0.01" autocomplete="off" required readonly>
 		</div>
 		<small class="uk-text-danger">{{ errors.iznos[0] ? :'' }}</small>
 	</div>
@@ -28,7 +28,7 @@
 	</div>
 	<div class="uk-width-1-4 uk-flex uk-flex-bottom">
 		<div class="uk-button-group uk-width-1-1">
-			<button class="uk-button uk-button-primary uk-width-1-2">Snimi</button>
+			<button class="uk-button uk-button-primary uk-width-1-2">Zaduzi</button>
 			<a href="{{ path_for('kartoni') }}" class="uk-button uk-button-secondary uk-width-1-2">Otkaži</a>
 		</div>
 	</div>

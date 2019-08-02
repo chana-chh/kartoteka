@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\Cena;
 use App\Models\Karton;
+use App\Models\Zaduzenje;
 
 class TransakcijeController extends Controller
 {
@@ -20,10 +21,15 @@ class TransakcijeController extends Controller
     public function getKarton($request, $response, $args)
     {
         $karton_id = $args['id'];
-        $mk = new Karton();
-        $karton = $mk->find($karton_id);
+        $model_karton = new Karton();
+        $karton = $model_karton->find($karton_id);
+        $model_zaduzenje = new Zaduzenje();
+        $takse = $model_zaduzenje->nerazduzeneTakseZaKarton($karton->id);
+        $broj_taksi = count($takse);
+        $zakupi = $model_zaduzenje->nerazduzeniZakupiZaKarton($karton->id);
+        $broj_zakupa = count($zakupi);
 
-        $this->render($response, 'transakcije.twig', compact('karton'));
+        $this->render($response, 'transakcije.twig', compact('karton', 'takse', 'broj_taksi', 'zakupi', 'broj_zakupa'));
     }
 
     public function getZaduzivanjeTakse($request, $response)

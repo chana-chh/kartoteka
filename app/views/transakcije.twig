@@ -19,52 +19,139 @@
         </div>
         <div class="uk-float-right">
             <div class="uk-button-group">
-                <button class="uk-button uk-button-default uk-button-small">
-                    <span uk-icon="minus-circle"></span> Nerazdužena zaduženja
-                </button>
-                <button class="uk-button uk-button-default uk-button-small" href="#modal-brisanje">
-                    <span uk-icon="plus-circle"></span> Sva zaduženja
-                </button>
-            </div>
-            <div class="uk-button-group">
-                <a href="{{ path_for('kartoni.izmena', { 'id': karton.id }) }}"
-                    class="uk-button uk-button-secondary uk-button-small">
-                    <span uk-icon="pencil"></span> Izmeni karton
+                <a href="" class="uk-button uk-button-secondary uk-button-small">
+                    <span uk-icon="database"></span> Sva zaduzenja
                 </a>
-                <a class="uk-button uk-button-danger uk-button-small" href="#modal-brisanje" uk-toggle>
-                    <span uk-icon="trash"></span> Obriši karton
+                <a href="" class="uk-button uk-button-primary uk-button-small">
+                    <span uk-icon="bookmark"></span> Zaduzi taksu
                 </a>
-                <a href="{{ path_for('kartoni.mapa', { 'id': karton.id }) }}"
-                    class="uk-button uk-button-primary uk-button-small">
-                    <span uk-icon="location"></span> Mapa
+                <a href="" class="uk-button uk-button-primary uk-button-small">
+                    <span uk-icon="bookmark"></span> Zaduzi zakup
                 </a>
             </div>
         </div>
     </div>
 </div>
 
-<h2>
-    Takse
-    <em class="uk-text-success">[{{ (0) | number_format(2, '.', ',') }}]</em>
-</h2>
-<p>Tabela sa zaduzenjima za takse.</p>
+<ul uk-accordion>
+    <li>
+        <a class="uk-accordion-title" href="#">
+            <h2>
+                Takse <em class="uk-text-danger">[{{ broj_taksi }}]</em>
+            </h2>
+        </a>
+        <div class="uk-accordion-content">
+            <div class="uk-overflow-auto">
+                <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+                    <thead>
+                        <tr>
+                            <th class="w-20">Godina</th>
+                            <th class="w-20 uk-text-right">Iznos</th>
+                            <th class="w-20 uk-text-center">Razduzeno</th>
+                            <th class="w-20">Reprogram</th>
+                            <th class="w-20 uk-text-right"><span uk-icon="cog"></span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for taksa in takse %}
+                        <tr>
+                            <td>{{ taksa.godina }}</td>
+                            <td class="uk-text-right">{{ taksa.iznos|number_format(2, '.', ',') }}</td>
+                            <td class="uk-text-center">{{ taksa.razduzeno()|raw }}</td>
+                            <td>
+                                {% if taksa.reprogram_id %}
+                                <a href=""><span uk-icon="refresh"></span>reprogram</a>
+                                {% endif %}
+                            </td>
+                            <td class="uk-clearfix">
+                                <ul class="uk-iconnav uk-float-right">
+                                    <li>
+                                        <a href="" title="Izmena"><span uk-icon="pencil"></span></a>
+                                    </li>
+                                    <li>
+                                        <a href="" title="Brisanje"><span uk-icon="trash"></span></a>
+                                    </li>
 
-<h2>
-    Zakup
-    <em class="uk-text-danger">[{{ (-9000) | number_format(2, '.', ',') }}]</em>
-</h2>
-<p>Tabela sa zaduzenjima za zakup.</p>
+                                </ul>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </li>
+    <li>
+        <a class="uk-accordion-title" href="#">
+            <h2>
+                Zakup
+                <em class="uk-text-danger">[{{ broj_zakupa }}]</em>
+            </h2>
+        </a>
+        <div class="uk-accordion-content">
+            <div class="uk-overflow-auto">
+                <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+                    <thead>
+                        <tr>
+                            <th class="w-20">Godina</th>
+                            <th class="w-20 uk-text-right">Iznos</th>
+                            <th class="w-20 uk-text-center">Razduzeno</th>
+                            <th class="w-20">Reprogram</th>
+                            <th class="w-20 uk-text-right"><span uk-icon="cog"></span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for zakup in zakupi %}
+                        <tr>
+                            <td>{{ zakup.godina }}</td>
+                            <td class="uk-text-right">{{ zakup.iznos|number_format(2, '.', ',') }}</td>
+                            <td class="uk-text-center">{{ zakup.razduzeno()|raw }}</td>
+                            <td>
+                                {% if zakup.reprogram_id %}
+                                <a href=""><span uk-icon="refresh"></span>reprogram</a>
+                                {% endif %}
+                            </td>
+                            <td class="uk-clearfix">
+                                <ul class="uk-iconnav uk-float-right">
+                                    <li>
+                                        <a href="" title="Izmena"><span uk-icon="pencil"></span></a>
+                                    </li>
+                                    <li>
+                                        <a href="" title="Brisanje"><span uk-icon="trash"></span></a>
+                                    </li>
 
-<h2>
-    Računi
-    <em class="uk-text-danger">[{{ (-800.32) | number_format(2, '.', ',') }}]</em>
-</h2>
-<p>Tabela sa zaduzenjima za racune.</p>
-<h2>
-    Reprogram
-    <em class="uk-text-success">[{{ (0) | number_format(2, '.', ',') }}]</em>
-</h2>
-<p>Tabela sa zaduzenjima za reprogram.</p>
+                                </ul>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </li>
+    <li>
+        <a class="uk-accordion-title" href="#">
+            <h2>
+                Računi
+                <em class="uk-text-success">[0]</em>
+            </h2>
+        </a>
+        <div class="uk-accordion-content">
+            <p>Tabela sa zaduzenjima za racune.</p>
+        </div>
+    </li>
+    <li>
+        <a class="uk-accordion-title" href="#">
+            <h2>
+                Reprogram
+                <em class="uk-text-success">[0]</em>
+            </h2>
+        </a>
+        <div class="uk-accordion-content">
+            <p>Tabela sa zaduzenjima za reprogram.</p>
+        </div>
+    </li>
+</ul>
 {% endblock sadrzaj %}
 
 {% block traka %}
@@ -72,21 +159,23 @@
     <div class="uk-width-1-2">
         <h2 class="uk-text-right">Saldo kartona</h2>
         <div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
-            <h1 class="uk-text-success">{{ (0) | number_format(2, '.', ',') }}</h1>
+            <h1 class="uk-text-success" id="saldo">{{ (0) | number_format(2, '.', ',') }}</h1>
         </div>
     </div>
     <div class="uk-width-1-2">
         <h2 class="uk-text-right">Ukupan dug</h2>
         <div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
-            <h1 class="uk-text-danger">{{ (9800.32) | number_format(2, '.', ',') }}</h1>
+            <h1 class="uk-text-danger" id="ukupan-dug">{{ (0) | number_format(2, '.', ',') }}</h1>
         </div>
     </div>
 </div>
 
 <h2 class="uk-text-right">Iznos razduženja</h2>
 <div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
-    <h1 class="uk-text-primary">{{ (5056.22) | number_format(2, '.', ',') }}</h1>
+    <h1 class="uk-text-primary" id="razduzenje">{{ (0) | number_format(2, '.', ',') }}</h1>
 </div>
+
+<hr>
 
 <h2>Uplata</h2>
 <form action="" method="POST" class="uk-form-stacked" uk-grid>
@@ -107,36 +196,23 @@
         </div>
         <small class=" uk-text-danger">{{ errors.datum[0] ? : '' }}</small>
     </div>
-    <div class="uk-width-1-2">
-        <label for="razduzenje-iznos" class="uk-form-label">Iznos razduženja</label>
-        <div class="uk-form-controls">
-            <input type="number" name="razduzenje-iznos" id="razduzenje-iznos" value="0" min="0" step="0.01"
-                class="uk-input uk-text-right" autocomplete="off" required readonly disabled>
-        </div>
-        <small class="uk-text-danger">{{ errors.opis[0] ? :'' }}</small>
-    </div>
-    <div class="uk-width-1-2 uk-flex uk-flex-bottom">
-        <div class="uk-button-group uk-width-1-1">
-            <input type="submit" value="Snimi uplatu" class="uk-button uk-button-primary uk-button-small uk-width-1-2">
-            <input type="reset" value="Otkaži" class="uk-button uk-button-secondary uk-button-small uk-width-1-2">
-        </div>
+    <div class="uk-width-1-2"></div>
+    <div class="uk-button-group uk-width-1-2">
+        <input type="submit" value="Snimi uplatu" class="uk-button uk-button-primary uk-button-small uk-width-1-2">
+        <input type="reset" value="Otkaži" class="uk-button uk-button-secondary uk-button-small uk-width-1-2">
     </div>
 </form>
 
+<hr>
 
-
-<h2>Opis</h2>
+<h2>Uplate</h2>
 <p>
-    Iznos razduženja se računa sabiranjem stavki koje se razdužuju iz tabela sa leve strane.
-</p>
-<p>
-    Kada se snimi uplata proveri se da li je iznos uplate i salda kartona veći ili jednak iznosu razduženja. Ako su
-    iznosi isti razduže se izabrana zaduženja, a ako je iznos uplate veći višak se prebacuje na saldo kartona.
+    Tabela uplata.
 </p>
 {% endblock traka %}
 
 {% block skripta %}
 <script>
-    
+
 </script>
 {% endblock skripta %}

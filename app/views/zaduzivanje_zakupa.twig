@@ -15,7 +15,7 @@
 		<label for="iznos" class="uk-form-label">Iznos zaduzenja za 10 godina</label>
 		<div class="uk-form-controls">
 			<input type="number" name="iznos" id="iznos" class="uk-input{{ errors.iznos[0] ? ' uk-form-danger': ''}}"
-				value="{{ zakup }}" min="0" step="0.01" autocomplete="off" required readonly disabled>
+				value="{{ zakup }}" min="0" step="0.01" autocomplete="off" required readonly>
 		</div>
 		<small class="uk-text-danger">{{ errors.iznos[0] ? :'' }}</small>
 	</div>
@@ -23,7 +23,7 @@
 		<label for="godina" class="uk-form-label">Pocetna godina zaduzenja</label>
 		<div class="uk-form-controls">
 			<input type="number" name="godina" id="godina" value="{{ old.godina ? : 'now'|date('Y') }}" min="0" step="1"
-				class="uk-input{{ errors.godina[0] ? ' uk-form-danger': ''}}" autocomplete="off" required readonly disabled>
+				class="uk-input{{ errors.godina[0] ? ' uk-form-danger': ''}}" autocomplete="off" required readonly>
 		</div>
 		<small class="uk-text-danger">{{ errors.godina[0] ? :'' }}</small>
 	</div>

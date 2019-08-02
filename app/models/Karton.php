@@ -59,10 +59,6 @@ class Karton extends Model
         return "<input type=\"checkbox\" name=\"aktivan\" data-id=\"{$this->$pk}\"{$chk} disabled>";
     }
 
-    public function saldo()
-    {
-        return $this->saldo;
-    }
     /**
     * Vraca sve parcele iz kartona
     */
