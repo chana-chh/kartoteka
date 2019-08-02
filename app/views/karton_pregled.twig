@@ -18,13 +18,19 @@
     </div>
     <div class="uk-float-right">
       <div class="uk-button-group">
-        <a href="{{ path_for('kartoni.izmena', { 'id': karton.id }) }}" class="uk-button uk-button-secondary uk-button-small">
+        <a href="{{ path_for('transakcije.karton',{'id':karton.id}) }}"
+          class="uk-button uk-button-primary uk-button-small">
+          <span uk-icon="credit-card"></span> Transakcije
+        </a>
+        <a href="{{ path_for('kartoni.izmena', { 'id': karton.id }) }}"
+          class="uk-button uk-button-secondary uk-button-small">
           <span uk-icon="pencil"></span> Izmeni karton
         </a>
         <a class="uk-button uk-button-danger uk-button-small" href="#modal-brisanje" uk-toggle>
           <span uk-icon="trash"></span> Obriši karton
         </a>
-        <a href="{{ path_for('kartoni.mapa', { 'id': karton.id }) }}" class="uk-button uk-button-primary uk-button-small">
+        <a href="{{ path_for('kartoni.mapa', { 'id': karton.id }) }}"
+          class="uk-button uk-button-primary uk-button-small">
           <span uk-icon="location"></span> Mapa
         </a>
       </div>
@@ -77,7 +83,8 @@
     </h2>
   </div>
   <div class="uk-float-right uk-margin-small-top">
-    <a href="{{ path_for('staraoci.dodavanje', {id:karton.id}) }}" class="uk-button uk-button-primary uk-button-small">Dodaj staraoca</a>
+    <a href="{{ path_for('staraoci.dodavanje', {id:karton.id}) }}"
+      class="uk-button uk-button-primary uk-button-small">Dodaj staraoca</a>
   </div>
 </div>
 <div class="uk-overflow-auto">
@@ -114,7 +121,8 @@
               </a>
             </li>
             <li>
-              <a title="Brisanje" href="#modal-brisanje-staraoca" data-id="{{ st.id }}" onclick="setStarId(this);" uk-toggle>
+              <a title="Brisanje" href="#modal-brisanje-staraoca" data-id="{{ st.id }}" onclick="setStarId(this);"
+                uk-toggle>
                 <span uk-icon="trash"></span>
               </a>
             </li>
@@ -138,7 +146,8 @@
     </h2>
   </div>
   <div class="uk-float-right uk-margin-small-top">
-    <a href="{{ path_for('pokojnici.dodavanje',{'id':karton.id}) }}" class="uk-button uk-button-primary uk-button-small">Dodaj pokojnika</a>
+    <a href="{{ path_for('pokojnici.dodavanje',{'id':karton.id}) }}"
+      class="uk-button uk-button-primary uk-button-small">Dodaj pokojnika</a>
   </div>
 </div>
 <div class="uk-overflow-auto">
@@ -177,7 +186,8 @@
               </a>
             </li>
             <li>
-              <a title="Brisanje" href="#modal-brisanje-pokojnika" data-id="{{ pok.id }}" onclick="setPokId(this);" uk-toggle>
+              <a title="Brisanje" href="#modal-brisanje-pokojnika" data-id="{{ pok.id }}" onclick="setPokId(this);"
+                uk-toggle>
                 <span uk-icon="trash"></span>
               </a>
             </li>
@@ -199,7 +209,8 @@
     <h2 class="uk-text-primary">Dokumenti</h2>
   </div>
   <div class="uk-float-right uk-margin-small-top">
-    <a class="uk-button uk-button-primary uk-button-small" href="{{ path_for('dokumenti.dodavanje', { 'id': karton.id }) }}">
+    <a class="uk-button uk-button-primary uk-button-small"
+      href="{{ path_for('dokumenti.dodavanje', { 'id': karton.id }) }}">
       Dodaj dokument
     </a>
   </div>
@@ -228,10 +239,12 @@
               <a href="{{ dok.veza }}" title="Pregled" target="_blank"><span uk-icon="search"></span></a>
             </li>
             <li>
-              <a href="{{ path_for('dokumenti.izmena', { 'id': dok.id }) }}" title="Izmena"><span uk-icon="pencil"></span></a>
+              <a href="{{ path_for('dokumenti.izmena', { 'id': dok.id }) }}" title="Izmena"><span
+                  uk-icon="pencil"></span></a>
             </li>
             <li>
-              <a href="#modal-brisanje-dokumenta" title="Brisanje" data-id="{{ dok.id }}" onclick="setDocId(this);" uk-toggle>
+              <a href="#modal-brisanje-dokumenta" title="Brisanje" data-id="{{ dok.id }}" onclick="setDocId(this);"
+                uk-toggle>
                 <span uk-icon="trash"></span>
               </a>
             </li>
@@ -246,45 +259,6 @@
 <!-- MODAL BRISANJE -->
 {% include 'inc/dokument_brisanje.twig' %}
 
-<hr class="uk-margin-large">
-<div class="uk-clearfix">
-  <div class="uk-float-left">
-    <h2 class="uk-text-success">Transakcije</h2>
-  </div>
-  <div class="uk-float-right uk-margin-small-top">
-    <a href="{{ path_for('kartoni.transakcije',{'id':karton.id}) }}" class="uk-button uk-button-primary uk-button-small">
-      Dodaj transakciju
-    </a>
-  </div>
-</div>
-<div class="uk-overflow-auto">
-  <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
-    <thead>
-      <tr>
-        <th class="w-15">Tip</th>
-        <th class="w-20">Godina</th>
-        <th class="w-15">Datum</th>
-        <th class="w-25 uk-text-right">Iznos</th>
-        <th class="w-15">Razduženo</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for tran in karton.transakcije() %}
-      <tr>
-        <td>
-          <em>{{ tran.tip_transakcije().tip }}</em>
-        </td>
-        <td>
-          {{ tran.tip_transakcije().godina_od ? : '' }}{{ tran.tip_transakcije().godina_do ? '-' ~ tran.tip_transakcije().godina_do : '' }}
-        </td>
-        <td>{{ tran.datum() }}</td>
-        <td class="uk-text-right">{{ (tran.iznos)|number_format(2, '.', ',') }}</td>
-        <td>{{ tran.razduzenoDisabled() | raw }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
 {% endblock traka %}
 
 {% block skripta %}
@@ -301,12 +275,15 @@
   document.getElementById("modal_dugme_brisi_pokojnika").addEventListener("click", function () {
     document.getElementById("forma_brisanje_pokojnika").submit();
   });
+
   function setDocId(el) {
     document.getElementById("modal_dokument_id").value = el.dataset.id;
   }
+
   function setStarId(el) {
     document.getElementById("modal_staraoc_id").value = el.dataset.id;
   }
+
   function setPokId(el) {
     document.getElementById("modal_pokojnik_id").value = el.dataset.id;
   }

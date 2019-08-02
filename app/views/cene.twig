@@ -1,0 +1,64 @@
+{% extends "templates/app.twig" %} {% block naslov %}
+<h1 class="uk-text-primary">
+    Cene
+</h1>
+
+<div class="uk-panel uk-background-muted uk-padding-small uk-text-right">
+    <div class="uk-clearfix">
+        <div class="uk-float-left uk-text-primary">
+            <strong>
+                Važeće cene - Taksa:
+                <span class="uk-text-success">{{ taksa|number_format(2, '.', ',') }}</span>
+                din za jednu godinu, Zakup:
+                <span class="uk-text-success">{{ zakup|number_format(2, '.', ',') }}</span>
+                din za deset godina
+            </strong>
+        </div>
+        <div class="uk-float-right">
+            <a href="{{ path_for('kartoni.dodavanje') }}" class="uk-button uk-button-primary uk-button-small">Dodaj nove
+                cene</a>
+        </div>
+    </div>
+</div>
+
+<div class="uk-overflow-auto">
+    <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+        <thead>
+            <tr>
+                <th class="w-10">Id</th>
+                <th class="w-20">Datum</th>
+                <th class="w-20 uk-text-right">Taksa (za 1 godinu)</th>
+                <th class="w-20 uk-text-right">Zakup (za 10 godina)</th>
+                <th class="w-10 uk-text-right">Važeće cene</th>
+                <th class="w-20 uk-text-right"><span uk-icon="cog"></span></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cena in cene %}
+            <tr>
+                <td>
+                    <em>{{ cena.id }}</em>
+                </td>
+                <td>
+                    <strong>{{ cena.datum }}</strong>
+                </td>
+                <td class="uk-text-right">{{ cena.taksa|number_format(2, '.', ',') }}</td>
+                <td class="uk-text-right">{{ cena.zakup|number_format(2, '.', ',') }}</td>
+                <td class="uk-text-right">{{ cena.vazecaDisabled | raw }}</td>
+                <td class="uk-clearfix">
+                    <ul class="uk-iconnav uk-float-right">
+                        <li>
+                            <a href="" title="Izmena"><span uk-icon="pencil"></span></a>
+                        </li>
+                        <li>
+                            <a href="" title="Brisanje"><span uk-icon="trash"></span></a>
+                        </li>
+
+                    </ul>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock naslov %}

@@ -39,9 +39,10 @@ class Karton extends Model
         return $this->hasMany('App\Models\Dokument', 'karton_id');
     }
 
-    public function transakcije()
+    public function sviAktivni()
     {
-        return $this->hasMany('App\Models\Transakcija', 'karton_id', 'datum DESC');
+        $sql = "SELECT id FROM {$this->table} WHERE aktivan = 1;";
+        return $this->fetch($sql);
     }
 
     public function aktivan()
@@ -60,21 +61,8 @@ class Karton extends Model
 
     public function saldo()
     {
-        $sql = "SELECT SUM(iznos) AS saldo FROM transakcije WHERE karton_id = {$this->id};";
-        return (float)Db::fetch($sql)[0]->saldo;
+        return $this->saldo;
     }
-
-    public function nerazduzeneTransakcije()
-    {
-        $pk = $this->getPrimaryKey();
-        $sql = "SELECT * FROM transakcije
-                WHERE karton_id = {$this->$pk}
-                AND tip_transakcije_id > 1
-                AND razduzeno = 0
-                ORDER BY datum DESC;";
-        return $this->fetch($sql, null, 'App\Models\Transakcija');
-    }
-
     /**
     * Vraca sve parcele iz kartona
     */
@@ -83,5 +71,5 @@ class Karton extends Model
     {
         $sql = "SELECT parcela FROM {$this->table} GROUP BY parcela";
         return $this->fetch($sql);
-    } 
+    }
 }

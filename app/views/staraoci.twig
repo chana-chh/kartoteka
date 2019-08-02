@@ -14,10 +14,12 @@
 <div class="uk-panel uk-background-muted uk-padding-small">
     <form action="{{ path_for('staraoci.pretraga') }}" method="POST">
         {{ csrf|raw }}
-        <input type="text" name="jmbg" id="jmbg" class="uk-input uk-form-width-small uk-form-small" value="{{ data.jmbg }}" maxlength="13" autocomplete="off" placeholder="JMBG">
-        <input type="text" name="prezime" id="prezime" class="uk-input uk-form-width-small uk-form-small" value="{{ data.prezime }}" autocomplete="off"
-            placeholder="Prezime">
-        <input type="text" name="ime" id="ime" class="uk-input uk-form-width-small uk-form-small" value="{{ data.ime }}" autocomplete="off" placeholder="Ime">
+        <input type="text" name="jmbg" id="jmbg" class="uk-input uk-form-width-small uk-form-small"
+            value="{{ data.jmbg }}" maxlength="13" autocomplete="off" placeholder="JMBG">
+        <input type="text" name="prezime" id="prezime" class="uk-input uk-form-width-small uk-form-small"
+            value="{{ data.prezime }}" autocomplete="off" placeholder="Prezime">
+        <input type="text" name="ime" id="ime" class="uk-input uk-form-width-small uk-form-small" value="{{ data.ime }}"
+            autocomplete="off" placeholder="Ime">
         <div class="uk-button-group">
             <input type="submit" value="Filtriraj" class="uk-button uk-button-primary uk-button-small">
             <a href="{{ path_for('staraoci') }}" class="uk-button uk-button-secondary uk-button-small">Svi staraoci</a>
@@ -60,8 +62,8 @@
                 <td class="uk-clearfix">
                     <ul class="uk-iconnav uk-float-right">
                         <li>
-                            <a href="{{ path_for('kartoni.transakcije', { id: st.karton_id }) }}" title="Transakcije"><span
-                                    uk-icon="credit-card"></span></a>
+                            <a href="{{ path_for('transakcije.karton', { id: st.karton_id }) }}"
+                                title="Transakcije"><span uk-icon="credit-card"></span></a>
                         </li>
                     </ul>
                 </td>

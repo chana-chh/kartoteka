@@ -472,6 +472,11 @@ abstract class Model
         return $this->model;
     }
 
+    public function getDb()
+    {
+        return $this->db;
+    }
+
     /**
 	 * Vraca poslednji uneti ID
 	 *

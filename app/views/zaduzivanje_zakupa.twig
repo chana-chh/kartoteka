@@ -1,0 +1,44 @@
+{% extends "templates/app.twig" %}
+
+{% block naslov %}
+<h1>Zaduzivanje zakupa</h1>
+<hr>
+<ul class="uk-text-warning">
+	<li>Proveri iznos zakupa</li>
+	<li>Proveri godinu zaduzenja</li>
+	<li>Ova operacija moze potrajati izvesno vreme</li>
+	<li>Zaduzivanje se vrsi za narednih 10 godina</li>
+</ul>
+<form action="{{ path_for('transakcije.zaduzivanje.zakup.post') }}" method="POST" class="uk-form-stacked" uk-grid>
+	{{ csrf|raw }}
+	<div class="uk-width-1-4">
+		<label for="iznos" class="uk-form-label">Iznos zaduzenja za 10 godina</label>
+		<div class="uk-form-controls">
+			<input type="number" name="iznos" id="iznos" class="uk-input{{ errors.iznos[0] ? ' uk-form-danger': ''}}"
+				value="{{ zakup }}" min="0" step="0.01" autocomplete="off" required readonly disabled>
+		</div>
+		<small class="uk-text-danger">{{ errors.iznos[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-4">
+		<label for="godina" class="uk-form-label">Pocetna godina zaduzenja</label>
+		<div class="uk-form-controls">
+			<input type="number" name="godina" id="godina" value="{{ old.godina ? : 'now'|date('Y') }}" min="0" step="1"
+				class="uk-input{{ errors.godina[0] ? ' uk-form-danger': ''}}" autocomplete="off" required readonly disabled>
+		</div>
+		<small class="uk-text-danger">{{ errors.godina[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-4 uk-flex uk-flex-bottom">
+		<div class="uk-button-group uk-width-1-1">
+			<button class="uk-button uk-button-primary uk-width-1-2">Zaduzi</button>
+			<a href="{{ path_for('kartoni') }}" class="uk-button uk-button-secondary uk-width-1-2">Otkaži</a>
+		</div>
+	</div>
+</form>
+<hr>
+<h2>Kartoni kojima je istekao zakup (nisu zaduzeni za tekucu godinu)</h2>
+<ul>
+	{% for karton in nezaduzeni_kartoni %}
+	<li>{{ karton.id }} - {{ karton.broj() }}</li>
+	{% endfor %}
+</ul>
+{% endblock naslov %}

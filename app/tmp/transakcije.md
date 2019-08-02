@@ -1,6 +1,6 @@
 # Tabele
 
-U tabeli `kartoni` dodati polje za ukupan saldo (+/-):
+U tabeli `kartoni` dodati polje za ukupan saldo (+):
 
 - saldo - decimal 12,2 = 0.00
 
@@ -76,6 +76,14 @@ Ako ide samo racun onda mozda moze u zajednicku tabelu sa zaduzenjima,a ako se i
 - tip - enum (zaduzenje, racun)
 - stavka_id - int 10 - unsigned
 - razduzeno - tinyint 4 = 0
+
+`cene`
+
+- id - int 10 - unsigned
+- datum - date
+- taksa - decimal 12,2 = 0.00
+- zakup - decimal 12,2 = 0.00
+- vazece - tinyint 4 = 0
 
 # Pitanja
 
