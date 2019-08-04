@@ -60,7 +60,7 @@ class Zaduzenje extends Model
 	{
 		$chk = $this->razduzeno === 1 ? ' checked' : '';
 		$pk = $this->pk;
-		return "<input type=\"checkbox\" name=\"aktivan\" data-id=\"{$this->$pk}\"{$chk}>";
+		return "<input type=\"checkbox\" name=\"razduzeno-zaduzenje[]\" value=\"{$this->$pk}\" data-tip=\"{$this->tip}\" class=\"razduzeno-zaduzenja\"{$chk}>";
 	}
 
 }
