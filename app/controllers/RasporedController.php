@@ -202,10 +202,25 @@ class RasporedController extends Controller
 
     public function postRasporedAjax($request, $response)
     {
+            $data = $request->getParams();
+            $parcela = '%' . filter_var($data['parcela'], FILTER_SANITIZE_STRING) . '%';
+            $where = "groblje_id = :groblje_id AND parcela LIKE :parcela AND grobno_mesto = :grobno_mesto";
+            $params = [':groblje_id' => $data['groblje_id' ], ':parcela' => $parcela, ':grobno_mesto' => $data['grobno_mesto' ]];
+
+            $model = new Karton();
+            $sql = "SELECT * FROM {$model->getTable()} WHERE {$where} LIMIT 1;";
+            $karton = $model->fetch($sql, $params);
+
+            if(!empty($karton)){
+                $poruka = $karton[0]->broj();
+            }else{
+                $poruka = "Obzirom da ne postoji karton sa ovim parametrima biće kreiran novi!";
+            }
+
         $rezultat = [];
         $rezultat['csrf_name'] = $this->csrf->getTokenName();
         $rezultat['csrf_value'] = $this->csrf->getTokenValue();
-        $rezultat['poruka'] = $request->getParam('parcela');
+        $rezultat['poruka'] = $poruka;
         return json_encode($rezultat);
     }
 }

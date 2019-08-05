@@ -2,11 +2,16 @@
 
 {% block naslov %}
 <h1>Zakazivanje sahrane</h1>
-<button class="uk-button uk-button-primary" id="ajax" name="ajax">AJAX</button>
+<hr>
+
 <div uk-grid>
+	<div class="uk-width-5-6">
 	<h3 class="uk-text-muted" id="poruka"></h3>
 </div>
-<hr>
+	<div class="uk-width-1-6">
+	<button class="uk-button uk-button-primary" id="ajax" name="ajax">Provera kartona <span uk-icon="search"></span></button>
+</div>
+</div>
 <form action="{{ path_for('raspored.dodavanje.post') }}" method="POST" class="uk-form-stacked" id="forma" uk-grid>
 	{{ csrf|raw }}
 	<div class="uk-width-1-1">
@@ -290,17 +295,14 @@
 {% block skripta %}
 	<script type="text/javascript">
 		document.getElementById('ajax').addEventListener('click', loadText);
-		
-  	
-	//token.append("csrf_name", document.getElementById("csrf_name").value);
-	//token.append("csrf_value", document.getElementById("csrf_value").value);
-            //console.log(token);
 		function loadText(){
 			var xhr = new XMLHttpRequest();
 			xhr.open('POST', '{{ path_for('raspored.ajax') }}', true);
 			xhr.onload = function(){
 				if (this.status == 200){
-					document.getElementById('poruka').innerHTML = this.responseText;
+					document.getElementById('poruka').innerHTML = JSON.parse(this.responseText).poruka;
+					document.getElementById("csrf_name").value = JSON.parse(this.responseText).csrf_name;
+					document.getElementById("csrf_value").value = JSON.parse(this.responseText).csrf_value;
 				}
 			}
 			token = new FormData(document.querySelector("#forma"));
