@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\Cena;
 use App\Models\Karton;
 use App\Models\Zaduzenje;
+use App\Models\Racun;
 
 class TransakcijeController extends Controller
 {
@@ -28,8 +29,31 @@ class TransakcijeController extends Controller
         $broj_taksi = count($takse);
         $zakupi = $model_zaduzenje->nerazduzeniZakupiZaKarton($karton->id);
         $broj_zakupa = count($zakupi);
+        $model_cena = new Cena();
+        $cena_takse = (float) $model_cena->taksa();
+        $cena_zakupa = (float) $model_cena->zakup() / 10;
+        $dug = ($broj_taksi * $cena_takse) + ($broj_zakupa * $cena_zakupa);
+        $model_racun = new Racun();
+        $racuni = $model_racun->nerazduzeniRacuniZaKarton($karton->id);
+        $broj_racuna = count($racuni);
+        $dug += (float) $model_racun->dugZaKarton($karton->id);
 
-        $this->render($response, 'transakcije.twig', compact('karton', 'takse', 'broj_taksi', 'zakupi', 'broj_zakupa'));
+        $this->render(
+            $response,
+            'transakcije.twig',
+            compact(
+                'karton',
+                'takse',
+                'broj_taksi',
+                'zakupi',
+                'broj_zakupa',
+                'dug',
+                'cena_takse',
+                'cena_zakupa',
+                'racuni',
+                'broj_racuna'
+            )
+        );
     }
 
     public function getZaduzivanjeTakse($request, $response)
@@ -174,5 +198,11 @@ class TransakcijeController extends Controller
             $this->flash->addMessage('success', 'Svi aktivni kartoni su uspesno zaduzeni.');
             return $response->withRedirect($this->router->pathFor('transakcije.zaduzivanje.zakup'));
         }
+    }
+
+    public function postUplata($request, $response)
+    {
+        $data = $request->getParams();
+        dd($data);
     }
 }

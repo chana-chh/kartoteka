@@ -1,0 +1,44 @@
+{% extends "templates/app.twig" %}
+
+{% block naslov %}
+<h1>
+	Zaduzivanje racuna za karton
+	<small><em class="uk-text-success">[{{ karton.broj() }}]</em></small>
+</h1>
+<hr>
+<form action="{{ path_for('racun.post') }}" method="POST" class="uk-form-stacked" uk-grid>
+	{{ csrf|raw }}
+	<input type="hidden" value="{{ karton.id }}" name="karton_id">
+	<div class="uk-width-1-5">
+		<label for="broj" class="uk-form-label">Broj racuna</label>
+		<div class="uk-form-controls">
+			<input type="text" name="broj" id="broj" class="uk-input{{ errors.broj[0] ? ' uk-form-danger': ''}}"
+				value="{{ old.broj ? : '' }}" maxlength="200" autocomplete="off" required>
+		</div>
+		<small class="uk-text-danger">{{ errors.broj[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-5">
+		<label for="datum" class="uk-form-label">Datum</label>
+		<div class="uk-form-controls">
+			<input type="date" name="datum" id="datum" value="{{ old.datum ? : 'now'|date('Y-m-d') }}" class="uk-input"
+				autocomplete="off" required>
+		</div>
+		<small class=" uk-text-danger">{{ errors.datum[0] ? : '' }}</small>
+	</div>
+	<div class="uk-width-1-5">
+		<label for="iznos" class="uk-form-label">Iznos</label>
+		<div class="uk-form-controls">
+			<input type="number" name="iznos" id="iznos" class="uk-input{{ errors.iznos[0] ? ' uk-form-danger': ''}}"
+				value="{{ old.iznos ? : '0' }}" min="0" step="0.01" autocomplete="off" required>
+		</div>
+		<small class="uk-text-danger">{{ errors.iznos[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-4 uk-flex uk-flex-bottom">
+		<div class="uk-button-group uk-width-1-1">
+			<button class="uk-button uk-button-primary uk-width-1-2">Zaduzi</button>
+			<a href="{{ path_for('transakcije.karton', { id: karton.id }) }}"
+				class="uk-button uk-button-secondary uk-width-1-2">Otkaži</a>
+		</div>
+	</div>
+</form>
+{% endblock naslov %}

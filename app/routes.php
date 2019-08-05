@@ -101,4 +101,9 @@ $app->group('', function () {
     $this->get('/transakcije/zaduzivanje/zakup', '\App\Controllers\TransakcijeController:getZaduzivanjeZakup')->setName('transakcije.zaduzivanje.zakup');
     $this->post('/transakcije/zaduzivanje/zakup', '\App\Controllers\TransakcijeController:postZaduzivanjeZakup')->setName('transakcije.zaduzivanje.zakup.post');
     $this->get('/transakcije/karton/{id}', '\App\Controllers\TransakcijeController:getKarton')->setName('transakcije.karton');
+    $this->post('/transakcije/uplata', '\App\Controllers\TransakcijeController:postUplata')->setName('transakcije.uplata');
+    // Racuni
+    $this->get('/transakcije/racun/{id}', '\App\Controllers\RacuniController:getRacun')->setName('racun');
+    $this->post('/transakcije/racun', '\App\Controllers\RacuniController:postRacun')->setName('racun.post');
+    // Reprogram
 })->add(new AuthMiddleware($container));
