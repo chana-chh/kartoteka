@@ -2,6 +2,10 @@
 
 {% block naslov %}
 <h1>Zakazivanje sahrane</h1>
+<button class="uk-button uk-button-primary" id="ajax" name="ajax">AJAX</button>
+<div uk-grid>
+	<h3 class="uk-text-muted" id="poruka"></h3>
+</div>
 <hr>
 <form action="{{ path_for('raspored.dodavanje.post') }}" method="POST" class="uk-form-stacked" uk-grid>
 	{{ csrf|raw }}
@@ -283,3 +287,27 @@
 	<div class="uk-width-3-4"></div>
 </form>
 {% endblock naslov %}
+{% block skripta %}
+	<script type="text/javascript">
+		document.getElementById('ajax').addEventListener('click', loadText);
+		var token ={
+                       'csrf_name':document.getElementById("csrf_name").value,
+                       'csrf_value':document.getElementById("csrf_value").value
+                   };
+            console.log(token);
+		function loadText(){
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST', '{{ path_for('raspored.ajax') }}', true);
+			xhr.setRequestHeader("x-csrf-token", token);
+			xhr.setRequestHeader("Accept", "application/json");
+			xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+			xhr.onload = function(){
+				if (this.status == 200){
+					document.getElementById('poruka').innerHTML = this.responseText;
+				}
+			}
+
+			xhr.send(token);
+		}
+	</script>
+{% endblock skripta %}

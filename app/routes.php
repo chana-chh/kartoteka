@@ -53,6 +53,7 @@ $app->group('', function () {
     $this->post('/raspored/brisanje', '\App\Controllers\RasporedController:postRasporedBrisanje')->setName('raspored.brisanje');
     $this->get('/raspored/izmena/{id}', '\App\Controllers\RasporedController:getRasporedIzmena')->setName('raspored.izmena');
     $this->post('/raspored/izmena', '\App\Controllers\RasporedController:postRasporedIzmena')->setName('raspored.izmena.post');
+    $this->post('/raspored/ajax', '\App\Controllers\RasporedController:postRasporedAjax')->setName('raspored.ajax');
     $this->get('/raspored/stampa/{id}', '\App\Controllers\RasporedController:getRasporedStampa')->setName('raspored.stampa');
     //Mape
     $this->get('/mape', '\App\Controllers\MapeController:getMape')->setName('mape');

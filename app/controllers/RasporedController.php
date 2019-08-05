@@ -199,4 +199,13 @@ class RasporedController extends Controller
             return $response->withRedirect($this->router->pathFor('raspored'));
         }
     }
+
+    public function postAjax($request, $response)
+    {
+        $rezultat = [];
+        $rezultat['csrf_name'] = $this->csrf->getTokenName();
+        $rezultat['csrf_value'] = $this->csrf->getTokenValue();
+        $rezultat['poruka'] = 'Ajax test';
+        return json_encode($rezultat);
+    }
 }
