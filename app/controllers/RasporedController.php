@@ -200,12 +200,12 @@ class RasporedController extends Controller
         }
     }
 
-    public function postAjax($request, $response)
+    public function postRasporedAjax($request, $response)
     {
         $rezultat = [];
         $rezultat['csrf_name'] = $this->csrf->getTokenName();
         $rezultat['csrf_value'] = $this->csrf->getTokenValue();
-        $rezultat['poruka'] = 'Ajax test';
+        $rezultat['poruka'] = $request->getParam('parcela');
         return json_encode($rezultat);
     }
 }
