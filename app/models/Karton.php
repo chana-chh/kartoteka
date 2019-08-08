@@ -14,6 +14,11 @@ class Karton extends Model
         return $this->groblje()->naziv . '-' . $this->parcela . '-' . $this->grobno_mesto;
     }
 
+    public function saldo()
+    {
+        return 0;
+    }
+
     public function rasporedi()
     {
         return $this->hasMany('App\Models\Raspored', 'karton_id');

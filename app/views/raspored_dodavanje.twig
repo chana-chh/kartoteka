@@ -6,7 +6,9 @@
 
 <div uk-grid>
 	<div class="uk-width-5-6">
-	<h3 class="uk-text-muted" id="poruka"></h3>
+	<p class="uk-text-muted" id="poruka"></p>
+	<p class="uk-text-muted" id="poruka_staraoci"></p>
+	<p class="uk-text-muted" id="poruka_pokojnici"></p>
 </div>
 	<div class="uk-width-1-6">
 	<button class="uk-button uk-button-primary" id="ajax" name="ajax">Provera kartona <span uk-icon="search"></span></button>
@@ -294,19 +296,38 @@
 {% endblock naslov %}
 {% block skripta %}
 	<script type="text/javascript">
+	window.onload = function () {
 		document.getElementById('ajax').addEventListener('click', loadText);
 		function loadText(){
+			var groblje = document.getElementById('groblje_id').value;
+			var parcela = document.getElementById('parcela').value;
+			var mesto = document.getElementById('grobno_mesto').value;
+
+			if(groblje == null || groblje == "", parcela == null || parcela == "", mesto == null || mesto == ""){
+				document.getElementById('poruka').innerHTML = "Morate uneti naziv groblja, parcelu i redni broj grobnog mesta da bi ste proverili postojanje određenog kartona!";
+		}else{
 			var xhr = new XMLHttpRequest();
 			xhr.open('POST', '{{ path_for('raspored.ajax') }}', true);
 			xhr.onload = function(){
+				var data = JSON.parse(this.responseText);
 				if (this.status == 200){
-					document.getElementById('poruka').innerHTML = JSON.parse(this.responseText).poruka;
-					document.getElementById("csrf_name").value = JSON.parse(this.responseText).csrf_name;
-					document.getElementById("csrf_value").value = JSON.parse(this.responseText).csrf_value;
+					document.getElementById('poruka').innerHTML = data.poruka;
+					if(data.nov_karton == 0){
+						var str1 = "Staraoci: ";
+						var str2 = "Pokojnici: ";
+						document.getElementById('poruka_staraoci').innerHTML = str1.concat(data.poruka_staraoci);
+						document.getElementById('poruka_pokojnici').innerHTML = str2.concat(data.poruka_pokojnici);
+					}else{
+						document.getElementById('poruka_staraoci').innerHTML = "";
+						document.getElementById('poruka_pokojnici').innerHTML = "";
+					}
+						document.getElementById("csrf_name").value = data.csrf_name;
+						document.getElementById("csrf_value").value = data.csrf_value;
 				}
 			}
 			token = new FormData(document.querySelector("#forma"));
 			xhr.send(token);
-		}
+		}}
+	};
 	</script>
 {% endblock skripta %}

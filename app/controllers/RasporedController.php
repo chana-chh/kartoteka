@@ -211,16 +211,35 @@ class RasporedController extends Controller
             $sql = "SELECT * FROM {$model->getTable()} WHERE {$where} LIMIT 1;";
             $karton = $model->fetch($sql, $params);
 
+            $poruka_staraoci ="";
+            $i = 0;
+            $poruka_pokojnici ="";
+            $j = 0;
+            $nov_karton = 0;
             if(!empty($karton)){
                 $poruka = $karton[0]->broj();
+                $staraoci = $karton[0]->staraoci();
+                $pokojnici = $karton[0]->pokojnici();
+                foreach ($staraoci as $staralac) {
+                    $i++;
+                    $poruka_staraoci .= $i.". ".$staralac->ime." ".$staralac->prezime;
+                }
+                foreach ($pokojnici as $pokojnik) {
+                    $j++;
+                    $poruka_pokojnici .= $j.". ".$pokojnik->ime." ".$pokojnik->prezime;
+                }
             }else{
                 $poruka = "Obzirom da ne postoji karton sa ovim parametrima biće kreiran novi!";
+                $nov_karton = 1;
             }
 
         $rezultat = [];
         $rezultat['csrf_name'] = $this->csrf->getTokenName();
         $rezultat['csrf_value'] = $this->csrf->getTokenValue();
         $rezultat['poruka'] = $poruka;
+        $rezultat['poruka_staraoci'] = $poruka_staraoci;
+        $rezultat['poruka_pokojnici'] = $poruka_pokojnici;
+        $rezultat['nov_karton'] = $nov_karton;
         return json_encode($rezultat);
     }
 }
