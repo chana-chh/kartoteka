@@ -39,11 +39,28 @@
     <img data-src="{{ base_url() }}/img/help/kartoni_dodavanje_dugme.png" alt="Dugme za dodavanje novog kartona" uk-img>
     <figcaption>Slika 5. Dugme za dodavanje novog kartona</figcaption>
 </figure>
+<p>
+    Nakon popunjavanja svih obaveznih polja karton će biti sačuvan tek nakon klika na dugme <code>SNIMI</code> U slučaju da neko od obaveznih polja nije popunjeno to će biti vidno naglašeno. U slučaju da smo se predomislili ili nemamo sve neophodne podatke klikom na dugme <code>OTKAŽI</code> otkazujemo kreiranje/dodavanje novog kartona.
+</p>
 <figure>
     <img data-src="{{ base_url() }}/img/help/kartoni_dodavanje.png" alt="Ekran - dodavanje novog kartona" uk-img>
     <figcaption>Slika 6. Ekran - dodavanje novog kartona</figcaption>
 </figure>
-
+<h3 id="detaljno">Detaljni pregled kartona</h3>
+<p>
+    Sa ekrana kartoni moguće je pristupiti detaljnom pregledu kartona i to klikom na ikonu <span class="uk-text-danger" uk-icon="search"></span> koja se nalazi krajne desno u poslednjoj koloni tabelarnog pregleda.
+</p>
+<figure>
+    <img data-src="{{ base_url() }}/img/help/karton_detaljno_dugme.png" alt="Dugme za pristup detaljnom pregledu kartona" uk-img>
+    <figcaption>Slika 7. Dugme za pristup detaljnom pregledu kartona</figcaption>
+</figure>
+<figure>
+    <img data-src="{{ base_url() }}/img/help/karton_detaljno.png" alt="Detaljni pregled kartona" uk-img>
+    <figcaption>Slika 8. Ekran - detaljni pregled kartona</figcaption>
+</figure>
+<p>
+    Na ovom ekranu se nalaze svi podaci u vezi kartona kao i pregled skenirane dokumentacije. Tu su dakle, pored osnovnih i podaci o pokojnicima i staraocima. Sa ovog ekrana je takođe moguće pristupiti izmeni, brisanju kartona kao i dodavanju, pregledu i uklanjanju staraoca, pokojnika kao i skenirane dokumentacije. Omogućen je i pristup lokaciji(mapi) i transakcijama vezanim za karton.
+</p>
 {% endblock sadrzaj %}
 
 {% block traka %}
@@ -59,6 +76,7 @@
         <li><a href="#pregled">Pregled svih kartona</a></li>
         <li><a href="#pretraga">Pretraživanje kartona</a></li>
         <li><a href="#dodavanje">Dodavanje novog kartona</a></li>
+        <li><a href="#detaljno">Detaljni pregled kartona</a></li>
         <li class="uk-nav-divider"></li>
         <li><a href="#top"><span uk-icon="arrow-up"></span> Vrh strane</a></li>
     </ul>

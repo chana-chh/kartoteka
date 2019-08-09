@@ -297,6 +297,7 @@
 {% block skripta %}
 	<script type="text/javascript">
 	window.onload = function () {
+		window.scrollTo(0, 0);
 		document.getElementById('ajax').addEventListener('click', loadText);
 		function loadText(){
 			var groblje = document.getElementById('groblje_id').value;

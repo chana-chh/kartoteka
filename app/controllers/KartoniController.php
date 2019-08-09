@@ -140,15 +140,22 @@ class KartoniController extends Controller
     {
         $id = (int)$request->getParam('brisanje_id');
         $modelKarton = new Karton();
-        $broj = $modelKarton->find($id)->broj();
+        $karton = $modelKarton->find($id);
+        $broj = $karton->broj();
+    if(!$karton->rasporedi() && !$karton->staraoci() && !$karton->pokojnici() && !$karton->dokumenti()){
         $success = $modelKarton->deleteOne($id);
-        if ($success) {
+    if ($success) {
             $this->flash->addMessage('success', "Karton broj [{$broj}] je uspešno obrisan.");
             return $response->withRedirect($this->router->pathFor('kartoni'));
         } else {
             $this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja kartona.");
             return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $id]));
         }
+    } else {
+            $this->flash->addMessage('danger', "Pre brisanja kartona neophodno je obrisati svu skeniranu dokumentaciju, staraoce, pokojnike i termine vezane za njega.");
+            return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $id]));
+    }
+
     }
 
     public function postKartoniPretraga($request, $response)
