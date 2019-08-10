@@ -1,0 +1,62 @@
+{% extends "templates/app.twig" %}
+
+{% block sadrzaj %}
+<h1>Vezivanje dodatne parcele za postojeću mapu</h1>
+<hr>
+<div uk-grid>
+		<h4 class="uk-text-success">Spisak trenutno vezanih parcela za ovu mapu:</h4>
+		{% for ost in ostale %}
+				<p class="uk-text-danger"><strong>{{ost.parcela}}</strong></p>
+		{% endfor %}
+</div>
+<form action="{{ path_for('mapa.povezi.post') }}" method="POST" class="uk-form-stacked uk-margin-top uk-padding-small">
+	{{ csrf|raw }}
+	<input type="hidden" value="{{ mapa.id }}" name="id" id="id">
+	<input type="hidden" value="{{ mapa.groblje_id }}" name="groblje_id" id="groblje_id">
+	<div uk-grid>
+	<div class="uk-width-1-4">
+		<label for="parcela" class="uk-form-label">Parcela koju želite da dodate</label>
+		<div class="uk-form-controls">
+			<select name="parcela" id="parcela" class="uk-select{{ errors.parcela[0] ? ' uk-form-danger': ''}}"
+			 required>
+				{% for par in razlike %}
+				<option value="{{ par }}" {{ (old.parcela == par) ? ' selected' : '' }}>
+					{{ par }}
+				</option>
+				{% endfor %}
+			</select>
+		</div>
+		<small class="uk-text-danger">{{ errors.parcela[0] ? :'' }}</small>
+	</div>
+	</div>
+		<div uk-grid>
+	<div class="uk-button-group uk-width-1-1">
+		<small class="uk-text-warning">NAPOMENA: Ukoliko željena parcela nije dostupna na listi postoji mogućnost da je već povezana za neku drugu mapu!</small>
+	</div>
+</div>
+	<div uk-grid>
+	<div class="uk-button-group uk-width-1-2">
+		<button class="uk-button uk-button-primary uk-width-1-2"><span uk-icon="link"></span> Poveži</button>
+		<a href="{{ path_for('mape') }}" class="uk-button uk-button-secondary uk-width-1-2">
+			<span uk-icon="ban"></span> Otkaži
+		</a>
+	</div>
+</div>
+</form>
+{% endblock sadrzaj %}
+
+{% block traka %}
+	<div class="uk-width-1-1 uk-background-muted uk-margin-top uk-padding-small" uk-lightbox id="light">
+                    <a href="{{ base_url() }}/img/Mape/{{ mapa.veza }}" data-caption="{{ mapa.groblje.naziv }} {{ mapa.parcela }}"><img
+                            class="uk-border-rounded" src="{{ base_url() }}/img/Mape/Thumb/{{ mapa.veza }}" width="200"
+                            alt="Mapa thumb"></a>
+                    <p>Naziv fajla mape je <span class="uk-text-success">{{ mapa.veza }}</span> i nalazi se na lokaciji <span class="uk-text-success">{{base_url() }}/img/Mape/</span></p>
+    </div>
+{% endblock traka %}
+
+{% block skripta %}
+<script>
+var light = document.getElementById("light");
+UIkit.lightbox(light);
+</script>
+{% endblock skripta %}

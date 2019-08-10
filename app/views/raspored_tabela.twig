@@ -1,0 +1,70 @@
+{% extends "templates/app.twig" %}
+
+{% block naslov %}
+<h1 id="top">Tabelarni pregled termina</h1>
+<hr>
+<div class="uk-overflow-auto">
+  <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+    <thead>
+      <tr>
+        <th class="w-10">Id</th>
+        <th class="w-10">Početak</th>
+        <th class="w-20">Prijavioc</th>
+        <th class="w-20">Snosi troškove</th>
+        <th class="w-10">Datum prijave</th>
+        <th class="w-10">Karton</th>
+        <th class="w-10">Pokojnik</th>
+        <th class="w-10 uk-text-right"><span uk-icon="cog"></span></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for termin in termini.data %}
+      <tr>
+        <td>
+          <em>{{ termin.id }}</em>
+        </td>
+        <td>
+            <strong>{{ termin.start }}</strong>
+        </td>
+        <td>{{ termin.prezime_prijavioca }} {{ termin.ime_prijavioca }}</td>
+        <td>{{termin.prezime_troskovi}} {{termin.ime_troskovi}}</td>
+         <td>{{ termin.datum_prijave }}</td>
+         <td>
+          <a href="{{ path_for('kartoni.pregled', { 'id': termin.karton_id }) }}">
+                        <strong>{{ termin.karton.broj() }}</strong>
+                    </a></td>
+         <td><em class="uk-text-muted">{{ termin.pokojnik().ime }}
+    {{ termin.pokojnik().prezime }}</em></td>
+        <td class="uk-clearfix">
+          <ul class="uk-iconnav uk-float-right">
+            <li>
+              <a href="{{ path_for('raspored.izmena', { id: termin.id }) }}" title="Izmena">
+                <span uk-icon="pencil"></span>
+              </a>
+            </li>
+            <li>
+              <a title="Brisanje" href="#modal-brisanje" data-id="{{ termin.id }}" onclick="setTerminId(this);" uk-toggle>
+                <span uk-icon="trash"></span>
+              </a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="uk-flex uk-flex-between uk-margin-top">
+  <div>{{ termini.links.buttons | raw }}</div>
+  <div>Idi na stranu {{ termini.links.select | raw }}</div>
+  <div>
+    <p>
+      Prikazani redovi od
+      <em>{{ termini.links.row_from }}</em> do
+      <em>{{ termini.links.row_to }}</em> od ukupno
+      <em>{{ termini.links.total_rows }}</em>
+    </p>
+  </div>
+</div>
+{% endblock naslov %}

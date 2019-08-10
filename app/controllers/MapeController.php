@@ -173,6 +173,60 @@ class MapeController extends Controller
         }
     }
 
+    public function getMapaPovezi($request, $response, $args){
+
+        $id = (int)$args['id'];
+        $modelMape = new Mapa();
+        $sveMape = $modelMape->all();
+        $mapa = $modelMape->find($id);
+        $modelKarton = new Karton();
+        $parcele = $modelKarton->vratiParcele();
+        $sve = array_column($parcele, 'parcela');
+        $izmapa = array_column($sveMape, 'parcela');
+        $razlike = array_diff($sve, $izmapa);
+
+        $ostale = $modelMape->isteMape($mapa->veza);
+
+        $this->render($response, 'mapa_povezi.twig', compact('mapa', 'razlike', 'ostale'));
+
+
+    }
+
+    public function postMapaPovezi($request, $response){
+
+        $data = $request->getParams();
+        $id = $data['id'];
+        unset($data['id']);
+        unset($data['csrf_name']);
+        unset($data['csrf_value']);
+
+        $modelMapePolaz = new Mapa();
+        $mapapolaz = $modelMapePolaz->find($id);
+        $veza = $mapapolaz->veza;
+
+        $validation_rules = [
+            'groblje_id' => [
+                'required' => true,
+                'multi_unique' => 'mape.groblje_id,parcela'
+            ]
+        ];
+
+        $this->validator->validate($data, $validation_rules);
+
+        if ($this->validator->hasErrors()) {
+            $this->flash->addMessage('danger', 'Došlo je do greške prilikom pokušaja da se poveže dodatna parcela za mapu!');
+            return $response->withRedirect($this->router->pathFor('mapa.povezi.get', ['id' => $id]));
+        } else {
+            $modelMape = new Mapa();
+            $data['veza'] = $veza;
+            $modelMape->insert($data);
+            $this->flash->addMessage('success', 'Uspešno ste povezali parcelu sa postojećom mapom.');
+            return $response->withRedirect($this->router->pathFor('mape'));
+        }
+
+
+    }
+
     public function getMapaIzmena($request, $response, $args)
     {
         $id = (int)$args['id'];
