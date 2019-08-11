@@ -23,7 +23,7 @@
 		<label for="godina" class="uk-form-label">Pocetna godina zaduzenja</label>
 		<div class="uk-form-controls">
 			<input type="number" name="godina" id="godina" value="{{ old.godina ? : 'now'|date('Y') }}" min="0" step="1"
-				class="uk-input{{ errors.godina[0] ? ' uk-form-danger': ''}}" autocomplete="off" required readonly>
+				class="uk-input{{ errors.godina[0] ? ' uk-form-danger': ''}}" autocomplete="off" required>
 		</div>
 		<small class="uk-text-danger">{{ errors.godina[0] ? :'' }}</small>
 	</div>

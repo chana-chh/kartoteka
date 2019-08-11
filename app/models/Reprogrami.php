@@ -5,26 +5,26 @@ namespace App\Models;
 use App\Classes\Model;
 use DateTime;
 
-class Racun extends Model
+class Reprogrami extends Model
 {
-	protected $table = 'racuni';
+	protected $table = 'reprogrami';
 
-	public function racuniZaKarton($karton_id)
+	public function reprogramiZaKarton($karton_id)
 	{
 		$sql = "SELECT * FROM {$this->table} WHERE karton_id = {$karton_id};";
 		return $this->fetch($sql);
 	}
 
-	public function nerazduzeniRacuni()
+	public function nerazduzeniReprogrami()
 	{
 		$sql = "SELECT * FROM {$this->table} WHERE razduzeno = 0;";
 		return $this->fetch($sql);
 	}
 
-	public function nerazduzeniRacuniZaKarton($karton_id)
+	public function nerazduzeniReprogramiZaKarton($karton_id)
 	{
 		$sql = "SELECT * FROM {$this->table}
-				WHERE razduzeno = 0 AND reprogram_id IS NULL AND karton_id = {$karton_id};";
+				WHERE razduzeno = 0 AND karton_id = {$karton_id};";
 		return $this->fetch($sql);
 	}
 
@@ -32,7 +32,7 @@ class Racun extends Model
 	{
 		$chk = $this->razduzeno === 1 ? ' checked' : '';
 		$pk = $this->pk;
-		return "<input type=\"checkbox\" name=\"razduzeno-racuni[]\" value=\"{$this->$pk}\" data-iznos=\"{$this->iznos}\" class=\"razduzeno-racuni\"{$chk}>";
+		return "<input type=\"checkbox\" name=\"razduzeno-reprogrami[]\" value=\"{$this->$pk}\" data-iznos=\"{$this->iznos}\" class=\"razduzeno-reprogrami\"{$chk}>";
 	}
 
 	public function datum()
