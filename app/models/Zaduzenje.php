@@ -46,13 +46,15 @@ class Zaduzenje extends Model
 
 	public function nerazduzeneTakseZaKarton($karton_id)
 	{
-		$sql = "SELECT * FROM {$this->table} WHERE tip = 'taksa' AND razduzeno = 0 AND karton_id = {$karton_id};";
+		$sql = "SELECT * FROM {$this->table}
+				WHERE tip = 'taksa' AND razduzeno = 0 AND reprogram_id IS NULL AND karton_id = {$karton_id};";
 		return $this->fetch($sql);
 	}
 
 	public function nerazduzeniZakupiZaKarton($karton_id)
 	{
-		$sql = "SELECT * FROM {$this->table} WHERE tip = 'zakup' AND razduzeno = 0 AND karton_id = {$karton_id};";
+		$sql = "SELECT * FROM {$this->table}
+				WHERE tip = 'zakup' AND razduzeno = 0 AND reprogram_id IS NULL AND karton_id = {$karton_id};";
 		return $this->fetch($sql);
 	}
 
@@ -62,5 +64,4 @@ class Zaduzenje extends Model
 		$pk = $this->pk;
 		return "<input type=\"checkbox\" name=\"razduzeno-zaduzenje[]\" value=\"{$this->$pk}\" data-tip=\"{$this->tip}\" class=\"razduzeno-zaduzenja\"{$chk}>";
 	}
-
 }
