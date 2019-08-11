@@ -244,6 +244,53 @@
 	</div>
 	<div class="uk-width-3-5"></div>
 	<div class="uk-width-1-1">
+		<div uk-grid class="uk-background-muted uk-margin-top uk-padding-small">
+		<div class="uk-width-1-1">
+		<h4>Podaci o računu ako je dostupan</h4>
+		</div>
+		<div class="uk-width-1-5">
+		<label for="broj" class="uk-form-label">Broj računa:</label>
+		<div class="uk-form-controls">
+			<input type="text" name="broj" id="broj"
+				class="uk-input{{ errors.broj[0] ? ' uk-form-danger': ''}}" value="{{ old.broj ? : '' }}"
+				autocomplete="off">
+		</div>
+		<small class="uk-text-danger">{{ errors.broj[0] ? :'' }}</small>
+	</div>
+		<div class="uk-width-1-5">
+		<label for="datum" class="uk-form-label">Datum:</label>
+		<div class="uk-form-controls">
+			<input type="date" name="datum" id="datum" value="{{ old.datum ? : '' }}"
+				class="uk-input{{ errors.datum[0] ? ' uk-form-danger': ''}}" autocomplete="off">
+		</div>
+		<small class=" uk-text-danger">{{ errors.datum[0] ? : '' }}</small>
+	</div>
+	    <div class="uk-width-1-5">
+        <label for="iznos" class="uk-form-label">Iznos</label>
+        <div class="uk-form-controls">
+            <input type="number" name="iznos" id="iznos" value="0" min="0" step="0.01"
+                class="uk-input uk-text-right" autocomplete="off" required>
+        </div>
+        <small class="uk-text-danger">{{ errors.iznos[0] ? :'' }}</small>
+    </div>
+    	<div class="uk-width-1-5">
+		<div class="uk-form-controls uk-margin-medium-top">
+			<label><input class="uk-checkbox{{ errors.razduzeno[0] ? ' uk-form-danger': ''}}" type="checkbox" name="razduzeno"
+					{{ old.razduzeno ? ' checked' : '' }}> Razduženo</label>
+		</div>
+	</div>
+	<div class="uk-width-1-5">
+		<label for="datum_razduzenja" class="uk-form-label">Datum razduženja:</label>
+		<div class="uk-form-controls">
+			<input type="date" name="datum_razduzenja" id="datum_razduzenja" value="{{ old.datum_razduzenja ? : '' }}"
+				class="uk-input{{ errors.datum_razduzenja[0] ? ' uk-form-danger': ''}}" autocomplete="off">
+		</div>
+		<small class=" uk-text-danger">{{ errors.datum_razduzenja[0] ? : '' }}</small>
+	</div>
+		</div>
+	</div>
+
+	<div class="uk-width-1-1">
 		<hr class="uk-divider-icon">
 	</div>
 	<div class="uk-width-1-5">

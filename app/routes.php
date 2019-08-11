@@ -55,6 +55,7 @@ $app->group('', function () {
     $this->post('/raspored/izmena', '\App\Controllers\RasporedController:postRasporedIzmena')->setName('raspored.izmena.post');
     $this->post('/raspored/ajax', '\App\Controllers\RasporedController:postRasporedAjax')->setName('raspored.ajax');
     $this->get('/raspored/stampa/{id}', '\App\Controllers\RasporedController:getRasporedStampa')->setName('raspored.stampa');
+    $this->get('/raspored/tabela', '\App\Controllers\RasporedController:getRasporedTabela')->setName('raspored.tabela');
     //Mape
     $this->get('/mape', '\App\Controllers\MapeController:getMape')->setName('mape');
     $this->get('/kartoni/mapa/{id}', '\App\Controllers\KartoniController:getKartoniMapa')->setName('kartoni.mapa');
@@ -63,6 +64,8 @@ $app->group('', function () {
     $this->post('/mapa/brisanje', '\App\Controllers\MapeController:postMapaBrisanje')->setName('mapa.brisanje');
     $this->get('/mapa/izmena/{id}', '\App\Controllers\MapeController:getMapaIzmena')->setName('mapa.izmena');
     $this->post('/mapa/izmena', '\App\Controllers\MapeController:postMapaIzmena')->setName('mapa.izmena.post');
+    $this->get('/mapa/povezi/{id}', '\App\Controllers\MapeController:getMapaPovezi')->setName('mapa.povezi.get');
+    $this->post('/mapa/povezi', '\App\Controllers\MapeController:postMapaPovezi')->setName('mapa.povezi.post');
     // Staraoci
     $this->get('/staraoci', '\App\Controllers\StaraociController:getStaraoci')->setName('staraoci');
     $this->get('/staraoci/pretraga', '\App\Controllers\StaraociController:getStaraociPretraga')->setName('staraoci.pretraga');

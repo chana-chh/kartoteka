@@ -6,6 +6,7 @@ use App\Models\Raspored;
 use App\Models\Karton;
 use App\Models\Groblje;
 use App\Models\Pokojnik;
+use App\Models\Racun;
 use App\Models\Log;
 use App\Classes\Auth;
 use DateTime;
@@ -18,6 +19,18 @@ class RasporedController extends Controller
         $dogadjajiA = $modelRaspored->all();
         $dogadjaji = json_encode($dogadjajiA);
         $this->render($response, 'raspored.twig', compact('dogadjaji'));
+    }
+
+    public function getRasporedTabela($request, $response)
+    {
+        $query = [];
+        parse_str($request->getUri()->getQuery(), $query);
+        $page = isset($query['page']) ? (int)$query['page'] : 1;
+
+        $modelRaspored = new Raspored();
+        $termini = $modelRaspored->paginate($page);
+
+        $this->render($response, 'raspored_tabela.twig', compact('termini'));
     }
 
     public function getRasporedDodavanje($request, $response, $args)
@@ -137,12 +150,28 @@ class RasporedController extends Controller
                 ]);
         $id_rasporeda = $modelRaspored->getLastId();
 
-        $model = new Raspored();
+        $modelR = new Raspored();
         $dataU['url'] = URL."/raspored/izmena/". $id_rasporeda;
-        $model->update($dataU, $id_rasporeda);
-        
+        $modelR->update($dataU, $id_rasporeda);
+
         $modelLog= new Log();
         $k = new Auth();
+        $idzaracun = $k->user()->id;
+
+        $razduzeno = isset($data['razduzeno']) ? 1 : 0;
+
+        $modelRacun = new Racun();
+        $racun = $modelRacun->insert([
+                    'karton_id' => $id_kartona,
+                    'broj' => $data['broj'],
+                    'datum' => $data['datum'],
+                    'iznos' => $data['iznos'],
+                    'razduzeno' => $razduzeno,
+                    'datum_razduzenja' => $data['datum_razduzenja'],
+                    'korisnik_id_zaduzio' => $idzaracun,
+                    'korisnik_id_razduzio' => $idzaracun
+                ]);
+
         $l = $k->user()->ime;
         $modelLog->insert([opis => $l."je dodao termin za sahranu sa id brojem ".$id_rasporeda ]);
 
