@@ -97,8 +97,13 @@ $app->group('', function () {
     $this->post('/administracija/groblja/brisanje', '\App\Controllers\GrobljaController:postGrobljaBrisanje')->setName('groblja.brisanje');
     $this->get('/administracija/groblja/izmena/{id}', '\App\Controllers\GrobljaController:getGrobljaIzmena')->setName('groblja.izmena');
     $this->post('/administracija/groblja/izmena', '\App\Controllers\GrobljaController:postGrobljaIzmena')->setName('groblja.izmena.post');
+    // Transakcije Cene
+    $this->get('/transakcije/cene', '\App\Controllers\CeneController:getCene')->setName('cene');
+    $this->get('/transakcije/cene/dodavanje', '\App\Controllers\CeneController:getCeneDodavanje')->setName('cene.dodavanje.get');
+    $this->post('/transakcije/cene/dodavanje', '\App\Controllers\CeneController:postCeneDodavanje')->setName('cene.dodavanje.post');
+    $this->get('/transakcije/cene/izmena/{id}', '\App\Controllers\CeneController:getCeneIzmena')->setName('cene.izmena');
+    $this->post('/transakcije/cene/izmena', '\App\Controllers\CeneController:postCeneIzmena')->setName('cene.izmena.post');
     // Transakcije
-    $this->get('/transakcije/cene', '\App\Controllers\TransakcijeController:getCene')->setName('transakcije.cene');
     $this->get('/transakcije/zaduzivanje/takse', '\App\Controllers\TransakcijeController:getZaduzivanjeTakse')->setName('transakcije.zaduzivanje.takse');
     $this->post('/transakcije/zaduzivanje/takse', '\App\Controllers\TransakcijeController:postZaduzivanjeTakse')->setName('transakcije.zaduzivanje.takse.post');
     $this->get('/transakcije/zaduzivanje/zakup', '\App\Controllers\TransakcijeController:getZaduzivanjeZakup')->setName('transakcije.zaduzivanje.zakup');

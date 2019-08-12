@@ -101,7 +101,7 @@ abstract class Model
 	 * Vraca sve zapise iz tabele (sortirane)
 	 *
 	 * @param string $sort_column Naziv kolone za sortiranje
-	 * @param string $sort Ncin sortiranja
+	 * @param string $sort Nacin sortiranja
 	 * @return array|\App\Classes\Model Niz modela ili jedan model
 	 */
     public function all(string $sort_column = null, $sort = 'ASC')

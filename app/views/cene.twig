@@ -15,7 +15,7 @@
             </strong>
         </div>
         <div class="uk-float-right">
-            <a href="{{ path_for('kartoni.dodavanje') }}" class="uk-button uk-button-primary uk-button-small">Dodaj nove
+            <a href="{{ path_for('cene.dodavanje.get') }}" class="uk-button uk-button-primary uk-button-small">Dodaj nove
                 cene</a>
         </div>
     </div>
@@ -48,7 +48,7 @@
                 <td class="uk-clearfix">
                     <ul class="uk-iconnav uk-float-right">
                         <li>
-                            <a href="" title="Izmena"><span uk-icon="pencil"></span></a>
+                            <a href="{{ path_for('cene.izmena', { id: cena.id }) }}" title="Izmena"><span uk-icon="pencil"></span></a>
                         </li>
                         <li>
                             <a href="" title="Brisanje"><span uk-icon="trash"></span></a>
