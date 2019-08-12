@@ -14,13 +14,14 @@
         {{ csrf | raw }}
         <select name="groblje_id" id="groblje_id" class="uk-select uk-form-width-small uk-form-small" autofocus>
           {% for groblje in groblja %}
-          <option value="{{ groblje.id }}" {{ data.groblje_id == groblje.id ? ' selected' : '' }}>{{ groblje.naziv }}</option>
+          <option value="{{ groblje.id }}" {{ data.groblje_id == groblje.id ? ' selected' : '' }}>{{ groblje.naziv }}
+          </option>
           {% endfor %}
         </select>
-        <input type="text" name="parcela" id="parcela" class="uk-input uk-form-width-small uk-form-small" value="{{ data.parcela }}" autocomplete="off"
-          placeholder="Parcela" />
-        <input type="text" name="grobno_mesto" id="grobno_mesto" class="uk-input uk-form-width-small uk-form-small" value="{{ data.grobno_mesto }}" autocomplete="off"
-          placeholder="Grobno mesto" />
+        <input type="text" name="parcela" id="parcela" class="uk-input uk-form-width-small uk-form-small"
+          value="{{ data.parcela }}" autocomplete="off" placeholder="Parcela" />
+        <input type="text" name="grobno_mesto" id="grobno_mesto" class="uk-input uk-form-width-small uk-form-small"
+          value="{{ data.grobno_mesto }}" autocomplete="off" placeholder="Grobno mesto" />
 
         <div class="uk-button-group">
           <input type="submit" value="Filtriraj" class="uk-button uk-button-primary uk-button-small" />
@@ -69,13 +70,16 @@
         <td class="uk-clearfix">
           <ul class="uk-iconnav uk-float-right">
             <li>
-              <a href="{{ path_for('kartoni.pregled', { id: karton.id }) }}" title="Pregled"><span uk-icon="search"></span></a>
+              <a href="{{ path_for('kartoni.pregled', { id: karton.id }) }}" title="Pregled"><span
+                  uk-icon="search"></span></a>
             </li>
             <li>
-              <a href="{{ path_for('kartoni.mapa', { id: karton.id }) }}" title="Lokacija"><span uk-icon="location"></span></a>
+              <a href="{{ path_for('kartoni.mapa', { id: karton.id }) }}" title="Lokacija"><span
+                  uk-icon="location"></span></a>
             </li>
             <li>
-              <a href="{{ path_for('transakcije.karton', { id: karton.id }) }}" title="Transakcije"><span uk-icon="credit-card"></span></a>
+              <a href="{{ path_for('transakcije.pregled', { id: karton.id }) }}" title="Transakcije"><span
+                  uk-icon="credit-card"></span></a>
             </li>
           </ul>
         </td>

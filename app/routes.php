@@ -103,6 +103,7 @@ $app->group('', function () {
     $this->post('/transakcije/zaduzivanje/takse', '\App\Controllers\TransakcijeController:postZaduzivanjeTakse')->setName('transakcije.zaduzivanje.takse.post');
     $this->get('/transakcije/zaduzivanje/zakup', '\App\Controllers\TransakcijeController:getZaduzivanjeZakup')->setName('transakcije.zaduzivanje.zakup');
     $this->post('/transakcije/zaduzivanje/zakup', '\App\Controllers\TransakcijeController:postZaduzivanjeZakup')->setName('transakcije.zaduzivanje.zakup.post');
+    $this->get('/transakcije/pregled/karton/{id}', '\App\Controllers\TransakcijeController:getKartonPregled')->setName('transakcije.pregled');
     $this->get('/transakcije/karton/{id}', '\App\Controllers\TransakcijeController:getKarton')->setName('transakcije.karton');
     $this->post('/transakcije/uplata', '\App\Controllers\TransakcijeController:postUplata')->setName('transakcije.uplata');
     // Racuni

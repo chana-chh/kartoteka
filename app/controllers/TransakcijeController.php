@@ -56,6 +56,54 @@ class TransakcijeController extends Controller
         );
     }
 
+    public function getKartonPregled($request, $response, $args)
+    {
+        $karton_id = $args['id'];
+        $model_karton = new Karton();
+        $karton = $model_karton->find($karton_id);
+
+        $model_zaduzenje = new Zaduzenje();
+        $takse = $model_zaduzenje->takseZaKarton($karton_id);
+        $takse_nerazduzene = $model_zaduzenje->nerazduzeneTakseZaKarton($karton_id);
+        $broj_taksi_nearazduzenih = count($takse_nerazduzene);
+        $zakupi = $model_zaduzenje->zakupiZaKarton($karton_id);
+        $zakupi_nearzduzeni = $model_zaduzenje->nerazduzeniZakupiZaKarton($karton_id);
+        $broj_zakupa_nerazduzenih = count($zakupi_nearzduzeni);
+
+        $model_cena = new Cena();
+        $cena_takse = (float) $model_cena->taksa();
+        $cena_zakupa = (float) $model_cena->zakup() / 10;
+
+        $dug = ($broj_taksi_nearazduzenih * $cena_takse) + ($broj_zakupa_nerazduzenih * $cena_zakupa);
+
+        $model_racun = new Racun();
+        $racuni = $model_racun->racuniZaKarton($karton_id);
+        $racuni_nerazduzeni = $model_racun->nerazduzeniRacuniZaKarton($karton_id);
+        $broj_racuna_nerazduzenih = count($racuni_nerazduzeni);
+
+        $dug += (float) $model_racun->dugZaKarton($karton_id);
+
+        $this->render(
+            $response,
+            'transakcije_pregled.twig',
+            compact(
+                'karton',
+                'takse',
+                'takse_nearzduzene',
+                'broj_taksi_nearazduzenih',
+                'zakupi',
+                'zakupi_nerazduzeni',
+                'broj_zakupa_nerazduzenih',
+                'dug',
+                'cena_takse',
+                'cena_zakupa',
+                'racuni',
+                'racuni_nerazduzeni',
+                'broj_racuna_nerazduzenih'
+            )
+        );
+    }
+
     public function getZaduzivanjeTakse($request, $response)
     {
         $model_cene = new Cena();
