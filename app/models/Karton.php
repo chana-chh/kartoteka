@@ -65,12 +65,74 @@ class Karton extends Model
     }
 
     /**
-    * Vraca sve parcele iz kartona
-    */
+     * Vraca sve parcele iz kartona
+     */
 
     public function vratiParcele()
     {
         $sql = "SELECT parcela FROM {$this->table} GROUP BY parcela";
         return $this->fetch($sql);
+    }
+
+
+    // Transakcije
+    public function takse()
+    {
+        $sql = "SELECT * FROM zaduzenja WHERE tip = 'taksa' AND karton_id = {$this->id};";
+        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
+    }
+
+    public function zakupi()
+    {
+        $sql = "SELECT * FROM zaduzenja WHERE tip = 'zakup' AND karton_id = {$this->id};";
+        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
+    }
+
+    public function nerazduzeneTakse()
+    {
+        $sql = "SELECT * FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0 AND karton_id = {$this->id};";
+        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
+    }
+
+    public function dugZaTakse()
+    {
+        $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0 AND karton_id = {$this->id};";
+        $broj = $this->fetch($sql)[0]->broj;
+        $model_cena = new Cena();
+        $cena = (float) $model_cena->taksa();
+        return $broj * $cena;
+    }
+
+    public function nerazduzeniZakupi()
+    {
+        $sql = "SELECT * FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0 AND karton_id = {$this->id};";
+        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
+    }
+
+    public function dugZaZakupe()
+    {
+        $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0 AND karton_id = {$this->id};";
+        $broj = $this->fetch($sql)[0]->broj;
+        $model_cena = new Cena();
+        $cena = (float) $model_cena->zakup() / 10;
+        return $broj * $cena;
+    }
+
+    public function racuni()
+    {
+        $sql = "SELECT * FROM racuni WHERE karton_id = {$this->id};";
+        return $this->fetch($sql, null, '\App\Models\Racun');
+    }
+
+    public function nerazduzeniRacuni()
+    {
+        $sql = "SELECT * FROM racuni WHERE razduzeno = 0 AND karton_id = {$this->id};";
+        return $this->fetch($sql, null, '\App\Models\Racun');
+    }
+
+    public function dugZaRacune()
+    {
+        $sql = "SELECT SUM(iznos) AS dug FROM racuni WHERE razduzeno = 0 AND karton_id = {$this->id};";
+        return (float) $this->fetch($sql)[0]->dug;
     }
 }

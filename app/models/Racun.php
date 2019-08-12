@@ -35,6 +35,13 @@ class Racun extends Model
 		return "<input type=\"checkbox\" name=\"razduzeno-racuni[]\" value=\"{$this->$pk}\" data-iznos=\"{$this->iznos}\" class=\"razduzeno-racuni\"{$chk}>";
 	}
 
+	public function razduzenoDisabled()
+	{
+		$chk = $this->razduzeno === 1 ? ' checked' : '';
+		$pk = $this->pk;
+		return "<input type=\"checkbox\" name=\"razduzeno-racuni[]\" value=\"{$this->$pk}\" data-iznos=\"{$this->iznos}\" class=\"razduzeno-racuni\"{$chk} disabled>";
+	}
+
 	public function datum()
 	{
 		if ($this->datum === null) {
