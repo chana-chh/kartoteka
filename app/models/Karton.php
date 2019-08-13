@@ -82,12 +82,6 @@ class Karton extends Model
         return $this->fetch($sql, null, '\App\Models\Zaduzenje');
     }
 
-    public function zakupi()
-    {
-        $sql = "SELECT * FROM zaduzenja WHERE tip = 'zakup' AND karton_id = {$this->id};";
-        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
-    }
-
     public function nerazduzeneTakse()
     {
         $sql = "SELECT * FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0 AND karton_id = {$this->id};";
@@ -101,6 +95,12 @@ class Karton extends Model
         $model_cena = new Cena();
         $cena = (float) $model_cena->taksa();
         return $broj * $cena;
+    }
+
+    public function zakupi()
+    {
+        $sql = "SELECT * FROM zaduzenja WHERE tip = 'zakup' AND karton_id = {$this->id};";
+        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
     }
 
     public function nerazduzeniZakupi()

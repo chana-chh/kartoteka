@@ -19,6 +19,15 @@ class TransakcijeController extends Controller
         $this->render($response, 'cene.twig', compact('cene', 'taksa', 'zakup'));
     }
 
+    public function getKartonPregled($request, $response, $args)
+    {
+        $karton_id = $args['id'];
+        $model_karton = new Karton();
+        $karton = $model_karton->find($karton_id);
+
+        $this->render($response, 'transakcije_pregled.twig', compact('karton'));
+    }
+
     public function getKarton($request, $response, $args)
     {
         $karton_id = $args['id'];
@@ -54,15 +63,6 @@ class TransakcijeController extends Controller
                 'broj_racuna'
             )
         );
-    }
-
-    public function getKartonPregled($request, $response, $args)
-    {
-        $karton_id = $args['id'];
-        $model_karton = new Karton();
-        $karton = $model_karton->find($karton_id);
-        // dd($karton->takse());
-        $this->render($response, 'transakcije_pregled.twig', compact('karton'));
     }
 
     public function getZaduzivanjeTakse($request, $response)

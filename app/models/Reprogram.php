@@ -5,22 +5,22 @@ namespace App\Models;
 use App\Classes\Model;
 use DateTime;
 
-class Racun extends Model
+class Reprogram extends Model
 {
-	protected $table = 'racuni';
+	protected $table = 'reprogrami';
 
 	public function razduzeno()
 	{
 		$chk = $this->razduzeno === 1 ? ' checked' : '';
 		$pk = $this->pk;
-		return "<input type=\"checkbox\" name=\"razduzeno-racuni[]\" value=\"{$this->$pk}\" data-iznos=\"{$this->iznos}\" class=\"razduzeno-racuni\"{$chk}>";
+		return "<input type=\"checkbox\" name=\"razduzeno-reprogrami[]\" value=\"{$this->$pk}\" data-iznos=\"{$this->iznos}\" class=\"razduzeno-reprogrami\"{$chk}>";
 	}
 
 	public function razduzenoDisabled()
 	{
 		$chk = $this->razduzeno === 1 ? ' checked' : '';
 		$pk = $this->pk;
-		return "<input type=\"checkbox\" name=\"razduzeno-racuni[]\" value=\"{$this->$pk}\" data-iznos=\"{$this->iznos}\" class=\"razduzeno-racuni\"{$chk} disabled>";
+		return "<input type=\"checkbox\" name=\"razduzeno-reprogrami[]\" value=\"{$this->$pk}\" data-iznos=\"{$this->iznos}\" class=\"razduzeno-reprogrami\"{$chk} disabled>";
 	}
 
 	public function datum()
