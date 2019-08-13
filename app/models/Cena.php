@@ -38,7 +38,7 @@ class Cena extends Model
 	{
 		$sql_anuliraj = "UPDATE {$this->table} SET vazece = 0 WHERE vazece = 1";
 		$this->run($sql_anuliraj);
-		$sql_vrati = "SELECT * FROM {$this->table} WHERE datum = (SELECT MAX(datum) FROM {$this->table})";
-		return $this->fetch($sql_vrati)[0];
+		$sql_vrati = "UPDATE {$this->table} SET vazece = 1 ORDER BY datum DESC LIMIT 1";
+		$this->run($sql_vrati);
 	}
 }

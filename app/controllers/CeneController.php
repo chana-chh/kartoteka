@@ -51,11 +51,11 @@ class CeneController extends Controller
         } else {
             $modelCena = new Cena();
             $modelCena->update($data, $id);
-            $id_vazece = $modelCena->odrediVazece()->id;
+            $modelCena->odrediVazece();
 
-            $modelR = new Cena();
-            $dataU['vazece'] = 1;
-            $modelR->update($dataU, $id_vazece);
+            // $modelR = new Cena();
+            // $dataU['vazece'] = 1;
+            // $modelR->update($dataU, $id_vazece);
             $this->flash->addMessage('success', 'Cene su uspešno izmenjene.');
             return $response->withRedirect($this->router->pathFor('cene'));
         }
