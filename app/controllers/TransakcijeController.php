@@ -9,15 +9,6 @@ use App\Models\Racun;
 
 class TransakcijeController extends Controller
 {
-    public function getCene($request, $response)
-    {
-        $model = new Cena();
-        $cene = $model->all('datum', 'DESC');
-        $taksa = $model->taksa();
-        $zakup = $model->zakup();
-
-        $this->render($response, 'cene.twig', compact('cene', 'taksa', 'zakup'));
-    }
 
     public function getKartonPregled($request, $response, $args)
     {

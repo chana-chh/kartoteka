@@ -35,7 +35,7 @@ class Raspored extends Model
         if ($this->start === null) {
             return "";
         } else {
-            return DateTime::createFromFormat($format, $this->start)->format('d-m-Y H:i');
+            return DateTime::createFromFormat($format, $this->start)->format('d.m.Y H:i');
         }
     }
 

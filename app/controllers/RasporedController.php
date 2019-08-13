@@ -70,6 +70,7 @@ class RasporedController extends Controller
                     'parcela' => $data['parcela'],
                     'grobno_mesto' => $data['grobno_mesto'],
                     'broj_mesta' => 1,
+                    'aktivan' => 1,
                     'tip_groba' => $data['tip_groba']
                 ]
                 );

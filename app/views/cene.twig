@@ -40,7 +40,7 @@
                     <em>{{ cena.id }}</em>
                 </td>
                 <td>
-                    <strong>{{ cena.datum }}</strong>
+                    <strong>{{ cena.datum() }}</strong>
                 </td>
                 <td class="uk-text-right">{{ cena.taksa|number_format(2, '.', ',') }}</td>
                 <td class="uk-text-right">{{ cena.zakup|number_format(2, '.', ',') }}</td>

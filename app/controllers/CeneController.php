@@ -53,9 +53,6 @@ class CeneController extends Controller
             $modelCena->update($data, $id);
             $modelCena->odrediVazece();
 
-            // $modelR = new Cena();
-            // $dataU['vazece'] = 1;
-            // $modelR->update($dataU, $id_vazece);
             $this->flash->addMessage('success', 'Cene su uspešno izmenjene.');
             return $response->withRedirect($this->router->pathFor('cene'));
         }
@@ -91,11 +88,8 @@ class CeneController extends Controller
         } else {
             $modelCena = new Cena();
             $modelCena->insert($data);
-            $id_vazece = $modelCena->odrediVazece()->id;
+            $modelCena->odrediVazece();
 
-            $modelR = new Cena();
-            $dataU['vazece'] = 1;
-            $modelR->update($dataU, $id_vazece);
             $this->flash->addMessage('success', 'Nove cene su uspešno dodate.');
             return $response->withRedirect($this->router->pathFor('cene'));
         }
@@ -107,6 +101,7 @@ class CeneController extends Controller
         $modelCena = new Cena();
         $success = $modelCena->deleteOne($id);
         if ($success) {
+            $modelCena->odrediVazece();
             $this->flash->addMessage('success', "Cene su uspešno obrisane.");
             return $response->withRedirect($this->router->pathFor('cene'));
         } else {

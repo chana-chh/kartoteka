@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Classes\Model;
+use DateTime;
 
 class Cena extends Model
 {
@@ -41,4 +42,14 @@ class Cena extends Model
 		$sql_vrati = "UPDATE {$this->table} SET vazece = 1 ORDER BY datum DESC LIMIT 1";
 		$this->run($sql_vrati);
 	}
+
+	public function datum()
+    {
+        $format = 'Y-m-d';
+        if ($this->datum === null) {
+            return "";
+        } else {
+            return DateTime::createFromFormat($format, $this->datum)->format('d.m.Y');
+        }
+    }
 }

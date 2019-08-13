@@ -142,7 +142,7 @@ class KartoniController extends Controller
         $modelKarton = new Karton();
         $karton = $modelKarton->find($id);
         $broj = $karton->broj();
-    // if(!$karton->rasporedi() && !$karton->staraoci() && !$karton->pokojnici() && !$karton->dokumenti()){
+    if(!$karton->rasporedi() && !$karton->staraoci() && !$karton->pokojnici() && !$karton->dokumenti()){
         $success = $modelKarton->deleteOne($id);
     if ($success) {
             $this->flash->addMessage('success', "Karton broj [{$broj}] je uspešno obrisan.");
@@ -151,10 +151,10 @@ class KartoniController extends Controller
             $this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja kartona.");
             return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $id]));
         }
-    // } else {
-    //         $this->flash->addMessage('danger', "Pre brisanja kartona neophodno je obrisati svu skeniranu dokumentaciju, staraoce, pokojnike i termine vezane za njega.");
-    //         return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $id]));
-    // }
+    } else {
+            $this->flash->addMessage('danger', "Pre brisanja kartona neophodno je obrisati svu skeniranu dokumentaciju, staraoce, pokojnike, transakcije i termine vezane za njega.");
+            return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $id]));
+    }
 
     }
 

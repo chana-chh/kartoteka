@@ -18,10 +18,10 @@
     </div>
     <div class="uk-float-right">
       <div class="uk-button-group">
-        <a href="{{ path_for('transakcije.karton',{'id':karton.id}) }}"
-          class="uk-button uk-button-primary uk-button-small">
-          <span uk-icon="credit-card"></span> Transakcije
-        </a>
+        <a href="{{ path_for('transakcije.pregled', { id: karton.id }) }}" 
+        class="uk-button uk-button-primary uk-button-small">
+        <span uk-icon="credit-card"></span>Transakcije
+      </a>
         <a href="{{ path_for('kartoni.izmena', { 'id': karton.id }) }}"
           class="uk-button uk-button-secondary uk-button-small">
           <span uk-icon="pencil"></span> Izmeni karton
@@ -282,7 +282,7 @@
                   uk-icon="pencil"></span></a>
             </li>
             <li>
-              <a href="#modal-brisanje-dokumenta" title="Brisanje" data-id="{{ dok.id }}" onclick="setDocId(this);"
+              <a href="#modal-brisanje-termina" title="Brisanje" data-id="{{ ter.id }}" onclick="setDocId(this);"
                 uk-toggle>
                 <span uk-icon="trash"></span>
               </a>
@@ -315,6 +315,10 @@
     document.getElementById("forma_brisanje_pokojnika").submit();
   });
 
+  document.getElementById("modal_dugme_brisi_termin").addEventListener("click", function () {
+    document.getElementById("forma_brisanje_termina").submit();
+  });
+
   function setDocId(el) {
     document.getElementById("modal_dokument_id").value = el.dataset.id;
   }
@@ -325,6 +329,10 @@
 
   function setPokId(el) {
     document.getElementById("modal_pokojnik_id").value = el.dataset.id;
+  }
+  
+  function setPokId(el) {
+    document.getElementById("termin_modal_id").value = el.dataset.id;
   }
 </script>
 {% endblock skripta %}
