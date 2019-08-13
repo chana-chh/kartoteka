@@ -1,6 +1,6 @@
 {% extends "templates/app.twig" %} {% block sadrzaj %}
 <h1 class="uk-text-danger">
-  Transakcije za karton
+  Razduzivanje za karton
   <small
     ><em class="uk-text-primary">[{{ karton.broj() }}]</em></small
   >
@@ -25,8 +25,9 @@
     </div>
     <div class="uk-float-right">
       <div class="uk-button-group">
-        <a href="" class="uk-button uk-button-secondary uk-button-small">
-          <span uk-icon="database"></span> Sva zaduzenja
+        <a href="{{ path_for('transakcije.pregled', { id: karton.id }) }}"
+          class="uk-button uk-button-secondary uk-button-small">
+          <span uk-icon="list"></span> Pregled zaduzenja
         </a>
         <a href="" class="uk-button uk-button-primary uk-button-small">
           <span uk-icon="bookmark"></span> Zaduzi taksu

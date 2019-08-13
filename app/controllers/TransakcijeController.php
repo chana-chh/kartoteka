@@ -33,36 +33,8 @@ class TransakcijeController extends Controller
         $karton_id = $args['id'];
         $model_karton = new Karton();
         $karton = $model_karton->find($karton_id);
-        $model_zaduzenje = new Zaduzenje();
-        $takse = $model_zaduzenje->nerazduzeneTakseZaKarton($karton_id);
-        $broj_taksi = count($takse);
-        $zakupi = $model_zaduzenje->nerazduzeniZakupiZaKarton($karton_id);
-        $broj_zakupa = count($zakupi);
-        $model_cena = new Cena();
-        $cena_takse = (float) $model_cena->taksa();
-        $cena_zakupa = (float) $model_cena->zakup() / 10;
-        $dug = ($broj_taksi * $cena_takse) + ($broj_zakupa * $cena_zakupa);
-        $model_racun = new Racun();
-        $racuni = $model_racun->nerazduzeniRacuniZaKarton($karton_id);
-        $broj_racuna = count($racuni);
-        $dug += (float) $model_racun->dugZaKarton($karton_id);
 
-        $this->render(
-            $response,
-            'transakcije.twig',
-            compact(
-                'karton',
-                'takse',
-                'broj_taksi',
-                'zakupi',
-                'broj_zakupa',
-                'dug',
-                'cena_takse',
-                'cena_zakupa',
-                'racuni',
-                'broj_racuna'
-            )
-        );
+        $this->render($response, 'transakcije_razduzivanje.twig', compact('karton'));
     }
 
     public function getZaduzivanjeTakse($request, $response)

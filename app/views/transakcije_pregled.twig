@@ -1,7 +1,7 @@
 {% extends "templates/app.twig" %}
 {% block sadrzaj %}
 <h1 class="uk-text-danger">
-  Transakcije za karton
+  Pregled zaduzenja za karton
   <small><em class="uk-text-primary">[{{ karton.broj() }}]</em></small>
 </h1>
 <div class="uk-panel uk-background-muted uk-padding-small">
@@ -272,14 +272,4 @@
     </div>
   </div>
 </div>
-<hr>
-<h2>Uputstvo</h2>
-<p>
-  Odabrati (cekirati) zaduzenja koja ce se razduziti. Ukupan iznos odabranih
-  razduzenja ce se pojaviti u polju "Iznos razduzenja". Uneti iznos i datum
-  uplate. Kliknuti na dugme "Snimi uplatu i razduzi odabrane stavke".
-</p>
-<p>
-  Izabrane stavke ce biti razduzene, a uplata snimljena.
-</p>
 {% endblock traka %}
