@@ -53,7 +53,7 @@
               </a>
             </li>
             <li>
-              <a title="Brisanje" href="#modal-brisanje" data-id="{{ termin.id }}" onclick="setTerminId(this);" uk-toggle>
+              <a title="Brisanje" href="#modal-brisanje-termina" data-id="{{ termin.id }}" onclick="setTerminId(this);" uk-toggle>
                 <span uk-icon="trash"></span>
               </a>
             </li>
@@ -77,4 +77,19 @@
     </p>
   </div>
 </div>
+
+<!-- MODAL BRISANJE KORISNIKA -->
+{% include 'inc/termin_brisanje.twig' %}
 {% endblock naslov %}
+
+{% block skripta %}
+<script>
+document.getElementById("modal_dugme_brisi_termin").addEventListener("click", function () {
+    document.getElementById("forma_brisanje_termina").submit();
+  });
+
+  function setKorisnikId(el) {
+    document.getElementById("termin_modal_id").value = el.dataset.id;
+  }
+</script>
+{% endblock skripta %}

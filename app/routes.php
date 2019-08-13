@@ -91,7 +91,8 @@ $app->group('', function () {
     $this->post('/administracija/korisnici/dodavanje', '\App\Controllers\KorisniciController:postKorisniciDodavanje')->setName('korisnici.dodavanje');
     $this->post('/administracija/korisnici/brisanje', '\App\Controllers\KorisniciController:postKorisniciBrisanje')->setName('korisnici.brisanje');
     $this->get('/administracija/korisnici/izmena/{id}', '\App\Controllers\KorisniciController:getKorisniciIzmena')->setName('korisnici.izmena');
-    $this->post('/administracija/korisnici/izmena', '\App\Controllers\KorisniciController:postKorisniciIzmena')->setName('korisnici.izmena.post'); // Groblja
+    $this->post('/administracija/korisnici/izmena', '\App\Controllers\KorisniciController:postKorisniciIzmena')->setName('korisnici.izmena.post'); 
+    // Groblja
     $this->get('/administracija/groblja', '\App\Controllers\GrobljaController:getGroblja')->setName('groblja');
     $this->post('/administracija/groblja/dodavanje', '\App\Controllers\GrobljaController:postGrobljaDodavanje')->setName('groblja.dodavanje');
     $this->post('/administracija/groblja/brisanje', '\App\Controllers\GrobljaController:postGrobljaBrisanje')->setName('groblja.brisanje');
@@ -103,6 +104,7 @@ $app->group('', function () {
     $this->post('/transakcije/cene/dodavanje', '\App\Controllers\CeneController:postCeneDodavanje')->setName('cene.dodavanje.post');
     $this->get('/transakcije/cene/izmena/{id}', '\App\Controllers\CeneController:getCeneIzmena')->setName('cene.izmena');
     $this->post('/transakcije/cene/izmena', '\App\Controllers\CeneController:postCeneIzmena')->setName('cene.izmena.post');
+    $this->post('/transakcije/cene/brisanje', '\App\Controllers\CeneController:postCeneBrisanje')->setName('cene.brisanje.post');
     // Transakcije
     $this->get('/transakcije/zaduzivanje/takse', '\App\Controllers\TransakcijeController:getZaduzivanjeTakse')->setName('transakcije.zaduzivanje.takse');
     $this->post('/transakcije/zaduzivanje/takse', '\App\Controllers\TransakcijeController:postZaduzivanjeTakse')->setName('transakcije.zaduzivanje.takse.post');

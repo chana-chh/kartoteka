@@ -29,6 +29,16 @@ class Raspored extends Model
         }
     }
 
+    public function pocetak()
+    {
+        $format = 'Y-m-d H:i:s';
+        if ($this->start === null) {
+            return "";
+        } else {
+            return DateTime::createFromFormat($format, $this->start)->format('d-m-Y H:i');
+        }
+    }
+
     public function datum_end()
     {
     	$format = 'Y-m-d H:i:s';

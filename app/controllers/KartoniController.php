@@ -198,8 +198,9 @@ class KartoniController extends Controller
         $id = $args['id'];
         $modelKarton = new Karton();
         $karton = $modelKarton->find($id);
+        $termini = $karton->rasporedi();
         $saldo = $karton->saldo();
-        $this->render($response, 'karton_pregled.twig', compact('karton', 'saldo'));
+        $this->render($response, 'karton_pregled.twig', compact('karton', 'saldo', 'termini'));
     }
 
     public function getKartoniMapa($request, $response, $args)

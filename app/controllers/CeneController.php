@@ -101,4 +101,18 @@ class CeneController extends Controller
         }
     }
 
+    public function postCeneBrisanje($request, $response)
+    {
+        $id = (int)$request->getParam('modal_cena_id');
+        $modelCena = new Cena();
+        $success = $modelCena->deleteOne($id);
+        if ($success) {
+            $this->flash->addMessage('success', "Cene su uspešno obrisane.");
+            return $response->withRedirect($this->router->pathFor('cene'));
+        } else {
+            $this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja cena.");
+            return $response->withRedirect($this->router->pathFor('cene'));
+        }
+    }
+
 }

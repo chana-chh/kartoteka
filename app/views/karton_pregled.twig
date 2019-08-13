@@ -204,7 +204,7 @@
 {% endblock sadrzaj %}
 
 {% block traka %}
-<div class="uk-clearfix">
+<div class="uk-clearfix uk-margin-small-top">
   <div class="uk-float-left">
     <h2 class="uk-text-primary">Dokumenti</h2>
   </div>
@@ -255,9 +255,48 @@
     </tbody>
   </table>
 </div>
-
+<hr class="uk-divider-icon uk-margin-large">
+<h3>Termini</h3>
+<div class="uk-overflow-auto">
+  <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+    <thead>
+      <tr>
+        <th class="w-15">ID</th>
+        <th class="w-30">Početak</th>
+        <th class="w-35">Opis</th>
+        <th class="w-20 uk-text-right"><span uk-icon="cog"></span></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ter in termini %}
+      <tr>
+        <td>
+          <em>{{ ter.id }}</em>
+        </td>
+        <td>{{ ter.pocetak() }}</td>
+        <td>{{ ter.title }}</td>
+        <td class="uk-clearfix">
+          <ul class="uk-iconnav uk-float-right">
+            <li>
+              <a href="{{ path_for('raspored.izmena', { 'id': ter.id }) }}" title="Izmena"><span
+                  uk-icon="pencil"></span></a>
+            </li>
+            <li>
+              <a href="#modal-brisanje-dokumenta" title="Brisanje" data-id="{{ dok.id }}" onclick="setDocId(this);"
+                uk-toggle>
+                <span uk-icon="trash"></span>
+              </a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 <!-- MODAL BRISANJE -->
 {% include 'inc/dokument_brisanje.twig' %}
+{% include 'inc/termin_brisanje.twig' %}
 
 {% endblock traka %}
 

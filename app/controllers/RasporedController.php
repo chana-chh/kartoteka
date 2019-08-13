@@ -135,8 +135,8 @@ class RasporedController extends Controller
                     'broj_lk' => $data['broj_lk'],
                     'prezime_prijavioca' => $prezime_prijavioca,
                     'ime_prijavioca' => $ime_prijavioca,
-                    'prezime_troskovi' => $prezime_prijavioca,
-                    'ime_troskovi' => $ime_prijavioca,
+                    'prezime_troskovi' => $prezime_troskovi,
+                    'ime_troskovi' => $ime_troskovi,
                     'jmbg_troskovi' => $jmbg_troskovi,
                     'prebivaliste_troskovi' => $prebivaliste_troskovi,
                     'ovlascen' => $ovlascen,
@@ -158,10 +158,13 @@ class RasporedController extends Controller
         $k = new Auth();
         $idzaracun = $k->user()->id;
 
+        if (!empty($data['broj']) && !empty($data['datum']) && !empty($data['iznos'])) {
+            
         $razduzeno = isset($data['razduzeno']) ? 1 : 0;
 
         $modelRacun = new Racun();
-        $racun = $modelRacun->insert([
+        if($razduzeno == 1){
+            $racun = $modelRacun->insert([
                     'karton_id' => $id_kartona,
                     'broj' => $data['broj'],
                     'datum' => $data['datum'],
@@ -170,7 +173,18 @@ class RasporedController extends Controller
                     'datum_razduzenja' => $data['datum_razduzenja'],
                     'korisnik_id_zaduzio' => $idzaracun,
                     'korisnik_id_razduzio' => $idzaracun
+                ]);}else{
+                $racun = $modelRacun->insert([
+                    'karton_id' => $id_kartona,
+                    'broj' => $data['broj'],
+                    'datum' => $data['datum'],
+                    'iznos' => $data['iznos'],
+                    'razduzeno' => $razduzeno,
+                    'datum_razduzenja' => $data['datum_razduzenja'],
+                    'korisnik_id_zaduzio' => $idzaracun
                 ]);
+            }
+        }
 
         $l = $k->user()->ime;
         $modelLog->insert([opis => $l."je dodao termin za sahranu sa id brojem ".$id_rasporeda ]);

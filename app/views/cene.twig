@@ -51,7 +51,9 @@
                             <a href="{{ path_for('cene.izmena', { id: cena.id }) }}" title="Izmena"><span uk-icon="pencil"></span></a>
                         </li>
                         <li>
-                            <a href="" title="Brisanje"><span uk-icon="trash"></span></a>
+                            <a title="Brisanje" href="#modal-brisanje" data-id="{{ cena.id }}" onclick="setKorisnikId(this);" uk-toggle>
+                                <span uk-icon="trash"></span>
+                            </a>
                         </li>
 
                     </ul>
@@ -61,4 +63,18 @@
         </tbody>
     </table>
 </div>
+<!-- MODAL BRISANJE KORISNIKA -->
+{% include 'inc/cene_brisanje.twig' %}
 {% endblock naslov %}
+{% block skripta %}
+<script>
+
+document.getElementById("modal_dugme_brisi").addEventListener("click", function () {
+    document.getElementById("forma_brisanje").submit();
+  });
+
+  function setKorisnikId(el) {
+    document.getElementById("modal_cena_id").value = el.dataset.id;
+  }
+</script>
+{% endblock skripta %}

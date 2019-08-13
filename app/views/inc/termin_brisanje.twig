@@ -1,4 +1,4 @@
-<div id="modal-brisanje" uk-modal>
+<div id="modal-brisanje-termina" uk-modal>
 	<div class="uk-modal-dialog">
 		<button class="uk-modal-close-default" type="button" uk-close></button>
 		<div class="uk-modal-header">
@@ -6,14 +6,14 @@
 		</div>
 		<div class="uk-modal-body">
 			<p>Da li ste sigurni da želite da obrišete termin?</p>
-			<form action="{{ path_for('raspored.brisanje') }}" method="POST" id="forma_brisanje">
+			<form action="{{ path_for('raspored.brisanje') }}" method="POST" id="forma_brisanje_termina">
 				{{ csrf|raw }}
-				<input type="hidden" name="modal_id" id="modal_id" value="">
+				<input type="hidden" name="termin_modal_id" id="termin_modal_id" value="">
 			</form>
 		</div>
 		<div class="uk-modal-footer uk-text-right">
 			<div class="uk-button-group">
-				<button class="uk-button uk-button-primary" type="button" id="modal_dugme_brisi">Obriši</button>
+				<button class="uk-button uk-button-primary" type="button" id="modal_dugme_brisi_termin">Obriši</button>
 				<button class="uk-button uk-button-secondary uk-modal-close" type="button">Otkaži</button>
 			</div>
 		</div>
