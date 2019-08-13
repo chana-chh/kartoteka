@@ -116,5 +116,8 @@ $app->group('', function () {
     // Racuni
     $this->get('/transakcije/racun/{id}', '\App\Controllers\RacuniController:getRacun')->setName('racun');
     $this->post('/transakcije/racun', '\App\Controllers\RacuniController:postRacun')->setName('racun.post');
+    // Taksa
+    $this->get('/transakcije/taksa/{id}', '\App\Controllers\TaksaController:getTaksa')->setName('taksa');
+    $this->post('/transakcije/taksa', '\App\Controllers\TaksaController:postTaksa')->setName('taksa.post');
     // Reprogram
 })->add(new AuthMiddleware($container));

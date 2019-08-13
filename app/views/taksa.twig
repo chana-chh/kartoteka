@@ -1,0 +1,75 @@
+{% extends "templates/app.twig" %}
+
+{% block sadrzaj %}
+<h1>
+	Zaduživanje takse za karton
+	<small><em class="uk-text-success">[{{ karton.broj() }}]</em></small>
+</h1>
+<hr>
+<form action="{{ path_for('taksa.post') }}" method="POST" class="uk-form-stacked" uk-grid>
+	{{ csrf|raw }}
+	<input type="hidden" value="{{ karton.id }}" name="karton_id">
+	<div class="uk-width-1-2">
+		<label for="taksa_id" class="uk-form-label">Dostupne takse iz cenovnika</label>
+		<div class="uk-form-controls">
+			<select name="taksa_id" id="taksa_id" class="uk-select{{ errors.taksa[0] ? ' uk-form-danger': ''}}"
+			 required>
+				{% for taksa in takse %}
+				<option value="{{ taksa.id }}"{{ old.taksa == taksa.id ? ' selected' : '' }}>
+					Taksa iz {{ taksa.datum|date('d.m.Y') }} sa iznosom od: {{ taksa.taksa }}
+				</option>
+				{% endfor %}
+			</select>
+		</div>
+		<small class="uk-text-danger">{{ errors.taksa[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-4">
+		<label for="datum_zaduzenja" class="uk-form-label">Datum zaduženja</label>
+		<div class="uk-form-controls">
+			<input type="date" name="datum_zaduzenja" id="datum_zaduzenja" value="{{ old.datum_zaduzenja ? : 'now'|date('Y-m-d') }}" class="uk-input"
+				autocomplete="off" required>
+		</div>
+		<small class=" uk-text-danger">{{ errors.datum_zaduzenja[0] ? : '' }}</small>
+	</div>
+	<div class="uk-width-1-4 uk-flex uk-flex-bottom">
+		<div class="uk-button-group uk-width-1-1">
+			<button class="uk-button uk-button-primary uk-width-1-2">Zaduži</button>
+			<a href="{{ path_for('transakcije.pregled', { id: karton.id }) }}"
+				class="uk-button uk-button-secondary uk-width-1-2">Otkaži</a>
+		</div>
+	</div>
+</form>
+{% endblock sadrzaj %}
+{% block traka %}
+	<div class="uk-background-muted uk-margin-large-top uk-padding-small">
+	<h4>Pregled taksi trenutno vezanih za karton</h4>
+	        <div class="uk-overflow-auto">
+          <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small" style="font-size: 0.875em;">
+            <thead>
+              <tr>
+                <th class="w-25">Godina</th>
+                <th class="w-25 uk-text-right">Iznos</th>
+                <th class="w-25 uk-text-center">Razduzeno</th>
+                <th class="w-25">Reprogram</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for taksa in karton.takse() %}
+              <tr>
+                <td>{{ taksa.godina }}</td>
+                <td class="uk-text-right">
+                  {{ taksa.iznos|number_format(2, '.', ',') }}
+                </td>
+                <td class="uk-text-center">{{ taksa.razduzenoDisabled() | raw }}</td>
+                <td class="uk-text-primary">
+                  {% if taksa.reprogram_id %}
+                  <span uk-icon="refresh"></span> reprogram
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+       </div>
+{% endblock traka %}

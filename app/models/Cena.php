@@ -52,4 +52,14 @@ class Cena extends Model
             return DateTime::createFromFormat($format, $this->datum)->format('d.m.Y');
         }
     }
+
+    public function godina()
+    {
+        $format = 'Y-m-d';
+        if ($this->datum === null) {
+            return "";
+        } else {
+            return DateTime::createFromFormat($format, $this->datum)->format('Y');
+        }
+    }
 }
