@@ -19,7 +19,8 @@
     </div>
     <div class="uk-float-right">
       <div class="uk-button-group">
-        <a href="" class="uk-button uk-button-secondary uk-button-small">
+        <a href="{{ path_for('transakcije.karton', { id: karton.id }) }}"
+          class="uk-button uk-button-secondary uk-button-small">
           <span uk-icon="database"></span> Razduzivanje
         </a>
         <a href="" class="uk-button uk-button-primary uk-button-small">
@@ -50,7 +51,7 @@
         </h2>
       </a>
       <div class="uk-accordion-content">
-        <hr />
+        <hr>
         <div class="uk-overflow-auto">
           <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
             <thead>
@@ -130,7 +131,7 @@
         </h2>
       </a>
       <div class="uk-accordion-content">
-        <hr />
+        <hr>
         <div class="uk-overflow-auto">
           <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
             <thead>
@@ -167,12 +168,44 @@
       <a class="uk-accordion-title" href="#">
         <h2>
           Reprogrami
-          <em class="uk-text-success">[0]</em>
+          <em class="uk-text-success">[{{ karton.reprogrami()|length }}]</em>
+          <em class="uk-text-danger">[{{ karton.nerazduzeniReprogrami()|length }}]</em>
         </h2>
       </a>
       <div class="uk-accordion-content">
-        <hr />
-        <p>Tabela sa zaduzenjima za reprogram.</p>
+        <hr>
+        <div class="uk-overflow-auto">
+          <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+            <thead>
+              <tr>
+                <th class="w-20">Broj</th>
+                <th class="w-15 uk-text-right">Datum</th>
+                <th class="w-15 uk-text-right">Iznos</th>
+                <th class="w-20 uk-text-right">Peroid</th>
+                <th class="w-20 uk-text-right">Preostalo rata</th>
+                <th class="w-10 uk-text-center">Razduzeno</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for rep in karton.reprogrami() %}
+              <tr>
+                <td>{{ rep.broj }}</td>
+                <td class="uk-text-right">{{ rep.datum() }}</td>
+                <td class="uk-text-right">
+                  {{ rep.iznos|number_format(2, '.', ',') }}
+                </td>
+                <td class="uk-text-right">
+                  {{ rep.period }}
+                </td>
+                <td class="uk-text-right">
+                  {{ rep.preostalo_rata }}
+                </td>
+                <td class="uk-text-center">{{ rep.razduzenoDisabled() | raw }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </li>
   </ul>
@@ -199,37 +232,47 @@
     </div>
   </div>
   <div class="uk-width-1-2">
-    <h2>Dug za takse</h2>
+    <h3>Dug za takse</h3>
   </div>
   <div class="uk-width-1-2">
     <div class="uk-panel uk-background-muted uk-text-large uk-text-bold uk-text-right">
-      <h2 class="uk-text-danger" id="takse-dug">
+      <h3 class="uk-text-danger" id="takse-dug">
         {{ karton.dugZaTakse() | number_format(2, '.', ',') }}
-      </h2>
+      </h3>
     </div>
   </div>
   <div class="uk-width-1-2">
-    <h2>Dug za zakup</h2>
+    <h3>Dug za zakup</h3>
   </div>
   <div class="uk-width-1-2">
     <div class="uk-panel uk-background-muted uk-text-large uk-text-bold uk-text-right">
-      <h2 class="uk-text-danger" id="takse-dug">
+      <h3 class="uk-text-danger" id="takse-dug">
         {{ karton.dugZaZakupe() | number_format(2, '.', ',') }}
-      </h2>
+      </h3>
     </div>
   </div>
   <div class="uk-width-1-2">
-    <h2>Dug za racune</h2>
+    <h3>Dug za racune</h3>
   </div>
   <div class="uk-width-1-2">
     <div class="uk-panel uk-background-muted uk-text-large uk-text-bold uk-text-right">
-      <h2 class="uk-text-danger" id="takse-dug">
+      <h3 class="uk-text-danger" id="takse-dug">
         {{ karton.dugZaRacune() | number_format(2, '.', ',') }}
-      </h2>
+      </h3>
+    </div>
+  </div>
+  <div class="uk-width-1-2">
+    <h3>Dug za reprograme</h3>
+  </div>
+  <div class="uk-width-1-2">
+    <div class="uk-panel uk-background-muted uk-text-large uk-text-bold uk-text-right">
+      <h3 class="uk-text-danger" id="takse-dug">
+        {{ karton.dugZaReprograme() | number_format(2, '.', ',') }}
+      </h3>
     </div>
   </div>
 </div>
-<hr />
+<hr>
 <h2>Uputstvo</h2>
 <p>
   Odabrati (cekirati) zaduzenja koja ce se razduziti. Ukupan iznos odabranih

@@ -84,13 +84,13 @@ class Karton extends Model
 
     public function nerazduzeneTakse()
     {
-        $sql = "SELECT * FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0 AND karton_id = {$this->id};";
+        $sql = "SELECT * FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0 AND reprogram_id IS NULL AND karton_id = {$this->id};";
         return $this->fetch($sql, null, '\App\Models\Zaduzenje');
     }
 
     public function dugZaTakse()
     {
-        $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0 AND karton_id = {$this->id};";
+        $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0 AND reprogram_id IS NULL AND karton_id = {$this->id};";
         $broj = $this->fetch($sql)[0]->broj;
         $model_cena = new Cena();
         $cena = (float) $model_cena->taksa();
@@ -105,13 +105,13 @@ class Karton extends Model
 
     public function nerazduzeniZakupi()
     {
-        $sql = "SELECT * FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0 AND karton_id = {$this->id};";
+        $sql = "SELECT * FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0 AND reprogram_id IS NULL AND karton_id = {$this->id};";
         return $this->fetch($sql, null, '\App\Models\Zaduzenje');
     }
 
     public function dugZaZakupe()
     {
-        $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0 AND karton_id = {$this->id};";
+        $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0 AND reprogram_id IS NULL AND karton_id = {$this->id};";
         $broj = $this->fetch($sql)[0]->broj;
         $model_cena = new Cena();
         $cena = (float) $model_cena->zakup() / 10;
@@ -126,13 +126,31 @@ class Karton extends Model
 
     public function nerazduzeniRacuni()
     {
-        $sql = "SELECT * FROM racuni WHERE razduzeno = 0 AND karton_id = {$this->id};";
+        $sql = "SELECT * FROM racuni WHERE razduzeno = 0 AND reprogram_id IS NULL AND karton_id = {$this->id};";
         return $this->fetch($sql, null, '\App\Models\Racun');
     }
 
     public function dugZaRacune()
     {
-        $sql = "SELECT SUM(iznos) AS dug FROM racuni WHERE razduzeno = 0 AND karton_id = {$this->id};";
+        $sql = "SELECT SUM(iznos) AS dug FROM racuni WHERE razduzeno = 0 AND reprogram_id IS NULL AND karton_id = {$this->id};";
+        return (float) $this->fetch($sql)[0]->dug;
+    }
+
+    public function reprogrami()
+    {
+        $sql = "SELECT * FROM reprogrami WHERE karton_id = {$this->id};";
+        return $this->fetch($sql, null, '\App\Models\Reprogram');
+    }
+
+    public function nerazduzeniReprogrami()
+    {
+        $sql = "SELECT * FROM reprogrami WHERE razduzeno = 0 AND karton_id = {$this->id};";
+        return $this->fetch($sql, null, '\App\Models\Reprogram');
+    }
+
+    public function dugZaReprograme()
+    {
+        $sql = "SELECT SUM((iznos/period)*preostalo_rata) AS dug FROM reprogrami WHERE razduzeno = 0 AND karton_id = {$this->id};";
         return (float) $this->fetch($sql)[0]->dug;
     }
 }
