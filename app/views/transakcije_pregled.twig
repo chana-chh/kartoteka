@@ -19,7 +19,7 @@
     </div>
     <div class="uk-float-right">
       <div class="uk-button-group">
-        <a href="{{ path_for('transakcije.karton', { id: karton.id }) }}"
+        <a href="{{ path_for('transakcije.razduzivanje', { id: karton.id }) }}"
           class="uk-button uk-button-secondary uk-button-small">
           <span uk-icon="database"></span> Razduživanje
         </a>
@@ -32,7 +32,8 @@
         <a href="{{ path_for('racun', { id: karton.id }) }}" class="uk-button uk-button-primary uk-button-small">
           <span uk-icon="bookmark"></span> Zaduži račun
         </a>
-        <a href="" class="uk-button uk-button-danger uk-button-small">
+        <a href="{{ path_for('transakcije.reprogrami', { id: karton.id }) }}"
+          class="uk-button uk-button-danger uk-button-small">
           <span uk-icon="refresh"></span> Reprogrami
         </a>
       </div>
@@ -72,7 +73,7 @@
                 <td class="uk-text-center">{{ taksa.razduzenoDisabled() | raw }}</td>
                 <td class="uk-text-primary">
                   {% if taksa.reprogram_id %}
-                  <span uk-icon="refresh"></span> reprogram
+                  <span uk-icon="refresh"></span> {{ taksa.reprogram().broj }}
                   {% endif %}
                 </td>
               </tr>
@@ -112,7 +113,7 @@
                 <td class="uk-text-center">{{ zakup.razduzenoDisabled() | raw }}</td>
                 <td class="uk-text-primary">
                   {% if zakup.reprogram_id %}
-                  <span uk-icon="refresh"></span> reprogram
+                  <span uk-icon="refresh"></span> {{ zakup.reprogram().broj }}
                   {% endif %}
                 </td>
               </tr>
@@ -154,7 +155,7 @@
                 <td class="uk-text-center">{{ rn.razduzenoDisabled() | raw }}</td>
                 <td class="uk-text-primary">
                   {% if rn.reprogram_id %}
-                  <span uk-icon="refresh"></span> reprogram
+                  <span uk-icon="refresh"></span> {{ rn.reprogram().broj }}
                   {% endif %}
                 </td>
               </tr>
