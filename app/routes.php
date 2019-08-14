@@ -91,7 +91,7 @@ $app->group('', function () {
     $this->post('/administracija/korisnici/dodavanje', '\App\Controllers\KorisniciController:postKorisniciDodavanje')->setName('korisnici.dodavanje');
     $this->post('/administracija/korisnici/brisanje', '\App\Controllers\KorisniciController:postKorisniciBrisanje')->setName('korisnici.brisanje');
     $this->get('/administracija/korisnici/izmena/{id}', '\App\Controllers\KorisniciController:getKorisniciIzmena')->setName('korisnici.izmena');
-    $this->post('/administracija/korisnici/izmena', '\App\Controllers\KorisniciController:postKorisniciIzmena')->setName('korisnici.izmena.post'); 
+    $this->post('/administracija/korisnici/izmena', '\App\Controllers\KorisniciController:postKorisniciIzmena')->setName('korisnici.izmena.post');
     // Groblja
     $this->get('/administracija/groblja', '\App\Controllers\GrobljaController:getGroblja')->setName('groblja');
     $this->post('/administracija/groblja/dodavanje', '\App\Controllers\GrobljaController:postGrobljaDodavanje')->setName('groblja.dodavanje');
@@ -111,8 +111,10 @@ $app->group('', function () {
     $this->get('/transakcije/zaduzivanje/zakup', '\App\Controllers\TransakcijeController:getZaduzivanjeZakup')->setName('transakcije.zaduzivanje.zakup');
     $this->post('/transakcije/zaduzivanje/zakup', '\App\Controllers\TransakcijeController:postZaduzivanjeZakup')->setName('transakcije.zaduzivanje.zakup.post');
     $this->get('/transakcije/pregled/karton/{id}', '\App\Controllers\TransakcijeController:getKartonPregled')->setName('transakcije.pregled');
-    $this->get('/transakcije/karton/{id}', '\App\Controllers\TransakcijeController:getKarton')->setName('transakcije.karton');
-    $this->post('/transakcije/uplata', '\App\Controllers\TransakcijeController:postUplata')->setName('transakcije.uplata');
+    $this->get('/transakcije/karton/{id}', '\App\Controllers\TransakcijeController:getKartonRazduzivanje')->setName('transakcije.razduzivanje'); // razduzivanje
+    $this->get('/transakcije/reprogrami/karton/{id}', '\App\Controllers\TransakcijeController:getKartonReprogrami')->setName('transakcije.reprogrami'); // reprogram
+    $this->post('/transakcije/uplata', '\App\Controllers\TransakcijeController:postUplata')->setName('transakcije.uplata'); // post razduzivanje
+    $this->post('/transakcije/reprogram', '\App\Controllers\TransakcijeController:postReprogram')->setName('transakcije.reprogram'); // post razduzivanje
     // Racuni
     $this->get('/transakcije/racun/{id}', '\App\Controllers\RacuniController:getRacun')->setName('racun');
     $this->post('/transakcije/racun', '\App\Controllers\RacuniController:postRacun')->setName('racun.post');

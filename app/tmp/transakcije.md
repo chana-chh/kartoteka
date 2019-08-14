@@ -91,3 +91,8 @@ Ako ide samo racun onda mozda moze u zajednicku tabelu sa zaduzenjima,a ako se i
 - gde staviti priznanicu
 - na koji period se isplacuje reprogram (mesecno, kvartalno, godisnje)
 - cenim da nije potrebno ici na stavke racuna. Racun bi trebalo da se placa ceo iznos, a ako i plati neki deo novac ce biti na saldu kartona pa kad doplati dovoljno onda razduziti seo racun
+
+# TODO
+
+- razduzivanje - modal kad je uplata razlicita od iznosa razduzivanja (confirmation)
+- reprogrami kompletna shema rada

@@ -19,13 +19,22 @@ class TransakcijeController extends Controller
         $this->render($response, 'transakcije_pregled.twig', compact('karton'));
     }
 
-    public function getKarton($request, $response, $args)
+    public function getKartonRazduzivanje($request, $response, $args)
     {
         $karton_id = $args['id'];
         $model_karton = new Karton();
         $karton = $model_karton->find($karton_id);
 
         $this->render($response, 'transakcije_razduzivanje.twig', compact('karton'));
+    }
+
+    public function getKartonReprogrami($request, $response, $args)
+    {
+        $karton_id = $args['id'];
+        $model_karton = new Karton();
+        $karton = $model_karton->find($karton_id);
+
+        $this->render($response, 'transakcije_reprogrami.twig', compact('karton'));
     }
 
     public function getZaduzivanjeTakse($request, $response)
@@ -175,6 +184,12 @@ class TransakcijeController extends Controller
     }
 
     public function postUplata($request, $response)
+    {
+        $data = $request->getParams();
+        dd($data);
+    }
+
+    public function postReprogram($request, $response)
     {
         $data = $request->getParams();
         dd($data);
