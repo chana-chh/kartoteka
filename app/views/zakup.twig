@@ -2,14 +2,14 @@
 
 {% block sadrzaj %}
 <h1>
-	Zaduživanje kartona zakupom za jednu godinu (1/10)
-	<small><em class="uk-text-success">[{{ karton.broj() }}]</em></small>
+	Zaduživanje kartona <small><em class="uk-text-success">[{{ karton.broj() }}]</em></small> zakupom
 </h1>
 <hr>
-<form action="{{ path_for('zakup.post') }}" method="POST" class="uk-form-stacked" uk-grid>
+<form action="{{ path_for('zakup.post') }}" method="POST" class="uk-form-stacked">
 	{{ csrf|raw }}
+	<div uk-grid>
 	<input type="hidden" value="{{ karton.id }}" name="karton_id">
-	<div class="uk-width-1-2">
+	<div class="uk-width-3-4">
 		<label for="zakup_id" class="uk-form-label">Dostupni godišnji iznosi zakupa iz cenovnika</label>
 		<div class="uk-form-controls">
 			<select name="zakup_id" id="zakup_id" class="uk-select{{ errors.zakup[0] ? ' uk-form-danger': ''}}"
@@ -31,6 +31,16 @@
 		</div>
 		<small class=" uk-text-danger">{{ errors.datum_zaduzenja[0] ? : '' }}</small>
 	</div>
+	</div>
+	<div uk-grid>
+	<div class="uk-width-3-4">
+		<label for="deset" class="uk-form-label">Vrsta zaduženja</label>
+		<div class="uk-form-controls">
+			<input type="radio" name="deset" value="1" required> Zaduži karton iznosom samo za izabranu godinu<br>
+  			<input type="radio" name="deset" value="10" required> Zaduži karton za period od deset godina počevši od izabrane godine<br>
+		</div>
+		<small class=" uk-text-danger">{{ errors.deset[0] ? : '' }}</small>
+	</div>
 	<div class="uk-width-1-4 uk-flex uk-flex-bottom">
 		<div class="uk-button-group uk-width-1-1">
 			<button class="uk-button uk-button-primary uk-width-1-2">Zaduži</button>
@@ -38,8 +48,9 @@
 				class="uk-button uk-button-secondary uk-width-1-2">Otkaži</a>
 		</div>
 	</div>
+</div>
 </form>
-<small class="uk-text-warning">Biće zadužen deseti deo iznosa sa liste, obzirom da se radi o zaduživanju za samo jednu godinu!</small>
+<small class="uk-text-warning">U slučaju da ste odabrali prvu opciju biće zadužen deseti deo iznosa sa liste, obzirom da se radi o zaduživanju za samo jednu godinu!</small>
 {% endblock sadrzaj %}
 {% block traka %}
 	<div class="uk-background-muted uk-margin-large-top uk-padding-small">

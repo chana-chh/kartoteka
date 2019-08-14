@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\Cena;
 use App\Models\Karton;
 use App\Models\Zaduzenje;
+use DateTime;
 
 class TaksaController extends Controller
 {
@@ -17,6 +18,10 @@ class TaksaController extends Controller
 
         $model_cene = new Cena();
         $takse = $model_cene->all();
+
+        usort($takse, function($a, $b) {
+        return new DateTime($a->datum) <=> new DateTime($b->datum);
+        });
 
         $this->render($response, 'taksa.twig', compact('takse', 'karton'));
     }

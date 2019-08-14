@@ -3,16 +3,20 @@
 namespace App\Controllers;
 
 use App\Models\Cena;
+use DateTime;
 
 class CeneController extends Controller
 {
     public function getCene($request, $response)
     {
         $model = new Cena();
-        $cene = $model->all('datum', 'DESC'); //Ovo ne` da sortira
+        $cene = $model->all();
         $taksa = $model->taksa();
         $zakup = $model->zakup();
 
+        usort($cene, function($a, $b) {
+        return new DateTime($a->datum) <=> new DateTime($b->datum);
+        });
         $this->render($response, 'cene.twig', compact('cene', 'taksa', 'zakup'));
     }
 

@@ -51,29 +51,34 @@ class ZakupController extends Controller
             return $response->withRedirect($this->router->pathFor('transakcije.zaduzivanje.zakup'));
         } else {
 
-        $model_karton = new Karton();
-        $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE godina = :god AND tip = 2;";
-        $broj = $model_karton->fetch($sql, [':god' => $godina])[0]->broj;
-        if ($broj > 0) {
-            $this->flash->addMessage('danger', 'Već postoji zaduženje za odabranu godinu');
-            return $response->withRedirect($this->router->pathFor('taksa', ['id' => $data['karton_id']]));
-        } else {
-            $modelZaduzenja = new Zaduzenje();
-                $karton = $modelZaduzenja->insert(
-                [
-                    'karton_id' => $data['karton_id'],
-                    'tip' => 'zakup',
-                    'godina' => (int) $godina,
-                    'iznos' => (float) $iznos,
-                    'razduzeno' => 0,
-                    'datum_zaduzenja' =>$data['datum_zaduzenja'],
-                    'korisnik_id_zaduzio' => $this->auth->user()->id
-                ]
-                );
-
-            $this->flash->addMessage('success', 'Kartoni je uspešno zadužen odgovarajućim zakupom.');
-            return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $data['karton_id']]));
-        }
+       if($data['deset'] == 1) {
+            $model_karton = new Karton();
+            $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE karton_id = :kar AND godina = :god AND tip = 2;";
+            $broj = $model_karton->fetch($sql, [':god' => $godina, ':kar' => $data['karton_id']])[0]->broj;
+            if ($broj > 0) {
+                $this->flash->addMessage('danger', 'Već postoji zaduženje za odabranu godinu');
+                return $response->withRedirect($this->router->pathFor('zakup', ['id' => $data['karton_id']]));
+            } else {
+                    $modelZaduzenja = new Zaduzenje();
+                    $karton = $modelZaduzenja->insert(
+                    [
+                        'karton_id' => $data['karton_id'],
+                        'tip' => 'zakup',
+                        'godina' => (int) $godina,
+                        'iznos' => (float) $iznos,
+                        'razduzeno' => 0,
+                        'datum_zaduzenja' =>$data['datum_zaduzenja'],
+                        'korisnik_id_zaduzio' => $this->auth->user()->id
+                    ]
+                    );
+    
+                $this->flash->addMessage('success', 'Kartoni je uspešno zadužen odgovarajućim zakupom.');
+                return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $data['karton_id']]));
+            }
+       }else{
+            $this->flash->addMessage('success', 'Nije još gotovo');
+            return $response->withRedirect($this->router->pathFor('zakup', ['id' => $data['karton_id']]));
+       }
     }
     }
 

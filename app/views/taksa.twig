@@ -2,8 +2,7 @@
 
 {% block sadrzaj %}
 <h1>
-	Zaduživanje takse za karton
-	<small><em class="uk-text-success">[{{ karton.broj() }}]</em></small>
+	Zaduživanje kartona <small><em class="uk-text-success">[{{ karton.broj() }}]</em></small> taksom
 </h1>
 <hr>
 <form action="{{ path_for('taksa.post') }}" method="POST" class="uk-form-stacked" uk-grid>
