@@ -1,0 +1,76 @@
+{% extends "templates/app.twig" %}
+
+{% block sadrzaj %}
+<h1>
+	Zaduživanje kartona zakupom za jednu godinu (1/10)
+	<small><em class="uk-text-success">[{{ karton.broj() }}]</em></small>
+</h1>
+<hr>
+<form action="{{ path_for('zakup.post') }}" method="POST" class="uk-form-stacked" uk-grid>
+	{{ csrf|raw }}
+	<input type="hidden" value="{{ karton.id }}" name="karton_id">
+	<div class="uk-width-1-2">
+		<label for="zakup_id" class="uk-form-label">Dostupni godišnji iznosi zakupa iz cenovnika</label>
+		<div class="uk-form-controls">
+			<select name="zakup_id" id="zakup_id" class="uk-select{{ errors.zakup[0] ? ' uk-form-danger': ''}}"
+			 required>
+				{% for zakup in zakupi %}
+				<option value="{{ zakup.id }}"{{ old.zakup == zakup.id ? ' selected' : '' }}>
+					Godina - {{ zakup.datum|date('d.m.Y') }} sa iznosom zaduženja za 10 godina od: {{ zakup.zakup }}
+				</option>
+				{% endfor %}
+			</select>
+		</div>
+		<small class="uk-text-danger">{{ errors.zakup[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-4">
+		<label for="datum_zaduzenja" class="uk-form-label">Datum zaduženja</label>
+		<div class="uk-form-controls">
+			<input type="date" name="datum_zaduzenja" id="datum_zaduzenja" value="{{ old.datum_zaduzenja ? : 'now'|date('Y-m-d') }}" class="uk-input"
+				autocomplete="off" required>
+		</div>
+		<small class=" uk-text-danger">{{ errors.datum_zaduzenja[0] ? : '' }}</small>
+	</div>
+	<div class="uk-width-1-4 uk-flex uk-flex-bottom">
+		<div class="uk-button-group uk-width-1-1">
+			<button class="uk-button uk-button-primary uk-width-1-2">Zaduži</button>
+			<a href="{{ path_for('transakcije.pregled', { id: karton.id }) }}"
+				class="uk-button uk-button-secondary uk-width-1-2">Otkaži</a>
+		</div>
+	</div>
+</form>
+<small class="uk-text-warning">Biće zadužen deseti deo iznosa sa liste, obzirom da se radi o zaduživanju za samo jednu godinu!</small>
+{% endblock sadrzaj %}
+{% block traka %}
+	<div class="uk-background-muted uk-margin-large-top uk-padding-small">
+	<h4>Pregled zakupa trenutno vezanih za karton</h4>
+	        <div class="uk-overflow-auto">
+          <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small" style="font-size: 0.875em;">
+            <thead>
+              <tr>
+                <th class="w-25">Godina</th>
+                <th class="w-25 uk-text-right">Iznos</th>
+                <th class="w-25 uk-text-center">Razduženo</th>
+                <th class="w-25">Reprogram</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for zakup in karton.zakupi() %}
+              <tr>
+                <td>{{ zakup.godina }}</td>
+                <td class="uk-text-right">
+                  {{ zakup.iznos|number_format(2, '.', ',') }}
+                </td>
+                <td class="uk-text-center">{{ zakup.razduzenoDisabled() | raw }}</td>
+                <td class="uk-text-primary">
+                  {% if zakup.reprogram_id %}
+                  <span uk-icon="refresh"></span> reprogram
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+       </div>
+{% endblock traka %}

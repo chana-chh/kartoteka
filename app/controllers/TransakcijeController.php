@@ -31,9 +31,9 @@ class TransakcijeController extends Controller
     public function getZaduzivanjeTakse($request, $response)
     {
         $model_cene = new Cena();
-        $taksa = $model_cene->taksa();
+        $takse = $model_cene->all();
 
-        $this->render($response, 'zaduzivanje_taksi.twig', compact('taksa'));
+        $this->render($response, 'zaduzivanje_taksi.twig', compact('takse'));
     }
 
     public function postZaduzivanjeTakse($request, $response)
@@ -41,16 +41,17 @@ class TransakcijeController extends Controller
         $data = $request->getParams();
         unset($data['csrf_name']);
         unset($data['csrf_value']);
-        $iznos = $data['iznos'];
-        $godina = $data['godina'];
+
+        $model_cene = new Cena();
+        $cena = $model_cene->find($data['taksa_id']);
+
+        $iznos = $cena->taksa;
+        $godina = $cena->godina();
 
         $validation_rules = [
-            'iznos' => [
+            'taksa_id' => [
                 'required' => true,
-            ],
-            'godina' => [
-                'required' => true,
-            ],
+            ]
         ];
 
         $this->validator->validate($data, $validation_rules);
@@ -59,11 +60,11 @@ class TransakcijeController extends Controller
         $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE godina = :god AND tip = 1;";
         $broj = $model_karton->fetch($sql, [':god' => $godina])[0]->broj;
         if ($broj > 0) {
-            $this->flash->addMessage('danger', 'Vec postoji zaduzenje za odabranu godinu');
+            $this->flash->addMessage('danger', 'Vec postoji zaduženje za odabranu godinu');
             return $response->withRedirect($this->router->pathFor('transakcije.zaduzivanje.takse'));
         }
         if ($this->validator->hasErrors()) {
-            $this->flash->addMessage('danger', 'Došlo je do greške prilikom zaduzivanja kartona.');
+            $this->flash->addMessage('danger', 'Došlo je do greške prilikom zaduživanja kartona.');
             return $response->withRedirect($this->router->pathFor('transakcije.zaduzivanje.takse'));
         } else {
             $podaci = [
@@ -88,7 +89,7 @@ class TransakcijeController extends Controller
                 $stmt->execute($podaci);
             }
             $pdo->commit();
-            $this->flash->addMessage('success', 'Svi aktivni kartoni su uspesno zaduzeni.');
+            $this->flash->addMessage('success', 'Svi aktivni kartoni su uspešno zaduženi.');
             return $response->withRedirect($this->router->pathFor('transakcije.zaduzivanje.takse'));
         }
     }
@@ -97,7 +98,7 @@ class TransakcijeController extends Controller
     {
         $model_cene = new Cena();
         $model_kartoni = new Karton();
-        $zakup = $model_cene->zakup();
+        $cene = $model_cene->all();
 
         // pokupiti sve kartone koji nisu zaduzeni za tekucu godinu
         $tekuca_godina = (int) date('Y');
@@ -108,7 +109,7 @@ class TransakcijeController extends Controller
                 ) AND aktivan = 1 ORDER BY kartoni.id;";
         $nezaduzeni_kartoni = $model_kartoni->fetch($sql);
 
-        $this->render($response, 'zaduzivanje_zakupa.twig', compact('zakup', 'nezaduzeni_kartoni'));
+        $this->render($response, 'zaduzivanje_zakupa.twig', compact('cene', 'nezaduzeni_kartoni'));
     }
 
     public function postZaduzivanjeZakup($request, $response)
@@ -116,37 +117,38 @@ class TransakcijeController extends Controller
         $data = $request->getParams();
         unset($data['csrf_name']);
         unset($data['csrf_value']);
-        $iznos = $data['iznos'] / 10;
-        $godina = $data['godina'];
+
+        $model_cene = new Cena();
+        $cena = $model_cene->find($data['zakup_id']);
+
+        $iznos = $cena->zakup / 10;
+        $godina = $cena->godina();
 
         $validation_rules = [
-            'iznos' => [
+           'zakup_id' => [
                 'required' => true,
-            ],
-            'godina' => [
-                'required' => true,
-            ],
+            ]
         ];
 
         $this->validator->validate($data, $validation_rules);
 
         if ($this->validator->hasErrors()) {
-            $this->flash->addMessage('danger', 'Došlo je do greške prilikom zaduzivanja kartona.');
+            $this->flash->addMessage('danger', 'Došlo je do greške prilikom zaduživanja kartona.');
             return $response->withRedirect($this->router->pathFor('transakcije.zaduzivanje.zakup'));
         } else {
             $model_karton = new Karton();
-            $tekuca_godina = (int) date('Y');
+            $pocetna_godina = (int) $godina;
             $sql = "SELECT * FROM kartoni
                 WHERE id NOT IN (
                     SELECT karton_id FROM  zaduzenja
-                    WHERE  tip = 2 AND godina = {$tekuca_godina}
+                    WHERE  tip = 2 AND godina = {$pocetna_godina}
                 ) AND aktivan = 1 ORDER BY kartoni.id;";
             $kartoni = $model_karton->fetch($sql);
             $podaci = [
                 ':karton_id' => 0,
                 ':tip' => 'zakup',
                 ':iznos' => (float) $iznos,
-                ':godina' => (int) $tekuca_godina,
+                ':godina' => (int) $pocetna_godina,
                 ':razduzeno' => 0,
                 ':datum_zaduzenja' => date('Y-m-d'),
                 ':korisnik_id_zaduzio' => $this->auth->user()->id,
@@ -159,7 +161,7 @@ class TransakcijeController extends Controller
             $pdo->beginTransaction();
 
             for ($i = 0; $i < 10; $i++) {
-                $podaci[':godina'] = $tekuca_godina + $i;
+                $podaci[':godina'] = $pocetna_godina + $i;
                 foreach ($kartoni as $karton) {
                     $podaci[':karton_id'] = $karton->id;
                     $stmt->execute($podaci);
@@ -167,7 +169,7 @@ class TransakcijeController extends Controller
             }
 
             $pdo->commit();
-            $this->flash->addMessage('success', 'Svi aktivni kartoni su uspesno zaduzeni.');
+            $this->flash->addMessage('success', 'Svi aktivni kartoni su uspešno zaduženi.');
             return $response->withRedirect($this->router->pathFor('transakcije.zaduzivanje.zakup'));
         }
     }
