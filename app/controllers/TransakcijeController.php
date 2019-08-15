@@ -6,6 +6,7 @@ use App\Models\Cena;
 use App\Models\Karton;
 use App\Models\Zaduzenje;
 use App\Models\Racun;
+use App\Models\Reprogram;
 
 class TransakcijeController extends Controller
 {
@@ -29,7 +30,7 @@ class TransakcijeController extends Controller
         $cena_takse = $model_cene->taksa();
         $cena_zakupa = $model_cene->zakup() / 10;
 
-        $this->render($response, 'transakcije_razduzivanje.twig', compact('karton','cena_takse','cena_zakupa'));
+        $this->render($response, 'transakcije_razduzivanje.twig', compact('karton', 'cena_takse', 'cena_zakupa'));
     }
 
     public function getKartonReprogrami($request, $response, $args)
@@ -39,6 +40,24 @@ class TransakcijeController extends Controller
         $karton = $model_karton->find($karton_id);
 
         $this->render($response, 'transakcije_reprogrami.twig', compact('karton'));
+    }
+
+    public function getReprogramDodavanje($request, $response, $args)
+    {
+        $karton_id = $args['id'];
+        $model_karton = new Karton();
+        $karton = $model_karton->find($karton_id);
+
+        $this->render($response, 'reprogram_dodavanje.twig', compact('karton'));
+    }
+
+    public function getReprogramIzmena($request, $response, $args)
+    {
+        $reprogram_id = $args['id'];
+        $model_reprogram = new Reprogram();
+        $reprogram = $model_reprogram->find($reprogram_id);
+
+        $this->render($response, 'reprogram_izmena.twig', compact('reprogram'));
     }
 
     public function getZaduzivanjeTakse($request, $response)
@@ -138,7 +157,7 @@ class TransakcijeController extends Controller
         $godina = $cena->godina();
 
         $validation_rules = [
-           'zakup_id' => [
+            'zakup_id' => [
                 'required' => true,
             ]
         ];
@@ -193,7 +212,13 @@ class TransakcijeController extends Controller
         dd($data);
     }
 
-    public function postReprogram($request, $response)
+    public function postReprogramDodavanje($request, $response)
+    {
+        $data = $request->getParams();
+        dd($data);
+    }
+
+    public function postReprogramIzmena($request, $response)
     {
         $data = $request->getParams();
         dd($data);
@@ -201,8 +226,8 @@ class TransakcijeController extends Controller
 
     public function postZaduzenjeBrisanje($request, $response)
     {
-        $id = (int)$request->getParam('modal_zaduzenje_id');
-        $karton_id = (int)$request->getParam('karton_id');
+        $id = (int) $request->getParam('modal_zaduzenje_id');
+        $karton_id = (int) $request->getParam('karton_id');
         $modelZaduzenja = new Zaduzenje();
         $success = $modelZaduzenja->deleteOne($id);
         if ($success) {

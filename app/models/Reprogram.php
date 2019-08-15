@@ -9,6 +9,11 @@ class Reprogram extends Model
 {
 	protected $table = 'reprogrami';
 
+	public function karton()
+	{
+		return $this->belongsTo('App\Models\Karton', 'karton_id');
+	}
+
 	public function zaduzenja()
 	{
 		return $this->hasMany('App\Models\Zaduzenje', 'reprogram_id');

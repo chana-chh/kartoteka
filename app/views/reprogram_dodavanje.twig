@@ -1,0 +1,346 @@
+{% extends "templates/app.twig" %} {% block sadrzaj %}
+<h1 class="uk-text-danger">
+  Dodavanje reprograma za karton
+  <small><em class="uk-text-primary">[{{ karton.broj() }}]</em></small>
+</h1>
+<div class="uk-panel uk-background-muted uk-padding-small">
+  <div class="uk-clearfix">
+    <div class="uk-float-left">
+      <div class="uk-button-group">
+        <button onclick="window.history.back();" class="uk-button uk-button-primary uk-button-small">
+          <span uk-icon="chevron-left"></span> Nazad
+        </button>
+        <a href="{{ path_for('kartoni.pregled', { id: karton.id }) }}"
+          class="uk-button uk-button-primary uk-button-small">
+          <span uk-icon="chevron-double-left"></span> Otvori karton
+        </a>
+      </div>
+    </div>
+    <div class="uk-float-right">
+      <div class="uk-button-group">
+        <a href="{{ path_for('transakcije.pregled', { id: karton.id }) }}"
+          class="uk-button uk-button-secondary uk-button-small">
+          <span uk-icon="list"></span> Pregled zaduženja
+        </a>
+        <a href="{{ path_for('transakcije.reprogrami', { id: karton.id }) }}"
+          class="uk-button uk-button-danger uk-button-small">
+          <span uk-icon="refresh"></span> Reprogrami
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form action="{{ path_for('transakcije.uplata') }}" method="POST" id="foram_uplata" class="uk-form-stacked" uk-grid>
+  {{ csrf | raw }}
+  <input type="hidden" value="{{ karton.id }}">
+  <div class="uk-width-1-5">
+    <label for="uplata_iznos" class="uk-form-label">Iznos</label>
+    <div class="uk-form-controls">
+      <input type="number" name="uplata_iznos" id="uplata_iznos" value="0" min="0" step="0.01"
+        class="uk-input uk-text-right" autocomplete="off" required>
+    </div>
+    <small class="uk-text-danger">{{ errors.uplata_iznos[0] ? :'' }}</small>
+  </div>
+  <div class="uk-width-1-5">
+    <label for="uplata_datum" class="uk-form-label">Datum</label>
+    <div class="uk-form-controls">
+      <input type="date" name="uplata_datum" id="uplata_datum" value="{{ 'now'|date('Y-m-d') }}" class="uk-input"
+        autocomplete="off" required>
+    </div>
+    <small class=" uk-text-danger">{{ errors.uplata_datum[0] ? : '' }}</small>
+  </div>
+  <div class="uk-button-group uk-width-3-5 uk-flex uk-flex-bottom">
+    <a href="#modal-uplata" onclick="uporediPolja();" uk-toggle class="uk-button uk-button-primary uk-button-small uk-width-2-3">Snimi uplatu i razduži odabrane stavke</a>
+   {#  <input type="submit" value="Snimi uplatu i razduzi odabrane stavke"
+      class="uk-button uk-button-primary uk-button-small uk-width-2-3"> #}
+    <input type="reset" value="Otkaži" class="uk-button uk-button-secondary uk-button-small uk-width-1-3">
+  </div>
+  <div class="uk-width-1-1">
+    <ul uk-accordion="multiple: true">
+      <li>
+        <a class="uk-accordion-title" href="#">
+          <h2>
+            Takse <em class="uk-text-danger">[{{ karton.nerazduzeneTakse()|length }}]</em>
+          </h2>
+        </a>
+        <div class="uk-accordion-content">
+          <hr>
+          <div class="uk-overflow-auto">
+            <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+              <thead>
+                <tr>
+                  <th class="w-50">Godina</th>
+                  <th class="w-25 uk-text-right">Iznos</th>
+                  <th class="w-25 uk-text-center">Razduzeno</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for taksa in karton.nerazduzeneTakse() %}
+                <tr>
+                  <td>{{ taksa.godina }}</td>
+                  <td class="uk-text-right">
+                    {{ taksa.iznos|number_format(2, '.', ',') }}
+                  </td>
+                  <td class="uk-text-center">{{ taksa.razduzeno() | raw }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </li>
+      <li>
+        <a class="uk-accordion-title" href="#">
+          <h2>
+            Zakup
+            <em class="uk-text-danger">[{{ karton.nerazduzeniZakupi()|length }}]</em>
+          </h2>
+        </a>
+        <div class="uk-accordion-content">
+          <hr>
+          <div class="uk-overflow-auto">
+            <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+              <thead>
+                <tr>
+                  <th class="w-50">Godina</th>
+                  <th class="w-25 uk-text-right">Iznos</th>
+                  <th class="w-25 uk-text-center">Razduzeno</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for zakup in karton.nerazduzeniZakupi() %}
+                <tr>
+                  <td>{{ zakup.godina }}</td>
+                  <td class="uk-text-right">
+                    {{ zakup.iznos|number_format(2, '.', ',') }}
+                  </td>
+                  <td class="uk-text-center">{{ zakup.razduzeno() | raw }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </li>
+      <li>
+        <a class="uk-accordion-title" href="#">
+          <h2>
+            Računi
+            <em class="uk-text-danger">[{{ karton.nerazduzeniRacuni()|length }}]</em>
+          </h2>
+        </a>
+        <div class="uk-accordion-content">
+          <hr>
+          <div class="uk-overflow-auto">
+            <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+              <thead>
+                <tr>
+                  <th class="w-25">Broj</th>
+                  <th class="w-25">Datum</th>
+                  <th class="w-25 uk-text-right">Iznos</th>
+                  <th class="w-25 uk-text-center">Razduzeno</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for rn in karton.nerazduzeniRacuni() %}
+                <tr>
+                  <td>{{ rn.broj }}</td>
+                  <td>{{ rn.datum() }}</td>
+                  <td class="uk-text-right">
+                    {{ rn.iznos|number_format(2, '.', ',') }}
+                  </td>
+                  <td class="uk-text-center">{{ rn.razduzeno() | raw }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </li>
+      <li>
+        <a class="uk-accordion-title" href="#">
+          <h2>
+            Reprogrami
+            <em class="uk-text-danger">[{{ karton.nerazduzeniReprogrami()|length }}]</em>
+          </h2>
+        </a>
+        <div class="uk-accordion-content">
+          <hr>
+          <div class="uk-overflow-auto">
+            <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+              <thead>
+                <tr>
+                  <th class="w-15">Broj</th>
+                  <th class="w-10 uk-text-right">Datum</th>
+                  <th class="w-15 uk-text-right">Peroid</th>
+                  <th class="w-15 uk-text-right">Preostalo rata</th>
+                  <th class="w-20 uk-text-right">Iznos</th>
+                  <th class="w-25 uk-text-center">Razduzeno</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for rep in karton.nerazduzeniReprogrami() %}
+                <tr>
+                  <td>{{ rep.broj }}</td>
+                  <td class="uk-text-right">{{ rep.datum() }}</td>
+                  <td class="uk-text-right">
+                    {{ rep.period }}
+                  </td>
+                  <td class="uk-text-right">
+                    {{ rep.preostalo_rata }}
+                  </td>
+                  <td class="uk-text-right">
+                    {{ rep.iznos|number_format(2, '.', ',') }}
+                  </td>
+                  <td class="uk-text-center">{{ rep.razduzeno() | raw }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</form>
+{% endblock sadrzaj %} {% block traka %}
+<div uk-grid>
+  <div class="uk-width-1-2">
+    <h2 class="uk-text-right">Saldo kartona</h2>
+    <div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
+      <h1 class="uk-text-success" id="saldo">
+        {{ karton.saldo | number_format(2, '.', ',') }}
+      </h1>
+    </div>
+  </div>
+  <div class="uk-width-1-2">
+    <h2 class="uk-text-right">Ukupan dug</h2>
+    <div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
+      <h1 class="uk-text-danger" id="ukupan-dug">
+        {% set dug = karton.dugZaTakse() + karton.dugZaZakupe() + karton.dugZaRacune() + karton.dugZaReprograme() %}
+        {{ dug | number_format(2, '.', ',') }}
+      </h1>
+    </div>
+  </div>
+</div>
+
+<h2 class="uk-text-right">Iznos razduženja</h2>
+<div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
+  <h1 class="uk-text-primary" id="razduzenje">
+    {{ (0) | number_format(2, '.', ',') }}
+  </h1>
+</div>
+
+<hr>
+
+<h2>Uputstvo</h2>
+<p>
+  Odabrati (čekirati) zaduženja koja ce se razdužiti. Ukupan iznos odabranih
+  razduženja ce se pojaviti u polju "Iznos razduženja". Uneti iznos i datum
+  uplate. Kliknuti na dugme "Snimi uplatu i razduži odabrane stavke".
+</p>
+<p>
+  Izabrane stavke ce biti razdužene, a uplata snimljena.
+</p>
+<div id="modal-uplata" uk-modal>
+  <div class="uk-modal-dialog">
+    <button class="uk-modal-close-default" type="button" uk-close></button>
+    <div class="uk-modal-header">
+      <h2 class="uk-modal-title uk-text-danger">Potvrda uplate i razduženja</h2>
+    </div>
+    <div class="uk-modal-body">
+      <p id="poruka">Poruka</p>
+    </div>
+    <div class="uk-modal-footer uk-text-right">
+      <div class="uk-button-group">
+        <button class="uk-button uk-button-primary" type="button" id="prosledi_formu">Potvrdi</button>
+        <button class="uk-button uk-button-secondary uk-modal-close" type="button">Otkaži</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock traka %}
+{% block skripta %}
+<script>
+  var taksa = Number("{{ cena_takse }}");
+  var zakup = Number("{{ cena_zakupa }}");
+  console.log(taksa);
+  var razduzenje = document.getElementById("razduzenje");
+  var chk_zaduzenja = document.getElementsByClassName("razduzeno-zaduzenja");
+  var chk_racuni = document.getElementsByClassName("razduzeno-racuni");
+  var chk_reprogrami = document.getElementsByClassName("razduzeno-reprogrami");
+  var forma = document.getElementById("foram_uplata");
+  var poruka = document.getElementById("poruka");
+
+  document.getElementById("prosledi_formu").addEventListener("click", function () {
+    document.getElementById("foram_uplata").submit();
+  });
+
+  for (i = 0; i < chk_zaduzenja.length; i++) {
+    chk_zaduzenja[i].addEventListener(
+      "click",
+      function () {
+        var razd = Number(razduzenje.textContent);
+        var tip = this.getAttribute("data-tip");
+        if (this.checked) {
+          if (tip === "taksa") {
+            razduzenje.textContent = (razd + taksa).toFixed(2);
+          } else {
+            razduzenje.textContent = (razd + zakup).toFixed(2);
+          }
+        } else {
+          if (tip === "taksa") {
+            razduzenje.textContent = (razd - taksa).toFixed(2);
+          } else {
+            razduzenje.textContent = (razd - zakup).toFixed(2);
+          }
+        }
+      },
+      false
+    );
+  }
+
+  for (i = 0; i < chk_racuni.length; i++) {
+    chk_racuni[i].addEventListener(
+      "click",
+      function () {
+        var razd = Number(razduzenje.textContent);
+        var iznos = Number(this.getAttribute("data-iznos"));
+        if (this.checked) {
+          razduzenje.textContent = (razd + iznos).toFixed(2);
+        } else {
+          razduzenje.textContent = (razd - iznos).toFixed(2);
+        }
+      },
+      false
+    );
+  }
+
+  for (i = 0; i < chk_reprogrami.length; i++) {
+    chk_reprogrami[i].addEventListener("click", function () {
+        var
+          razd = Number(razduzenje.textContent);
+        var iznos = Number(this.getAttribute("data-iznos"));
+        if (this.checked) {
+          razduzenje.textContent = (razd + iznos).toFixed(2);
+        } else {
+          razduzenje.textContent = (razd - iznos).toFixed(2);
+        }
+      },
+      false);
+  }
+
+  function uporediPolja(){
+    var polje_uplata = document.getElementById("uplata_iznos").value;
+    var polje_razduzenje = document.getElementById("razduzenje").textContent;
+    if (parseFloat(polje_uplata) === parseFloat(polje_razduzenje)){
+      poruka.innerHTML = "Uplata tačno pokriva iznos predviđen za razduženje.";
+    }else if(parseFloat(polje_uplata) > parseFloat(polje_razduzenje)){
+      poruka.innerHTML = "Uplata je veća nego iznos za razduženje.";
+    }else{
+      poruka.innerHTML = "Uplata nije dovoljna da pokrije iznos za razduženje.";
+    };
+  }
+</script>
+{% endblock skripta %}

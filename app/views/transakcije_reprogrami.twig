@@ -10,17 +10,20 @@
         <button onclick="window.history.back();" class="uk-button uk-button-primary uk-button-small">
           <span uk-icon="chevron-left"></span> Nazad
         </button>
-        <a href="{{ path_for('kartoni.pregled', { id: karton.id }) }}" class="uk-button uk-button-primary uk-button-small">
+        <a href="{{ path_for('kartoni.pregled', { id: karton.id }) }}"
+          class="uk-button uk-button-primary uk-button-small">
           <span uk-icon="chevron-double-left"></span> Otvori karton
         </a>
       </div>
     </div>
     <div class="uk-float-right">
       <div class="uk-button-group">
-        <a href="{{ path_for('transakcije.pregled', { id: karton.id }) }}" class="uk-button uk-button-secondary uk-button-small">
+        <a href="{{ path_for('transakcije.pregled', { id: karton.id }) }}"
+          class="uk-button uk-button-secondary uk-button-small">
           <span uk-icon="list"></span> Pregled zaduzenja
         </a>
-        <a href="" class="uk-button uk-button-primary uk-button-small">
+        <a href="{{ path_for('transakcije.reprogram.dodavanje', { id: karton.id }) }}"
+          class="uk-button uk-button-primary uk-button-small">
           <span uk-icon="plus"></span> Dodavanje reprograma
         </a>
       </div>
@@ -36,22 +39,25 @@
       <span uk-icon="icon: info; ratio: 1.5"></span>
     </button>
     <div uk-dropdown="mode: click" class="uk-text-large">
-      Broj rata {{ rep.period }}, preostalo za uplatu {{ rep.preostalo_rata }} rata).<br>
-      Razduzen: <span class="{{ rep.razduzeno == 0 ? 'uk-text-danger' : 'uk-text-success' }}">{{ rep.razduzeno == 0 ? 'NE' : 'DA' }}</span>.
+      Broj rata {{ rep.period }}, preostalo za uplatu {{ rep.preostalo_rata }} rata.<br>
+      Razduzen: <span
+        class="{{ rep.razduzeno == 0 ? 'uk-text-danger' : 'uk-text-success' }}">{{ rep.razduzeno == 0 ? 'NE' : 'DA' }}</span>.
       {{ rep.datum_razduzenja ? 'Dana ' ~ rep.datum_razduzenja() ~ '. godine' : '' }}<br>
       {{ rep.razduzenja|nl2br }}<br>
       Napomene: {{ rep.napomena|nl2br }}
     </div>
-    <button class="uk-button uk-button-default uk-text-large uk-padding-small uk-width-4-6">
-      Reprogram broj: {{ rep.broj }} do {{ rep.datum() }}. godine. Iznos: {{ rep.iznos|number_format(2, '.', ',') }} dinara.
-    </button>
-    <button class="uk-button uk-button-primary uk-text-large uk-padding-small uk-width-1-6">
+    <div class="uk-button-secondary uk-text-large uk-text-center uk-padding-small uk-width-4-6">
+      Reprogram broj:
+      <span class="uk-text-success">
+        <strong>{{ rep.broj }}</strong>
+      </span>
+      od {{ rep.datum() }}. godine. Iznos: {{ rep.iznos|number_format(2, '.', ',') }} dinara.
+    </div>
+    <a href="{{ path_for('transakcije.reprogram.izmena', { id: rep.id }) }}"
+      class="uk-button uk-button-primary uk-text-large uk-padding-small uk-width-1-6">
       <span uk-icon="icon: pencil; ratio: 1.5"></span>
-    </button>
+    </a>
   </div>
-
-
-
   <div class="uk-margin-large-left">
     <h4>Takse</h4>
     <div class="uk-overflow-auto">
