@@ -1,6 +1,6 @@
 {% extends "templates/app.twig" %} {% block sadrzaj %}
 <h1 class="uk-text-danger">
-  Razduzivanje za karton
+  Razduživanje za karton
   <small><em class="uk-text-primary">[{{ karton.broj() }}]</em></small>
 </h1>
 <div class="uk-panel uk-background-muted uk-padding-small">
@@ -20,7 +20,7 @@
       <div class="uk-button-group">
         <a href="{{ path_for('transakcije.pregled', { id: karton.id }) }}"
           class="uk-button uk-button-secondary uk-button-small">
-          <span uk-icon="list"></span> Pregled zaduzenja
+          <span uk-icon="list"></span> Pregled zaduženja
         </a>
         <a href="{{ path_for('transakcije.reprogrami', { id: karton.id }) }}"
           class="uk-button uk-button-danger uk-button-small">
@@ -31,7 +31,7 @@
   </div>
 </div>
 
-<form action="{{ path_for('transakcije.uplata') }}" method="POST" class="uk-form-stacked" uk-grid>
+<form action="{{ path_for('transakcije.uplata') }}" method="POST" id="foram_uplata" class="uk-form-stacked" uk-grid>
   {{ csrf | raw }}
   <input type="hidden" value="{{ karton.id }}">
   <div class="uk-width-1-5">
@@ -51,8 +51,9 @@
     <small class=" uk-text-danger">{{ errors.uplata_datum[0] ? : '' }}</small>
   </div>
   <div class="uk-button-group uk-width-3-5 uk-flex uk-flex-bottom">
-    <input type="submit" value="Snimi uplatu i razduzi odabrane stavke"
-      class="uk-button uk-button-primary uk-button-small uk-width-2-3">
+    <a href="#modal-uplata" onclick="uporediPolja();" uk-toggle class="uk-button uk-button-primary uk-button-small uk-width-2-3">Snimi uplatu i razduži odabrane stavke</a>
+   {#  <input type="submit" value="Snimi uplatu i razduzi odabrane stavke"
+      class="uk-button uk-button-primary uk-button-small uk-width-2-3"> #}
     <input type="reset" value="Otkaži" class="uk-button uk-button-secondary uk-button-small uk-width-1-3">
   </div>
   <div class="uk-width-1-1">
@@ -235,14 +236,32 @@
 
 <h2>Uputstvo</h2>
 <p>
-  Odabrati (cekirati) zaduzenja koja ce se razduziti. Ukupan iznos odabranih
-  razduzenja ce se pojaviti u polju "Iznos razduzenja". Uneti iznos i datum
-  uplate. Kliknuti na dugme "Snimi uplatu i razduzi odabrane stavke".
+  Odabrati (čekirati) zaduženja koja ce se razdužiti. Ukupan iznos odabranih
+  razduženja ce se pojaviti u polju "Iznos razduženja". Uneti iznos i datum
+  uplate. Kliknuti na dugme "Snimi uplatu i razduži odabrane stavke".
 </p>
 <p>
-  Izabrane stavke ce biti razduzene, a uplata snimljena.
+  Izabrane stavke ce biti razdužene, a uplata snimljena.
 </p>
-{% endblock traka %} {% block skripta %}
+<div id="modal-uplata" uk-modal>
+  <div class="uk-modal-dialog">
+    <button class="uk-modal-close-default" type="button" uk-close></button>
+    <div class="uk-modal-header">
+      <h2 class="uk-modal-title uk-text-danger">Potvrda uplate i razduženja</h2>
+    </div>
+    <div class="uk-modal-body">
+      <p id="poruka">Poruka</p>
+    </div>
+    <div class="uk-modal-footer uk-text-right">
+      <div class="uk-button-group">
+        <button class="uk-button uk-button-primary" type="button" id="prosledi_formu">Potvrdi</button>
+        <button class="uk-button uk-button-secondary uk-modal-close" type="button">Otkaži</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock traka %} 
+{% block skripta %}
 <script>
   var taksa = Number("{{ cena_takse }}");
   var zakup = Number("{{ cena_zakupa }}");
@@ -251,6 +270,12 @@
   var chk_zaduzenja = document.getElementsByClassName("razduzeno-zaduzenja");
   var chk_racuni = document.getElementsByClassName("razduzeno-racuni");
   var chk_reprogrami = document.getElementsByClassName("razduzeno-reprogrami");
+  var forma = document.getElementById("foram_uplata");
+  var poruka = document.getElementById("poruka");
+
+  document.getElementById("prosledi_formu").addEventListener("click", function () {
+    document.getElementById("foram_uplata").submit();
+  });
 
   for (i = 0; i < chk_zaduzenja.length; i++) {
     chk_zaduzenja[i].addEventListener(
@@ -304,6 +329,18 @@
         }
       },
       false);
+  }
+
+  function uporediPolja(){
+    var polje_uplata = document.getElementById("uplata_iznos").value;
+    var polje_razduzenje = document.getElementById("razduzenje").textContent;
+    if (parseFloat(polje_uplata) === parseFloat(polje_razduzenje)){
+      poruka.innerHTML = "Uplata tačno pokriva iznos predviđen za razduženje.";
+    }else if(parseFloat(polje_uplata) > parseFloat(polje_razduzenje)){
+      poruka.innerHTML = "Uplata je veća nego iznos za razduženje.";
+    }else{
+      poruka.innerHTML = "Uplata nije dovoljna da pokrije iznos za razduženje.";
+    };
   }
 </script>
 {% endblock skripta %}
