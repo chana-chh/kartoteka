@@ -56,7 +56,7 @@
     <input type="reset" value="Otkaži" class="uk-button uk-button-secondary uk-button-small uk-width-1-3">
   </div>
   <div class="uk-width-1-1">
-    <ul uk-accordion>
+    <ul uk-accordion="multiple: true">
       <li>
         <a class="uk-accordion-title" href="#">
           <h2>
@@ -172,9 +172,9 @@
                 <tr>
                   <th class="w-15">Broj</th>
                   <th class="w-10 uk-text-right">Datum</th>
-                  <th class="w-20 uk-text-right">Iznos</th>
                   <th class="w-15 uk-text-right">Peroid</th>
                   <th class="w-15 uk-text-right">Preostalo rata</th>
+                  <th class="w-20 uk-text-right">Iznos</th>
                   <th class="w-25 uk-text-center">Razduzeno</th>
                 </tr>
               </thead>
@@ -184,13 +184,13 @@
                   <td>{{ rep.broj }}</td>
                   <td class="uk-text-right">{{ rep.datum() }}</td>
                   <td class="uk-text-right">
-                    {{ rep.iznos|number_format(2, '.', ',') }}
-                  </td>
-                  <td class="uk-text-right">
                     {{ rep.period }}
                   </td>
                   <td class="uk-text-right">
                     {{ rep.preostalo_rata }}
+                  </td>
+                  <td class="uk-text-right">
+                    {{ rep.iznos|number_format(2, '.', ',') }}
                   </td>
                   <td class="uk-text-center">{{ rep.razduzeno() | raw }}</td>
                 </tr>
@@ -246,6 +246,7 @@
 <script>
   var taksa = Number("{{ cena_takse }}");
   var zakup = Number("{{ cena_zakupa }}");
+  console.log(taksa);
   var razduzenje = document.getElementById("razduzenje");
   var chk_zaduzenja = document.getElementsByClassName("razduzeno-zaduzenja");
   var chk_racuni = document.getElementsByClassName("razduzeno-racuni");

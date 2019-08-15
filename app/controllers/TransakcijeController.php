@@ -25,7 +25,11 @@ class TransakcijeController extends Controller
         $model_karton = new Karton();
         $karton = $model_karton->find($karton_id);
 
-        $this->render($response, 'transakcije_razduzivanje.twig', compact('karton'));
+        $model_cene = new Cena();
+        $cena_takse = $model_cene->taksa();
+        $cena_zakupa = $model_cene->zakup() / 10;
+
+        $this->render($response, 'transakcije_razduzivanje.twig', compact('karton','cena_takse','cena_zakupa'));
     }
 
     public function getKartonReprogrami($request, $response, $args)
