@@ -16,14 +16,14 @@ class Reprogram extends Model
 
 	public function zakupi()
 	{
-		$sql = "SELECT * FROM zadizenja WHERE reprogram_id = {$this->id} AND tip = 'zakup';";
-		return $this->fetch($sql);
+		$sql = "SELECT * FROM zaduzenja WHERE reprogram_id = {$this->id} AND tip = 'zakup';";
+		return $this->fetch($sql, null, 'App\Models\Zaduzenje');
 	}
 
 	public function takse()
 	{
-		$sql = "SELECT * FROM zadizenja WHERE reprogram_id = {$this->id} AND tip = 'taksa';";
-		return $this->fetch($sql);
+		$sql = "SELECT * FROM zaduzenja WHERE reprogram_id = {$this->id} AND tip = 'taksa';";
+		return $this->fetch($sql, null, 'App\Models\Zaduzenje');
 	}
 
 	public function racuni()
@@ -53,6 +53,15 @@ class Reprogram extends Model
 	public function datum()
 	{
 		if ($this->datum === null) {
+			return "";
+		} else {
+			return DateTime::createFromFormat('Y-m-d', $this->datum)->format('d.m.Y');
+		}
+	}
+
+	public function datum_razduzenja()
+	{
+		if ($this->datum_razduzenja === null) {
 			return "";
 		} else {
 			return DateTime::createFromFormat('Y-m-d', $this->datum)->format('d.m.Y');

@@ -1,1 +1,16 @@
 # ERRORS
+[15-Aug-2019 11:15:04 Europe/Belgrade] PHP Notice:  Undefined offset: 0 in C:\xampp\htdocs\kartoteka\app\classes\Model.php on line 419
+[15-Aug-2019 11:15:04 Europe/Belgrade] PHP Notice:  Undefined offset: 0 in C:\xampp\htdocs\kartoteka\app\classes\Model.php on line 419
+[15-Aug-2019 11:15:29 Europe/Belgrade] PHP Notice:  Undefined offset: 0 in C:\xampp\htdocs\kartoteka\app\classes\Model.php on line 419
+[15-Aug-2019 11:15:29 Europe/Belgrade] PHP Notice:  Undefined offset: 0 in C:\xampp\htdocs\kartoteka\app\classes\Model.php on line 419
+[15-Aug-2019 11:16:40 Europe/Belgrade] PHP Notice:  Undefined offset: 0 in C:\xampp\htdocs\kartoteka\app\classes\Model.php on line 419
+[15-Aug-2019 11:16:40 Europe/Belgrade] PHP Notice:  Undefined offset: 0 in C:\xampp\htdocs\kartoteka\app\classes\Model.php on line 419
+[15-Aug-2019 11:18:01 Europe/Belgrade] PHP Notice:  Undefined offset: 0 in C:\xampp\htdocs\kartoteka\app\classes\Model.php on line 419
+[15-Aug-2019 11:18:01 Europe/Belgrade] PHP Notice:  Undefined offset: 0 in C:\xampp\htdocs\kartoteka\app\classes\Model.php on line 419
+[15-Aug-2019 11:18:12 Europe/Belgrade] PHP Notice:  Undefined offset: 0 in C:\xampp\htdocs\kartoteka\app\classes\Model.php on line 419
+[15-Aug-2019 11:18:12 Europe/Belgrade] PHP Notice:  Undefined offset: 0 in C:\xampp\htdocs\kartoteka\app\classes\Model.php on line 419
+[15-Aug-2019 11:36:11 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Reprogram::$period in C:\xampp\htdocs\kartoteka\app\models\Reprogram.php on line 36
+[15-Aug-2019 11:36:11 Europe/Belgrade] PHP Warning:  Division by zero in C:\xampp\htdocs\kartoteka\app\models\Reprogram.php on line 36
+[15-Aug-2019 11:36:11 Europe/Belgrade] PHP Notice:  Undefined property: App\Models\Reprogram::$preostalo_rata in C:\xampp\htdocs\kartoteka\app\models\Reprogram.php on line 36
+[15-Aug-2019 11:57:59 Europe/Belgrade] PHP Warning:  A non-numeric value encountered in C:\xampp\htdocs\kartoteka\vendor\twig\twig\lib\Twig\Environment.php(378) : eval()'d code on line 98
+[15-Aug-2019 11:57:59 Europe/Belgrade] PHP Notice:  A non well formed numeric value encountered in C:\xampp\htdocs\kartoteka\vendor\twig\twig\lib\Twig\Environment.php(378) : eval()'d code on line 98
