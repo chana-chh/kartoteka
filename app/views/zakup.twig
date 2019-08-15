@@ -14,7 +14,7 @@
 		<div class="uk-form-controls">
 			<select name="zakup_id" id="zakup_id" class="uk-select{{ errors.zakup[0] ? ' uk-form-danger': ''}}"
 			 required>
-				{% for zakup in zakupi %}
+				{% for zakup in cene %}
 				<option value="{{ zakup.id }}"{{ old.zakup == zakup.id ? ' selected' : '' }}>
 					Godina - {{ zakup.datum|date('d.m.Y') }} sa iznosom zaduženja za 10 godina od: {{ zakup.zakup }}
 				</option>
@@ -66,7 +66,7 @@
               </tr>
             </thead>
             <tbody>
-              {% for zakup in karton.zakupi() %}
+              {% for zakup in zakupi %}
               <tr>
                 <td>{{ zakup.godina }}</td>
                 <td class="uk-text-right">

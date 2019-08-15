@@ -1,7 +1,7 @@
 {% extends "templates/app.twig" %}
 {% block sadrzaj %}
 <h1 class="uk-text-danger">
-  Pregled zaduzenja za karton
+  Pregled zaduženja za karton
   <small><em class="uk-text-primary">[{{ karton.broj() }}]</em></small>
 </h1>
 <div class="uk-panel uk-background-muted uk-padding-small">
@@ -56,8 +56,9 @@
               <tr>
                 <th class="w-25">Godina</th>
                 <th class="w-25 uk-text-right">Iznos</th>
-                <th class="w-25 uk-text-center">Razduzeno</th>
-                <th class="w-25">Reprogram</th>
+                <th class="w-20 uk-text-center">Razduženo</th>
+                <th class="w-20">Reprogram</th>
+                <th class="w-10 uk-text-right"><span uk-icon="cog"></span></th>
               </tr>
             </thead>
             <tbody>
@@ -82,6 +83,11 @@
                   <span uk-icon="refresh"></span> {{ taksa.reprogram().broj }}
                   {% endif %}
                 </td>
+                <td class="uk-text-right">
+                  <a title="Brisanje" href="#modal-brisanje" data-id="{{ taksa.id }}" onclick="setZaduzenjeId(this);" uk-toggle>
+                  <span uk-icon="trash"></span>
+                  </a>
+                </td>
               </tr>
               {% endfor %}
             </tbody>
@@ -105,8 +111,9 @@
               <tr>
                 <th class="w-25">Godina</th>
                 <th class="w-25 uk-text-right">Iznos</th>
-                <th class="w-25 uk-text-center">Razduzeno</th>
-                <th class="w-25">Reprogram</th>
+                <th class="w-20 uk-text-center">Razduženo</th>
+                <th class="w-20">Reprogram</th>
+                <th class="w-10 uk-text-right"><span uk-icon="cog"></span></th>
               </tr>
             </thead>
             <tbody>
@@ -130,6 +137,11 @@
                   {% if zakup.reprogram_id %}
                   <span uk-icon="refresh"></span> {{ zakup.reprogram().broj }}
                   {% endif %}
+                </td>
+                <td class="uk-text-right">
+                  <a title="Brisanje" href="#modal-brisanje" data-id="{{ zakup.id }}" onclick="setZaduzenjeId(this);" uk-toggle>
+                  <span uk-icon="trash"></span>
+                  </a>
                 </td>
               </tr>
               {% endfor %}
@@ -155,7 +167,7 @@
                 <th class="w-20">Broj</th>
                 <th class="w-20">Datum</th>
                 <th class="w-20 uk-text-right">Iznos</th>
-                <th class="w-20 uk-text-center">Razduzeno</th>
+                <th class="w-20 uk-text-center">Razduženo</th>
                 <th class="w-20">Reprogram</th>
               </tr>
             </thead>
@@ -208,7 +220,7 @@
                 <th class="w-15 uk-text-right">Iznos</th>
                 <th class="w-20 uk-text-right">Peroid</th>
                 <th class="w-20 uk-text-right">Preostalo rata</th>
-                <th class="w-10 uk-text-center">Razduzeno</th>
+                <th class="w-10 uk-text-center">Razduženo</th>
               </tr>
             </thead>
             <tbody>
@@ -242,6 +254,8 @@
     </li>
   </ul>
 </div>
+<!-- MODAL BRISANJE KORISNIKA -->
+{% include 'inc/zaduzenje_brisanje.twig' %}
 {% endblock sadrzaj %}
 
 {% block traka %}
@@ -284,7 +298,7 @@
     </div>
   </div>
   <div class="uk-width-1-2">
-    <h3>Dug za racune</h3>
+    <h3>Dug za račune</h3>
   </div>
   <div class="uk-width-1-2">
     <div class="uk-panel uk-background-muted uk-text-large uk-text-bold uk-text-right">
@@ -305,3 +319,16 @@
   </div>
 </div>
 {% endblock traka %}
+
+{% block skripta %}
+<script>
+
+document.getElementById("modal_dugme_brisi").addEventListener("click", function () {
+    document.getElementById("forma_brisanje").submit();
+  });
+
+  function setZaduzenjeId(el) {
+    document.getElementById("modal_zaduzenje_id").value = el.dataset.id;
+  }
+</script>
+{% endblock skripta %}

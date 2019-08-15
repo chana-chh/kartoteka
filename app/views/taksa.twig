@@ -13,7 +13,7 @@
 		<div class="uk-form-controls">
 			<select name="taksa_id" id="taksa_id" class="uk-select{{ errors.taksa[0] ? ' uk-form-danger': ''}}"
 			 required>
-				{% for taksa in takse %}
+				{% for taksa in cene %}
 				<option value="{{ taksa.id }}"{{ old.taksa == taksa.id ? ' selected' : '' }}>
 					Taksa iz {{ taksa.datum|date('d.m.Y') }} sa iznosom od: {{ taksa.taksa }}
 				</option>
@@ -53,7 +53,7 @@
               </tr>
             </thead>
             <tbody>
-              {% for taksa in karton.takse() %}
+              {% for taksa in takse %}
               <tr>
                 <td>{{ taksa.godina }}</td>
                 <td class="uk-text-right">

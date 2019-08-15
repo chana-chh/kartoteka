@@ -15,15 +15,26 @@ class TaksaController extends Controller
         $karton_id = $args['id'];
         $model_karton = new Karton();
         $karton = $model_karton->find($karton_id);
+        $takse = $karton->takse();
 
         $model_cene = new Cena();
-        $takse = $model_cene->all();
+        $cene = $model_cene->all();
 
-        usort($takse, function($a, $b) {
+        usort($cene, function($a, $b) {
         return new DateTime($a->datum) <=> new DateTime($b->datum);
         });
 
-        $this->render($response, 'taksa.twig', compact('takse', 'karton'));
+        usort($zakupi, function($a, $b) {
+            if ($a->godina == $b->godina) {
+                  return 0;
+            } else if ($a->godina > $b->godina) {
+                  return 1;
+            } else {
+                  return -1;
+            }
+        });
+
+        $this->render($response, 'taksa.twig', compact('cene', 'karton', 'takse'));
     }
 
     public function postTaksa($request, $response)

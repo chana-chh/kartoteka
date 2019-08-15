@@ -198,4 +198,19 @@ class TransakcijeController extends Controller
         $data = $request->getParams();
         dd($data);
     }
+
+    public function postZaduzenjeBrisanje($request, $response)
+    {
+        $id = (int)$request->getParam('modal_zaduzenje_id');
+        $karton_id = (int)$request->getParam('karton_id');
+        $modelZaduzenja = new Zaduzenje();
+        $success = $modelZaduzenja->deleteOne($id);
+        if ($success) {
+            $this->flash->addMessage('success', "Zaduženje je uspešno obrisano.");
+            return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $karton_id]));
+        } else {
+            $this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja zaduženja.");
+            return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $karton_id]));
+        }
+    }
 }
