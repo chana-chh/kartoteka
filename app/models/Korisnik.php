@@ -8,6 +8,12 @@ class Korisnik extends Model
 {
 	protected $table = 'korisnici';
 
+	public function uplate()
+    {
+        return $this->hasMany('App\Models\Uplata', 'korisnik_id');
+    }
+
+
 	public function findByUsername(string $username)
 	{
 		$sql = "SELECT * FROM {$this->table} WHERE korisnicko_ime = :kime LIMIT 1;";

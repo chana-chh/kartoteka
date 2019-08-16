@@ -130,5 +130,8 @@ $app->group('', function () {
     // Zakup
     $this->get('/transakcije/zakup/{id}', '\App\Controllers\ZakupController:getZakup')->setName('zakup');
     $this->post('/transakcije/zakup', '\App\Controllers\ZakupController:postZakup')->setName('zakup.post');
+    //Uplate
+    $this->get('/transakcije/uplate/{id}', '\App\Controllers\UplataController:getUplate')->setName('uplate');
+    $this->post('/transakcije/uplate/brisanje', '\App\Controllers\UplataController:postUplataBrisanje')->setName('uplate.brisanje');
     // Reprogram
 })->add(new AuthMiddleware($container));

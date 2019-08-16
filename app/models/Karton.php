@@ -24,6 +24,11 @@ class Karton extends Model
         return $this->hasMany('App\Models\Raspored', 'karton_id');
     }
 
+    public function uplata()
+    {
+        return $this->hasMany('App\Models\Karton', 'karton_id');
+    }
+
     public function groblje()
     {
         return $this->belongsTo('App\Models\Groblje', 'groblje_id');
@@ -76,6 +81,12 @@ class Karton extends Model
 
 
     // Transakcije
+     public function uplate()
+    {
+        $sql = "SELECT * FROM uplate WHERE karton_id = {$this->id};";
+        return $this->fetch($sql, null, '\App\Models\Uplata');
+    }
+
     public function takse()
     {
         $sql = "SELECT * FROM zaduzenja WHERE tip = 'taksa' AND karton_id = {$this->id};";

@@ -24,7 +24,7 @@ class TaksaController extends Controller
         return new DateTime($a->datum) <=> new DateTime($b->datum);
         });
 
-        usort($zakupi, function($a, $b) {
+        usort($takse, function($a, $b) {
             if ($a->godina == $b->godina) {
                   return 0;
             } else if ($a->godina > $b->godina) {
