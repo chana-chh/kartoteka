@@ -46,7 +46,22 @@ class RacuniController extends Controller
             $model = new Racun();
             $model->insert($data);
             $this->flash->addMessage('success', 'Karton je uspešno zaduzen racunom.');
-            return $response->withRedirect($this->router->pathFor('transakcije.karton', ['id' => $data['karton_id']]));
+            return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $data['karton_id']]));
+        }
+    }
+
+        public function postRacunBrisanje($request, $response)
+    {
+        $id = (int) $request->getParam('modal_racun_id');
+        $karton_id = (int) $request->getParam('karton_id');
+        $model = new Racun();
+        $success = $model->deleteOne($id);
+        if ($success) {
+            $this->flash->addMessage('success', "Račun je uspešno obrisano.");
+            return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $karton_id]));
+        } else {
+            $this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja računa.");
+            return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $karton_id]));
         }
     }
 }

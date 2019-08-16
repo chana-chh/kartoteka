@@ -111,6 +111,7 @@ $app->group('', function () {
     $this->get('/transakcije/zaduzivanje/zakup', '\App\Controllers\TransakcijeController:getZaduzivanjeZakup')->setName('transakcije.zaduzivanje.zakup');
     $this->post('/transakcije/zaduzivanje/zakup', '\App\Controllers\TransakcijeController:postZaduzivanjeZakup')->setName('transakcije.zaduzivanje.zakup.post');
     $this->post('/transakcije/zaduzivanje/brisanje', '\App\Controllers\TransakcijeController:postZaduzenjeBrisanje')->setName('transakcije.zaduzivanje.brisanje');
+    $this->post('/transakcije/sve/brisanje', '\App\Controllers\TransakcijeController:postSveBrisanje')->setName('sve.brisanje');
     $this->get('/transakcije/pregled/karton/{id}', '\App\Controllers\TransakcijeController:getKartonPregled')->setName('transakcije.pregled');
     $this->get('/transakcije/karton/{id}', '\App\Controllers\TransakcijeController:getKartonRazduzivanje')->setName('transakcije.razduzivanje'); // razduzivanje
     $this->get('/transakcije/reprogrami/karton/{id}', '\App\Controllers\TransakcijeController:getKartonReprogrami')->setName('transakcije.reprogrami'); // reprogram
@@ -122,6 +123,7 @@ $app->group('', function () {
     // Racuni
     $this->get('/transakcije/racun/{id}', '\App\Controllers\RacuniController:getRacun')->setName('racun');
     $this->post('/transakcije/racun', '\App\Controllers\RacuniController:postRacun')->setName('racun.post');
+    $this->post('/transakcije/racun/brisanje', '\App\Controllers\RacuniController:postRacunBrisanje')->setName('racun.brisanje');
     // Taksa
     $this->get('/transakcije/taksa/{id}', '\App\Controllers\TaksaController:getTaksa')->setName('taksa');
     $this->post('/transakcije/taksa', '\App\Controllers\TaksaController:postTaksa')->setName('taksa.post');

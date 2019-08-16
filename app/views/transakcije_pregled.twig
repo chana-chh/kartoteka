@@ -165,10 +165,11 @@
             <thead>
               <tr>
                 <th class="w-20">Broj</th>
-                <th class="w-20">Datum</th>
+                <th class="w-15">Datum</th>
                 <th class="w-20 uk-text-right">Iznos</th>
                 <th class="w-20 uk-text-center">Razduženo</th>
-                <th class="w-20">Reprogram</th>
+                <th class="w-15">Reprogram</th>
+                <th class="w-10 uk-text-right"><span uk-icon="cog"></span></th>
               </tr>
             </thead>
             <tbody>
@@ -193,6 +194,11 @@
                   {% if rn.reprogram_id %}
                   <span uk-icon="refresh"></span> {{ rn.reprogram().broj }}
                   {% endif %}
+                </td>
+                <td class="uk-text-right">
+                  <a title="Brisanje" href="#modal-brisanje-racuna" data-id="{{ rn.id }}" onclick="setRacunId(this);" uk-toggle>
+                  <span uk-icon="trash"></span>
+                  </a>
                 </td>
               </tr>
               {% endfor %}
@@ -254,8 +260,10 @@
     </li>
   </ul>
 </div>
-<!-- MODAL BRISANJE KORISNIKA -->
+<!-- MODAL BRISANJE ZADUŽENJA -->
 {% include 'inc/zaduzenje_brisanje.twig' %}
+<!-- MODAL BRISANJE RAČUNA -->
+{% include 'inc/racun_brisanje.twig' %}
 {% endblock sadrzaj %}
 
 {% block traka %}
@@ -323,7 +331,15 @@
 {% block skripta %}
 <script>
 
-document.getElementById("modal_dugme_brisi").addEventListener("click", function () {
+document.getElementById("modal_dugme_brisi_racun").addEventListener("click", function () {
+    document.getElementById("forma_brisanje_racuna").submit();
+  });
+
+  function setRacunId(el) {
+    document.getElementById("modal_racun_id").value = el.dataset.id;
+  }
+
+  document.getElementById("modal_dugme_brisi").addEventListener("click", function () {
     document.getElementById("forma_brisanje").submit();
   });
 

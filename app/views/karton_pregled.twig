@@ -294,9 +294,20 @@
     </tbody>
   </table>
 </div>
+
+{% if auth.logged and user.nivo == 0 %}
+  <div class="uk-background-muted uk-margin-large-top uk-padding">
+  <h3 class="uk-text-danger">Brisanje svih zaduženja po kartonu</h3>
+        <a class="uk-button uk-button-danger uk-button-small uk-text-right" href="#modal-sve-brisanje" style="float: right;" uk-toggle>
+                <span uk-icon="trash"></span> Obriši
+        </a>
+  </div>
+{% endif %}
+
 <!-- MODAL BRISANJE -->
 {% include 'inc/dokument_brisanje.twig' %}
 {% include 'inc/termin_brisanje.twig' %}
+{% include 'inc/sve_brisanje.twig' %}
 
 {% endblock traka %}
 
@@ -314,9 +325,11 @@
   document.getElementById("modal_dugme_brisi_pokojnika").addEventListener("click", function () {
     document.getElementById("forma_brisanje_pokojnika").submit();
   });
-
   document.getElementById("modal_dugme_brisi_termin").addEventListener("click", function () {
     document.getElementById("forma_brisanje_termina").submit();
+  });
+  document.getElementById("modal_dugme_brisi_sve").addEventListener("click", function () {
+    document.getElementById("forma_brisanje_svega").submit();
   });
 
   function setDocId(el) {

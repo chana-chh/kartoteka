@@ -334,7 +334,9 @@
   function uporediPolja(){
     var polje_uplata = document.getElementById("uplata_iznos").value;
     var polje_razduzenje = document.getElementById("razduzenje").textContent;
-    if (parseFloat(polje_uplata) === parseFloat(polje_razduzenje)){
+    if(parseFloat(polje_razduzenje) == 0){
+      poruka.innerHTML = "Nije odabrana/čekirana nijedna stavka za razduženje!";
+    }else if (parseFloat(polje_uplata) === parseFloat(polje_razduzenje)){
       poruka.innerHTML = "Uplata tačno pokriva iznos predviđen za razduženje.";
     }else if(parseFloat(polje_uplata) > parseFloat(polje_razduzenje)){
       poruka.innerHTML = "Uplata je veća nego iznos za razduženje.";
