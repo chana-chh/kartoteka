@@ -37,6 +37,7 @@ class KartoniController extends Controller
         $data = $request->getParams();
         unset($data['csrf_name']);
         unset($data['csrf_value']);
+        unset($data['stanje']);
 
         $validation_rules = [
             'groblje_id' => [
@@ -56,10 +57,10 @@ class KartoniController extends Controller
             'tip_groba' => [
                 'required' => true,
             ],
-            'stanje' => [
-                'required' => true,
-                'min' => 0,
-            ],
+            // 'stanje' => [
+            //     'required' => true,
+            //     'min' => 0,
+            // ],
         ];
 
         $this->validator->validate($data, $validation_rules);
@@ -95,6 +96,7 @@ class KartoniController extends Controller
         unset($data['id']);
         unset($data['csrf_name']);
         unset($data['csrf_value']);
+        unset($data['stanje']);
 
 
         $validation_rules = [
@@ -115,10 +117,10 @@ class KartoniController extends Controller
             'tip_groba' => [
                 'required' => true,
             ],
-            'stanje' => [
-                'required' => true,
-                'min' => 0,
-            ],
+            // 'stanje' => [
+            //     'required' => true,
+            //     'min' => 0,
+            // ],
         ];
 
         $this->validator->validate($data, $validation_rules);

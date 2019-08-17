@@ -5,7 +5,7 @@
     Mape u upotrebi
 </h1>
 
-
+{% if mape.data %}
 <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small uk-table-middle">
     <thead>
         <tr>
@@ -55,6 +55,9 @@
         </p>
     </div>
 </div>
+{% else %}
+  <h3 class="uk-panel uk-background-muted uk-margin-top uk-padding-small">Nema sačuvanih mapa niti podataka o njima.</h3>
+{% endif %}
 
 <!-- MODAL BRISANJE POCETAK -->
 <div id="modal-brisanje" uk-modal>

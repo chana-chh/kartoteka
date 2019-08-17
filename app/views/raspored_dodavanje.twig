@@ -196,7 +196,7 @@
 		<div class="uk-form-controls">
 			<input type="text" name="jmbg_troskovi" id="jmbg_troskovi"
 				class="uk-input{{ errors.jmbg_troskovi[0] ? ' uk-form-danger': ''}}"
-				value="{{ old.jmbg_troskovi ? : '' }}" autocomplete="off" maxlength="13" required>
+				value="{{ old.jmbg_troskovi ? : '' }}" autocomplete="off" maxlength="13">
 		</div>
 		<small class="uk-text-danger">{{ errors.jmbg_troskovi[0] ? :'' }}</small>
 	</div>
@@ -222,7 +222,7 @@
 		<label for="broj_lk" class="uk-form-label">Broj lične karte</label>
 		<div class="uk-form-controls">
 			<input type="number" name="broj_lk" step="1" id="broj_lk" value="{{ old.broj_lk ? : '' }}"
-				class="uk-input{{ errors.broj_lk[0] ? ' uk-form-danger': ''}}" autocomplete="off" required>
+				class="uk-input{{ errors.broj_lk[0] ? ' uk-form-danger': ''}}" autocomplete="off">
 		</div>
 		<small class=" uk-text-danger">{{ errors.broj_lk[0] ? :'' }}</small>
 	</div>
@@ -269,7 +269,7 @@
         <label for="iznos" class="uk-form-label">Iznos</label>
         <div class="uk-form-controls">
             <input type="number" name="iznos" id="iznos" value="0" min="0" step="0.01"
-                class="uk-input uk-text-right" autocomplete="off" required>
+                class="uk-input uk-text-right" autocomplete="off">
         </div>
         <small class="uk-text-danger">{{ errors.iznos[0] ? :'' }}</small>
     </div>

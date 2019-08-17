@@ -16,8 +16,8 @@ class TransakcijeController extends Controller
         $karton_id = $args['id'];
         $model_karton = new Karton();
         $karton = $model_karton->find($karton_id);
-
-        $this->render($response, 'transakcije_pregled.twig', compact('karton'));
+        $broj_uplate = count($karton->uplate());
+        $this->render($response, 'transakcije_pregled.twig', compact('karton', 'broj_uplate'));
     }
 
     public function getKartonRazduzivanje($request, $response, $args)
