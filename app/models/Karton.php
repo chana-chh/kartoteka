@@ -81,7 +81,7 @@ class Karton extends Model
 
 
     // Transakcije
-     public function uplate()
+    public function uplate()
     {
         $sql = "SELECT * FROM uplate WHERE karton_id = {$this->id};";
         return $this->fetch($sql, null, '\App\Models\Uplata');
@@ -163,6 +163,24 @@ class Karton extends Model
     {
         $sql = "SELECT SUM((iznos/period)*preostalo_rata) AS dug FROM reprogrami WHERE razduzeno = 0 AND karton_id = {$this->id};";
         return (float) $this->fetch($sql)[0]->dug;
+    }
+
+    public function nerazduzeneTakseZaReprogram($reprogram_id)
+    {
+        $sql = "SELECT * FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0 AND (reprogram_id = {$reprogram_id} OR reprogram_id IS NULL) AND karton_id = {$this->id};";
+        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
+    }
+
+    public function nerazduzeniZakupiZaReprogram($reprogram_id)
+    {
+        $sql = "SELECT * FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0 AND (reprogram_id = {$reprogram_id} OR reprogram_id IS NULL) AND karton_id = {$this->id};";
+        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
+    }
+
+    public function nerazduzeniRacuniZaReprogram($reprogram_id)
+    {
+        $sql = "SELECT * FROM racuni WHERE razduzeno = 0 AND (reprogram_id = {$reprogram_id} OR reprogram_id IS NULL) AND karton_id = {$this->id};";
+        return $this->fetch($sql, null, '\App\Models\Racun');
     }
 
     public function sumaUplata()

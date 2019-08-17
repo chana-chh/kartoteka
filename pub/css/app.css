@@ -85,6 +85,14 @@ body {
   width: 70%;
 }
 
+.w-80 {
+  width: 80%;
+}
+
+.w-90 {
+  width: 90%;
+}
+
 figcaption {
   margin-top: .5rem;
   font-size: 90%;

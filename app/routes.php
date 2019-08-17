@@ -114,12 +114,13 @@ $app->group('', function () {
     $this->post('/transakcije/sve/brisanje', '\App\Controllers\TransakcijeController:postSveBrisanje')->setName('sve.brisanje');
     $this->get('/transakcije/pregled/karton/{id}', '\App\Controllers\TransakcijeController:getKartonPregled')->setName('transakcije.pregled');
     $this->get('/transakcije/karton/{id}', '\App\Controllers\TransakcijeController:getKartonRazduzivanje')->setName('transakcije.razduzivanje'); // razduzivanje
-    $this->get('/transakcije/reprogrami/karton/{id}', '\App\Controllers\TransakcijeController:getKartonReprogrami')->setName('transakcije.reprogrami'); // reprogram
     $this->post('/transakcije/uplata', '\App\Controllers\TransakcijeController:postUplata')->setName('transakcije.uplata'); // post razduzivanje
-    $this->get('/transakcije/reprogram/dodavanje/{id}', '\App\Controllers\TransakcijeController:getReprogramDodavanje')->setName('transakcije.reprogram.dodavanje');
-    $this->get('/transakcije/reprogram/izmena/{id}', '\App\Controllers\TransakcijeController:getReprogramIzmena')->setName('transakcije.reprogram.izmena');
-    $this->post('/transakcije/reprogram/dodavanje', '\App\Controllers\TransakcijeController:postReprogramDodavanje')->setName('transakcije.reprogram.dodavanje');
-    $this->post('/transakcije/reprogram/izmena', '\App\Controllers\TransakcijeController:postReprogramIzmena')->setName('transakcije.reprogram.izmena');
+    // Reprogrami
+    $this->get('/transakcije/reprogrami/karton/{id}', '\App\Controllers\ReprogramiController:getKartonReprogrami')->setName('transakcije.reprogrami'); // reprogram
+    $this->get('/transakcije/reprogram/dodavanje/{id}', '\App\Controllers\ReprogramiController:getReprogramDodavanje')->setName('transakcije.reprogram.dodavanje');
+    $this->get('/transakcije/reprogram/izmena/{id}', '\App\Controllers\ReprogramiController:getReprogramIzmena')->setName('transakcije.reprogram.izmena');
+    $this->post('/transakcije/reprogram/dodavanje/{id}', '\App\Controllers\ReprogramiController:postReprogramDodavanje')->setName('transakcije.reprogram.dodavanje');
+    $this->post('/transakcije/reprogram/izmena/{id}', '\App\Controllers\ReprogramiController:postReprogramIzmena')->setName('transakcije.reprogram.izmena');
     // Racuni
     $this->get('/transakcije/racun/{id}', '\App\Controllers\RacuniController:getRacun')->setName('racun');
     $this->post('/transakcije/racun', '\App\Controllers\RacuniController:postRacun')->setName('racun.post');

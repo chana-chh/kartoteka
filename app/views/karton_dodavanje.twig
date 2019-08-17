@@ -9,9 +9,9 @@
 		<label for="groblje_id" class="uk-form-label">Groblje</label>
 		<div class="uk-form-controls">
 			<select name="groblje_id" id="groblje_id" class="uk-select{{ errors.groblje_id[0] ? ' uk-form-danger': ''}}"
-			 required>
+				required>
 				{% for groblje in groblja %}
-				<option value="{{ groblje.id }}"{{ old.groblje_id == groblje.id ? ' selected' : '' }}>
+				<option value="{{ groblje.id }}" {{ old.groblje_id == groblje.id ? ' selected' : '' }}>
 					{{ groblje.naziv }}
 				</option>
 				{% endfor %}
@@ -22,31 +22,35 @@
 	<div class="uk-width-1-6">
 		<label for="parcela" class="uk-form-label">Parcela</label>
 		<div class="uk-form-controls">
-			<input type="text" name="parcela" id="parcela" class="uk-input{{ errors.parcela[0] ? ' uk-form-danger': ''}}" value="{{ old.parcela ? : '' }}" autocomplete="off" required>
+			<input type="text" name="parcela" id="parcela"
+				class="uk-input{{ errors.parcela[0] ? ' uk-form-danger': ''}}" value="{{ old.parcela ? : '' }}"
+				autocomplete="off" required>
 		</div>
 		<small class="uk-text-danger">{{ errors.parcela[0] ? :'' }}</small>
 	</div>
 	<div class="uk-width-1-6">
 		<label for="grobno_mesto" class="uk-form-label">Grobno mesto</label>
 		<div class="uk-form-controls">
-			<input type="text" name="grobno_mesto" id="grobno_mesto" value="{{ old.grobno_mesto ? : '' }}" class="uk-input{{ errors.grobno_mesto[0] ? ' uk-form-danger': ''}}" autocomplete="off" required>
+			<input type="text" name="grobno_mesto" id="grobno_mesto" value="{{ old.grobno_mesto ? : '' }}"
+				class="uk-input{{ errors.grobno_mesto[0] ? ' uk-form-danger': ''}}" autocomplete="off" required>
 		</div>
 		<small class="uk-text-danger">{{ errors.grobno_mesto[0] ? :'' }}</small>
 	</div>
 	<div class="uk-width-1-6">
 		<label for="broj_mesta" class="uk-form-label">Broj mesta</label>
 		<div class="uk-form-controls">
-			<input type="number" name="broj_mesta" step="1" id="broj_mesta" value="{{ old.broj_mesta ? : '1' }}" class="uk-input{{ errors.broj_mesta[0] ? ' uk-form-danger': ''}}" autocomplete="off" min="1"
-			 required>
+			<input type="number" name="broj_mesta" step="1" id="broj_mesta" value="{{ old.broj_mesta ? : '1' }}"
+				class="uk-input{{ errors.broj_mesta[0] ? ' uk-form-danger': ''}}" autocomplete="off" min="1" required>
 		</div>
 		<small class=" uk-text-danger">{{ errors.broj_mesta[0] ? :'' }}</small>
 	</div>
 	<div class="uk-width-1-6">
 		<label for="tip_groba" class="uk-form-label">Tip groba</label>
 		<div class="uk-form-controls">
-			<select name="tip_groba" id="tip_groba" class="uk-select{{ errors.tip_groba[0] ? ' uk-form-danger': ''}}" required>
+			<select name="tip_groba" id="tip_groba" class="uk-select{{ errors.tip_groba[0] ? ' uk-form-danger': ''}}"
+				required>
 				{% for tip in tipovi %}
-				<option value="{{ tip }}"{{ old.tip_groba == tip ? ' selected' : '' }}>{{ tip }}</option>
+				<option value="{{ tip }}" {{ old.tip_groba == tip ? ' selected' : '' }}>{{ tip }}</option>
 				{% endfor %}
 			</select>
 		</div>
@@ -55,21 +59,24 @@
 	<div class="uk-width-1-6">
 		<label for="stanje" class="uk-form-label">Stanje</label>
 		<div class="uk-form-controls">
-			<input type="number" name="stanje" step="0.01" id="stanje" class="uk-input{{ errors.stanje[0] ? ' uk-form-danger': ''}}" autocomplete="off" value="{{ old.stanje ? : '0.00' }}" min="0"
-			 required>
+			<input type="number" name="stanje" step="0.01" id="stanje"
+				class="uk-input{{ errors.stanje[0] ? ' uk-form-danger': ''}}" autocomplete="off"
+				value="{{ old.stanje ? : '0.00' }}" min="0" required>
 		</div>
 		<small class=" uk-text-danger">{{ errors.stanje[0] ? :'' }}</small>
 	</div>
 	<div class="uk-width-5-6">
 		<label for="napomena" class="uk-form-label">Napomena</label>
 		<div class="uk-form-controls">
-			<textarea class="uk-textarea{{ errors.napomena[0] ? ' uk-form-danger': ''}}" rows="5" name="napomena" id="napomena">{{ old.napomena ? : '' }}</textarea>
+			<textarea class="uk-textarea{{ errors.napomena[0] ? ' uk-form-danger': ''}}" rows="5" name="napomena"
+				id="napomena">{{ old.napomena ? : '' }}</textarea>
 		</div>
 		<small class=" uk-text-danger">{{ errors.napomena[0] ? :'' }}</small>
 	</div>
 	<div class="uk-width-1-6">
 		<div class="uk-form-controls uk-margin-top">
-			<label><input class="uk-checkbox{{ errors.aktivan[0] ? ' uk-form-danger': ''}}" type="checkbox" name="aktivan"{{ old.aktivan ? ' checked' : '' }}> Aktivan</label>
+			<label><input class="uk-checkbox{{ errors.aktivan[0] ? ' uk-form-danger': ''}}" type="checkbox"
+					name="aktivan" {{ old.aktivan ? ' checked' : '' }}> Aktivan</label>
 		</div>
 	</div>
 	<div class="uk-button-group uk-width-1-6">

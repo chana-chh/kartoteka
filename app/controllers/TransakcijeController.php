@@ -7,6 +7,7 @@ use App\Models\Karton;
 use App\Models\Zaduzenje;
 use App\Models\Racun;
 use App\Models\Reprogram;
+use App\Models\Uplata;
 
 class TransakcijeController extends Controller
 {
@@ -31,33 +32,6 @@ class TransakcijeController extends Controller
         $cena_zakupa = $model_cene->zakup() / 10;
 
         $this->render($response, 'transakcije_razduzivanje.twig', compact('karton', 'cena_takse', 'cena_zakupa'));
-    }
-
-    public function getKartonReprogrami($request, $response, $args)
-    {
-        $karton_id = $args['id'];
-        $model_karton = new Karton();
-        $karton = $model_karton->find($karton_id);
-
-        $this->render($response, 'transakcije_reprogrami.twig', compact('karton'));
-    }
-
-    public function getReprogramDodavanje($request, $response, $args)
-    {
-        $karton_id = $args['id'];
-        $model_karton = new Karton();
-        $karton = $model_karton->find($karton_id);
-
-        $this->render($response, 'reprogram_dodavanje.twig', compact('karton'));
-    }
-
-    public function getReprogramIzmena($request, $response, $args)
-    {
-        $reprogram_id = $args['id'];
-        $model_reprogram = new Reprogram();
-        $reprogram = $model_reprogram->find($reprogram_id);
-
-        $this->render($response, 'reprogram_izmena.twig', compact('reprogram'));
     }
 
     public function getZaduzivanjeTakse($request, $response)
@@ -209,19 +183,67 @@ class TransakcijeController extends Controller
     public function postUplata($request, $response)
     {
         $data = $request->getParams();
-        dd($data);
-    }
+        $karton_id = $data['karton_id'];
+        $korisnik_id = $this->auth->user()->id;
+        // podaci za uplatu
+        $uplata_data = [
+            'karton_id' => $karton_id,
+            'iznos' => (float) $data['uplata_iznos'],
+            'datum' => $data['uplata_datum'],
+            'priznanica' => $data['uplata_priznanica'],
+            'napomena' => $data['uplata_napomena'],
+            'korisnik_id' => $korisnik_id,
+        ];
+        // niz id-a zaduzenja
+        $zaduzenja_data = isset($data['razduzeno-zaduzenje']) ? $data['razduzeno-zaduzenje'] : [];
+        // niz id-a racuna
+        $racuni_data = isset($data['razduzeno-racuni']) ? $data['razduzeno-racuni'] : [];
+        // niz id-a reprograma
+        $reprogrami_data = isset($data['razduzeno-reprogrami']) ? $data['razduzeno-reprogrami'] : [];
 
-    public function postReprogramDodavanje($request, $response)
-    {
-        $data = $request->getParams();
-        dd($data);
-    }
+        $validation_rules = [
+            'karton_id' => [
+                'required' => true,
+            ],
+            'uplata_iznos' => [
+                'required' => true,
+                'min' => 0.01,
+            ],
+            'uplata_datum' => [
+                'required' => true,
+            ],
+        ];
 
-    public function postReprogramIzmena($request, $response)
-    {
-        $data = $request->getParams();
-        dd($data);
+        $this->validator->validate($data, $validation_rules);
+
+        if ($this->validator->hasErrors()) {
+            $this->flash->addMessage('danger', 'Došlo je do greške prilikom snimanja uplate i razduživanja.');
+            return $response->withRedirect($this->router->pathFor('transakcije.razduzivanje', ['id' => $karton_id]));
+        } else {
+            $model_uplata = new Uplata();
+            $model_uplata->insert($uplata_data);
+            if (!empty($zaduzenja_data)) {
+                $zad = implode(", ", $zaduzenja_data);
+                $sql_zaduzenja = "UPDATE zaduzenja SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id} WHERE id IN ($zad);";
+                $model_uplata->run($sql_zaduzenja);
+            }
+            if (!empty($racuni_data)) {
+                $rac = implode(", ", $racuni_data);
+                $sql_racuni = "UPDATE racuni SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id} WHERE id IN ($rac);";
+                $model_uplata->run($sql_racuni);
+            }
+            if (!empty($reprogrami_data)) {
+                $rep = implode(", ", $racuni_data);
+                // erotika
+
+                // razduziti sva zaduzenja sa reprogram_id
+                // razduziti sve racune sa reprogram_id
+
+                // razduziti reprogram (preostalo_rata = 0, razduzeno = 1, datum_razduzenja, korisnik_id_razduzio)
+            }
+            $this->flash->addMessage('success', 'Uplata je uspešno sačuvana, a odabrane stavke su razdužene.');
+            return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $karton_id]));
+        }
     }
 
     public function postZaduzenjeBrisanje($request, $response)
@@ -239,7 +261,7 @@ class TransakcijeController extends Controller
         }
     }
 
-        public function postSveBrisanje($request, $response)
+    public function postSveBrisanje($request, $response)
     {
         $karton_id = (int) $request->getParam('karton_id');
 
