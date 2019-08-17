@@ -224,22 +224,32 @@ class TransakcijeController extends Controller
             $model_uplata->insert($uplata_data);
             if (!empty($zaduzenja_data)) {
                 $zad = implode(", ", $zaduzenja_data);
-                $sql_zaduzenja = "UPDATE zaduzenja SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id} WHERE id IN ($zad);";
+                $sql_zaduzenja = "UPDATE zaduzenja
+                    SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id}
+                    WHERE id IN ($zad);";
                 $model_uplata->run($sql_zaduzenja);
             }
             if (!empty($racuni_data)) {
                 $rac = implode(", ", $racuni_data);
-                $sql_racuni = "UPDATE racuni SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id} WHERE id IN ($rac);";
+                $sql_racuni = "UPDATE racuni
+                    SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id}
+                    WHERE id IN ($rac);";
                 $model_uplata->run($sql_racuni);
             }
             if (!empty($reprogrami_data)) {
-                $rep = implode(", ", $racuni_data);
-                // erotika
-
-                // razduziti sva zaduzenja sa reprogram_id
-                // razduziti sve racune sa reprogram_id
-
-                // razduziti reprogram (preostalo_rata = 0, razduzeno = 1, datum_razduzenja, korisnik_id_razduzio)
+                $rep = implode(", ", $reprogrami_data);
+                $sql_zaduzenja = "UPDATE zaduzenja
+                    SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id}
+                    WHERE reprogram_id IN ($rep);";
+                $model_uplata->run($sql_zaduzenja);
+                $sql_racuni = "UPDATE racuni
+                    SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id}
+                    WHERE reprogram_id IN ($rep);";
+                $model_uplata->run($sql_racuni);
+                $sql_reprogram = "UPDATE reprogrami
+                    SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id}, preostalo_rata = 0
+                    WHERE id IN ($rep);";
+                $model_uplata->run($sql_reprogram);
             }
             $this->flash->addMessage('success', 'Uplata je uspešno sačuvana, a odabrane stavke su razdužene.');
             return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $karton_id]));

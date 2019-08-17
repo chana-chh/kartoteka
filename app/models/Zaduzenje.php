@@ -16,7 +16,7 @@ class Zaduzenje extends Model
 	public function reprogramChk($reprogram_id)
 	{
 		$chk = ($this->reprogram_id != null && $this->reprogram_id === $reprogram_id) ? ' checked' : '';
-		return "<input type=\"checkbox\" name=\"reprogram-racuni[]\" value=\"{$this->id}\" data-iznos=\"{$this->iznos}\" class=\"reprogram-racuni\"{$chk}>";
+		return "<input type=\"checkbox\" name=\"reprogram-zaduzenja[]\" value=\"{$this->id}\" data-iznos=\"{$this->iznos}\" class=\"reprogram-zaduzenja\"{$chk}>";
 	}
 
 	public function reprogramLbl($reprogram_id)

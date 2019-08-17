@@ -94,5 +94,5 @@ Ako ide samo racun onda mozda moze u zajednicku tabelu sa zaduzenjima,a ako se i
 
 # TODO
 
-- razduzivanje - modal kad je uplata razlicita od iznosa razduzivanja (confirmation)
-- reprogrami kompletna shema rada
+- dodavanje cena uzima trenutni datum ...
+-

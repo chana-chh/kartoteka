@@ -35,7 +35,8 @@
 
   {% for rep in karton.reprogrami() %}
   <div class="uk-button-group uk-margin-top uk-margin-bottom uk-width-1-1">
-    <button class="uk-button uk-button-primary uk-text-large uk-padding-small w-5">
+    <button
+      class="uk-button uk-text-large uk-padding-small w-5{{ rep.razduzeno == 1 ? ' uk-button-primary' : ' uk-button-danger' }}">
       <span uk-icon="icon: info; ratio: 1.5"></span>
     </button>
     <div uk-dropdown="mode: click" class="uk-text-large uk-width-1-1">
