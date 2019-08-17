@@ -182,4 +182,10 @@ class Karton extends Model
         $sql = "SELECT * FROM racuni WHERE razduzeno = 0 AND (reprogram_id = {$reprogram_id} OR reprogram_id IS NULL) AND karton_id = {$this->id};";
         return $this->fetch($sql, null, '\App\Models\Racun');
     }
+
+    public function sumaUplata()
+    {
+        $sql = "SELECT SUM(iznos) AS ukupno FROM uplate WHERE karton_id = {$this->id};";
+        return (float) $this->fetch($sql)[0]->ukupno;
+    }
 }

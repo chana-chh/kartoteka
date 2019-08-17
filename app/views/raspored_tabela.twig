@@ -13,6 +13,7 @@
     </div>
   </div>
 </div>
+{% if termini.data %}
 <div class="uk-overflow-auto uk-margin-large-top">
   <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
     <thead>
@@ -77,6 +78,9 @@
     </p>
   </div>
 </div>
+{% else %}
+  <h3>Trenutno nema zakazanih termina</h3>
+{% endif %}
 
 <!-- MODAL BRISANJE KORISNIKA -->
 {% include 'inc/termin_brisanje.twig' %}

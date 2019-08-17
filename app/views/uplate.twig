@@ -13,6 +13,7 @@
     </div>
   </div>
 </div>
+{% if uplate %}
 <div class="uk-overflow-auto">
   <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
     <thead>
@@ -54,10 +55,24 @@
     </tbody>
   </table>
 </div>
-
+{% else %}
+  <h3>Trenutno nema evidentiranih uplata</h3>
+{% endif %}
 <!-- MODAL BRISANJE KORISNIKA -->
 {% include 'inc/uplate_brisanje.twig' %}
 {% endblock sadrzaj %}
+
+{% block traka %}
+<div uk-grid class="uk-margin-small-top">
+  <div class="uk-width-1-1">
+    <h3 class="uk-text-right">Ukupan iznos uplata:</h3>
+    <div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
+      <h2 class="uk-text-success" id="sumaUplata">
+        {{ karton.sumaUplata() | number_format(2, '.', ',') }}
+      </h2>
+    </div>
+  </div>
+{% endblock traka %}
 
 {% block skripta %}
 <script>

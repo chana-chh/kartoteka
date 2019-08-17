@@ -1,6 +1,7 @@
 {% extends "templates/app.twig" %}
 
 {% block sadrzaj %}
+{% if danasnji %}
 <div class="uk-card uk-card-default uk-card-body uk-margin-top uk-padding-small">
 		<h3 class="uk-card-title">Današnji termini:</h3>
 		<ul class="uk-list uk-list-striped">
@@ -8,7 +9,10 @@
 		<li>početak {{ termin.start|date('H:i') }}, kraj {{ termin.end|date('H:i') }}, {{ termin.karton().broj() }} <strong>{{ termin.pokojnik().ime }} {{ termin.pokojnik().prezime }}</strong> </li>
 	{% endfor %}
 	</ul>
-	</div>
+</div>
+{% else %}
+	<h3 class="uk-panel uk-background-muted uk-margin-top uk-padding-small">Danas nema zakazanih termina.</h3>
+{% endif %}
 {% endblock sadrzaj %}
 {% block traka %}
 		<div class="uk-text-center">
