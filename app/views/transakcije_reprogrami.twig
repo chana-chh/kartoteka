@@ -34,11 +34,11 @@
 <div class="uk-width-1-1">
 
   {% for rep in karton.reprogrami() %}
-  <div class="uk-button-group uk-width-1-1 uk-margin-top uk-margin-bottom">
-    <button class="uk-button uk-button-primary uk-text-large uk-padding-small uk-width-1-6">
+  <div class="uk-button-group uk-margin-top uk-margin-bottom uk-width-1-1">
+    <button class="uk-button uk-button-primary uk-text-large uk-padding-small w-5">
       <span uk-icon="icon: info; ratio: 1.5"></span>
     </button>
-    <div uk-dropdown="mode: click" class="uk-text-large">
+    <div uk-dropdown="mode: click" class="uk-text-large uk-width-1-1">
       Broj rata {{ rep.period }}, preostalo za uplatu {{ rep.preostalo_rata }} rata.<br>
       Razduzen: <span
         class="{{ rep.razduzeno == 0 ? 'uk-text-danger' : 'uk-text-success' }}">{{ rep.razduzeno == 0 ? 'NE' : 'DA' }}</span>.
@@ -46,7 +46,7 @@
       {{ rep.razduzenja|nl2br }}<br>
       Napomene: {{ rep.napomena|nl2br }}
     </div>
-    <div class="uk-button-secondary uk-text-large uk-text-center uk-padding-small uk-width-4-6">
+    <div class="uk-button-secondary uk-text-large uk-text-center uk-padding-small w-90">
       Reprogram broj:
       <span class="uk-text-success">
         <strong>{{ rep.broj }}</strong>
@@ -54,12 +54,12 @@
       od {{ rep.datum() }}. godine. Iznos: {{ rep.iznos|number_format(2, '.', ',') }} dinara.
     </div>
     <a href="{{ path_for('transakcije.reprogram.izmena', { id: rep.id }) }}"
-      class="uk-button uk-button-primary uk-text-large uk-padding-small uk-width-1-6">
+      class="uk-button uk-button-primary uk-text-large uk-padding-small w-5">
       <span uk-icon="icon: pencil; ratio: 1.5"></span>
     </a>
   </div>
   <div class="uk-margin-large-left">
-    <h4>Takse</h4>
+    <h4 class="uk-text-primary">Takse</h4>
     <div class="uk-overflow-auto">
       <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
         <thead>
@@ -82,7 +82,7 @@
         </tbody>
       </table>
     </div>
-    <h4>Zakupi</h4>
+    <h4 class="uk-text-primary">Zakupi</h4>
     <div class="uk-overflow-auto">
       <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
         <thead>
@@ -105,7 +105,7 @@
         </tbody>
       </table>
     </div>
-    <h4>Računi</h4>
+    <h4 class="uk-text-primary">Računi</h4>
     <div class="uk-overflow-auto">
       <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
         <thead>

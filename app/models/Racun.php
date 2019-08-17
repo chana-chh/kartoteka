@@ -14,6 +14,23 @@ class Racun extends Model
 		return $this->belongsTo('App\Models\Reprogram', 'reprogram_id');
 	}
 
+	public function reprogramChk($reprogram_id)
+	{
+		$chk = ($this->reprogram_id != null && $this->reprogram_id === $reprogram_id) ? ' checked' : '';
+		return "<input type=\"checkbox\" name=\"reprogram-racuni[]\" value=\"{$this->id}\" data-iznos=\"{$this->iznos}\" class=\"reprogram-racuni\"{$chk}>";
+	}
+
+	public function reprogramLbl($reprogram_id)
+	{
+		$lbl = $this->reprogram_id === $reprogram_id ? "{$this->reprogram()->broj}" : '';
+		return $lbl;
+	}
+
+	public function reprogramCheckDisabled()
+	{
+		return null;
+	}
+
 	public function razduzeno()
 	{
 		$chk = $this->razduzeno === 1 ? ' checked' : '';

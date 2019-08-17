@@ -98,12 +98,13 @@
                 <td class="uk-text-center">{{ taksa.razduzenoDisabled() | raw }}</td>
                 <td>
                   {% if taksa.reprogram_id %}
-                  <span uk-icon="refresh"></span> {{ taksa.reprogram().broj }}
+                  <span uk-icon="refresh"></span> {{ taksa.reprogramLbl(taksa.reprogram_id)|raw }}
                   {% endif %}
                 </td>
                 <td class="uk-text-right">
-                  <a title="Brisanje" href="#modal-brisanje" data-id="{{ taksa.id }}" onclick="setZaduzenjeId(this);" uk-toggle>
-                  <span uk-icon="trash"></span>
+                  <a title="Brisanje" href="#modal-brisanje" data-id="{{ taksa.id }}" onclick="setZaduzenjeId(this);"
+                    uk-toggle>
+                    <span uk-icon="trash"></span>
                   </a>
                 </td>
               </tr>
@@ -153,12 +154,13 @@
                 <td class="uk-text-center">{{ zakup.razduzenoDisabled() | raw }}</td>
                 <td>
                   {% if zakup.reprogram_id %}
-                  <span uk-icon="refresh"></span> {{ zakup.reprogram().broj }}
+                  <span uk-icon="refresh"></span> {{ zakup.reprogramLbl(zakup.reprogram_id)|raw }}
                   {% endif %}
                 </td>
                 <td class="uk-text-right">
-                  <a title="Brisanje" href="#modal-brisanje" data-id="{{ zakup.id }}" onclick="setZaduzenjeId(this);" uk-toggle>
-                  <span uk-icon="trash"></span>
+                  <a title="Brisanje" href="#modal-brisanje" data-id="{{ zakup.id }}" onclick="setZaduzenjeId(this);"
+                    uk-toggle>
+                    <span uk-icon="trash"></span>
                   </a>
                 </td>
               </tr>
@@ -183,10 +185,10 @@
             <thead>
               <tr>
                 <th class="w-20">Broj</th>
-                <th class="w-15">Datum</th>
+                <th class="w-10">Datum</th>
                 <th class="w-20 uk-text-right">Iznos</th>
                 <th class="w-20 uk-text-center">Razduženo</th>
-                <th class="w-15">Reprogram</th>
+                <th class="w-20">Reprogram</th>
                 <th class="w-10 uk-text-right"><span uk-icon="cog"></span></th>
               </tr>
             </thead>
@@ -210,12 +212,13 @@
                 <td class="uk-text-center">{{ rn.razduzenoDisabled() | raw }}</td>
                 <td>
                   {% if rn.reprogram_id %}
-                  <span uk-icon="refresh"></span> {{ rn.reprogram().broj }}
+                  <span uk-icon="refresh"></span> {{ rn.reprogramLbl(rn.reprogram_id)|raw }}
                   {% endif %}
                 </td>
                 <td class="uk-text-right">
-                  <a title="Brisanje" href="#modal-brisanje-racuna" data-id="{{ rn.id }}" onclick="setRacunId(this);" uk-toggle>
-                  <span uk-icon="trash"></span>
+                  <a title="Brisanje" href="#modal-brisanje-racuna" data-id="{{ rn.id }}" onclick="setRacunId(this);"
+                    uk-toggle>
+                    <span uk-icon="trash"></span>
                   </a>
                 </td>
               </tr>
@@ -348,8 +351,7 @@
 
 {% block skripta %}
 <script>
-
-document.getElementById("modal_dugme_brisi_racun").addEventListener("click", function () {
+  document.getElementById("modal_dugme_brisi_racun").addEventListener("click", function () {
     document.getElementById("forma_brisanje_racuna").submit();
   });
 
