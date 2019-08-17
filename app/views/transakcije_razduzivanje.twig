@@ -33,7 +33,7 @@
 
 <form action="{{ path_for('transakcije.uplata') }}" method="POST" id="foram_uplata" class="uk-form-stacked" uk-grid>
   {{ csrf | raw }}
-  <input type="hidden" value="{{ karton.id }}">
+  <input type="hidden" name="karton_id" value="{{ karton.id }}">
   <div class="uk-width-1-1">
     <label for="napomena" class="uk-form-label">Napomena / opis uplate</label>
     <div class="uk-form-controls">
@@ -41,7 +41,6 @@
     </div>
     <small class=" uk-text-danger">{{ errors.napomena[0] ? :'' }}</small>
   </div>
-  <input type="hidden" name="karton_id" value="{{ karton.id }}">
   <div class="uk-width-1-5">
     <label for="uplata_iznos" class="uk-form-label">Iznos</label>
     <div class="uk-form-controls">
