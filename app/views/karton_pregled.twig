@@ -1,6 +1,14 @@
 {% extends "templates/app.twig" %}
 
 {% block sadrzaj %}
+<style>
+  
+  .ikonica {
+  position: relative;
+  top: -2px;
+}
+</style>
+
 <h1 class="uk-text-primary">
   Karton <small><em class="uk-text-success">[{{ karton.broj() }}]</em></small>
 </h1>
@@ -20,18 +28,18 @@
       <div class="uk-button-group">
         <a href="{{ path_for('transakcije.pregled', { id: karton.id }) }}" 
         class="uk-button uk-button-primary uk-button-small">
-        <span uk-icon="credit-card"></span>Transakcije
+        <span uk-icon="credit-card" class="ikonica"></span> Transakcije
       </a>
         <a href="{{ path_for('kartoni.izmena', { 'id': karton.id }) }}"
           class="uk-button uk-button-secondary uk-button-small">
-          <span uk-icon="pencil"></span> Izmeni karton
+          <span uk-icon="pencil" class="ikonica"></span> Izmeni karton
         </a>
         <a class="uk-button uk-button-danger uk-button-small" href="#modal-brisanje" uk-toggle>
-          <span uk-icon="trash"></span> Obriši karton
+          <span uk-icon="trash" class="ikonica"></span> Obriši karton
         </a>
         <a href="{{ path_for('kartoni.mapa', { 'id': karton.id }) }}"
           class="uk-button uk-button-primary uk-button-small">
-          <span uk-icon="location"></span> Mapa
+          <span uk-icon="location" class="ikonica"></span> Mapa
         </a>
       </div>
     </div>

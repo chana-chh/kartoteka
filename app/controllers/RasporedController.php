@@ -170,6 +170,7 @@ class RasporedController extends Controller
                     'broj' => $data['broj'],
                     'datum' => $data['datum'],
                     'iznos' => $data['iznos'],
+                    'napomena' => $data['napomena_racun'],
                     'razduzeno' => $razduzeno,
                     'datum_razduzenja' => $data['datum_razduzenja'],
                     'korisnik_id_zaduzio' => $idzaracun,
@@ -180,6 +181,7 @@ class RasporedController extends Controller
                     'broj' => $data['broj'],
                     'datum' => $data['datum'],
                     'iznos' => $data['iznos'],
+                    'napomena' => $data['napomena_racun'],
                     'razduzeno' => $razduzeno,
                     'datum_razduzenja' => $data['datum_razduzenja'],
                     'korisnik_id_zaduzio' => $idzaracun

@@ -244,7 +244,7 @@
 	</div>
 	<div class="uk-width-3-5"></div>
 	<div class="uk-width-1-1">
-		<div uk-grid class="uk-background-muted uk-margin-top uk-padding-small">
+		<div uk-grid class="uk-background-muted uk-padding-small" style="margin-left:1px;">
 		<div class="uk-width-1-1">
 		<h4>Podaci o računu ako je dostupan</h4>
 		</div>
@@ -287,6 +287,13 @@
 		</div>
 		<small class=" uk-text-danger">{{ errors.datum_razduzenja[0] ? : '' }}</small>
 	</div>
+	  <div class="uk-width-1-1">
+    <label for="napomena_racun" class="uk-form-label">Napomena / opis uplate</label>
+    <div class="uk-form-controls">
+      <textarea class="uk-textarea{{ errors.napomena_racun[0] ? ' uk-form-danger': ''}}" rows="2" name="napomena_racun" id="napomena_racun">{{ old.napomena_racun ? : '' }}</textarea>
+    </div>
+    <small class=" uk-text-danger">{{ errors.napomena_racun[0] ? :'' }}</small>
+  </div>
 		</div>
 	</div>
 
@@ -321,7 +328,7 @@
 	<div class="uk-width-1-2">
 		<label for="napomena" class="uk-form-label">Napomena</label>
 		<div class="uk-form-controls">
-			<textarea class="uk-textarea{{ errors.napomena[0] ? ' uk-form-danger': ''}}" rows="4" name="napomena"
+			<textarea class="uk-textarea{{ errors.napomena[0] ? ' uk-form-danger': ''}}" rows="3" name="napomena"
 				id="napomena">{{ old.napomena ? : '' }}</textarea>
 		</div>
 		<small class=" uk-text-danger">{{ errors.napomena[0] ? :'' }}</small>
@@ -329,7 +336,7 @@
 	<div class="uk-width-1-2">
 		<label for="prevoz" class="uk-form-label">Prevoz</label>
 		<div class="uk-form-controls">
-			<textarea class="uk-textarea{{ errors.prevoz[0] ? ' uk-form-danger': ''}}" rows="4" name="prevoz"
+			<textarea class="uk-textarea{{ errors.prevoz[0] ? ' uk-form-danger': ''}}" rows="3" name="prevoz"
 				id="prevoz">{{ old.prevoz ? : '' }}</textarea>
 		</div>
 		<small class=" uk-text-danger">{{ errors.prevoz[0] ? :'' }}</small>

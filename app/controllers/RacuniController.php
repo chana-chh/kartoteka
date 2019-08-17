@@ -32,20 +32,20 @@ class RacuniController extends Controller
             'iznos' => [
                 'required' => true,
                 'min' => 0.01,
-            ],
+            ]
         ];
 
         $this->validator->validate($data, $validation_rules);
 
         if ($this->validator->hasErrors()) {
-            $this->flash->addMessage('danger', 'Došlo je do greške prilikom zaduzenja racuna.');
+            $this->flash->addMessage('danger', 'Došlo je do greške prilikom zaduženja računa.');
             return $response->withRedirect($this->router->pathFor('racun', ['id' => $data['karton_id']]));
         } else {
             $data['razduzeno'] = 0;
             $data['korisnik_id_zaduzio'] = $this->auth->user()->id;
             $model = new Racun();
             $model->insert($data);
-            $this->flash->addMessage('success', 'Karton je uspešno zaduzen racunom.');
+            $this->flash->addMessage('success', 'Karton je uspešno zadužen računom.');
             return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $data['karton_id']]));
         }
     }
