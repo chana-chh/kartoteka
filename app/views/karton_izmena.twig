@@ -56,27 +56,20 @@
 		<small class="uk-text-danger">{{ errors.tip_groba[0] ? :'' }}</small>
 	</div>
 	<div class="uk-width-1-6">
-		<label for="stanje" class="uk-form-label">Stanje</label>
-		<div class="uk-form-controls">
-			<input type="number" name="stanje" step="0.01" id="stanje" class="uk-input{{ errors.stanje[0] ? ' uk-form-danger': ''}}"
-			 autocomplete="off" value="{{ old.stanje ? : karton.stanje }}" min="0" required>
-		</div>
-		<small class=" uk-text-danger">{{ errors.stanje[0] ? :'' }}</small>
-	</div>
-	<div class="uk-width-5-6">
-		<label for="napomena" class="uk-form-label">Napomena</label>
-		<div class="uk-form-controls">
-			<textarea class="uk-textarea{{ errors.napomena[0] ? ' uk-form-danger': ''}}" rows="5" name="napomena" id="napomena">{{ old.napomena ? : karton.napomena }}</textarea>
-		</div>
-		<small class=" uk-text-danger">{{ errors.napomena[0] ? :'' }}</small>
-	</div>
-	<div class="uk-width-1-6">
-		<div class="uk-form-controls uk-margin-top">
+		<div class="uk-form-controls" style="margin-top: 30px;">
 			<label><input class="uk-checkbox{{ errors.aktivan[0] ? ' uk-form-danger': ''}}" type="checkbox" name="aktivan"
 				 {{ (old.aktivan or karton.aktivan == 1) ? ' checked' : '' }}> Aktivan</label>
 		</div>
 	</div>
-	<div class="uk-button-group uk-width-1-5">
+	<div class="uk-width-1-2">
+		<label for="napomena" class="uk-form-label">Napomena</label>
+		<div class="uk-form-controls">
+			<textarea class="uk-textarea{{ errors.napomena[0] ? ' uk-form-danger': ''}}" rows="3" name="napomena" id="napomena">{{ old.napomena ? : karton.napomena }}</textarea>
+		</div>
+		<small class=" uk-text-danger">{{ errors.napomena[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-2"></div>
+	<div class="uk-button-group uk-width-1-4">
 		<button class="uk-button uk-button-primary uk-width-1-2"><span uk-icon="check"></span> Snimi</button>
 		<a href="{{ path_for('kartoni.pregled',{'id':karton.id}) }}" class="uk-button uk-button-secondary uk-width-1-2">
 			<span uk-icon="ban"></span> Otkaži

@@ -69,9 +69,6 @@
     <div>
       <strong>Aktivan:</strong> {{ karton.aktivan == 1 ? 'DA' : 'NE' }}
     </div>
-    <div>
-      <strong>Stanje:</strong> {{ karton.stanje|number_format(2, '.', ',') }}
-    </div>
   </div>
   <div class="uk-flex uk-flex-between uk-margin-small-top">
     <div class="uk-width-1-6">
@@ -307,7 +304,7 @@
   <div class="uk-background-muted uk-margin-large-top uk-padding">
   <h3 class="uk-text-danger">Brisanje svih zaduženja po kartonu</h3>
         <a class="uk-button uk-button-danger uk-button-small uk-text-right" href="#modal-sve-brisanje" style="float: right;" uk-toggle>
-                <span uk-icon="trash"></span> Obriši
+                <span uk-icon="trash" class="ikonica"></span> Obriši
         </a>
   </div>
 {% endif %}

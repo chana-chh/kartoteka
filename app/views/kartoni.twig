@@ -40,12 +40,11 @@
     <thead>
       <tr>
         <th class="w-5">Id</th>
-        <th class="w-10">Broj <span uk-icon="link"></span></th>
+        <th class="w-15">Broj <span uk-icon="link"></span></th>
         <th class="w-5">Br mesta</th>
         <th class="w-10">Tip groba</th>
         <th class="w-5">Aktivan</th>
-        <th class="w-45">Napomena</th>
-        <th class="w-10 uk-text-right">Stanje</th>
+        <th class="w-50">Napomena</th>
         <th class="w-10 uk-text-right"><span uk-icon="cog"></span></th>
       </tr>
     </thead>
@@ -64,9 +63,6 @@
         <td>{{ karton.tip_groba }}</td>
         <td>{{ karton.aktivanDisabled() | raw }}</td>
         <td>{{ karton.napomena | nl2br }}</td>
-        <td class="uk-text-right">
-          {{ karton.stanje|number_format(2, '.', ',') }}
-        </td>
         <td class="uk-clearfix">
           <ul class="uk-iconnav uk-float-right">
             <li>
