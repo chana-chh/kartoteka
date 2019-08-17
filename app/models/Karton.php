@@ -164,4 +164,10 @@ class Karton extends Model
         $sql = "SELECT SUM((iznos/period)*preostalo_rata) AS dug FROM reprogrami WHERE razduzeno = 0 AND karton_id = {$this->id};";
         return (float) $this->fetch($sql)[0]->dug;
     }
+
+    public function sumaUplata()
+    {
+        $sql = "SELECT SUM(iznos) AS ukupno FROM uplate WHERE karton_id = {$this->id};";
+        return (float) $this->fetch($sql)[0]->ukupno;
+    }
 }
