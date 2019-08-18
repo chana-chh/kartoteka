@@ -119,8 +119,8 @@ $app->group('', function () {
     $this->get('/transakcije/reprogrami/karton/{id}', '\App\Controllers\ReprogramiController:getKartonReprogrami')->setName('transakcije.reprogrami'); // reprogram
     $this->get('/transakcije/reprogram/dodavanje/{id}', '\App\Controllers\ReprogramiController:getReprogramDodavanje')->setName('transakcije.reprogram.dodavanje');
     $this->get('/transakcije/reprogram/izmena/{id}', '\App\Controllers\ReprogramiController:getReprogramIzmena')->setName('transakcije.reprogram.izmena');
-    $this->post('/transakcije/reprogram/dodavanje/{id}', '\App\Controllers\ReprogramiController:postReprogramDodavanje')->setName('transakcije.reprogram.dodavanje');
-    $this->post('/transakcije/reprogram/izmena/{id}', '\App\Controllers\ReprogramiController:postReprogramIzmena')->setName('transakcije.reprogram.izmena');
+    $this->post('/transakcije/reprogram/dodavanje', '\App\Controllers\ReprogramiController:postReprogramDodavanje')->setName('transakcije.reprogram.dodavanje.post');
+    $this->post('/transakcije/reprogram/izmena', '\App\Controllers\ReprogramiController:postReprogramIzmena')->setName('transakcije.reprogram.izmena.post');
     // Racuni
     $this->get('/transakcije/racun/{id}', '\App\Controllers\RacuniController:getRacun')->setName('racun');
     $this->post('/transakcije/racun', '\App\Controllers\RacuniController:postRacun')->setName('racun.post');

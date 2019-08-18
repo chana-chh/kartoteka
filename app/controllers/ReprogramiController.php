@@ -35,7 +35,66 @@ class ReprogramiController extends Controller
 	public function postReprogramDodavanje($request, $response)
 	{
 		$data = $request->getParams();
-		dd($data);
+		$karton_id = (int) $data['karton_id'];
+		$korisnik_id = $this->auth->user()->id;
+		$reprogram_data = [
+			'karton_id' => $karton_id,
+			'broj' => $data['broj'],
+			'datum' => $data['datum'],
+			'iznos' => (float) $data['iznos'],
+			'period' => (int) $data['period'],
+			'preostalo_rata' => (int) $data['preostalo'],
+			'korisnik_id_zaduzio' => $korisnik_id,
+			'napomena' => $data['napomena'],
+		];
+		$zaduzenja_data = isset($data['reprogram-zaduzenje']) ? $data['reprogram-zaduzenje'] : [];
+		$racuni_data = isset($data['reprogram-racuni']) ? $data['reprogram-racuni'] : [];
+
+		$validation_rules = [
+			'karton_id' => [
+				'required' => true,
+			],
+			'iznos' => [
+				'required' => true,
+				'min' => 0.01,
+			],
+			'datum' => [
+				'required' => true,
+			],
+			'period' => [
+				'required' => true,
+				'min' => 1,
+			],
+			'preostalo_rata' => [
+				'required' => true,
+				'min' => 1,
+			],
+		];
+
+		$this->validator->validate($reprogram_data, $validation_rules);
+
+		// Proveriti da li je uneta makar jedna stavka
+
+		if ($this->validator->hasErrors()) {
+			$this->flash->addMessage('danger', 'Došlo je do greške prilikom snimanja reprograma.');
+			return $response->withRedirect($this->router->pathFor('transakcije.reprogram.dodavanje', ['id' => $karton_id]));
+		} else {
+			$model_reprogram = new Reprogram();
+			$model_reprogram->insert($reprogram_data);
+			$rep_id = (int) $model_reprogram->getLastId();
+			if (!empty($zaduzenja_data)) {
+				$zad = implode(", ", $zaduzenja_data);
+				$sql_zaduzenja = "UPDATE zaduzenja SET reprogram_id = {$rep_id} WHERE id IN ($zad);";
+				$model_reprogram->run($sql_zaduzenja);
+			}
+			if (!empty($racuni_data)) {
+				$rac = implode(", ", $racuni_data);
+				$sql_racuni = "UPDATE racuni SET reprogram_id = {$rep_id} WHERE id IN ($rac);";
+				$model_reprogram->run($sql_racuni);
+			}
+			$this->flash->addMessage('success', 'Reprogram je uspešno sačuvan.');
+			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $karton_id]));
+		}
 	}
 
 	public function getReprogramIzmena($request, $response, $args)
@@ -54,6 +113,66 @@ class ReprogramiController extends Controller
 	public function postReprogramIzmena($request, $response)
 	{
 		$data = $request->getParams();
-		dd($data);
+		$rep_id = (int) $data['reprogram_id'];
+		$karton_id = (int) $data['karton_id'];
+		$korisnik_id = $this->auth->user()->id;
+		$reprogram_data = [
+			'broj' => $data['broj'],
+			'datum' => $data['datum'],
+			'iznos' => (float) $data['iznos'],
+			'period' => (int) $data['period'],
+			'preostalo_rata' => (int) $data['preostalo_rata'],
+			'napomena' => $data['napomena'],
+		];
+		$zaduzenja_data = isset($data['reprogram-zaduzenje']) ? $data['reprogram-zaduzenje'] : [];
+		$racuni_data = isset($data['reprogram-racuni']) ? $data['reprogram-racuni'] : [];
+
+		$validation_rules = [
+			'iznos' => [
+				'required' => true,
+				'min' => 0.01,
+			],
+			'datum' => [
+				'required' => true,
+			],
+			'period' => [
+				'required' => true,
+				'min' => 1,
+			],
+			'preostalo_rata' => [
+				'required' => true,
+				'min' => 1,
+			],
+		];
+
+		$this->validator->validate($reprogram_data, $validation_rules);
+
+		// Proveriti da li je uneta makar jedna stavka
+
+		if ($this->validator->hasErrors()) {
+			$this->flash->addMessage('danger', 'Došlo je do greške prilikom snimanja izmena reprograma.');
+			return $response->withRedirect($this->router->pathFor('transakcije.reprogram.izmena', ['id' => $karton_id]));
+		} else {
+			$model_reprogram = new Reprogram();
+			$model_reprogram->update($reprogram_data, $rep_id);
+
+			$sql_zaduzenja = "UPDATE zaduzenja SET reprogram_id = NULL WHERE reprogram_id = {$rep_id};";
+			$sql_racuni = "UPDATE racuni SET reprogram_id = NULL WHERE reprogram_id = {$rep_id};";
+			$model_reprogram->run($sql_zaduzenja);
+			$model_reprogram->run($sql_racuni);
+
+			if (!empty($zaduzenja_data)) {
+				$zad = implode(", ", $zaduzenja_data);
+				$sql_zaduzenja = "UPDATE zaduzenja SET reprogram_id = {$rep_id} WHERE id IN ($zad);";
+				$model_reprogram->run($sql_zaduzenja);
+			}
+			if (!empty($racuni_data)) {
+				$rac = implode(", ", $racuni_data);
+				$sql_racuni = "UPDATE racuni SET reprogram_id = {$rep_id} WHERE id IN ($rac);";
+				$model_reprogram->run($sql_racuni);
+			}
+			$this->flash->addMessage('success', 'Reprogram je uspešno izmenjen.');
+			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $karton_id]));
+		}
 	}
 }

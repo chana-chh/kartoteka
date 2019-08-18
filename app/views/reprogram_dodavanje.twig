@@ -31,7 +31,7 @@
   </div>
 </div>
 
-<form action="{{ path_for('transakcije.reprogram.dodavanje', { id: karton.id }) }}" method="POST" id="form_reprogram"
+<form action="{{ path_for('transakcije.reprogram.dodavanje.post') }}" method="POST" id="form_reprogram"
   class="uk-form-stacked uk-margin-top" uk-grid>
   {{ csrf | raw }}
   <input type="hidden" name="karton_id" value="{{ karton.id }}">

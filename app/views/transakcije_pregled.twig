@@ -1,7 +1,7 @@
 {% extends "templates/app.twig" %}
 {% block sadrzaj %}
 <style>
-  
+
   .ikonica {
   position: relative;
   top: -2px;
@@ -308,7 +308,7 @@
     <h2 class="uk-text-right">Ukupan dug</h2>
     <div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
       <h1 class="uk-text-danger" id="ukupan-dug">
-        {% set dug = karton.dugZaTakse() + karton.dugZaZakupe() + karton.dugZaRacune() %}
+        {% set dug = karton.dugZaTakse() + karton.dugZaZakupe() + karton.dugZaRacune() + karton.dugZaReprograme() %}
         {{ dug | number_format(2, '.', ',') }}
       </h1>
     </div>

@@ -33,8 +33,8 @@
   </div>
 </div>
 
-<form action="{{ path_for('transakcije.reprogram.izmena', { id: reprogram.karton().id }) }}" method="POST"
-  id="form_reprogram" class="uk-form-stacked uk-margin-top" uk-grid>
+<form action="{{ path_for('transakcije.reprogram.izmena.post') }}" method="POST" id="form_reprogram"
+  class="uk-form-stacked uk-margin-top" uk-grid>
   {{ csrf | raw }}
   <input type="hidden" name="karton_id" value="{{ reprogram.karton().id }}">
   <input type="hidden" name="reprogram_id" value="{{ reprogram.id }}">

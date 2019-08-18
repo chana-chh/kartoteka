@@ -47,7 +47,7 @@
       {{ rep.razduzenja|nl2br }}<br>
       Napomene: {{ rep.napomena|nl2br }}
     </div>
-    <div class="uk-button-secondary uk-text-large uk-text-center uk-padding-small w-90">
+    <div class="uk-button-secondary uk-text-large uk-text-center uk-padding-small w-80">
       Reprogram broj:
       <span class="uk-text-success">
         <strong>{{ rep.broj }}</strong>
@@ -55,8 +55,12 @@
       od {{ rep.datum() }}. godine. Iznos: {{ rep.iznos|number_format(2, '.', ',') }} dinara.
     </div>
     <a href="{{ path_for('transakcije.reprogram.izmena', { id: rep.id }) }}"
-      class="uk-button uk-button-primary uk-text-large uk-padding-small w-5">
+      class="uk-button uk-button-default uk-text-large uk-padding-small w-5">
       <span uk-icon="icon: pencil; ratio: 1.5"></span>
+    </a>
+    <a href=""
+      class="uk-button uk-button-primary uk-text-success uk-text-large uk-padding-small w-10">
+      <span uk-icon="icon: tablet-landscape; ratio: 1.5"></span>
     </a>
   </div>
   <div class="uk-margin-large-left">
