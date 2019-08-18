@@ -1,2 +1,20 @@
 
 https://plainjs.com/javascript/ajax/send-ajax-get-and-post-requests-47/
+
+
+BAZA
+=======================
+
+- [pokojnici] dodata napomena
+- [staraoci] dodata napomena
+
+sve ostalo ima napomenu ili nije potrebna (taksa, zakup ...)
+
+APLIKACIJA
+=======================
+
+Puca tabelarni pregled termina
+
+Odraditi modale za transakcije/reprograme
+
+Napraviti uplatu rate reprograma
