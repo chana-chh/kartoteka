@@ -3,6 +3,9 @@
 namespace App\Controllers;
 
 use App\Models\Raspored;
+use App\Models\Karton;
+use App\Models\Pokojnik;
+use App\Models\Staraoc;
 
 class HomeController extends Controller
 {
@@ -11,7 +14,16 @@ class HomeController extends Controller
 		$model = new Raspored();
         $danasnji = $model->danas();
 
-		$this->render($response, 'home.twig', compact('danasnji'));
+        $karton = new Karton();
+        $kartoni = count($karton->all());
+
+        $pokojnik = new Pokojnik();
+        $pokojnici = count($pokojnik->all());
+
+        $staraoc = new Staraoc();
+        $staraoci = count($staraoc->all());
+        
+		$this->render($response, 'home.twig', compact('danasnji', 'kartoni', 'pokojnici', 'staraoci'));
 	}
 
 	public function getAbout($request, $response)

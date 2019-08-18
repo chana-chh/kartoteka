@@ -287,8 +287,12 @@ class TransakcijeController extends Controller
         $modelReprogram = new Reprogram();
         $successe = $modelReprogram->run($sqle, [':kar' => $karton_id]);
 
-        if ($successz || $successr || $successe) {
-            $this->flash->addMessage('success', "Zaduženje su uspešno obrisana.");
+        $sqlu = "DELETE FROM uplate WHERE karton_id = :kar;";
+        $modelUplata = new Uplata();
+        $successu = $modelUplata->run($sqlu, [':kar' => $karton_id]);
+
+        if ($successz || $successr || $successe || $successu) {
+            $this->flash->addMessage('success', "Zaduženje, računi i uplate su uspešno obrisane.");
             return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $karton_id]));
         } else {
             $this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja zaduženja.");
