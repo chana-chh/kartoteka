@@ -242,8 +242,8 @@
 {% endblock traka %}
 {% block skripta %}
 <script>
-  var taksa = Number("{{ cena_takse }}");
-  var zakup = Number("{{ cena_zakupa }}");
+  var taksa = Number("{{ cena_takse }}") * Number("{{ karton.broj_mesta }}");
+  var zakup = Number("{{ cena_zakupa }}") * Number("{{ karton.broj_mesta }}");
   var razduzenje = document.getElementById("razduzenje");
   var iznos = document.getElementById("iznos");
   var chk_zaduzenja = document.getElementsByClassName("reprogram-zaduzenja");

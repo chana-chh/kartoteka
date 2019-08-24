@@ -26,13 +26,13 @@ class Cena extends Model
 	public function taksa()
 	{
 		$sql = "SELECT taksa FROM {$this->table} WHERE vazece = 1 LIMIT 1";
-		return $this->fetch($sql)[0]->taksa;
+		return (float) $this->fetch($sql)[0]->taksa;
 	}
 
 	public function zakup()
 	{
 		$sql = "SELECT zakup FROM {$this->table} WHERE vazece = 1 LIMIT 1";
-		return $this->fetch($sql)[0]->zakup;
+		return (float) $this->fetch($sql)[0]->zakup;
 	}
 
 	public function odrediVazece()

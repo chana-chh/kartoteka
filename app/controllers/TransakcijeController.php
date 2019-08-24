@@ -51,7 +51,7 @@ class TransakcijeController extends Controller
         $model_cene = new Cena();
         $cena = $model_cene->find($data['taksa_id']);
 
-        $iznos = $cena->taksa;
+        $iznos =  (float) $cena->taksa;
         $godina = $cena->godina();
 
         $validation_rules = [
@@ -76,7 +76,7 @@ class TransakcijeController extends Controller
             $podaci = [
                 ':karton_id' => 0,
                 ':tip' => 'taksa',
-                ':iznos' => (float) $iznos,
+                ':iznos' => 0,
                 ':godina' => (int) $godina,
                 ':razduzeno' => 0,
                 ':datum_zaduzenja' => date('Y-m-d'),
@@ -88,10 +88,11 @@ class TransakcijeController extends Controller
             $sql = "INSERT INTO `zaduzenja` (karton_id, tip, iznos, godina, razduzeno, datum_zaduzenja, korisnik_id_zaduzio)
                 VALUES (:karton_id, :tip, :iznos, :godina, :razduzeno, :datum_zaduzenja, :korisnik_id_zaduzio);";
             $stmt = $pdo->prepare($sql);
-            $pdo->beginTransaction();
 
+            $pdo->beginTransaction();
             foreach ($kartoni as $karton) {
                 $podaci[':karton_id'] = $karton->id;
+                $podaci[':iznos'] = $iznos * $karton->broj_mesta;
                 $stmt->execute($podaci);
             }
             $pdo->commit();
@@ -106,7 +107,6 @@ class TransakcijeController extends Controller
         $model_kartoni = new Karton();
         $cene = $model_cene->all();
 
-        // pokupiti sve kartone koji nisu zaduzeni za tekucu godinu
         $tekuca_godina = (int) date('Y');
         $sql = "SELECT * FROM kartoni
                 WHERE id NOT IN (
@@ -127,7 +127,7 @@ class TransakcijeController extends Controller
         $model_cene = new Cena();
         $cena = $model_cene->find($data['zakup_id']);
 
-        $iznos = $cena->zakup / 10;
+        $iznos = (float) $cena->zakup / 10;
         $godina = $cena->godina();
 
         $validation_rules = [
@@ -153,7 +153,7 @@ class TransakcijeController extends Controller
             $podaci = [
                 ':karton_id' => 0,
                 ':tip' => 'zakup',
-                ':iznos' => (float) $iznos,
+                ':iznos' => 0,
                 ':godina' => (int) $pocetna_godina,
                 ':razduzeno' => 0,
                 ':datum_zaduzenja' => date('Y-m-d'),
@@ -170,6 +170,7 @@ class TransakcijeController extends Controller
                 $podaci[':godina'] = $pocetna_godina + $i;
                 foreach ($kartoni as $karton) {
                     $podaci[':karton_id'] = $karton->id;
+                    $podaci[':iznos'] = $iznos * $karton->broj_mesta;
                     $stmt->execute($podaci);
                 }
             }
