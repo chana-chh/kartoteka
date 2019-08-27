@@ -77,13 +77,17 @@ class ZakupController extends Controller
                 $this->flash->addMessage('danger', 'Već postoji zaduženje za odabranu godinu');
                 return $response->withRedirect($this->router->pathFor('zakup', ['id' => $data['karton_id']]));
             } else {
+                    $modelKarton = new Karton();
+                    $karton = $modelKarton->find($data['karton_id']);
+                    $bm = $karton->broj_mesta;
+
                     $modelZaduzenja = new Zaduzenje();
                     $karton = $modelZaduzenja->insert(
                     [
                         'karton_id' => $data['karton_id'],
                         'tip' => 'zakup',
                         'godina' => (int) $godina,
-                        'iznos' => (float) $iznos,
+                        'iznos' => (float) ($iznos * $bm),
                         'razduzeno' => 0,
                         'datum_zaduzenja' =>$data['datum_zaduzenja'],
                         'korisnik_id_zaduzio' => $this->auth->user()->id
@@ -102,6 +106,10 @@ class ZakupController extends Controller
             $razlike = array_diff($godine_request, $sve_godine);
             $duzina_niza = count($razlike);
 
+            $modelKarton = new Karton();
+            $karton = $modelKarton->find($data['karton_id']);
+            $bm = $karton->broj_mesta;
+
             if ($duzina_niza > 0) {
                 foreach ($razlike as $godina) {
                     $modelZaduzenja = new Zaduzenje();
@@ -110,7 +118,7 @@ class ZakupController extends Controller
                         'karton_id' => $data['karton_id'],
                         'tip' => 'zakup',
                         'godina' => $godina,
-                        'iznos' => (float) $iznos,
+                        'iznos' => (float) ($iznos * $bm),
                         'razduzeno' => 0,
                         'datum_zaduzenja' =>$data['datum_zaduzenja'],
                         'korisnik_id_zaduzio' => $this->auth->user()->id
