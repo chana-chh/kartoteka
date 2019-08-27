@@ -57,13 +57,17 @@ class TaksaController extends Controller
             $this->flash->addMessage('danger', 'Već postoji zaduženje za odabranu godinu');
             return $response->withRedirect($this->router->pathFor('taksa', ['id' => $data['karton_id']]));
         } else {
-            $modelZaduzenja = new Zaduzenje();
+                $modelKarton = new Karton();
+                $karton = $modelKarton->find($data['karton_id']);
+                $bm = $karton->broj_mesta;
+                
+                $modelZaduzenja = new Zaduzenje();
                 $karton = $modelZaduzenja->insert(
                 [
                     'karton_id' => $data['karton_id'],
                     'tip' => 'taksa',
                     'godina' => (int) $godina,
-                    'iznos' => (float) $iznos,
+                    'iznos' => (float) ($iznos * $bm),
                     'razduzeno' => 0,
                     'datum_zaduzenja' =>$data['datum_zaduzenja'],
                     'korisnik_id_zaduzio' => $this->auth->user()->id
