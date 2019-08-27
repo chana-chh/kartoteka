@@ -18,3 +18,7 @@ Puca tabelarni pregled termina
 Odraditi modale za transakcije/reprograme
 
 Napraviti uplatu rate reprograma
+
+
+CENA PO GROBNOM MESTU
+Stanislav - pojedinacno zaduzenje taksi i zakupa da se pomnozi sa $karton->broj_mesta

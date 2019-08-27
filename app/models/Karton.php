@@ -51,7 +51,7 @@ class Karton extends Model
 
     public function sviAktivni()
     {
-        $sql = "SELECT id FROM {$this->table} WHERE aktivan = 1;";
+        $sql = "SELECT * FROM {$this->table} WHERE aktivan = 1;";
         return $this->fetch($sql);
     }
 
@@ -105,7 +105,7 @@ class Karton extends Model
         $broj = $this->fetch($sql)[0]->broj;
         $model_cena = new Cena();
         $cena = (float) $model_cena->taksa();
-        return $broj * $cena;
+        return $broj * $cena * $this->broj_mesta;
     }
 
     public function zakupi()
@@ -126,7 +126,7 @@ class Karton extends Model
         $broj = $this->fetch($sql)[0]->broj;
         $model_cena = new Cena();
         $cena = (float) $model_cena->zakup() / 10;
-        return $broj * $cena;
+        return $broj * $cena * $this->broj_mesta;
     }
 
     public function racuni()
