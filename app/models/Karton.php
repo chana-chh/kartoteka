@@ -165,6 +165,11 @@ class Karton extends Model
         return (float) $this->fetch($sql)[0]->dug;
     }
 
+    public function dug()
+    {
+        return $this->dugZaTakse() + $this->dugZaZakupe() + $this->dugZaRacune() + $this->dugZaReprograme();
+    }
+
     public function nerazduzeneTakseZaReprogram($reprogram_id)
     {
         $sql = "SELECT * FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0 AND (reprogram_id = {$reprogram_id} OR reprogram_id IS NULL) AND karton_id = {$this->id};";
