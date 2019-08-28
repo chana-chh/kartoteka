@@ -53,4 +53,16 @@ class Racun extends Model
 			return DateTime::createFromFormat('Y-m-d', $this->datum)->format('d.m.Y');
 		}
 	}
+
+	public function rok()
+	{
+		$sql = "SELECT * FROM {$this->table} WHERE razduzeno = 0 AND rok IS NOT NULL AND rok >= CURDATE() AND rok < DATE_ADD(CURDATE(), INTERVAL 7 DAY)";
+    	return $this->fetch($sql);
+	}
+
+	public function istekli()
+	{
+		$sql = "SELECT * FROM {$this->table} WHERE razduzeno = 0 AND rok IS NOT NULL AND rok < CURDATE()";
+    	return $this->fetch($sql);
+	}
 }

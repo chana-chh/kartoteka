@@ -39,6 +39,8 @@
 </div>
 {% endblock sadrzaj %}
 {% block traka %}
+<div uk-grid>
+<div class="uk-width-1-1">
 {% if danasnji %}
 <div class="uk-card uk-card-default uk-card-body uk-margin-top uk-padding-small">
 		<h3 class="uk-card-title">Današnji termini:</h3>
@@ -55,5 +57,37 @@
       <a href="{{ path_for('raspored.dodavanje') }}" class="uk-button uk-button-primary uk-button-small"><span title="Zakazivanje termina" uk-icon="plus-circle" class="ikonica"></span></a>
       <a href="{{ path_for('raspored.tabela') }}" class="uk-button uk-button-default uk-button-small"><span title="Tabelarni pregled termina" uk-icon="table" class="ikonica"></span></a>
     </div>
-{% endif %}	
+{% endif %}
+</div>
+</div>
+<div uk-grid>
+<div class="uk-width-1-1">
+{% if isticu %}
+<div class="uk-card uk-card-default uk-card-body uk-margin-top uk-padding-small">
+        <h3 class="uk-card-title">Računi kojima ističe rok za uplatu:</h3>
+        <ul class="uk-list uk-list-striped">
+    {% for rac in isticu %}
+        <li>{{ rac.datum|date('d/m') }}, uplata do {{ rac.rok|date('d/m') }}, ({{ rac.broj }}) <strong>{{ rac.iznos }}</strong> </li>
+    {% endfor %}
+    </ul>
+</div>
+{% else %}
+    <h3 class="uk-panel uk-background-muted uk-margin-top uk-padding-small">Nema računa koje korisnici moraju da izmire.</h3>
+{% endif %}
+</div>
+</div>
+<div uk-grid>
+<div class="uk-width-1-1">
+    {% if istekli %}
+<div class="uk-card uk-card-default uk-card-body uk-margin-top uk-padding-small">
+        <h3 class="uk-card-title uk-text-danger">Računi kojima je istekao rok za uplatu:</h3>
+        <ul class="uk-list uk-list-striped">
+    {% for racu in istekli %}
+        <li>{{ racu.datum|date('d/m') }}, uplata do {{ racu.rok|date('d/m') }}, ({{ racu.broj }}) <strong>{{ racu.iznos }}</strong> </li>
+    {% endfor %}
+    </ul>
+</div>
+{% endif %}
+</div>
+</div>
 {% endblock traka %}
