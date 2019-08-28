@@ -1,11 +1,10 @@
 {% extends "templates/app.twig" %}
 {% block sadrzaj %}
 <style>
-
   .ikonica {
-  position: relative;
-  top: -2px;
-}
+    position: relative;
+    top: -2px;
+  }
 </style>
 <h1 class="uk-text-danger">
   Pregled zaduženja za karton
@@ -28,24 +27,25 @@
       <div class="uk-button-group">
         <button class="uk-button uk-button-primary uk-button-small">Zaduživanje</button>
         <div class="uk-inline">
-            <button class="uk-button uk-button-primary uk-button-small" type="button"><span uk-icon="icon:  triangle-down"></span></button>
-            <div uk-dropdown="mode: click; boundary: ! .uk-button-group; boundary-align: true;">
-                <ul class="uk-nav uk-dropdown-nav">
-                    <li>
-                    <a href="{{ path_for('taksa', { id: karton.id }) }}">
-                      <span uk-icon="bookmark"></span>&emsp;Zaduži taksu
-                    </a>
-                  </li>
-                  <li><a href="{{ path_for('zakup', { id: karton.id }) }}">
-                      <span uk-icon="bookmark"></span>&emsp;Zaduži zakup
-                    </a>
-                  </li>
-                  <li><a href="{{ path_for('racun', { id: karton.id }) }}">
-                      <span uk-icon="bookmark"></span>&emsp;Zaduži račun
-                    </a>
-                  </li>
-                </ul>
-            </div>
+          <button class="uk-button uk-button-primary uk-button-small" type="button"><span
+              uk-icon="icon:  triangle-down"></span></button>
+          <div uk-dropdown="mode: click; boundary: ! .uk-button-group; boundary-align: true;">
+            <ul class="uk-nav uk-dropdown-nav">
+              <li>
+                <a href="{{ path_for('taksa', { id: karton.id }) }}">
+                  <span uk-icon="bookmark"></span>&emsp;Zaduži taksu
+                </a>
+              </li>
+              <li><a href="{{ path_for('zakup', { id: karton.id }) }}">
+                  <span uk-icon="bookmark"></span>&emsp;Zaduži zakup
+                </a>
+              </li>
+              <li><a href="{{ path_for('racun', { id: karton.id }) }}">
+                  <span uk-icon="bookmark"></span>&emsp;Zaduži račun
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
         <a href="{{ path_for('transakcije.razduzivanje', { id: karton.id }) }}"
           class="uk-button uk-button-secondary uk-button-small">
@@ -57,6 +57,10 @@
         <a href="{{ path_for('transakcije.reprogrami', { id: karton.id }) }}"
           class="uk-button uk-button-danger uk-button-small">
           <span uk-icon="refresh" class="ikonica"></span> Reprogrami
+        </a>
+        <a href="{{ path_for('transakcije.pregled.stampa', { id: karton.id }) }}" target="_blank"
+          class="uk-button uk-button-primary uk-button-small">
+          <span uk-icon="print" class="ikonica"></span> Štampa
         </a>
       </div>
     </div>

@@ -6,6 +6,7 @@ use App\Models\Raspored;
 use App\Models\Karton;
 use App\Models\Pokojnik;
 use App\Models\Staraoc;
+use App\Models\Racun;
 
 class HomeController extends Controller
 {
@@ -22,8 +23,12 @@ class HomeController extends Controller
 
         $staraoc = new Staraoc();
         $staraoci = count($staraoc->all());
+
+        $racun = new Racun();
+        $isticu = $racun->rok();
+        $istekli = $racun->istekli();
         
-		$this->render($response, 'home.twig', compact('danasnji', 'kartoni', 'pokojnici', 'staraoci'));
+		$this->render($response, 'home.twig', compact('danasnji', 'kartoni', 'pokojnici', 'staraoci', 'isticu', 'istekli'));
 	}
 
 	public function getAbout($request, $response)
