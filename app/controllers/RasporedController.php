@@ -174,7 +174,8 @@ class RasporedController extends Controller
                     'razduzeno' => $razduzeno,
                     'datum_razduzenja' => $data['datum_razduzenja'],
                     'korisnik_id_zaduzio' => $idzaracun,
-                    'korisnik_id_razduzio' => $idzaracun
+                    'korisnik_id_razduzio' => $idzaracun,
+                    'rok' => $data['uplata_do']
                 ]);}else{
                 $racun = $modelRacun->insert([
                     'karton_id' => $id_kartona,
@@ -184,7 +185,8 @@ class RasporedController extends Controller
                     'napomena' => $data['napomena_racun'],
                     'razduzeno' => $razduzeno,
                     'datum_razduzenja' => $data['datum_razduzenja'],
-                    'korisnik_id_zaduzio' => $idzaracun
+                    'korisnik_id_zaduzio' => $idzaracun,
+                    'rok' => $data['uplata_do']
                 ]);
             }
         }

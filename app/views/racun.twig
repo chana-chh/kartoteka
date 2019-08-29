@@ -32,6 +32,14 @@
 		<small class=" uk-text-danger">{{ errors.datum[0] ? : '' }}</small>
 	</div>
 	<div class="uk-width-1-5">
+		<label for="rok" class="uk-form-label">Rok za plaćanje <small class="uk-text-warning">(ako ne postoji ostaviti nepopunjeno)</small></label>
+		<div class="uk-form-controls">
+			<input type="date" name="rok" id="rok" value="{{ old.rok ? : '' }}" class="uk-input"
+				autocomplete="off" required>
+		</div>
+		<small class=" uk-text-danger">{{ errors.rok[0] ? : '' }}</small>
+	</div>
+	<div class="uk-width-1-5">
 		<label for="iznos" class="uk-form-label">Iznos</label>
 		<div class="uk-form-controls">
 			<input type="number" name="iznos" id="iznos" class="uk-input{{ errors.iznos[0] ? ' uk-form-danger': ''}}"
@@ -39,7 +47,7 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.iznos[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-1-4 uk-flex uk-flex-bottom">
+	<div class="uk-width-1-5 uk-flex uk-flex-bottom">
 		<div class="uk-button-group uk-width-1-1">
 			<button class="uk-button uk-button-primary uk-width-1-2">Zaduži</button>
 			<a href="{{ path_for('transakcije.pregled', { id: karton.id }) }}"

@@ -6,26 +6,65 @@
   <tbody>
     <tr>
       <th>Dug za takse</th>
-      <td>{{ karton.dugZaTakse()|number_format(2, '.', ',') }}</td>
+      <td>
+      <ul>
+{% for taksa in karton.nerazduzeneTakse() %}
+<li>godina {{ taksa.godina }}</li>
+{% endfor %}
+</ul>
+      </td>
+    </tr>
+    <tr>
+      <th>Ukupno za takse</th>
+      <td><strong>{{ karton.dugZaTakse()|number_format(2, '.', ',') }}</strong></td>
     </tr>
     <tr>
       <th>Dug za zakupe</th>
-      <td>{{ karton.dugZaZakupe()|number_format(2, '.', ',') }}</td>
+      <td>
+      <ul>
+{% for zakup in karton.nerazduzeniZakupi() %}
+<li>godina {{ zakup.godina }}</li>
+{% endfor %}
+</ul>
+      </td>
+      </tr>
+      <tr>
+      <th>Ukupno za zakupe</th>
+      <td><strong>{{ karton.dugZaZakupe()|number_format(2, '.', ',') }}</strong></td>
     </tr>
     <tr>
       <th>Dug za račune</th>
-      <td>{{ karton.dugZaRacune()|number_format(2, '.', ',') }}</td>
+      <td>
+      <ul>
+{% for racun in karton.nerazduzeniRacuni() %}
+<li>broj {{ racun.broj }}</li>
+{% endfor %}
+</ul>
+      </td>
+    </tr>
+    <tr>
+      <th>Ukupno za račune</th>
+      <td><strong>{{ karton.dugZaRacune()|number_format(2, '.', ',') }}</strong></td>
     </tr>
     <tr>
       <th>Dug za reprograme</th>
-      <td>{{ karton.dugZaReprograme()|number_format(2, '.', ',') }}</td>
+      <td>
+      <ul>
+{% for rep in karton.nerazduzeniReprogrami() %}
+<li>broj {{ rep.broj }}</li>
+{% endfor %}
+</ul>
+      </td>
+    </tr>
+    <tr>
+      <th>Ukupno za reprograme</th>
+      <td><strong>{{ karton.dugZaReprograme()|number_format(2, '.', ',') }}</strong></td>
     </tr>
   </tbody>
-
   <tfoot>
     <tr>
       <th>Ukupan dug</th>
-      <td>{{ karton.dug()|number_format(2, '.', ',') }}</td>
+      <td><strong style="color: red">{{ karton.dug()|number_format(2, '.', ',') }}<strong></td>
     </tr>
   </tfoot>
 </table>
