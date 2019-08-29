@@ -68,4 +68,11 @@ class Pokojnik extends Model
             return DateTime::createFromFormat('Y-m-d', $this->datum_ekshumacije)->format('d.m.Y');
         }
     }
+
+    public function duplaDisabled()
+    {
+        $chk = $this->dupla_raka === 1 ? ' checked' : '';
+        $pk = $this->pk;
+        return "<input type=\"checkbox\" name=\"dupla_raka\" data-id=\"{$this->$pk}\"{$chk} disabled>";
+    }
 }

@@ -91,7 +91,7 @@ background.src = "../../img/Mape/"+mapa;
 
 var x_osa = {{ karton.x_pozicija|json_encode() }};
 var y_osa = {{ karton.y_pozicija|json_encode() }};
-var g = ["Grobno mesto {{ grobno_mesto}}"];
+var g = ["{{ grobno_mesto}}"];
 
 document.getElementById('canvas').onclick = function getCursorPosition(event){
     var rect = canvas.getBoundingClientRect();
@@ -105,23 +105,25 @@ document.getElementById('canvas').onclick = function getCursorPosition(event){
 
 background.onload = function(){
     ctx.drawImage(background,0,0);
-    var radius = 6;
+    var radius = 7;
     var period = 2000;
 
 
     ctx.beginPath();
     ctx.arc(x_osa, y_osa, radius, 0, 2 * Math.PI, false);
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = '#F7F272';
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = '#FF0000';
     ctx.stroke();
     ctx.fillStyle = '#F7F272';
     ctx.fill();
     ctx.textAlign = "center";
     ctx.textBaseline="top";
-    ctx.font = "bold 16px Arial";
+    ctx.font = "bold 22px Arial";
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 3;
+    ctx.strokeText(g, x_osa, y_osa + 2*radius);
+    ctx.fillStyle = '#F7F272';
     ctx.fillText(g, x_osa, y_osa + 2*radius);
-    ctx.fillStyle = '#FE9E76';
-    ctx.fill();
   };
 
 }

@@ -74,6 +74,7 @@ $app->group('', function () {
     $this->post('/staraoci/dodavanje', '\App\Controllers\StaraociController:postStaraociDodavanje')->setName('staraoci.dodavanje.post');
     $this->post('/staraoci/brisanje', '\App\Controllers\StaraociController:postStaraociBrisanje')->setName('staraoci.brisanje');
     $this->get('/staraoci/izmena/{id}', '\App\Controllers\StaraociController:getStaraociIzmena')->setName('staraoci.izmena');
+    $this->get('/staraoci/pregled/{id}', '\App\Controllers\StaraociController:getStaraociPregled')->setName('staraoci.pregled');
     $this->post('/staraoci/izmena', '\App\Controllers\StaraociController:postStaraociIzmena')->setName('staraoci.izmena.post');
     // Pokojnici
     $this->get('/pokojnici', '\App\Controllers\PokojniciController:getPokojnici')->setName('pokojnici');

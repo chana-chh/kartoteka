@@ -16,9 +16,9 @@
   <div class="uk-clearfix">
     <div class="uk-float-left">
       <div class="uk-button-group">
-        <a href="{{ path_for('kartoni') }}" class="uk-button uk-button-primary uk-button-small">
+        <button onclick="window.history.back();" class="uk-button uk-button-primary uk-button-small">
           <span uk-icon="chevron-left"></span> Nazad
-        </a>
+        </button>
         <a href="{{ path_for('kartoni') }}" class="uk-button uk-button-primary uk-button-small">
           <span uk-icon="chevron-double-left"></span> SVI Kartoni
         </a>
@@ -93,14 +93,13 @@
   </div>
 </div>
 <div class="uk-overflow-auto">
-  <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+  <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small uk-text-small">
     <thead>
       <tr>
-        <th class="w-5">Id</th>
         <th class="w-5">RB</th>
         <th class="w-20">Ime</th>
         <th class="w-15">JMBG</th>
-        <th class="w-20">Adresa</th>
+        <th class="w-25">Adresa</th>
         <th class="w-15">Telefon</th>
         <th class="w-5">Aktivan</th>
         <th class="w-5">Prenos</th>
@@ -110,7 +109,6 @@
     <tbody>
       {% for st in karton.staraoci() %}
       <tr>
-        <td><em>{{ st.id }}</em></td>
         <td>{{ st.redni_broj }}</td>
         <td>{{ st.punoIme() }}</td>
         <td>{{ st.jmbg }}</td>
@@ -120,6 +118,11 @@
         <td>{{ st.prenosDisabled()|raw }}</td>
         <td class="uk-clearfix">
           <ul class="uk-iconnav uk-float-right">
+             <li>
+              <a href="{{ path_for('staraoci.pregled',{id:st.id}) }}" title="Pregled">
+                <span uk-icon="search"></span>
+              </a>
+            </li>
             <li>
               <a href="{{ path_for('staraoci.izmena',{id:st.id}) }}" title="Izmena">
                 <span uk-icon="pencil"></span>
@@ -156,25 +159,25 @@
   </div>
 </div>
 <div class="uk-overflow-auto">
-  <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+  <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small uk-text-small">
     <thead>
       <tr>
-        <th class="w-5">Id</th>
         <th class="w-5">RB</th>
         <th class="w-25">Ime</th>
         <th class="w-15">JMBG</th>
-        <th class="w-20">Mesto</th>
+        <th class="w-10">Mesto</th>
         <th class="w-5">Datum rođenja</th>
         <th class="w-5">Datum smrti</th>
         <th class="w-5">Datum sahrane</th>
         <th class="w-5">Datum ekshumacije</th>
+        <th class="w-10">Pozicija</th>
+        <th class="w-5">Dupla raka</th>
         <th class="w-10 uk-text-right"><span uk-icon="cog"></span></th>
       </tr>
     </thead>
     <tbody>
       {% for pok in karton.pokojnici() %}
       <tr>
-        <td><em>{{ pok.id }}</em></td>
         <td>{{ pok.redni_broj }}</td>
         <td>{{ pok.punoIme() }}</td>
         <td>{{ pok.jmbg }}</td>
@@ -183,6 +186,8 @@
         <td>{{ pok.datum_smrti() }}</td>
         <td>{{ pok.datum_sahrane() }}</td>
         <td>{{ pok.datum_ekshumacije() }}</td>
+        <td>{{ pok.pozicija }}</td>
+        <td>{{ pok.duplaDisabled()|raw }}</td>
         <td class="uk-clearfix">
           <ul class="uk-iconnav uk-float-right">
             <li>

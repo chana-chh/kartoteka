@@ -141,6 +141,14 @@ class StaraociController extends Controller
         $this->render($response, 'staraoc_izmena.twig', compact('staraoc'));
     }
 
+    public function getStaraociPregled($request, $response, $args)
+    {
+        $id = (int)$args['id'];
+        $modelStaraoc = new Staraoc();
+        $staraoc = $modelStaraoc->find($id);
+        $this->render($response, 'staraoc_pregled.twig', compact('staraoc'));
+    }
+
     public function postStaraociIzmena($request, $response)
     {
         $id = (int)$request->getParam('id');
