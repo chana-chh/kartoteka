@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
--- Server version:               10.1.36-MariaDB - mariadb.org binary distribution
+-- Server version:               10.1.26-MariaDB - mariadb.org binary distribution
 -- Server OS:                    Win32
 -- HeidiSQL Version:             10.1.0.5464
 -- --------------------------------------------------------
@@ -13,10 +13,12 @@
 
 
 -- Dumping database structure for kartoteka
+DROP DATABASE IF EXISTS `kartoteka`;
 CREATE DATABASE IF NOT EXISTS `kartoteka` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
 USE `kartoteka`;
 
 -- Dumping structure for table kartoteka.cene
+DROP TABLE IF EXISTS `cene`;
 CREATE TABLE IF NOT EXISTS `cene` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `datum` date NOT NULL,
@@ -28,13 +30,17 @@ CREATE TABLE IF NOT EXISTS `cene` (
 
 -- Dumping data for table kartoteka.cene: ~0 rows (approximately)
 /*!40000 ALTER TABLE `cene` DISABLE KEYS */;
+INSERT INTO `cene` (`id`, `datum`, `taksa`, `zakup`, `vazece`) VALUES
+	(1, '2017-01-01', 500.00, 1000.00, 0),
+	(2, '2019-01-01', 1000.00, 12000.00, 1);
 /*!40000 ALTER TABLE `cene` ENABLE KEYS */;
 
 -- Dumping structure for table kartoteka.dokumenta
+DROP TABLE IF EXISTS `dokumenta`;
 CREATE TABLE IF NOT EXISTS `dokumenta` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `karton_id` int(10) unsigned NOT NULL,
-  `tip` enum('Ugovor') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tip` enum('Ugovor','Račun','Ostalo') COLLATE utf8mb4_unicode_ci NOT NULL,
   `datum` date NOT NULL,
   `opis` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `veza` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -43,11 +49,15 @@ CREATE TABLE IF NOT EXISTS `dokumenta` (
   CONSTRAINT `FK_dokumenta_kartoni` FOREIGN KEY (`karton_id`) REFERENCES `kartoni` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table kartoteka.dokumenta: ~0 rows (approximately)
+-- Dumping data for table kartoteka.dokumenta: ~2 rows (approximately)
 /*!40000 ALTER TABLE `dokumenta` DISABLE KEYS */;
+INSERT INTO `dokumenta` (`id`, `karton_id`, `tip`, `datum`, `opis`, `veza`) VALUES
+	(1, 1, 'Ostalo', '2019-08-19', 'kikiriki', 'http://localhost/kartoteka/pub//doc/1_Ostalo_2019-08-19_f92d018bd182fe17.pdf'),
+	(2, 1, 'Ugovor', '2019-08-28', 'Kristina', 'http://localhost/kartoteka/pub//doc/1_Ugovor_2019-08-28_9aec2ca856e2611f.jpg');
 /*!40000 ALTER TABLE `dokumenta` ENABLE KEYS */;
 
 -- Dumping structure for table kartoteka.groblja
+DROP TABLE IF EXISTS `groblja`;
 CREATE TABLE IF NOT EXISTS `groblja` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `naziv` varchar(190) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -56,11 +66,11 @@ CREATE TABLE IF NOT EXISTS `groblja` (
   `ptt` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `naziv` (`naziv`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table kartoteka.groblja: ~4 rows (approximately)
 /*!40000 ALTER TABLE `groblja` DISABLE KEYS */;
-INSERT IGNORE INTO `groblja` (`id`, `naziv`, `adresa`, `mesto`, `ptt`) VALUES
+INSERT INTO `groblja` (`id`, `naziv`, `adresa`, `mesto`, `ptt`) VALUES
 	(1, 'Bozman', 'Jovanovački put', 'Kragujevac', 34000),
 	(2, 'Varoško', 'Svetozara Markovića', 'Kragujevac', 34000),
 	(3, 'Palilulsko', 'Kneza Miloša', 'Kragujevac', 34000),
@@ -68,6 +78,7 @@ INSERT IGNORE INTO `groblja` (`id`, `naziv`, `adresa`, `mesto`, `ptt`) VALUES
 /*!40000 ALTER TABLE `groblja` ENABLE KEYS */;
 
 -- Dumping structure for table kartoteka.kartoni
+DROP TABLE IF EXISTS `kartoni`;
 CREATE TABLE IF NOT EXISTS `kartoni` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `groblje_id` int(10) unsigned NOT NULL,
@@ -85,11 +96,15 @@ CREATE TABLE IF NOT EXISTS `kartoni` (
   CONSTRAINT `FK_kartoni_groblja` FOREIGN KEY (`groblje_id`) REFERENCES `groblja` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table kartoteka.kartoni: ~0 rows (approximately)
+-- Dumping data for table kartoteka.kartoni: ~2 rows (approximately)
 /*!40000 ALTER TABLE `kartoni` DISABLE KEYS */;
+INSERT INTO `kartoni` (`id`, `groblje_id`, `parcela`, `grobno_mesto`, `broj_mesta`, `tip_groba`, `aktivan`, `napomena`, `x_pozicija`, `y_pozicija`, `saldo`) VALUES
+	(1, 1, 'Prva', '01', 2, 'Grobno mesto', 1, 'Napomena', 0, 0, 0.00),
+	(2, 4, 'Druga', '01', 1, 'Grobno mesto', 1, 'Su Drugo', 312, 506, 0.00);
 /*!40000 ALTER TABLE `kartoni` ENABLE KEYS */;
 
 -- Dumping structure for table kartoteka.korisnici
+DROP TABLE IF EXISTS `korisnici`;
 CREATE TABLE IF NOT EXISTS `korisnici` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `ime` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -98,15 +113,16 @@ CREATE TABLE IF NOT EXISTS `korisnici` (
   `nivo` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`korisnicko_ime`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table kartoteka.korisnici: ~2 rows (approximately)
+-- Dumping data for table kartoteka.korisnici: ~0 rows (approximately)
 /*!40000 ALTER TABLE `korisnici` DISABLE KEYS */;
-INSERT IGNORE INTO `korisnici` (`id`, `ime`, `korisnicko_ime`, `lozinka`, `nivo`) VALUES
+INSERT INTO `korisnici` (`id`, `ime`, `korisnicko_ime`, `lozinka`, `nivo`) VALUES
 	(1, 'Administrator', 'admin', '$2y$10$RWD9bVOhe1GlWER7DVKMAukc2/OAwpoAvC/8A.wYOpGtqMFTezQHm', 0);
 /*!40000 ALTER TABLE `korisnici` ENABLE KEYS */;
 
 -- Dumping structure for table kartoteka.logovi
+DROP TABLE IF EXISTS `logovi`;
 CREATE TABLE IF NOT EXISTS `logovi` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `opis` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '0',
@@ -116,9 +132,12 @@ CREATE TABLE IF NOT EXISTS `logovi` (
 
 -- Dumping data for table kartoteka.logovi: ~0 rows (approximately)
 /*!40000 ALTER TABLE `logovi` DISABLE KEYS */;
+INSERT INTO `logovi` (`id`, `opis`, `datum`) VALUES
+	(1, 'Administratorje dodao termin za sahranu sa id brojem 1', '2019-08-19 08:34:03');
 /*!40000 ALTER TABLE `logovi` ENABLE KEYS */;
 
 -- Dumping structure for table kartoteka.mape
+DROP TABLE IF EXISTS `mape`;
 CREATE TABLE IF NOT EXISTS `mape` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `groblje_id` int(10) unsigned NOT NULL,
@@ -132,9 +151,12 @@ CREATE TABLE IF NOT EXISTS `mape` (
 
 -- Dumping data for table kartoteka.mape: ~0 rows (approximately)
 /*!40000 ALTER TABLE `mape` DISABLE KEYS */;
+INSERT INTO `mape` (`id`, `groblje_id`, `parcela`, `veza`, `opis_mape`) VALUES
+	(1, 4, 'Druga', '4_Druga.jpg', 'Sušičko celo groblje');
 /*!40000 ALTER TABLE `mape` ENABLE KEYS */;
 
 -- Dumping structure for table kartoteka.pokojnici
+DROP TABLE IF EXISTS `pokojnici`;
 CREATE TABLE IF NOT EXISTS `pokojnici` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `karton_id` int(10) unsigned NOT NULL,
@@ -159,11 +181,15 @@ CREATE TABLE IF NOT EXISTS `pokojnici` (
   CONSTRAINT `FK_umrli_kartoni` FOREIGN KEY (`karton_id`) REFERENCES `kartoni` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table kartoteka.pokojnici: ~0 rows (approximately)
+-- Dumping data for table kartoteka.pokojnici: ~2 rows (approximately)
 /*!40000 ALTER TABLE `pokojnici` DISABLE KEYS */;
+INSERT INTO `pokojnici` (`id`, `karton_id`, `redni_broj`, `prezime`, `ime`, `srednje_ime`, `jmbg`, `mesto`, `prebivaliste`, `dupla_raka`, `pozicija`, `datum_rodjenja`, `datum_smrti`, `datum_sahrane`, `datum_ekshumacije`, `napomena`) VALUES
+	(1, 1, 1, 'Petrović', 'Nikola', 'P', '2222222222222', 'Kragujevac', NULL, 1, 'Levo gore', '1933-04-01', '2019-08-12', '2019-08-17', NULL, NULL),
+	(2, 1, 2, 'Petrović', 'Sima', 'N', '3333333333333', 'Kragujevac', 'Kragujevac', 0, NULL, '1940-02-10', '2019-08-17', '2019-08-19', NULL, NULL);
 /*!40000 ALTER TABLE `pokojnici` ENABLE KEYS */;
 
 -- Dumping structure for table kartoteka.racuni
+DROP TABLE IF EXISTS `racuni`;
 CREATE TABLE IF NOT EXISTS `racuni` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `karton_id` int(10) unsigned NOT NULL,
@@ -176,6 +202,7 @@ CREATE TABLE IF NOT EXISTS `racuni` (
   `korisnik_id_razduzio` int(10) unsigned DEFAULT NULL,
   `reprogram_id` int(10) unsigned DEFAULT NULL,
   `napomena` text COLLATE utf8mb4_unicode_ci,
+  `rok` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_racuni_kartoni` (`karton_id`),
   KEY `FK_racuni_korisnici` (`korisnik_id_zaduzio`),
@@ -187,11 +214,16 @@ CREATE TABLE IF NOT EXISTS `racuni` (
   CONSTRAINT `FK_racuni_reprogrami` FOREIGN KEY (`reprogram_id`) REFERENCES `reprogrami` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table kartoteka.racuni: ~0 rows (approximately)
+-- Dumping data for table kartoteka.racuni: ~2 rows (approximately)
 /*!40000 ALTER TABLE `racuni` DISABLE KEYS */;
+INSERT INTO `racuni` (`id`, `karton_id`, `broj`, `datum`, `iznos`, `razduzeno`, `datum_razduzenja`, `korisnik_id_zaduzio`, `korisnik_id_razduzio`, `reprogram_id`, `napomena`, `rok`) VALUES
+	(1, 1, '111/2019', '2019-08-19', 1000.00, 0, NULL, 1, NULL, NULL, 'Izrada opsega', NULL),
+	(2, 1, 'A1rok', '2019-08-28', 12000.00, 0, NULL, 1, NULL, NULL, 'Nesto', '2019-08-30'),
+	(3, 1, 'B2rok', '2019-08-28', 5000.00, 0, NULL, 1, NULL, NULL, 'Svasta', '2019-08-26');
 /*!40000 ALTER TABLE `racuni` ENABLE KEYS */;
 
 -- Dumping structure for table kartoteka.raspored
+DROP TABLE IF EXISTS `raspored`;
 CREATE TABLE IF NOT EXISTS `raspored` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `start` datetime NOT NULL,
@@ -213,7 +245,7 @@ CREATE TABLE IF NOT EXISTS `raspored` (
   `pio` tinyint(3) unsigned DEFAULT NULL,
   `napomena` text COLLATE utf8mb4_unicode_ci,
   `prevoz` text COLLATE utf8mb4_unicode_ci,
-  `karton_id` int(10) unsigned DEFAULT NULL,
+  `karton_id` int(10) unsigned NOT NULL,
   `pokojnik_id` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_raspored_kartoni` (`karton_id`),
@@ -224,9 +256,12 @@ CREATE TABLE IF NOT EXISTS `raspored` (
 
 -- Dumping data for table kartoteka.raspored: ~0 rows (approximately)
 /*!40000 ALTER TABLE `raspored` DISABLE KEYS */;
+INSERT INTO `raspored` (`id`, `start`, `end`, `title`, `url`, `prezime_prijavioca`, `ime_prijavioca`, `ovlascen`, `prezime_troskovi`, `ime_troskovi`, `jmbg_troskovi`, `prebivaliste_troskovi`, `broj_lk`, `mup`, `telefon`, `uplata_do`, `datum_prijave`, `pio`, `napomena`, `prevoz`, `karton_id`, `pokojnik_id`) VALUES
+	(1, '2019-08-19 10:00:00', '2019-08-19 11:30:00', 'Bozman-Prva-01, Sima Petrović', 'http://localhost/kartoteka/pub//raspored/izmena/1', 'Petrović', 'Petar', '-', 'Petrović', 'Petar', '2222222222222', 'Kragujevac', 956324, 'Kragujevac', '03322122', '2019-08-22', '2019-08-17', 1, '', '', 1, 2);
 /*!40000 ALTER TABLE `raspored` ENABLE KEYS */;
 
 -- Dumping structure for table kartoteka.reprogrami
+DROP TABLE IF EXISTS `reprogrami`;
 CREATE TABLE IF NOT EXISTS `reprogrami` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `karton_id` int(10) unsigned NOT NULL,
@@ -250,11 +285,14 @@ CREATE TABLE IF NOT EXISTS `reprogrami` (
   CONSTRAINT `FK_reprogrami_korisnici_2` FOREIGN KEY (`korisnik_id_razduzio`) REFERENCES `korisnici` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table kartoteka.reprogrami: ~1 rows (approximately)
+-- Dumping data for table kartoteka.reprogrami: ~0 rows (approximately)
 /*!40000 ALTER TABLE `reprogrami` DISABLE KEYS */;
+INSERT INTO `reprogrami` (`id`, `karton_id`, `broj`, `datum`, `period`, `iznos`, `preostalo_rata`, `razduzeno`, `datum_razduzenja`, `korisnik_id_zaduzio`, `korisnik_id_razduzio`, `razduzenja`, `napomena`) VALUES
+	(1, 1, '5h/2019', '2019-08-28', 12, 7200.00, 12, 0, NULL, 1, NULL, NULL, '');
 /*!40000 ALTER TABLE `reprogrami` ENABLE KEYS */;
 
 -- Dumping structure for table kartoteka.staraoci
+DROP TABLE IF EXISTS `staraoci`;
 CREATE TABLE IF NOT EXISTS `staraoci` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `karton_id` int(10) unsigned NOT NULL,
@@ -269,7 +307,7 @@ CREATE TABLE IF NOT EXISTS `staraoci` (
   `ptt` int(10) unsigned DEFAULT NULL,
   `telefon` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `aktivan` tinyint(3) unsigned NOT NULL,
-  `prenos` tinyint(3) unsigned NOT NULL,
+  `sukorisnik` tinyint(3) unsigned NOT NULL,
   `napomena` text COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`id`),
   UNIQUE KEY `karton_id_redni_broj` (`karton_id`,`redni_broj`),
@@ -280,9 +318,12 @@ CREATE TABLE IF NOT EXISTS `staraoci` (
 
 -- Dumping data for table kartoteka.staraoci: ~0 rows (approximately)
 /*!40000 ALTER TABLE `staraoci` DISABLE KEYS */;
+INSERT INTO `staraoci` (`id`, `karton_id`, `redni_broj`, `prezime`, `ime`, `srednje_ime`, `jmbg`, `ulica`, `broj`, `mesto`, `ptt`, `telefon`, `aktivan`, `sukorisnik`, `napomena`) VALUES
+	(1, 1, 1, 'Petrović', 'Petar', 'P', '1111111111111', 'Petra Petrović', '11', 'Kragujevac', 34000, '0332211', 1, 0, NULL);
 /*!40000 ALTER TABLE `staraoci` ENABLE KEYS */;
 
 -- Dumping structure for table kartoteka.uplate
+DROP TABLE IF EXISTS `uplate`;
 CREATE TABLE IF NOT EXISTS `uplate` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `karton_id` int(10) unsigned NOT NULL,
@@ -300,9 +341,12 @@ CREATE TABLE IF NOT EXISTS `uplate` (
 
 -- Dumping data for table kartoteka.uplate: ~0 rows (approximately)
 /*!40000 ALTER TABLE `uplate` DISABLE KEYS */;
+INSERT INTO `uplate` (`id`, `karton_id`, `datum`, `iznos`, `priznanica`, `korisnik_id`, `napomena`) VALUES
+	(1, 1, '2019-08-28', 5000.00, '56/2019', 1, 'ptr');
 /*!40000 ALTER TABLE `uplate` ENABLE KEYS */;
 
 -- Dumping structure for table kartoteka.zaduzenja
+DROP TABLE IF EXISTS `zaduzenja`;
 CREATE TABLE IF NOT EXISTS `zaduzenja` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `karton_id` int(10) unsigned NOT NULL,
@@ -326,8 +370,31 @@ CREATE TABLE IF NOT EXISTS `zaduzenja` (
   CONSTRAINT `FK_zaduzenja_reprogrami` FOREIGN KEY (`reprogram_id`) REFERENCES `reprogrami` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='dodati FK za reprogram';
 
--- Dumping data for table kartoteka.zaduzenja: ~0 rows (approximately)
+-- Dumping data for table kartoteka.zaduzenja: ~22 rows (approximately)
 /*!40000 ALTER TABLE `zaduzenja` DISABLE KEYS */;
+INSERT INTO `zaduzenja` (`id`, `karton_id`, `tip`, `godina`, `iznos`, `razduzeno`, `datum_zaduzenja`, `datum_razduzenja`, `korisnik_id_zaduzio`, `korisnik_id_razduzio`, `reprogram_id`) VALUES
+	(1, 1, 'taksa', 2017, 500.00, 0, '2019-08-19', NULL, 1, NULL, NULL),
+	(2, 2, 'taksa', 2017, 500.00, 0, '2019-08-19', NULL, 1, NULL, NULL),
+	(3, 1, 'zakup', 2017, 100.00, 1, '2019-08-19', '2019-08-28', 1, 1, NULL),
+	(4, 2, 'zakup', 2017, 100.00, 0, '2019-08-19', NULL, 1, NULL, NULL),
+	(5, 1, 'zakup', 2018, 100.00, 1, '2019-08-19', '2019-08-28', 1, 1, NULL),
+	(6, 2, 'zakup', 2018, 100.00, 0, '2019-08-19', NULL, 1, NULL, NULL),
+	(7, 1, 'zakup', 2019, 100.00, 0, '2019-08-19', NULL, 1, NULL, 1),
+	(8, 2, 'zakup', 2019, 100.00, 0, '2019-08-19', NULL, 1, NULL, NULL),
+	(9, 1, 'zakup', 2020, 100.00, 0, '2019-08-19', NULL, 1, NULL, 1),
+	(10, 2, 'zakup', 2020, 100.00, 0, '2019-08-19', NULL, 1, NULL, NULL),
+	(11, 1, 'zakup', 2021, 100.00, 0, '2019-08-19', NULL, 1, NULL, 1),
+	(12, 2, 'zakup', 2021, 100.00, 0, '2019-08-19', NULL, 1, NULL, NULL),
+	(13, 1, 'zakup', 2022, 100.00, 0, '2019-08-19', NULL, 1, NULL, NULL),
+	(14, 2, 'zakup', 2022, 100.00, 0, '2019-08-19', NULL, 1, NULL, NULL),
+	(15, 1, 'zakup', 2023, 100.00, 0, '2019-08-19', NULL, 1, NULL, NULL),
+	(16, 2, 'zakup', 2023, 100.00, 0, '2019-08-19', NULL, 1, NULL, NULL),
+	(17, 1, 'zakup', 2024, 100.00, 0, '2019-08-19', NULL, 1, NULL, NULL),
+	(18, 2, 'zakup', 2024, 100.00, 0, '2019-08-19', NULL, 1, NULL, NULL),
+	(19, 1, 'zakup', 2025, 100.00, 0, '2019-08-19', NULL, 1, NULL, NULL),
+	(20, 2, 'zakup', 2025, 100.00, 0, '2019-08-19', NULL, 1, NULL, NULL),
+	(21, 1, 'zakup', 2026, 100.00, 0, '2019-08-19', NULL, 1, NULL, NULL),
+	(22, 2, 'zakup', 2026, 100.00, 0, '2019-08-19', NULL, 1, NULL, NULL);
 /*!40000 ALTER TABLE `zaduzenja` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

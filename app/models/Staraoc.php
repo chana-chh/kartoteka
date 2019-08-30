@@ -38,17 +38,17 @@ class Staraoc extends Model
         return "<input type=\"checkbox\" name=\"aktivan\" data-id=\"{$this->$pk}\"{$chk} disabled>";
     }
 
-    public function prenos()
+    public function sukorisnik()
     {
-        $chk = $this->prenos === 1 ? ' checked' : '';
+        $chk = $this->sukorisnik === 1 ? ' checked' : '';
         $pk = $this->pk;
-        return "<input type=\"checkbox\" name=\"prenos\" data-id=\"{$this->$pk}\"{$chk}>";
+        return "<input type=\"checkbox\" name=\"sukorisnik\" data-id=\"{$this->$pk}\"{$chk}>";
     }
 
-    public function prenosDisabled()
+    public function sukorisnikDisabled()
     {
-        $chk = $this->prenos === 1 ? ' checked' : '';
+        $chk = $this->sukorisnik === 1 ? ' checked' : '';
         $pk = $this->pk;
-        return "<input type=\"checkbox\" name=\"prenos\" data-id=\"{$this->$pk}\"{$chk} disabled>";
+        return "<input type=\"checkbox\" name=\"sukorisnik\" data-id=\"{$this->$pk}\"{$chk} disabled>";
     }
 }

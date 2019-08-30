@@ -30,7 +30,7 @@ class PokojniciController extends Controller
         $data = $_SESSION['DATA_POKOJNICI_PRETRAGA'];
         array_shift($data);
         array_shift($data);
-        if (empty($data['jmbg']) && empty($data['prezime']) && empty($data['ime'])) {
+        if (empty($data['jmbg']) && empty($data['prezime']) && empty($data['ime']) && empty($data['datum_smrti']) && empty($data['datum_sahrane'])) {
             $this->getPokojnici($request, $response);
         }
         $data['jmbg'] = str_replace('%', '', $data['jmbg']);
@@ -62,6 +62,20 @@ class PokojniciController extends Controller
             }
             $where .= "ime LIKE :ime";
             $params[':ime'] = $ime;
+        }
+        if (!empty($data['datum_smrti'])) {
+            if ($where !== " WHERE ") {
+                $where .= " AND ";
+            }
+            $where .= "datum_smrti = :datum_smrti";
+            $params[':datum_smrti'] = $data['datum_smrti'];
+        }
+        if (!empty($data['datum_sahrane'])) {
+            if ($where !== " WHERE ") {
+                $where .= " AND ";
+            }
+            $where .= "datum_sahrane = :datum_sahrane";
+            $params[':datum_sahrane'] = $data['datum_sahrane'];
         }
         $where = $where === " WHERE " ? "" : $where;
         $model = new Pokojnik();

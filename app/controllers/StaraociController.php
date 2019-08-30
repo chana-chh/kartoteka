@@ -108,9 +108,9 @@ class StaraociController extends Controller
             return $response->withRedirect($this->router->pathFor('staraoci.dodavanje', ['id' => $data['karton_id']]));
         } else {
             $aktivan = isset($data['aktivan']) ? 1 : 0;
-            $prenos = isset($data['prenos']) ? 1 : 0;
+            $sukorisnik = isset($data['sukorisnik']) ? 1 : 0;
             $data['aktivan'] = $aktivan;
-            $data['prenos'] = $prenos;
+            $data['sukorisnik'] = $sukorisnik;
             $model = new Staraoc();
             $model->insert($data);
             $this->flash->addMessage('success', 'Novi staraoc je uspešno upisan.');
@@ -182,8 +182,8 @@ class StaraociController extends Controller
             unset($data['karton_id']);
             $aktivan = isset($data['aktivan']) ? 1 : 0;
             $data['aktivan'] = $aktivan;
-            $prenos = isset($data['prenos']) ? 1 : 0;
-            $data['prenos'] = $prenos;
+            $sukorisnik = isset($data['sukorisnik']) ? 1 : 0;
+            $data['sukorisnik'] = $sukorisnik;
             $modelStaraoc->update($data, $id);
             $this->flash->addMessage('success', 'Izmene staraoca su uspešno sačuvane.');
             return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $id_kartona]));
