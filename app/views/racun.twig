@@ -35,7 +35,7 @@
 		<label for="rok" class="uk-form-label">Rok za plaćanje <small class="uk-text-warning">(ako ne postoji ostaviti nepopunjeno)</small></label>
 		<div class="uk-form-controls">
 			<input type="date" name="rok" id="rok" value="{{ old.rok ? : '' }}" class="uk-input"
-				autocomplete="off" required>
+				autocomplete="off">
 		</div>
 		<small class=" uk-text-danger">{{ errors.rok[0] ? : '' }}</small>
 	</div>

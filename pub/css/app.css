@@ -93,6 +93,10 @@ body {
   width: 90%;
 }
 
+.w-100 {
+  width: 100%;
+}
+
 figcaption {
   margin-top: .5rem;
   font-size: 90%;

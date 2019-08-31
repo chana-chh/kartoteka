@@ -1,89 +1,251 @@
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    margin: 0;
+    margin: 0 auto;
     float: none;
+    width: 80%;
 }
 
-.buttons {
+.prn-page-break {
+    page-break-before: always;
+}
+
+.prn-hide {
+    display: block;
+}
+
+.prn-buttons {
     padding: .5rem;
 }
 
-h1 {
+.w-5 {
+    width: 5%;
+}
+
+.w-10 {
+    width: 10%;
+}
+
+.w-15 {
+    width: 15%;
+}
+
+.w-20 {
+    width: 20%;
+}
+
+.w-25 {
+    width: 25%;
+}
+
+.w-30 {
+    width: 30%;
+}
+
+.w-35 {
+    width: 35%;
+}
+
+.w-40 {
+    width: 40%;
+}
+
+.w-45 {
+    width: 45%;
+}
+
+.w-50 {
+    width: 50%;
+}
+
+.w-60 {
+    width: 60%;
+}
+
+.w-70 {
+    width: 70%;
+}
+
+.w-80 {
+    width: 80%;
+}
+
+.w-90 {
+    width: 90%;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.prn-h1,
+.prn-h2,
+.prn-h3,
+.prn-h4,
+.prn-h5,
+.prn-h6 {
+    color: #1e87f0;
+}
+
+.prn-h1 {
+    font-size: 2rem;
+}
+
+.prn-h2 {
+    font-size: 1.8rem;
+}
+
+.prn-h3 {
     font-size: 1.5rem;
-    line-height: 1.2;
-    margin-top: 32px;
-    margin: 0 0 16px 0;
-    font-weight: normal;
-    text-transform: none;
-    text-align: center;
-    color: #1673cf;
+}
+
+.prn-h4 {
+    font-size: 1.3rem;
+}
+
+.prn-h5 {
+    font-size: 1.2rem;
+}
+
+.prn-h6 {
+    font-size: 1rem;
+}
+
+.prn-padding-small {
+    padding: .5rem;
 }
 
 hr {
     box-sizing: content-box;
     height: 0;
-    overflow: visible;
-    text-align: inherit;
-    margin: 0 0 16px 0;
+    margin: 0 0 1rem 0;
     border: 0;
     border-top: 1px solid #1372d1;
 }
 
-table {
+.prn-table {
     border-collapse: collapse;
     margin: 0 auto;
     font-size: 1.2rem;
     width: 80%;
 }
 
-table,
-th,
-td {
+.prn-table,
+.prn-table th,
+.prn-table td {
     border: 1px solid black;
 }
 
-th {
-    width: 50%;
+.prn-table th,
+.prn-table td {
+    padding: .5rem;
+}
+
+.prn-table tfoot {
+    background: #ddd;
+}
+
+.prn-text-left {
     text-align: left;
-    padding: .5rem;
 }
 
-td {
-    width: 50%;
+.prn-text-center {
+    text-align: center;
+}
+
+.prn-text-right {
     text-align: right;
-    padding: .5rem;
 }
 
-tfoot {
-    font-size: 1.5rem;
+.prn-text-danger {
+    color: #f0506e;
 }
+
+.prn-text-primary {
+    color: #1e87f0;
+}
+
+.prn-text-success {
+    color: #32d296;
+}
+
 
 @media print {
     body {
+        width: 100% !important;
         font: 12pt;
         line-height: 1.3;
         background: #fff !important;
-        color: #000;
+        color: #000 !important;
     }
-    h1 {
-        font-size: 18pt;
-        color: #000;
-    }
-    .buttons {
+
+    .prn-hide {
         display: none;
     }
-    table {
-        width: 100%;
+
+    hr {
+        border-top: 1px solid #000;
     }
-    tfoot {
+
+    .prn-h1,
+    .prn-h2,
+    .prn-h3,
+    .prn-h4,
+    .prn-h5,
+    .prn-h6 {
+        background: #fff;
+        color: #000 !important;
+    }
+
+    .prn-h1 {
+        font-size: 22pt;
+    }
+
+    .prn-h2 {
+        font-size: 20pt;
+    }
+
+    .prn-h3 {
         font-size: 18pt;
     }
+
+    .prn-h4 {
+        font-size: 16pt;
+    }
+
+    .prn-h5 {
+        font-size: 14pt;
+    }
+
+    .prn-h6 {
+        font-size: 12pt;
+    }
+
+    .prn-text-danger {
+        color: #000;
+    }
+
+    .prn-text-primary {
+        color: #000;
+    }
+
+    .prn-text-success {
+        color: #000;
+    }
+
+    .prn-buttons {
+        display: none;
+    }
+
+    .prn-table {
+        width: 100%;
+    }
+
+    .prn-table tfoot {
+        background: #ddd !important;
+    }
+
     @page {
         /* U print dialogu Margins: default */
         margin: 1cm;
     }
-}
-
-ul {
-    list-style-type: none;
 }

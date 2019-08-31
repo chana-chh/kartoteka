@@ -111,6 +111,7 @@ $app->group('', function () {
     $this->post('/transakcije/zaduzivanje/takse', '\App\Controllers\TransakcijeController:postZaduzivanjeTakse')->setName('transakcije.zaduzivanje.takse.post');
     $this->get('/transakcije/zaduzivanje/zakup', '\App\Controllers\TransakcijeController:getZaduzivanjeZakup')->setName('transakcije.zaduzivanje.zakup');
     $this->post('/transakcije/zaduzivanje/zakup', '\App\Controllers\TransakcijeController:postZaduzivanjeZakup')->setName('transakcije.zaduzivanje.zakup.post');
+    $this->get('/transakcije/opomene', '\App\Controllers\TransakcijeController:getOpomene')->setName('transakcije.opomene');
     $this->post('/transakcije/zaduzivanje/brisanje', '\App\Controllers\TransakcijeController:postZaduzenjeBrisanje')->setName('transakcije.zaduzivanje.brisanje');
     $this->post('/transakcije/sve/brisanje', '\App\Controllers\TransakcijeController:postSveBrisanje')->setName('sve.brisanje');
     $this->get('/transakcije/pregled/karton/{id}', '\App\Controllers\TransakcijeController:getKartonPregled')->setName('transakcije.pregled');

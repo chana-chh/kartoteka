@@ -5,15 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <title>Kartoteka- sektor grobalja</title>
+<link rel="shortcut icon" href="{{base_url()}}/fav_ico.png">
 <link rel="stylesheet" href="{{base_url()}}/css/print.css">
 </head>
 
 <body>
-	<div class="buttons">
-		<button id="prn-zatvori">Zatvori</button>
-		<button id="prn-stampaj">Štampaj</button>
+	<div class="prn-buttons">
+		<button class="prn-zatvori" id="prn-zatvori">Zatvori</button>
+		<button class="prn-stampaj" id="prn-stampaj">Štampaj</button>
 	</div>
 	{% block sadrzaj %}{% endblock sadrzaj %}
 	<script src="{{base_url()}}/js/print.js"></script>
 </body>
+
 </html>

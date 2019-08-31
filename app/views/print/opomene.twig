@@ -1,0 +1,83 @@
+{% extends "templates/print.twig" %}
+
+{% block sadrzaj %}
+
+<h1 class="prn-hide">Štampanje opomena za dugovanja</h1>
+<hr class="prn-hide">
+
+{% for karton in kartoni %}
+<h1 class="prn-h1">Pregled dugovanja za karton <em>[ {{ karton.broj() }} ]</em></h1>
+<hr>
+<table class="prn-table">
+	<tbody>
+		<tr>
+			<th class="w-40 prn-text-left">Dug za takse</th>
+			<td class="w-60 prn-text-right">
+				<ol>
+					{% for taksa in karton.nerazduzeneTakse() %}
+					<li>za godinu {{ taksa.godina }}. po ceni od {{ taksa_vazeca|number_format(2, '.', ',') }} din</li>
+					{% endfor %}
+				</ol>
+			</td>
+		</tr>
+		<tr>
+			<th class="prn-text-right">Ukupno za takse</th>
+			<td class="prn-text-right"><strong>{{ karton.dugZaTakse()|number_format(2, '.', ',') }}</strong> din</td>
+		</tr>
+		<tr>
+			<th class="prn-text-left">Dug za desetogodišnji zakup</th>
+			<td class="prn-text-right">
+				<ol>
+					{% for zakup in karton.nerazduzeniZakupi() %}
+					<li>za godinu {{ zakup.godina }}. po ceni od {{ zakup_vazeci|number_format(2, '.', ',') }} din</li>
+					{% endfor %}
+				</ol>
+			</td>
+		</tr>
+		<tr>
+			<th class="prn-text-right">Ukupno za zakup</th>
+			<td class="prn-text-right"><strong>{{ karton.dugZaZakupe()|number_format(2, '.', ',') }}</strong> din</td>
+		</tr>
+		<tr>
+			<th class="prn-text-left">Dug za račune</th>
+			<td class="prn-text-right">
+				<ol>
+					{% for racun in karton.nerazduzeniRacuni() %}
+					<li>račun broj {{ racun.broj }} od {{ racun.datum() }} u iznosu od
+						{{ racun.iznos|number_format(2, '.', ',') }} din</li>
+					{% endfor %}
+				</ol>
+			</td>
+		</tr>
+		<tr>
+			<th class="prn-text-right">Ukupno za račune</th>
+			<td class="prn-text-right"><strong>{{ karton.dugZaRacune()|number_format(2, '.', ',') }}</strong> din</td>
+		</tr>
+		<tr>
+			<th class="prn-text-left">Dug za reprograme</th>
+			<td class="prn-text-right">
+				<ol>
+					{% for rep in karton.nerazduzeniReprogrami() %}
+					<li>za reprogram broj {{ rep.broj }} od {{ rep.datum() }} u iznosu od
+						{{ rep.dug()|number_format(2, '.', ',') }} din</li>
+					{% endfor %}
+				</ol>
+			</td>
+		</tr>
+		<tr>
+			<th class="prn-text-right">Ukupno za reprograme</th>
+			<td class="prn-text-right"><strong>{{ karton.dugZaReprograme()|number_format(2, '.', ',') }}</strong> din
+			</td>
+		</tr>
+	</tbody>
+	<tfoot>
+		<tr>
+			<th class="prn-text-left">Ukupan dug</th>
+			<td class="prn-text-right"> <strong> {{ karton.dug()|number_format(2, '.', ',') }} </strong> din</td>
+		</tr>
+	</tfoot>
+</table>
+<div class="prn-page-break"></div>
+{% endfor %}
+
+{% endblock sadrzaj %}

@@ -26,8 +26,10 @@ class TransakcijeController extends Controller
         $karton_id = $args['id'];
         $model_karton = new Karton();
         $karton = $model_karton->find($karton_id);
-        $broj_uplate = count($karton->uplate());
-        $this->render($response, 'print/transakcije_pregled.twig', compact('karton', 'broj_uplate'));
+        $model_cena = new Cena();
+        $taksa_vazeca = $model_cena->taksa();
+        $zakup_vazeci = $model_cena->zakup() / 10;
+        $this->render($response, 'print/transakcije_pregled.twig', compact('karton', 'taksa_vazeca', 'zakup_vazeci'));
     }
 
     public function getKartonRazduzivanje($request, $response, $args)
@@ -265,6 +267,15 @@ class TransakcijeController extends Controller
             return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $karton_id]));
         }
     }
+
+    public function getOpomene($request, $response)
+    {
+        $model_karton = new Karton();
+        $kartoni = $model_karton->sviAktivni();
+
+        $this->render($response, 'print/opomene.twig', compact('kartoni'));
+    }
+
 
     public function postZaduzenjeBrisanje($request, $response)
     {
