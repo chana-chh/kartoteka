@@ -164,15 +164,15 @@
       <tr>
         <th class="w-5">RB</th>
         <th class="w-25">Ime</th>
-        <th class="w-15">JMBG</th>
+        <th class="w-10">JMBG</th>
         <th class="w-10">Mesto</th>
         <th class="w-5">Datum rođenja</th>
         <th class="w-5">Datum smrti</th>
         <th class="w-5">Datum sahrane</th>
         <th class="w-5">Datum ekshumacije</th>
         <th class="w-10">Pozicija</th>
-        <th class="w-5">Dupla raka</th>
-        <th class="w-10 uk-text-right"><span uk-icon="cog"></span></th>
+        <th class="w-5"><small>Dupla raka</small></th>
+        <th class="w-15 uk-text-right"><span uk-icon="cog"></span></th>
       </tr>
     </thead>
     <tbody>
@@ -190,6 +190,11 @@
         <td>{{ pok.duplaDisabled()|raw }}</td>
         <td class="uk-clearfix">
           <ul class="uk-iconnav uk-float-right">
+            <li>
+              <a href="{{ path_for('pokojnici.pregled',{id:pok.id}) }}" title="Pregled">
+                <span uk-icon="search"></span>
+              </a>
+            </li>
             <li>
               <a href="{{ path_for('pokojnici.izmena',{'id':pok.id}) }}" title="Izmena">
                 <span uk-icon="pencil"></span>
