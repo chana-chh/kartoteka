@@ -84,6 +84,7 @@ $app->group('', function () {
     $this->post('/pokojnici/dodavanje', '\App\Controllers\PokojniciController:postPokojniciDodavanje')->setName('pokojnici.dodavanje.post');
     $this->post('/pokojnici/brisanje', '\App\Controllers\PokojniciController:postPokojniciBrisanje')->setName('pokojnici.brisanje');
     $this->get('/pokojnici/izmena/{id}', '\App\Controllers\PokojniciController:getPokojniciIzmena')->setName('pokojnici.izmena');
+    $this->get('/pokojnici/pregled/{id}', '\App\Controllers\PokojniciController:getPokojniciPregled')->setName('pokojnici.pregled');
     $this->post('/pokojnici/izmena', '\App\Controllers\PokojniciController:postPokojniciIzmena')->setName('pokojnici.izmena.post');
     // Logovi
     $this->get('/administracija/logovi', '\App\Controllers\LogController:getLog')->setName('logovi');

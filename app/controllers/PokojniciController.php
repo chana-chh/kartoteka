@@ -149,6 +149,14 @@ class PokojniciController extends Controller
         }
     }
 
+    public function getPokojniciPregled($request, $response, $args)
+    {
+        $id = (int)$args['id'];
+        $modelPokojnik = new Pokojnik();
+        $pokojnik = $modelPokojnik->find($id);
+        $this->render($response, 'pokojnik_pregled.twig', compact('pokojnik'));
+    }
+
     public function getPokojniciIzmena($request, $response, $args)
     {
         $id = (int)$args['id'];
