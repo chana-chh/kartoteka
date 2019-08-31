@@ -70,6 +70,11 @@
                 <td class="uk-clearfix">
                     <ul class="uk-iconnav uk-float-right">
                         <li>
+                            <a href="{{ path_for('pokojnici.pregled',{id:pok.id}) }}" title="Pregled">
+                            <span uk-icon="search"></span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{ path_for('transakcije.pregled', { id: pok.karton_id }) }}"
                                 title="Transakcije"><span
                                     uk-icon="credit-card"></span></a>

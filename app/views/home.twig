@@ -52,14 +52,16 @@
 </div>
 {% else %}
 	<h3 class="uk-panel uk-background-muted uk-margin-top uk-padding-small">Danas nema zakazanih termina.</h3>
-    <hr>
+{% endif %}
+{% if auth.logged %}
+ <hr>
      <div class="uk-float-right">
       <a href="{{ path_for('raspored.dodavanje') }}" class="uk-button uk-button-primary uk-button-small"><span title="Zakazivanje termina" uk-icon="plus-circle" class="ikonica"></span></a>
       <a href="{{ path_for('raspored.tabela') }}" class="uk-button uk-button-default uk-button-small"><span title="Tabelarni pregled termina" uk-icon="table" class="ikonica"></span></a>
     </div>
-{% endif %}
 </div>
 </div>
+
 <div uk-grid>
 <div class="uk-width-1-1">
 {% if isticu %}
@@ -90,4 +92,5 @@
 {% endif %}
 </div>
 </div>
+{% endif %}
 {% endblock traka %}
