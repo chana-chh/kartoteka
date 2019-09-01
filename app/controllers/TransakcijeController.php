@@ -18,7 +18,11 @@ class TransakcijeController extends Controller
         $model_karton = new Karton();
         $karton = $model_karton->find($karton_id);
         $broj_uplate = count($karton->uplate());
-        $this->render($response, 'transakcije_pregled.twig', compact('karton', 'broj_uplate'));
+        $model_cene = new Cena();
+        $cena_takse = $model_cene->taksa();
+        $cena_zakupa = $model_cene->zakup() / 10;
+
+        $this->render($response, 'transakcije_pregled.twig', compact('karton', 'broj_uplate', 'cena_takse', 'cena_zakupa'));
     }
 
     public function getKartonPregledStampa($request, $response, $args)
@@ -196,11 +200,14 @@ class TransakcijeController extends Controller
     {
         $data = $request->getParams();
         $karton_id = $data['karton_id'];
+        $model_karton = new Karton();
+        $karton = $model_karton->find($karton_id);
         $korisnik_id = $this->auth->user()->id;
+        $iznos = (float) $data['uplata_iznos'];
         // podaci za uplatu
         $uplata_data = [
             'karton_id' => $karton_id,
-            'iznos' => (float) $data['uplata_iznos'],
+            'iznos' => $iznos,
             'datum' => $data['uplata_datum'],
             'priznanica' => $data['uplata_priznanica'],
             'napomena' => $data['uplata_napomena'],
@@ -219,12 +226,56 @@ class TransakcijeController extends Controller
             ],
             'uplata_iznos' => [
                 'required' => true,
-                'min' => 0.01,
+                'min' => 0,
             ],
             'uplata_datum' => [
                 'required' => true,
             ],
         ];
+
+        // provera da li je iznos >= sva zaduzenja za razduzivanje
+        $model_zaduzenje = new Zaduzenje();
+        $model_racun = new Racun();
+        $model_reprogram = new Reprogram();
+        $model_cena = new Cena();
+
+        $taksa = $model_cena->taksa();
+        $zakup = $model_cena->zakup() / 10;
+
+        $iznos_za_razduzenje = 0;
+
+        if (!empty($zaduzenja_data)) {
+            $zad = implode(", ", $zaduzenja_data);
+            $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE id IN ($zad) AND tip = 'taksa';";
+            $br = (int) $model_zaduzenje->fetch($sql)[0]->broj;
+            $iznos_za_razduzenje += $br * $taksa * $karton->broj_mesta;
+            $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE id IN ($zad) AND tip = 'zakup';";
+            $br = (int) $model_zaduzenje->fetch($sql)[0]->broj;
+            $iznos_za_razduzenje += $br * $zakup * $karton->broj_mesta;
+        }
+        if (!empty($racuni_data)) {
+            $rac = implode(", ", $racuni_data);
+            $sql = "SELECT SUM(iznos) AS zbir FROM racuni WHERE id IN ($rac);";
+            $zbir = $model_racun->fetch($sql)[0]->zbir;
+            $iznos_za_razduzenje += $zbir;
+        }
+        if (!empty($reprogrami_data)) {
+            $rep = implode(", ", $reprogrami_data);
+            $sql = "SELECT * FROM reprogrami WHERE id IN ($rep);";
+            $reprogrami = $model_reprogram->fetch($sql);
+            $zbir = 0;
+            foreach ($reprogrami as $rep) {
+                $zbir += $rep->dug();
+            }
+            $iznos_za_razduzenje += $zbir;
+        }
+
+        $razlika = $iznos + $karton->saldo - $iznos_za_razduzenje;
+
+        if ($razlika < 0) {
+            $this->flash->addMessage('danger', 'Iznos uplate nije daovoljan za razduživanje.');
+            return $response->withRedirect($this->router->pathFor('transakcije.razduzivanje', ['id' => $karton_id]));
+        }
 
         $this->validator->validate($data, $validation_rules);
 
@@ -234,6 +285,8 @@ class TransakcijeController extends Controller
         } else {
             $model_uplata = new Uplata();
             $model_uplata->insert($uplata_data);
+            $sql = "UPDATE kartoni SET saldo = {$razlika} WHERE id={$karton_id};";
+            $model_karton->run($sql);
             if (!empty($zaduzenja_data)) {
                 $zad = implode(", ", $zaduzenja_data);
                 $sql_zaduzenja = "UPDATE zaduzenja

@@ -42,7 +42,8 @@
     <div uk-dropdown="mode: click" class="uk-text-large uk-width-1-1">
       Broj rata {{ rep.period }}, preostalo za uplatu {{ rep.preostalo_rata }} rata.<br>
       Razduzen: <span
-        class="{{ rep.razduzeno == 0 ? 'uk-text-danger' : 'uk-text-success' }}">{{ rep.razduzeno == 0 ? 'NE' : 'DA' }}</span>.
+        class="{{ rep.razduzeno == 0 ? 'uk-text-danger' : 'uk-text-success' }}">{{ rep.razduzeno == 0 ? 'NE' : 'DA' }}</span>.<br>
+      Preostali dug: {{ rep.dug()|number_format(2, '.', ',') }} din
       {{ rep.datum_razduzenja ? 'Dana ' ~ rep.datum_razduzenja() ~ '. godine' : '' }}<br>
       {{ rep.razduzenja|nl2br }}<br>
       Napomene: {{ rep.napomena|nl2br }}
@@ -58,10 +59,65 @@
       class="uk-button uk-button-default uk-text-large uk-padding-small w-5">
       <span uk-icon="icon: pencil; ratio: 1.5"></span>
     </a>
-    <a href=""
-      class="uk-button uk-button-primary uk-text-success uk-text-large uk-padding-small w-10">
+    <a href="" class="uk-button uk-button-primary uk-text-success uk-text-large uk-padding-small w-10">
       <span uk-icon="icon: tablet-landscape; ratio: 1.5"></span>
     </a>
+
+
+
+
+    <div uk-dropdown="mode: click" class="uk-width-1-1">
+      <h3>Uplata rate reprograma</h3>
+      <form action="{{ path_for('transakcije.reprogram.uplata') }}" method="POST" id="forma_uplata"
+        class="uk-form-stacked" uk-grid>
+        {{ csrf | raw }}
+        <input type="hidden" name="reprogram_id" value="{{ rep.id }}">
+        <div class="uk-width-1-5">
+          <label for="iznos" class="uk-form-label">Iznos</label>
+          <div class="uk-form-controls">
+            <input type="number" name="iznos" id="iznos" value="{{ rep.rata() }}" min="0" step="0.01"
+              class="uk-input uk-text-right" autocomplete="off" required>
+          </div>
+          <small class="uk-text-danger">{{ errors.iznos[0] ? :'' }}</small>
+        </div>
+        <div class="uk-width-1-5">
+          <label for="datum" class="uk-form-label">Datum</label>
+          <div class="uk-form-controls">
+            <input type="date" name="datum" id="datum" value="{{ 'now'|date('Y-m-d') }}" class="uk-input"
+              autocomplete="off" required>
+          </div>
+          <small class=" uk-text-danger">{{ errors.datum[0] ? : '' }}</small>
+        </div>
+
+        <div class="uk-width-1-5">
+          <label for="priznanica" class="uk-form-label">Priznanica</label>
+          <div class="uk-form-controls">
+            <input type="text" name="priznanica" id="priznanica" value="{{ old.priznanica ? : '' }}" class="uk-input"
+              autocomplete="off">
+          </div>
+          <small class=" uk-text-danger">{{ errors.priznanica[0] ? : '' }}</small>
+        </div>
+
+        <div class="uk-width-2-5">
+          <label for="napomena" class="uk-form-label">Napomena</label>
+          <div class="uk-form-controls">
+            <textarea class="uk-textarea{{ errors.napomena[0] ? ' uk-form-danger': ''}}" rows="2" name="napomena"
+              id="napomena">{{ old.napomena ? : '' }}</textarea>
+          </div>
+          <small class=" uk-text-danger">{{ errors.napomena[0] ? :'' }}</small>
+        </div>
+        <div class="uk-button-group uk-width-1-2">
+          <input type="submit" value="Snimi uplatu rate" class="uk-button uk-button-primary uk-width-1-2"
+            onclick="resetRazduzenje();">
+          <input type="reset" value="Otkaži" class="uk-button uk-button-secondary uk-width-1-2">
+        </div>
+      </form>
+    </div>
+
+
+
+
+
   </div>
   <div class="uk-margin-large-left">
     <h4 class="uk-text-primary">Takse</h4>
@@ -141,7 +197,12 @@
 {% endblock sadrzaj %}
 
 {% block traka %}
-
+<h2 class="uk-text-right">Saldo kartona</h2>
+<div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
+  <h1 class="uk-text-success" id="saldo">
+    {{ karton.saldo }}
+  </h1>
+</div>
 {% endblock traka %}
 
 {% block skripta %}

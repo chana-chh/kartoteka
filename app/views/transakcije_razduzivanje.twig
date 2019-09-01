@@ -88,8 +88,9 @@
             <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
               <thead>
                 <tr>
-                  <th class="w-50">Godina</th>
+                  <th class="w-25">Godina</th>
                   <th class="w-25 uk-text-right">Iznos</th>
+                  <th class="w-25 uk-text-right">Za razduženje</th>
                   <th class="w-25 uk-text-center">Razduzeno</th>
                 </tr>
               </thead>
@@ -99,6 +100,9 @@
                   <td>{{ taksa.godina }}</td>
                   <td class="uk-text-right">
                     {{ taksa.iznos|number_format(2, '.', ',') }}
+                  </td>
+                  <td class="uk-text-right">
+                    {{ (cena_takse * karton.broj_mesta)|number_format(2, '.', ',') }}
                   </td>
                   <td class="uk-text-center">{{ taksa.razduzeno() | raw }}</td>
                 </tr>
@@ -121,8 +125,9 @@
             <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
               <thead>
                 <tr>
-                  <th class="w-50">Godina</th>
+                  <th class="w-25">Godina</th>
                   <th class="w-25 uk-text-right">Iznos</th>
+                  <th class="w-25 uk-text-right">Za razduženje</th>
                   <th class="w-25 uk-text-center">Razduzeno</th>
                 </tr>
               </thead>
@@ -132,6 +137,9 @@
                   <td>{{ zakup.godina }}</td>
                   <td class="uk-text-right">
                     {{ zakup.iznos|number_format(2, '.', ',') }}
+                  </td>
+                  <td class="uk-text-right">
+                    {{ (cena_zakupa * karton.broj_mesta)|number_format(2, '.', ',') }}
                   </td>
                   <td class="uk-text-center">{{ zakup.razduzeno() | raw }}</td>
                 </tr>
@@ -222,13 +230,15 @@
     </ul>
   </div>
 </form>
-{% endblock sadrzaj %} {% block traka %}
+{% endblock sadrzaj %}
+
+{% block traka %}
 <div uk-grid>
   <div class="uk-width-1-2">
     <h2 class="uk-text-right">Saldo kartona</h2>
     <div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
       <h1 class="uk-text-success" id="saldo">
-        {{ karton.saldo | number_format(2, '.', ',') }}
+        {{ karton.saldo }}
       </h1>
     </div>
   </div>
@@ -289,10 +299,33 @@
   var chk_reprogrami = document.getElementsByClassName("razduzeno-reprogrami");
   var forma = document.getElementById("foram_uplata");
   var poruka = document.getElementById("poruka");
+  var uplata_iznos = document.getElementById("uplata_iznos");
+  var sub = false;
 
   document.getElementById("prosledi_formu").addEventListener("click", function () {
-    document.getElementById("foram_uplata").submit();
+    if (sub) {
+      document.getElementById("foram_uplata").submit();
+    }
   });
+
+  function uporediPolja() {
+    var polje_uplata =
+      parseFloat(document.getElementById("uplata_iznos").value) +
+      parseFloat(document.getElementById("saldo").textContent);
+    var polje_razduzenje = parseFloat(document.getElementById("razduzenje").textContent);
+    if (polje_razduzenje == 0) {
+      poruka.innerHTML = "Nije odabrana/čekirana nijedna stavka za razduženje!";
+      sub = true;
+    } else if (polje_uplata === polje_razduzenje) {
+      poruka.innerHTML = "Da li ste sigurni da želite da izvršite uplatu i razdužite odabrana zaduženja.";
+      sub = true;
+    } else if (polje_uplata > polje_razduzenje) {
+      poruka.innerHTML = "Uplata je veća nego iznos za razduženje.";
+      sub = true;
+    } else {
+      poruka.innerHTML = "Uplata nije dovoljna da pokrije iznos za razduženje.";
+    };
+  }
 
   for (i = 0; i < chk_zaduzenja.length; i++) {
     chk_zaduzenja[i].addEventListener(
@@ -303,14 +336,18 @@
         if (this.checked) {
           if (tip === "taksa") {
             razduzenje.textContent = (razd + taksa).toFixed(2);
+            uplata_iznos.value = (razd + taksa).toFixed(2);
           } else {
             razduzenje.textContent = (razd + zakup).toFixed(2);
+            uplata_iznos.value = (razd + zakup).toFixed(2);
           }
         } else {
           if (tip === "taksa") {
             razduzenje.textContent = (razd - taksa).toFixed(2);
+            uplata_iznos.value = (razd - taksa).toFixed(2);
           } else {
             razduzenje.textContent = (razd - zakup).toFixed(2);
+            uplata_iznos.value = (razd - zakup).toFixed(2);
           }
         }
       },
@@ -326,8 +363,10 @@
         var iznos = Number(this.getAttribute("data-iznos"));
         if (this.checked) {
           razduzenje.textContent = (razd + iznos).toFixed(2);
+          uplata_iznos.value = (razd + iznos).toFixed(2);
         } else {
           razduzenje.textContent = (razd - iznos).toFixed(2);
+          uplata_iznos.value = (razd - iznos).toFixed(2);
         }
       },
       false
@@ -341,29 +380,18 @@
         var iznos = Number(this.getAttribute("data-iznos"));
         if (this.checked) {
           razduzenje.textContent = (razd + iznos).toFixed(2);
+          uplata_iznos.value = (razd + iznos).toFixed(2);
         } else {
           razduzenje.textContent = (razd - iznos).toFixed(2);
+          uplata_iznos.value = (razd - iznos).toFixed(2);
         }
       },
       false);
   }
 
-  function uporediPolja() {
-    var polje_uplata = document.getElementById("uplata_iznos").value;
-    var polje_razduzenje = document.getElementById("razduzenje").textContent;
-    if (parseFloat(polje_razduzenje) == 0) {
-      poruka.innerHTML = "Nije odabrana/čekirana nijedna stavka za razduženje!";
-    } else if (parseFloat(polje_uplata) === parseFloat(polje_razduzenje)) {
-      poruka.innerHTML = "Uplata tačno pokriva iznos predviđen za razduženje.";
-    } else if (parseFloat(polje_uplata) > parseFloat(polje_razduzenje)) {
-      poruka.innerHTML = "Uplata je veća nego iznos za razduženje.";
-    } else {
-      poruka.innerHTML = "Uplata nije dovoljna da pokrije iznos za razduženje.";
-    };
-  }
-
   function resetRazduzenje() {
     razduzenje.textContent = 0;
+    uplata_iznos.value = 0;
   }
 </script>
 {% endblock skripta %}

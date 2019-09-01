@@ -125,6 +125,7 @@ $app->group('', function () {
     $this->get('/transakcije/reprogram/izmena/{id}', '\App\Controllers\ReprogramiController:getReprogramIzmena')->setName('transakcije.reprogram.izmena');
     $this->post('/transakcije/reprogram/dodavanje', '\App\Controllers\ReprogramiController:postReprogramDodavanje')->setName('transakcije.reprogram.dodavanje.post');
     $this->post('/transakcije/reprogram/izmena', '\App\Controllers\ReprogramiController:postReprogramIzmena')->setName('transakcije.reprogram.izmena.post');
+    $this->post('/transakcije/reprogram/rata', '\App\Controllers\ReprogramiController:postReprogramUplataRate')->setName('transakcije.reprogram.uplata');
     // Racuni
     $this->get('/transakcije/racun/{id}', '\App\Controllers\RacuniController:getRacun')->setName('racun');
     $this->post('/transakcije/racun', '\App\Controllers\RacuniController:postRacun')->setName('racun.post');

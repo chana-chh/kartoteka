@@ -38,7 +38,12 @@ class Reprogram extends Model
 
 	public function dug()
 	{
-		return (float) ($this->iznos / $this->period) * $this->preostalo_rata;
+		return round(($this->iznos / $this->period), 2) * $this->preostalo_rata;
+	}
+
+	public function rata()
+	{
+		return round($this->iznos / $this->period, 2);
 	}
 
 	public function razduzeno()

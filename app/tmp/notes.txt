@@ -13,11 +13,13 @@ sve ostalo ima napomenu ili nije potrebna (taksa, zakup ...)
 APLIKACIJA
 =======================
 
-Puca tabelarni pregled termina
+Ne brise pokojnike iz pregleda kartona !!!
 
-Odraditi modale za transakcije/reprograme
 
-Napraviti uplatu rate reprograma
+TODO
+
+kod uplate rate reprograma na view proveriti da li uplata pokriva ratu (veliki broj decimala!!!)
+
 
 
 CENA PO GROBNOM MESTU

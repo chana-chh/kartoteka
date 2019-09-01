@@ -7,6 +7,7 @@ use App\Models\Karton;
 use App\Models\Zaduzenje;
 use App\Models\Racun;
 use App\Models\Reprogram;
+use App\Models\Uplata;
 
 class ReprogramiController extends Controller
 {
@@ -173,6 +174,79 @@ class ReprogramiController extends Controller
 			}
 			$this->flash->addMessage('success', 'Reprogram je uspešno izmenjen.');
 			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $karton_id]));
+		}
+	}
+
+	public function postReprogramUplataRate($request, $response)
+	{
+		$data = $request->getParams();
+		$reprogram_id = $data['reprogram_id'];
+		$korisnik_id = $this->auth->user()->id;
+		$iznos = (float) $data['iznos'];
+		$model_reprogram = new Reprogram();
+		$reprogram = $model_reprogram->find($reprogram_id);
+		$karton_id = $reprogram->karton()->id;
+
+		$uplata_data = [
+			'karton_id' => $karton_id,
+			'iznos' => $iznos,
+			'datum' => $data['datum'],
+			'priznanica' => $data['priznanica'],
+			'napomena' => $data['napomena'],
+			'korisnik_id' => $korisnik_id,
+		];
+		$validation_rules = [
+			'karton_id' => [
+				'required' => true,
+			],
+			'iznos' => [
+				'required' => true,
+				'min' => 0,
+			],
+			'datum' => [
+				'required' => true,
+			],
+		];
+		$razlika = $iznos - $reprogram->rata() + $reprogram->karton()->saldo;
+
+		if ($razlika <= -0.05) {
+			$this->flash->addMessage('danger', 'Iznos uplate ne pokriva ratu reprograma.');
+			return $response->withRedirect($this->router->pathFor('transakcije.reprogrami', ['id' => $karton_id]));
+		}
+		$this->validator->validate($data, $validation_rules);
+		if ($this->validator->hasErrors()) {
+			$this->flash->addMessage('danger', 'Došlo je do greške prilikom snimanja uplate i razduživanja.');
+			return $response->withRedirect($this->router->pathFor('transakcije.reprogrami', ['id' => $karton_id]));
+		} else {
+			$model_uplata = new Uplata();
+			$model_uplata->insert($uplata_data);
+			$sql = "UPDATE kartoni SET saldo = {$razlika} WHERE id={$karton_id};";
+			$model_uplata->run($sql);
+			$preostalo_rata = $reprogram->preostalo_rata - 1;
+			$tekst_razduzenja = "{$reprogram->razduzenja}Uplata {$iznos} din od {$uplata_data['datum']}, ";
+			// proveriti da li je broj rata 0 i ako jeste razduziti reprogram
+			if ($preostalo_rata === 0) {
+				$sql_zaduzenja = "UPDATE zaduzenja
+                    SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id}
+                    WHERE reprogram_id = {$reprogram_id};";
+				$model_uplata->run($sql_zaduzenja);
+				$sql_racuni = "UPDATE racuni
+                    SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id}
+                    WHERE reprogram_id = {$reprogram_id};";
+				$model_uplata->run($sql_racuni);
+				$sql_reprogram = "UPDATE reprogrami
+                    SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id}, preostalo_rata = 0,
+					razduzenja = '{$tekst_razduzenja}'
+                    WHERE id = {$reprogram_id};";
+				$model_uplata->run($sql_reprogram);
+			} else {
+				$sql_reprogram = "UPDATE reprogrami
+                    SET preostalo_rata = {$preostalo_rata}, razduzenja = '{$tekst_razduzenja}'
+					WHERE id = {$reprogram_id};";
+				$model_uplata->run($sql_reprogram);
+			}
+			$this->flash->addMessage('success', 'Rata reprograma je uplaćena.');
+			return $response->withRedirect($this->router->pathFor('transakcije.reprogrami', ['id' => $karton_id]));
 		}
 	}
 }
