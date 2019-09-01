@@ -297,7 +297,7 @@
                   uk-icon="pencil"></span></a>
             </li>
             <li>
-              <a href="#modal-brisanje-termina" title="Brisanje" data-id="{{ ter.id }}" onclick="setDocId(this);"
+              <a href="#modal-brisanje-termina" title="Brisanje" data-id="{{ ter.id }}" onclick="setTerId(this);"
                 uk-toggle>
                 <span uk-icon="trash"></span>
               </a>
@@ -359,7 +359,7 @@
     document.getElementById("modal_pokojnik_id").value = el.dataset.id;
   }
   
-  function setPokId(el) {
+  function setTerId(el) {
     document.getElementById("termin_modal_id").value = el.dataset.id;
   }
 </script>
