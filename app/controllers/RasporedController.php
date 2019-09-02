@@ -236,7 +236,7 @@ class RasporedController extends Controller
 
     public function postRasporedBrisanje($request, $response)
     {
-        $id = (int)$request->getParam('modal_id');
+        $id = (int)$request->getParam('termin_modal_id');
         $model = new Raspored();
         $success = $model->deleteOne($id);
         if ($success) {
