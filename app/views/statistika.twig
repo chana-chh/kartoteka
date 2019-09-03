@@ -13,11 +13,11 @@
     <li>Ukupno pokojnika u bazi: <strong>{{pokojnici}}</strong></li>
     <li>Ukupno staralaca u bazi: <strong>{{staraoci}}</strong></li>
     <li>Ukupan broj grobnih mesta: <strong>{{broj_mesta}}</strong></li>
-    <li>Ukupan dug: <strong>{{dugTakse + dugZakupi + racuni}}</strong></li>
-    <li>Ukupan dug za zakup: <strong>{{dugZakupi}}</strong></li>
-    <li>Ukupan dug za takse: <strong>{{dugTakse}}</strong></li>
-    <li>Ukupan dug za račune: <strong>{{racuni}}</strong></li>
-    <li>Ukupan iznos uplata: <strong>{{uplate}}</strong></li>
+    <li>Ukupan dug: <strong>{{(dugTakse + dugZakupi + racuni)|number_format(2, '.', ',')}}</strong></li>
+    <li>Ukupan dug za zakup: <strong>{{dugZakupi|number_format(2, '.', ',') }}</strong></li>
+    <li>Ukupan dug za takse: <strong>{{dugTakse|number_format(2, '.', ',') }}</strong></li>
+    <li>Ukupan dug za račune: <strong>{{racuni|number_format(2, '.', ',') }}</strong></li>
+    <li>Ukupan iznos uplata: <strong>{{uplate|number_format(2, '.', ',') }}</strong></li>
 </ul>
 </div>
 <div style="max-height: 200px; max-width:200px" class="uk-margin uk-align-center">
