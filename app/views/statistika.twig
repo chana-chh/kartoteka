@@ -1,0 +1,93 @@
+{% extends "templates/app.twig" %}
+
+{% block sadrzaj %}
+<div style="max-height: 600px; max-width:600px" class="uk-margin uk-align-center">
+<canvas class="uk-margin-large" id="myChart" width="600" height="600"></canvas>
+</div>
+{% endblock sadrzaj %}
+{% block traka %}
+    <div class="uk-card uk-card-default uk-card-body uk-margin-top">
+    <h3 class="uk-card-title">Statistika:</h3>
+<ul class="uk-list uk-list-striped uk-margin">
+    <li>Ukupno kartona u bazi: <strong>{{kartoni}}</strong></li>
+    <li>Ukupno pokojnika u bazi: <strong>{{pokojnici}}</strong></li>
+    <li>Ukupno staralaca u bazi: <strong>{{staraoci}}</strong></li>
+    <li>Ukupan broj grobnih mesta: <strong>{{broj_mesta}}</strong></li>
+    <li>Ukupan dug: <strong>{{dugTakse + dugZakupi + racuni}}</strong></li>
+    <li>Ukupan dug za zakup: <strong>{{dugZakupi}}</strong></li>
+    <li>Ukupan dug za takse: <strong>{{dugTakse}}</strong></li>
+    <li>Ukupan dug za račune: <strong>{{racuni}}</strong></li>
+    <li>Ukupan iznos uplata: <strong>{{uplate}}</strong></li>
+</ul>
+</div>
+<div style="max-height: 200px; max-width:200px" class="uk-margin uk-align-center">
+<canvas class="uk-margin-large" id="pita" width="200" height="200"></canvas>
+</div>
+{% endblock traka %}
+{% block skripta %}
+<script src="{{base_url()}}/js/Chart.bundle.min.js"></script>
+<script>
+
+var takse = {{ dugTakse|json_encode() }};
+var zakupi = {{ dugZakupi|json_encode() }};
+var racuni = {{ racuni|json_encode() }};
+var uplate = {{ uplate|json_encode() }};
+var dug = parseInt(takse + zakupi + racuni);
+
+var ctx = document.getElementById('myChart');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Takse', 'Zakupi', 'Računi', 'Uplate'],
+        datasets: [{
+            label: 'Ukupno dugovanje ',
+            data: [takse, zakupi, racuni, uplate],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)'
+            ],
+            borderWidth: 3
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+
+var ctx_pita = document.getElementById('pita');
+var pita = new Chart(ctx_pita, {
+    type: 'pie',
+    data: {
+        labels: ['Dug', 'Uplate'],
+        datasets: [{
+            label: 'Ukupno dugovanje ',
+            data: [dug, uplate],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(75, 192, 192, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(75, 192, 192, 1)'
+            ],
+            borderWidth: 1
+        }]
+    }
+});
+
+</script>
+{% endblock skripta %}

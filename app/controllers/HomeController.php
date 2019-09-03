@@ -7,6 +7,7 @@ use App\Models\Karton;
 use App\Models\Pokojnik;
 use App\Models\Staraoc;
 use App\Models\Racun;
+use App\Models\Cena;
 
 class HomeController extends Controller
 {
@@ -17,6 +18,18 @@ class HomeController extends Controller
 
         $karton = new Karton();
         $kartoni = count($karton->all());
+        $broj_mesta = $karton->ukupanBrojMesta();
+        $takse = $karton->brojNerazduzenihTaksi();
+        $zakupi = $karton->brojNerazduzenihZakupa();
+        $racuni = $karton->ukupanDugZaRacune();
+        $uplate = $karton->ukupnaSumaUplata();
+
+        $model_cena = new Cena();
+        $cenaT = (float) $model_cena->taksa();
+        $cenaZ = (float) $model_cena->taksa()/10;
+
+        $dugTakse = $takse * $broj_mesta * $cenaT;
+        $dugZakupi = $zakupi * $broj_mesta * $cenaZ;
 
         $pokojnik = new Pokojnik();
         $pokojnici = count($pokojnik->all());
@@ -28,7 +41,8 @@ class HomeController extends Controller
         $isticu = $racun->rok();
         $istekli = $racun->istekli();
         
-		$this->render($response, 'home.twig', compact('danasnji', 'kartoni', 'pokojnici', 'staraoci', 'isticu', 'istekli'));
+		$this->render($response, 'home.twig', compact('danasnji', 'kartoni', 'pokojnici', 'staraoci', 'isticu', 'istekli', 
+			'dugTakse', 'dugZakupi', 'racuni', 'uplate'));
 	}
 
 	public function getAbout($request, $response)

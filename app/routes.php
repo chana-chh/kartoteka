@@ -139,5 +139,6 @@ $app->group('', function () {
     //Uplate
     $this->get('/transakcije/uplate/{id}', '\App\Controllers\UplataController:getUplate')->setName('uplate');
     $this->post('/transakcije/uplate/brisanje', '\App\Controllers\UplataController:postUplataBrisanje')->setName('uplate.brisanje');
-    // Reprogram
+    // Statistika
+    $this->get('/statistika', '\App\Controllers\StatistikaController:getStatistika')->setName('statistika');
 })->add(new AuthMiddleware($container));

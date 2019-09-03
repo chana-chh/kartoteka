@@ -193,4 +193,39 @@ class Karton extends Model
         $sql = "SELECT SUM(iznos) AS ukupno FROM uplate WHERE karton_id = {$this->id};";
         return (float) $this->fetch($sql)[0]->ukupno;
     }
+
+    //Za uvrnutu statistiku
+
+    public function ukupanBrojMesta()
+    {
+        $sql = "SELECT SUM(broj_mesta) AS ukupno FROM {$this->table};";
+        return $this->fetch($sql)[0]->ukupno;
+    }
+
+    public function brojNerazduzenihTaksi()
+    {
+        $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0 AND reprogram_id IS NULL;";
+        $broj = $this->fetch($sql)[0]->broj;
+        return $broj;
+    }
+
+    public function brojNerazduzenihZakupa()
+    {
+        $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0 AND reprogram_id IS NULL;";
+        $broj = $this->fetch($sql)[0]->broj;
+        return $broj;
+    }
+
+    public function ukupanDugZaRacune()
+    {
+        $sql = "SELECT SUM(iznos) AS dug FROM racuni WHERE razduzeno = 0 AND reprogram_id IS NULL;";
+        return (float) $this->fetch($sql)[0]->dug;
+    }
+
+    public function ukupnaSumaUplata()
+    {
+        $sql = "SELECT SUM(iznos) AS ukupno FROM uplate;";
+        return (float) $this->fetch($sql)[0]->ukupno;
+    }
+
 }
