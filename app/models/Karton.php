@@ -204,16 +204,24 @@ class Karton extends Model
 
     public function brojNerazduzenihTaksi()
     {
-        $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0 AND reprogram_id IS NULL;";
-        $broj = $this->fetch($sql)[0]->broj;
-        return $broj;
+        $sql = "SELECT SUM(d) AS ukupno FROM
+                (SELECT ((SELECT taksa FROM cene WHERE vazece = 1)*kartoni.broj_mesta) AS d
+                FROM zaduzenja 
+                LEFT JOIN kartoni ON zaduzenja.karton_id = kartoni.id
+                WHERE tip = 'taksa' AND razduzeno = 0 AND reprogram_id IS NULL) AS celo;";
+        $broj = $this->fetch($sql)[0]->ukupno;
+        return (float) $broj;
     }
 
     public function brojNerazduzenihZakupa()
     {
-        $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0 AND reprogram_id IS NULL;";
-        $broj = $this->fetch($sql)[0]->broj;
-        return $broj;
+        $sql = "SELECT SUM(d) AS ukupno FROM
+                (SELECT ((SELECT zakup FROM cene WHERE vazece = 1)*kartoni.broj_mesta) AS d
+                FROM zaduzenja 
+                LEFT JOIN kartoni ON zaduzenja.karton_id = kartoni.id
+                WHERE tip = 'zakup' AND razduzeno = 0 AND reprogram_id IS NULL) AS celo;";
+        $broj = $this->fetch($sql)[0]->ukupno;
+        return (float) $broj;
     }
 
     public function ukupanDugZaRacune()
