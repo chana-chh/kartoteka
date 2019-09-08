@@ -7,7 +7,10 @@ CREATE TABLE `s_tip_loga` (
 )
 COLLATE='utf8mb4_unicode_ci';
 ALTER TABLE `logovi` ADD COLUMN `tip_id` INT(10) UNSIGNED NOT NULL AFTER `datum`;
-INSERT INTO `kartoteka`.`s_tip_loga` (`tip`) VALUES ('Novi zapis', 'Brisanje zapisa', 'Izmena zapisa', 'Dodavanje dokumenta');
+INSERT INTO `kartoteka`.`s_tip_loga` (`tip`) VALUES ('Novi zapis');
+INSERT INTO `kartoteka`.`s_tip_loga` (`tip`) VALUES ('Izmena zapisa');
+INSERT INTO `kartoteka`.`s_tip_loga` (`tip`) VALUES ('Brisanje zapisa');
+INSERT INTO `kartoteka`.`s_tip_loga` (`tip`) VALUES ('Dodavanje dokumenta/slike');
 UPDATE `kartoteka`.`logovi` SET `tip_id`='1';
 ALTER TABLE `logovi` ADD CONSTRAINT `FK_logovi_s_tip_loga` FOREIGN KEY (`tip_id`) REFERENCES `s_tip_loga` (`id`);
 ALTER TABLE `logovi` ADD COLUMN `korisnik_id` INT(10) UNSIGNED NOT NULL AFTER `tip_id`;
