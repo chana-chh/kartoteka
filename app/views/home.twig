@@ -55,9 +55,10 @@
 {% endif %}
 {% if auth.logged %}
  <hr>
-     <div class="uk-float-right">
-      <a href="{{ path_for('raspored.dodavanje') }}" class="uk-button uk-button-primary uk-button-small"><span title="Zakazivanje termina" uk-icon="plus-circle" class="ikonica"></span></a>
-      <a href="{{ path_for('raspored.tabela') }}" class="uk-button uk-button-default uk-button-small"><span title="Tabelarni pregled termina" uk-icon="table" class="ikonica"></span></a>
+    <div class="uk-float-right">
+        <a href="{{ path_for('raspored.dodavanje') }}" class="uk-button uk-button-primary uk-button-small"><span title="Zakazivanje termina" uk-icon="plus-circle" class="ikonica"></span></a>
+        <a href="{{ path_for('raspored.tabela') }}" class="uk-button uk-button-default uk-button-small"><span title="Tabelarni pregled termina" uk-icon="table" class="ikonica"></span></a>
+        <a href="{{ path_for('raspored.danas') }}" class="uk-button uk-button-default uk-button-small" target="_blank"><span title="Štampanje današnjih termina" uk-icon="print"  class="ikonica"></span></a>
     </div>
 </div>
 </div>

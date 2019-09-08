@@ -1,0 +1,49 @@
+{% extends "templates/print.twig" %}
+
+{% block sadrzaj %}
+
+<h1 class="prn-hide">Štampanje današnjih termina sahrana</h1>
+<hr class="prn-hide">
+<h4 id="datum"></h4>
+{% for termin in danasnji %}
+<h3>Detalji termina sahrane vezane za karton <em>[ {{ termin.karton().broj() }} ]</em></h3>
+<hr>
+<table class="prn-table">
+	<tbody>
+		<tr>
+			<th class="w-40 prn-text-left">Početak</th>
+			<td class="w-60 prn-text-right">
+				{{ termin.start|date('H:i') }}
+			</td>
+		</tr>
+		<tr>
+			<th class="prn-text-left">Kraj</th>
+			<td class="prn-text-right">
+				{{ termin.end|date('H:i') }}
+			</td>
+		</tr>
+		<tr>
+			<th class="prn-text-left">Pokojnik</th>
+			<td class="prn-text-right">
+				<strong>{{ termin.pokojnik().ime }} {{ termin.pokojnik().prezime }}</strong>
+			</td>
+		</tr>
+		
+	</tbody>
+</table>
+{% endfor %}
+
+{% endblock sadrzaj %}
+
+{% block skripta %}
+	<script type="text/javascript">
+	window.onload = function () {
+		var datum = document.getElementById("datum");
+		var n =  new Date();
+		var y = n.getFullYear();
+		var m = n.getMonth() + 1;
+		var d = n.getDate();
+		datum.innerHTML = "Termini sahrana na dan: " + d + "." + m + "." + y;
+	};
+	</script>
+{% endblock skripta %}

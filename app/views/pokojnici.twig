@@ -65,7 +65,12 @@
                 <td>{{ pok.pozicija }}</td>
                 <td>{{ pok.datum_rodjenja() }}</td>
                 <td>{{ pok.datum_smrti() }}</td>
+                {% set deset = 'now'|date_modify("-10 year") %}
+                {%  if date(deset|date('d/m/Y')) > date(pok.datum_sahrane) %}
+                <td class="uk-text-success"><strong>{{ pok.datum_sahrane() }}</strong></td>
+                {% else %}
                 <td>{{ pok.datum_sahrane() }}</td>
+                {% endif %}
                 <td>{{ pok.datum_ekshumacije() }}</td>
                 <td class="uk-clearfix">
                     <ul class="uk-iconnav uk-float-right">

@@ -48,6 +48,7 @@
 				Odaberi novi dokument <span uk-icon="file-pdf"></span>
 			</button>
 		</div>
+		<small class="uk-text-warning" id="filename">Dokument za prosleđivanje nije odabran !!!</small>
 	</div>
 	<div class="uk-button-group uk-width-1-6">
 		<input class="uk-button uk-button-primary uk-width-1-2" type="submit" value="Snimi">
@@ -58,3 +59,21 @@
 </form>
 
 {% endblock naslov %}
+
+{% block skripta %}
+	<script type="text/javascript">
+		document.getElementById('dokument').onchange = uploadOnChange;
+		var fajl = document.getElementById('filename');
+
+		function uploadOnChange() {
+		  var filename = this.value;
+		  var lastIndex = filename.lastIndexOf("\\");
+		  if (lastIndex >= 0) {
+		    filename = filename.substring(lastIndex + 1);
+		  }
+		  fajl.classList.remove("uk-text-warning");
+		  fajl.classList.add("uk-text-success");
+		  fajl.innerHTML = "Odabran je dokument - " + filename;
+		}
+	</script>
+{% endblock skripta %}

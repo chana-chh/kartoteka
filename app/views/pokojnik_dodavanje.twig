@@ -1,6 +1,6 @@
 {% extends "templates/app.twig" %}
 
-{% block naslov %}
+{% block sadrzaj %}
 <h1>Dodavanje novog pokojnika</h1>
 <hr>
 <form action="{{ path_for('pokojnici.dodavanje.post') }}" method="POST" class="uk-form-stacked" uk-grid>
@@ -100,9 +100,28 @@
 					{{ old.dupla_raka ? ' checked' : '' }}> Dupla raka</label>
 		</div>
 	</div>
-	<div class="uk-button-group uk-width-1-6">
+	<div class="uk-button-group uk-width-1-4">
 		<button class="uk-button uk-button-primary uk-width-1-2">Snimi</button>
 		<a href="{{ path_for('kartoni.pregled',{id:karton_id}) }}" class="uk-button uk-button-secondary uk-width-1-2">Otkaži</a>
 	</div>
 </form>
-{% endblock naslov %}
+{% endblock sadrzaj %}
+
+{% block traka %}
+<div class="uk-card uk-card-default uk-card-body uk-margin-top">
+    <h3 class="uk-card-title">Podaci iz kartona u koji dodajemo pokojnika</h3>
+
+    <ul class="uk-list uk-list-striped">
+    <li><strong>Groblje:</strong> {{ karton.groblje().naziv }}</li>
+    <li><strong>Parcela:</strong> {{ karton.parcela }}</li>
+    <li><strong>Grobno mesto:</strong> {{ karton.grobno_mesto }}</li>
+    <li><strong>Broj mesta:</strong> {{ karton.broj_mesta }}</li>
+    <li><strong>Tip groba:</strong> {{ karton.tip_groba }}</li>
+    <li><strong>Aktivan karton:</strong> {{ karton.aktivanDisabled() | raw }}</li>
+    <article class="uk-article uk-margin-top">
+    <h4>Napomene:</h4>
+    <p class="uk-article-meta">{{ karton.napomena | nl2br }}</p>
+</article>
+</ul>
+</div>
+{% endblock traka %}

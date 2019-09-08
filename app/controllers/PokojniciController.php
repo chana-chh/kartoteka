@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Pokojnik;
+use App\Models\Karton;
 
 class PokojniciController extends Controller
 {
@@ -88,7 +89,9 @@ class PokojniciController extends Controller
     public function getPokojniciDodavanje($request, $response, $args)
     {
         $karton_id = $args['id'];
-        $this->render($response, 'pokojnik_dodavanje.twig', compact('karton_id'));
+        $modelKarton = new Karton();
+        $karton = $modelKarton->find($karton_id);
+        $this->render($response, 'pokojnik_dodavanje.twig', compact('karton_id', 'karton'));
     }
 
     public function postPokojniciDodavanje($request, $response)

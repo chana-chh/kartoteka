@@ -75,4 +75,10 @@ class Pokojnik extends Model
         $pk = $this->pk;
         return "<input type=\"checkbox\" name=\"dupla_raka\" data-id=\"{$this->$pk}\"{$chk} disabled>";
     }
+
+    public function desetGodina()
+    {
+        $sql = "SELECT * FROM {$this->table} WHERE datum_sahrane < DATE_SUB(NOW(), INTERVAL 10 YEAR)";
+        return $this->fetch($sql);
+    }
 }

@@ -7,6 +7,7 @@ use App\Models\Karton;
 use App\Models\Groblje;
 use App\Models\Pokojnik;
 use App\Models\Racun;
+use App\Models\Uplata;
 use App\Models\Log;
 use App\Classes\Auth;
 use DateTime;
@@ -164,7 +165,10 @@ class RasporedController extends Controller
         $razduzeno = isset($data['razduzeno']) ? 1 : 0;
 
         $modelRacun = new Racun();
+        $modelUplata = new Uplata();
+
         if($razduzeno == 1){
+
             $racun = $modelRacun->insert([
                     'karton_id' => $id_kartona,
                     'broj' => $data['broj'],
@@ -176,7 +180,17 @@ class RasporedController extends Controller
                     'korisnik_id_zaduzio' => $idzaracun,
                     'korisnik_id_razduzio' => $idzaracun,
                     'rok' => $data['uplata_do']
-                ]);}else{
+                ]);
+
+            $uplata = $modelUplata->insert([
+                    'karton_id' => $id_kartona,
+                    'iznos' => $data['iznos'],
+                    'datum' => $data['datum'],
+                    'napomena' => "Uplata uz zakazivanje termina za račun sa brojem - ".$data['broj'],
+                    'korisnik_id' => $idzaracun,
+                ]);
+
+        }else{
                 $racun = $modelRacun->insert([
                     'karton_id' => $id_kartona,
                     'broj' => $data['broj'],
@@ -192,7 +206,7 @@ class RasporedController extends Controller
         }
 
         $l = $k->user()->ime;
-        $modelLog->insert([opis => $l."je dodao termin za sahranu sa id brojem ".$id_rasporeda ]);
+        $modelLog->insert(['opis' => $l." je dodao termin za sahranu sa id brojem ".$id_rasporeda,  'tip_id' => 1, 'korisnik_id' => $idzaracun]);
 
         $this->flash->addMessage('success', "Zakazivanje termina je uspešno završeno.");
         return $response->withRedirect($this->router->pathFor('raspored'));
@@ -214,6 +228,14 @@ class RasporedController extends Controller
         $raspored = $modelRaspored->find($id);
 
         $this->render($response, 'raspored_stampa.twig', compact('raspored'));
+    }
+
+    public function getRasporedDanas($request, $response, $args){
+
+        $model = new Raspored();
+        $danasnji = $model->danas();
+
+        $this->render($response, 'print/raspored_danas.twig', compact('danasnji'));
     }
 
     public function postRasporedIzmena($request, $response){

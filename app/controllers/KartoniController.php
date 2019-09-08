@@ -56,11 +56,7 @@ class KartoniController extends Controller
             ],
             'tip_groba' => [
                 'required' => true,
-            ],
-            // 'stanje' => [
-            //     'required' => true,
-            //     'min' => 0,
-            // ],
+            ]
         ];
 
         $this->validator->validate($data, $validation_rules);
@@ -73,8 +69,9 @@ class KartoniController extends Controller
             $data['aktivan'] = $aktivan;
             $modelKarton = new Karton();
             $modelKarton->insert($data);
+            $id = $modelKarton->getLastId();
             $this->flash->addMessage('success', 'Novi karton je uspešno upisan.');
-            return $response->withRedirect($this->router->pathFor('kartoni'));
+            return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $id]));
         }
     }
 
@@ -116,11 +113,7 @@ class KartoniController extends Controller
             ],
             'tip_groba' => [
                 'required' => true,
-            ],
-            // 'stanje' => [
-            //     'required' => true,
-            //     'min' => 0,
-            // ],
+            ]
         ];
 
         $this->validator->validate($data, $validation_rules);

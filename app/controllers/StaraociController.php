@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Staraoc;
+use App\Models\Karton;
 
 class StaraociController extends Controller
 {
@@ -74,7 +75,9 @@ class StaraociController extends Controller
     public function getStaraociDodavanje($request, $response, $args)
     {
         $karton_id = $args['id'];
-        $this->render($response, 'staraoc_dodavanje.twig', compact('karton_id'));
+        $modelKarton = new Karton();
+        $karton = $modelKarton->find($karton_id);
+        $this->render($response, 'staraoc_dodavanje.twig', compact('karton_id', 'karton'));
     }
 
     public function postStaraociDodavanje($request, $response)
