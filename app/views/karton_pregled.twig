@@ -2,7 +2,7 @@
 
 {% block sadrzaj %}
 <style>
-  
+
   .ikonica {
   position: relative;
   top: -2px;
@@ -26,7 +26,7 @@
     </div>
     <div class="uk-float-right">
       <div class="uk-button-group">
-        <a href="{{ path_for('transakcije.pregled', { id: karton.id }) }}" 
+        <a href="{{ path_for('transakcije.pregled', { id: karton.id }) }}"
         class="uk-button uk-button-primary uk-button-small">
         <span uk-icon="credit-card" class="ikonica"></span> Transakcije
       </a>
@@ -310,7 +310,7 @@
   </table>
 </div>
 
-{% if auth.logged and user.nivo == 0 %}
+{% if auth.logged and auth.user.nivo == 0 %}
   <div class="uk-background-muted uk-margin-large-top uk-padding">
   <h3 class="uk-text-danger">Brisanje svih zaduženja po kartonu</h3>
         <a class="uk-button uk-button-danger uk-button-small uk-text-right" href="#modal-sve-brisanje" style="float: right;" uk-toggle>
@@ -358,7 +358,7 @@
   function setPokId(el) {
     document.getElementById("modal_pokojnik_id").value = el.dataset.id;
   }
-  
+
   function setTerId(el) {
     document.getElementById("termin_modal_id").value = el.dataset.id;
   }
