@@ -29,8 +29,7 @@ class HomeController extends Controller
         $isticu = $racun->rok();
         $istekli = $racun->istekli();
         
-		$this->render($response, 'home.twig', compact('danasnji', 'kartoni', 'pokojnici', 'staraoci', 'isticu', 'istekli', 
-			'dugTakse', 'dugZakupi', 'racuni', 'uplate'));
+		$this->render($response, 'home.twig', compact('danasnji', 'kartoni', 'pokojnici', 'staraoci', 'isticu', 'istekli'));
 	}
 
 	public function getAbout($request, $response)
