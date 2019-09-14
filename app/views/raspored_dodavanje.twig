@@ -302,6 +302,49 @@
 		    </label>
 		</div>
 		</div>
+			<div class="uk-width-1-5 pravno" style="display: none;">
+				<label for="naziv_primaoca" class="uk-form-label">Naziv:</label>
+					<div class="uk-form-controls">
+					<input type="text" name="naziv_primaoca" id="naziv_primaoca"
+					class="uk-input{{ errors.naziv_primaoca[0] ? ' uk-form-danger': ''}}" value="{{ old.naziv_primaoca ? : '' }}"
+					autocomplete="off">
+					</div>
+				<small class="uk-text-danger">{{ errors.naziv_primaoca[0] ? :'' }}</small>
+			</div>
+			<div class="uk-width-1-5 pravno" style="display: none;">
+				<label for="adresa_primaoca" class="uk-form-label">Adresa:</label>
+					<div class="uk-form-controls">
+					<input type="text" name="adresa_primaoca" id="adresa_primaoca"
+					class="uk-input{{ errors.adresa_primaoca[0] ? ' uk-form-danger': ''}}" value="{{ old.adresa_primaoca ? : '' }}"
+					autocomplete="off">
+					</div>
+				<small class="uk-text-danger">{{ errors.adresa_primaoca[0] ? :'' }}</small>
+			</div>
+			<div class="uk-width-1-5 pravno" style="display: none;">
+				<label for="ziro_primaoca" class="uk-form-label">Žiro račun:</label>
+					<div class="uk-form-controls">
+					<input type="text" name="ziro_primaoca" id="ziro_primaoca"
+					class="uk-input{{ errors.ziro_primaoca[0] ? ' uk-form-danger': ''}}" value="{{ old.ziro_primaoca ? : '' }}"
+					autocomplete="off">
+					</div>
+				<small class="uk-text-danger">{{ errors.ziro_primaoca[0] ? :'' }}</small>
+			</div>
+			<div class="uk-width-1-5 pravno" style="display: none;">
+				<label for="pib_primaoca" class="uk-form-label">PIB:</label>
+					<div class="uk-form-controls">
+					<input type="text" name="pib_primaoca" id="pib_primaoca"
+					class="uk-input{{ errors.pib_primaoca[0] ? ' uk-form-danger': ''}}" value="{{ old.pib_primaoca ? : '' }}"
+					autocomplete="off">
+					</div>
+				<small class="uk-text-danger">{{ errors.pib_primaoca[0] ? :'' }}</small>
+			</div>
+			<div class="uk-width-1-5 pravno" style="display: none;">
+				<div class="uk-form-controls uk-margin-medium-top">
+				<label><input class="uk-checkbox{{ errors.pdv[0] ? ' uk-form-danger': ''}}" type="checkbox" name="pdv"
+				{{ old.pdv ? ' checked' : '' }}> PDV</label>
+				</div>
+			</div>
+
 		<div class="uk-width-1-5">
 		<label for="broj" class="uk-form-label">Broj računa:</label>
 		<div class="uk-form-controls">
@@ -437,6 +480,20 @@
 			token = new FormData(document.querySelector("#forma"));
 			xhr.send(token);
 		}}
+
+		const checkbox = document.getElementById('myonoffswitch');
+
+		checkbox.addEventListener('change', (event) => {
+		  if (event.target.checked) {
+		    [].forEach.call(document.querySelectorAll('.pravno'), function (el) {
+  				el.style.display = 'none';
+			});
+		  } else {
+		    [].forEach.call(document.querySelectorAll('.pravno'), function (el) {
+  				el.style.display = 'inline-block';
+			});
+		  }
+		});
 	};
 	</script>
 {% endblock skripta %}
