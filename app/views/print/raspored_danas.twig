@@ -1,49 +1,108 @@
-{% extends "templates/print.twig" %}
+{% extends "templates/app.twig" %}
 
-{% block sadrzaj %}
+{% block naslov %}
+<style>
+p {
+  font-size: 1.2em;
+}
 
-<h1 class="prn-hide">Štampanje današnjih termina sahrana</h1>
-<hr class="prn-hide">
-<h4 id="datum"></h4>
+@media print {
+	
+	p {
+  font-size: 0.875em;
+}
+    .ne_stampaj {
+        display: none !important;
+    }
+    a[href]:after {
+    content: none !important;
+  }
+  .prikazi {
+  	visibility: visible !important;
+  }
+}
+</style>
+<div class="uk-panel uk-background-muted uk-padding-small uk-margin-small ne_stampaj">
+  <div class="uk-clearfix">
+    <div class="uk-float-left">
+      <div class="uk-button-group">
+        <button type="button" id="nazad" class="uk-button uk-button-primary uk-button-small">
+          <span uk-icon="chevron-left"></span> Nazad
+        </button>
+        <button class="uk-button uk-button-primary uk-button-small" id="stampa" onclick="printajStranu()"><span uk-icon="print"></span> Štampaj</button>
+      </div>
+    </div>
+  </div>
+</div>
+<h1 class="ne_stampaj uk-text-primary">Štampanje današnjih termina sahrana</h1>
+<hr class="ne_stampaj">
+<h3 id="datum"></h3>
+<hr class="prikazi uk-divider-icon" style="visibility: hidden;">
 {% for termin in danasnji %}
-<h3>Detalji termina sahrane vezane za karton <em>[ {{ termin.karton().broj() }} ]</em></h3>
+<div uk-grid class="uk-margin-medium-top">
+	<div class="uk-width-5-6">
+<h3><a href="{{ path_for('kartoni.pregled', { id: termin.karton.id }) }}" class="uk-icon-link" uk-icon="icon:album; ratio: 2" class="ne_stampaj"></a>&emsp;
+	 Detalji termina sahrane vezane za karton <em>[ {{ termin.karton().broj() }} ]</em></h3>
+	</div>
+	<div class="uk-width-1-6 uk-text-right">
+		<p><span class="uk-badge">{{loop.index}}</span></p>
+	</div>
+</div>
 <hr>
-<table class="prn-table">
+<div uk-grid>
+		<div class="uk-width-auto">
+			<div class="uk-panel uk-background-muted uk-margin-small" style="padding: 1px 5px 5px 5px;">
+	<p><span uk-icon="clock"></span></p>
+</div>
+		</div>
+		<div class="uk-width-1-6">
+		<p>Početak sahrane</p>
+		</div>
+		<div class="uk-width-1-6">
+		<p class="uk-text-bold">{{ termin.start|date('H:i') }}</p>
+		</div>	
+		<div class="uk-width-1-6">
+		<p>Predviđeni završetak sahrane</p>
+		</div>
+		<div class="uk-width-1-6">
+		<p class="uk-text-bold">{{ termin.end|date('H:i') }}</p>
+		</div>	
+</div>
+<table class="uk-table">
 	<tbody>
 		<tr>
-			<th class="w-40 prn-text-left">Početak</th>
-			<td class="w-60 prn-text-right">
-				{{ termin.start|date('H:i') }}
-			</td>
-		</tr>
-		<tr>
-			<th class="prn-text-left">Kraj</th>
-			<td class="prn-text-right">
-				{{ termin.end|date('H:i') }}
-			</td>
-		</tr>
-		<tr>
-			<th class="prn-text-left">Pokojnik</th>
-			<td class="prn-text-right">
+			<th class="uk-table-shrink">Pokojnik</th>
+			<td>
 				<strong>{{ termin.pokojnik().ime }} {{ termin.pokojnik().prezime }}</strong>
 			</td>
 		</tr>
 		
 	</tbody>
 </table>
+
 {% endfor %}
 
-{% endblock sadrzaj %}
+{% endblock naslov %}
 
 {% block skripta %}
 	<script type="text/javascript">
-	window.onload = function () {
-		var datum = document.getElementById("datum");
-		var n =  new Date();
-		var y = n.getFullYear();
-		var m = n.getMonth() + 1;
-		var d = n.getDate();
-		datum.innerHTML = "Termini sahrana na dan: " + d + "." + m + "." + y;
-	};
+	
+		document.getElementById("nazad").addEventListener("click", function (event) {
+    		event.preventDefault();
+    		window.history.back();
+  		});
+
+		window.onload = function () {
+			var datum = document.getElementById("datum");
+			var n =  new Date();
+			var y = n.getFullYear();
+			var m = n.getMonth() + 1;
+			var d = n.getDate();
+			datum.innerHTML = "Termini sahrana na dan: " + d + "." + m + "." + y;
+		};
+
+		function printajStranu() {
+  			window.print();
+		};
 	</script>
 {% endblock skripta %}
