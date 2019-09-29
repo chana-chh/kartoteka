@@ -9,6 +9,11 @@ class Racun extends Model
 {
 	protected $table = 'racuni';
 
+	public function artikli()
+	{
+		$this->belongsToMany('App\Models\Artikal', 'racun_artikal', 'racun_id', 'artikal_id');
+	}
+
 	public function reprogram()
 	{
 		return $this->belongsTo('App\Models\Reprogram', 'reprogram_id');

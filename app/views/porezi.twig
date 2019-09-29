@@ -1,0 +1,67 @@
+{% extends "templates/app.twig" %} {% block naslov %}
+<h1 class="uk-text-primary">
+    Porezi
+</h1>
+
+<div class="uk-panel uk-background-muted uk-padding-small uk-text-right">
+    <a href="{{ path_for('porezi.dodavanje.get') }}" class="uk-button uk-button-primary uk-button-small">
+        Dodaj nov porez
+    </a>
+</div>
+
+<div class="uk-overflow-auto">
+    <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+        <thead>
+            <tr>
+                <th class="w-10">Id</th>
+                <th class="w-20">Naziv</th>
+                <th class="w-10 uk-text-right">Procenat (%)</th>
+                <th class="w-40">Opis</th>
+                <th class="w-20 uk-text-right"><span uk-icon="cog"></span></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for porez in porezi %}
+            <tr>
+                <td>
+                    <em>{{ porez.id }}</em>
+                </td>
+                <td>
+                    <strong>{{ porez.naziv }}</strong>
+                </td>
+                <td class="uk-text-right">{{ porez.procenat|number_format(2, '.', ',') }}</td>
+                <td>{{ porez.opis }}</td>
+                <td class="uk-clearfix">
+                    <ul class="uk-iconnav uk-float-right">
+                        <li>
+                            <a href="{{ path_for('porezi.izmena', { id: porez.id }) }}" title="Izmena">
+                                <span uk-icon="pencil"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a title="Brisanje" href="#modal-brisanje" data-id="{{ porez.id }}"
+                                onclick="setPorezId(this);" uk-toggle>
+                                <span uk-icon="trash"></span>
+                            </a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<!-- MODAL BRISANJE KORISNIKA -->
+{% include 'inc/porezi_brisanje.twig' %}
+{% endblock naslov %}
+{% block skripta %}
+<script>
+    document.getElementById("modal_dugme_brisi").addEventListener("click", function () {
+        document.getElementById("forma_brisanje").submit();
+    });
+
+    function setPorezId(el) {
+        document.getElementById("modal_porez_id").value = el.dataset.id;
+    }
+</script>
+{% endblock skripta %}
