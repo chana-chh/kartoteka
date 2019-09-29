@@ -14,97 +14,90 @@ class PoreziController extends Controller
         $this->render($response, 'porezi.twig', compact('porezi'));
     }
 
-    // public function getCeneIzmena($request, $response, $args)
-    // {
-    //     $id = (int) $args['id'];
-    //     $modelCena = new Cena();
-    //     $cene = $modelCena->find($id);
-    //     $this->render($response, 'cene_izmena.twig', compact('cene'));
-    // }
+    public function getPoreziIzmena($request, $response, $args)
+    {
+        $id = (int) $args['id'];
+        $modelPorez = new Porez();
+        $porez = $modelPorez->find($id);
+        $this->render($response, 'porezi_izmena.twig', compact('porez'));
+    }
 
-    // public function postCeneIzmena($request, $response)
-    // {
-    //     $data = $request->getParams();
-    //     $id = $data['id'];
-    //     unset($data['id']);
-    //     unset($data['csrf_name']);
-    //     unset($data['csrf_value']);
+    public function postporeziIzmena($request, $response)
+    {
+        $data = $request->getParams();
+        $id = $data['id'];
+        unset($data['id']);
+        unset($data['csrf_name']);
+        unset($data['csrf_value']);
 
-    //     $validation_rules = [
-    //         'datum' => [
-    //             'required' => true
-    //         ],
-    //         'taksa' => [
-    //             'required' => true
-    //         ],
-    //         'zakup' => [
-    //             'required' => true,
-    //         ]
-    //     ];
-    //     $this->validator->validate($data, $validation_rules);
+        $validation_rules = [
+            'datum' => [
+                'required' => true
+            ],
+            'taksa' => [
+                'required' => true
+            ],
+        ];
 
-    //     if ($this->validator->hasErrors()) {
-    //         $this->flash->addMessage('danger', 'Došlo je do greške prilikom izmene cena.');
-    //         return $response->withRedirect($this->router->pathFor('groblja'));
-    //     } else {
-    //         $modelCena = new Cena();
-    //         $modelCena->update($data, $id);
-    //         $modelCena->odrediVazece();
+        $this->validator->validate($data, $validation_rules);
 
-    //         $this->flash->addMessage('success', 'Cene su uspešno izmenjene.');
-    //         return $response->withRedirect($this->router->pathFor('cene'));
-    //     }
-    // }
+        if ($this->validator->hasErrors()) {
+            $this->flash->addMessage('danger', 'Došlo je do greške prilikom izmene poreza.');
+            return $response->withRedirect($this->router->pathFor('porezi'));
+        } else {
+            $modelPorez = new Porez();
+            $modelPorez->update($data, $id);
 
-    // public function getCeneDodavanje($request, $response)
-    // {
-    //     $this->render($response, 'cene_dodavanje.twig');
-    // }
+            $this->flash->addMessage('success', 'Porez je uspešno izmenjen.');
+            return $response->withRedirect($this->router->pathFor('porezi'));
+        }
+    }
 
-    // public function postCeneDodavanje($request, $response)
-    // {
-    //     $data = $request->getParams();
-    //     unset($data['csrf_name']);
-    //     unset($data['csrf_value']);
+    public function getPoreziDodavanje($request, $response)
+    {
+        $this->render($response, 'porezi_dodavanje.twig');
+    }
 
-    //     $validation_rules = [
-    //         'datum' => [
-    //             'required' => true
-    //         ],
-    //         'taksa' => [
-    //             'required' => true
-    //         ],
-    //         'zakup' => [
-    //             'required' => true,
-    //         ]
-    //     ];
-    //     $this->validator->validate($data, $validation_rules);
+    public function postPoreziDodavanje($request, $response)
+    {
+        $data = $request->getParams();
+        unset($data['csrf_name']);
+        unset($data['csrf_value']);
 
-    //     if ($this->validator->hasErrors()) {
-    //         $this->flash->addMessage('danger', 'Došlo je do greške prilikom dodavanja cena.');
-    //         return $response->withRedirect($this->router->pathFor('groblja'));
-    //     } else {
-    //         $modelCena = new Cena();
-    //         $modelCena->insert($data);
-    //         $modelCena->odrediVazece();
+        $validation_rules = [
+            'naziv' => [
+                'required' => true
+            ],
+            'procenat' => [
+                'required' => true
+            ],
+        ];
 
-    //         $this->flash->addMessage('success', 'Nove cene su uspešno dodate.');
-    //         return $response->withRedirect($this->router->pathFor('cene'));
-    //     }
-    // }
+        $this->validator->validate($data, $validation_rules);
 
-    // public function postCeneBrisanje($request, $response)
-    // {
-    //     $id = (int) $request->getParam('modal_cena_id');
-    //     $modelCena = new Cena();
-    //     $success = $modelCena->deleteOne($id);
-    //     if ($success) {
-    //         $modelCena->odrediVazece();
-    //         $this->flash->addMessage('success', "Cene su uspešno obrisane.");
-    //         return $response->withRedirect($this->router->pathFor('cene'));
-    //     } else {
-    //         $this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja cena.");
-    //         return $response->withRedirect($this->router->pathFor('cene'));
-    //     }
-    // }
+        if ($this->validator->hasErrors()) {
+            $this->flash->addMessage('danger', 'Došlo je do greške prilikom dodavanja poreza.');
+            return $response->withRedirect($this->router->pathFor('cene'));
+        } else {
+            $modelPorez = new Porez();
+            $modelPorez->insert($data);
+
+            $this->flash->addMessage('success', 'Novi porez je uspešno dodat.');
+            return $response->withRedirect($this->router->pathFor('porezi'));
+        }
+    }
+
+    public function postPoreziBrisanje($request, $response)
+    {
+        $id = (int) $request->getParam('modal_porez_id');
+        $modelPorez = new Porez();
+        $success = $modelPorez->deleteOne($id);
+        if ($success) {
+            $this->flash->addMessage('success', "Porez je uspešno obrisan.");
+            return $response->withRedirect($this->router->pathFor('porezi'));
+        } else {
+            $this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja poreza.");
+            return $response->withRedirect($this->router->pathFor('porezi'));
+        }
+    }
 }

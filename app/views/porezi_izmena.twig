@@ -1,0 +1,52 @@
+{% extends "templates/app.twig" %}
+
+{% block naslov %}
+<h1>Dodavanje novog poreza</h1>
+<div class="uk-panel uk-background-muted uk-padding-small">
+	<div class="uk-clearfix">
+		<div class="uk-float-left">
+			<div class="uk-button-group">
+				<a href="{{ path_for('porezi') }}" class="uk-button uk-button-primary uk-button-small">
+					<span uk-icon="chevron-left"></span> Nazad
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<form action="{{ path_for('porezi.izmena.post') }}" method="POST" class="uk-form-stacked uk-margin-medium" uk-grid>
+	{{ csrf|raw }}
+	<input type="hidden" name="id" value="{{ porez.id }}">
+	<div class="uk-width-1-5">
+		<label for="naziv" class="uk-form-label">Naziv</label>
+		<div class="uk-form-controls">
+			<input type="text" name="naziv" id="naziv" value="{{ old.naziv ? : porez.naziv }}"
+				class="uk-input{{ errors.naziv[0] ? ' uk-form-danger': ''}}" autocomplete="off" required>
+		</div>
+		<small class="uk-text-danger">{{ errors.naziv[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-5">
+		<label for="procenat" class="uk-form-label">Vrednost u procentima (%)</label>
+		<div class="uk-form-controls">
+			<input type="number" name="procenat" id="procenat"
+				class="uk-input{{ errors.procenat[0] ? ' uk-form-danger': ''}}"
+				value="{{ old.procenat ? : porez.procenat }}" min="0" step="0.01" autocomplete="off" required>
+		</div>
+		<small class="uk-text-danger">{{ errors.procenat[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-3-5">
+		<label for="opis" class="uk-form-label">Opis</label>
+		<div class="uk-form-controls">
+			<input type="text" name="opis" id="opis" class="uk-input{{ errors.opis[0] ? ' uk-form-danger': ''}}"
+				value="{{ old.opis ? : porez.opis }}" autocomplete="off">
+		</div>
+		<small class="uk-text-danger">{{ errors.opis[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-5 uk-flex uk-flex-bottom">
+		<div class="uk-button-group uk-width-1-1">
+			<button class="uk-button uk-button-primary uk-width-1-2">Snimi</button>
+			<a href="{{ path_for('porezi') }}" class="uk-button uk-button-secondary uk-width-1-2">Otkaži</a>
+		</div>
+	</div>
+</form>
+{% endblock naslov %}

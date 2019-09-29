@@ -108,6 +108,13 @@ $app->group('', function () {
     $this->get('/porez/izmena/{id}', '\App\Controllers\PoreziController:getPoreziIzmena')->setName('porezi.izmena');
     $this->post('/porez/izmena', '\App\Controllers\PoreziController:postPoreziIzmena')->setName('porezi.izmena.post');
     $this->post('/porez/brisanje', '\App\Controllers\PoreziController:postPoreziBrisanje')->setName('porezi.brisanje.post');
+    // Artikli
+    $this->get('/artikli', '\App\Controllers\ArtikliController:getArtikli')->setName('artikli');
+    $this->get('/artikal/dodavanje', '\App\Controllers\ArtikliController:getArtikliDodavanje')->setName('artikli.dodavanje.get');
+    $this->post('/artikal/dodavanje', '\App\Controllers\ArtikliController:postArtikliDodavanje')->setName('artikli.dodavanje.post');
+    $this->get('/artikal/izmena/{id}', '\App\Controllers\ArtikliController:getArtikliIzmena')->setName('artikli.izmena');
+    $this->post('/artikal/izmena', '\App\Controllers\ArtikliController:postArtikliIzmena')->setName('artikli.izmena.post');
+    $this->post('/artikal/brisanje', '\App\Controllers\ArtikliController:postArtikliBrisanje')->setName('artikli.brisanje.post');
     // Transakcije Cene
     $this->get('/transakcije/cene', '\App\Controllers\CeneController:getCene')->setName('cene');
     $this->get('/transakcije/cene/dodavanje', '\App\Controllers\CeneController:getCeneDodavanje')->setName('cene.dodavanje.get');

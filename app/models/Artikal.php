@@ -18,4 +18,18 @@ class Artikal extends Model
 	{
 		$this->belongsToMany('App\Models\Racun', 'racun_artikal', 'artikal_id', 'racun_id');
 	}
+
+	public function fiskal()
+	{
+		$chk = $this->fiskal === 1 ? ' checked' : '';
+		$pk = $this->pk;
+		return "<input type=\"checkbox\" name=\"aktivan\" data-id=\"{$this->$pk}\"{$chk}>";
+	}
+
+	public function fiskalDisabled()
+	{
+		$chk = $this->fiskal === 1 ? ' checked' : '';
+		$pk = $this->pk;
+		return "<input type=\"checkbox\" name=\"aktivan\" data-id=\"{$this->$pk}\"{$chk} disabled>";
+	}
 }

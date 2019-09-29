@@ -51,7 +51,7 @@ class CeneController extends Controller
 
         if ($this->validator->hasErrors()) {
             $this->flash->addMessage('danger', 'Došlo je do greške prilikom izmene cena.');
-            return $response->withRedirect($this->router->pathFor('groblja'));
+            return $response->withRedirect($this->router->pathFor('cene'));
         } else {
             $modelCena = new Cena();
             $modelCena->update($data, $id);
@@ -88,7 +88,7 @@ class CeneController extends Controller
 
         if ($this->validator->hasErrors()) {
             $this->flash->addMessage('danger', 'Došlo je do greške prilikom dodavanja cena.');
-            return $response->withRedirect($this->router->pathFor('groblja'));
+            return $response->withRedirect($this->router->pathFor('cene'));
         } else {
             $modelCena = new Cena();
             $modelCena->insert($data);
