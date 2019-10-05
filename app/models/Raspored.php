@@ -51,7 +51,7 @@ class Raspored extends Model
 
     public function danas()
     {
-    	$sql = "SELECT * FROM {$this->table} WHERE end >= CURDATE() AND end < DATE_ADD(CURDATE(), INTERVAL 1 DAY)";
+    	$sql = "SELECT * FROM {$this->table} WHERE end >= CURDATE() AND end < DATE_ADD(CURDATE(), INTERVAL 1 DAY) ORDER BY start";
     	return $this->fetch($sql);
     }
 }
