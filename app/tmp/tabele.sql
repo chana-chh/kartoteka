@@ -11,12 +11,6 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
-
--- Dumping database structure for kartoteka
-DROP DATABASE IF EXISTS `kartoteka`;
-CREATE DATABASE IF NOT EXISTS `kartoteka` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
-USE `kartoteka`;
-
 -- Dumping structure for table kartoteka.artikli
 DROP TABLE IF EXISTS `artikli`;
 CREATE TABLE IF NOT EXISTS `artikli` (
