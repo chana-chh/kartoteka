@@ -1,5 +1,36 @@
 
+- Logovi su samo nabaceni kao dodatna mogucnost. Nisu razradjeni do kraja.
+- Treba napraviti eksport baze sa svim izmenama u jednom fajlu
+- Termini su bez validacije i provere preklapanja
+- Stampa nije bas prilagodjena
+- Mape zahtevaju dva foldera img/Mape/Thumb/ i img/Mape/ nisam potrobno testirao
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+STARO!!!! i to treba proveriti
+============================================================================================
+
+
 https://plainjs.com/javascript/ajax/send-ajax-get-and-post-requests-47/
+
+
+
+
+
 
 
 BAZA
