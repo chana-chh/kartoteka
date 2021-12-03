@@ -26,10 +26,10 @@ p {
   <div class="uk-clearfix">
     <div class="uk-float-left">
       <div class="uk-button-group">
-        <button type="button" id="nazad" class="uk-button uk-button-primary uk-button-small">
-          <span uk-icon="chevron-left"></span> Nazad
-        </button>
-        <button class="uk-button uk-button-primary uk-button-small" id="stampa" onclick="printajStranu()"><span uk-icon="print"></span> Štampaj</button>
+	  				<a href="{{ path_for('pocetna') }}" class="uk-button uk-button-primary uk-button-small">
+					<span uk-icon="chevron-left"></span> Nazad
+				</a>
+        <button class="uk-button uk-button-primary uk-button-small" id="stampa" onclick="printajStranu();"><span uk-icon="print"></span> Štampaj</button>
       </div>
     </div>
   </div>
