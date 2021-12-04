@@ -6416,3 +6416,4 @@
 [29-Sep-2019 13:06:11 Europe/Belgrade] PHP  34. Slim\Handlers\Strategies\RequestResponse->__invoke() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Route.php:356
 [29-Sep-2019 13:06:11 Europe/Belgrade] PHP  35. call_user_func:{D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41}() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41
 [29-Sep-2019 13:06:11 Europe/Belgrade] PHP  36. App\Controllers\PoreziController->postporeziIzmena() D:\xampp\htdocs\kartoteka\vendor\slim\slim\Slim\Handlers\Strategies\RequestResponse.php:41
+[30-Nov-2021 17:37:01 Europe/Belgrade] PHP Notice:  Undefined offset: 0 in D:\xampp\htdocs\kartoteka\app\models\Korisnik.php on line 21
