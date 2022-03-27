@@ -15,10 +15,10 @@
 $config = [
     'settings' => [
         'displayErrorDetails' => true,
-        'logger' => [
-            'name' => 'monologger',
-            'file' => DIR . 'app' . DS . 'tmp' . DS . 'log' . DS . 'app.log',
-        ],
+        // 'logger' => [
+        //     'name' => 'monologger',
+        //     'file' => DIR . 'app' . DS . 'tmp' . DS . 'log' . DS . 'app.log',
+        // ],
         'renderer' => [
             'template_path' => DIR . 'app' . DS . 'views',
             'cache_path' => false, // DIR . 'app' . DS . 'tmp' . DS . 'cache',

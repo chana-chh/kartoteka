@@ -92,7 +92,11 @@ class CeneController extends Controller
         } else {
             $modelCena = new Cena();
             $modelCena->insert($data);
+            $id = $modelCena->getLastId();
             $modelCena->odrediVazece();
+            
+            $cena = $modelCena->find($id);
+            $this->log($this::DODAVANJE, $cena, 'datum', $cena);
 
             $this->flash->addMessage('success', 'Nove cene su uspešno dodate.');
             return $response->withRedirect($this->router->pathFor('cene'));
@@ -101,10 +105,17 @@ class CeneController extends Controller
 
     public function postCeneBrisanje($request, $response)
     {
+        if($this->auth->user()->nivo !== 0)
+        {
+            return $response->withRedirect($this->router->pathFor('cene'));
+        }
+
         $id = (int)$request->getParam('modal_cena_id');
         $modelCena = new Cena();
+        $cena = $modelCena->find($id);
         $success = $modelCena->deleteOne($id);
         if ($success) {
+            $this->log($this::BRISANJE, $cena, 'datum', $cena);
             $modelCena->odrediVazece();
             $this->flash->addMessage('success', "Cene su uspešno obrisane.");
             return $response->withRedirect($this->router->pathFor('cene'));

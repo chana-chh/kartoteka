@@ -2,27 +2,15 @@
 
 namespace App\Models;
 
-use DateTime;
 use App\Classes\Model;
+use App\Classes\Db;
 
 class Log extends Model
 {
-	protected $table = 'logovi';
+    protected $table = 'logovi';
 
-	public function datum()
+    public function korisnik()
     {
-    	$format = 'Y-m-d H:i:s';
-        if ($this->datum === null) {
-            return "";
-        } else {
-            return DateTime::createFromFormat($format, $this->datum)->format('Y-m-d\TH:i:s');
-        }
+        return $this->belongsTo('App\Models\Korisnik', 'korisnik_id');
     }
-
-    public function danas()
-    {
-    	$sql = "SELECT * FROM {$this->table} WHERE end >= CURDATE() AND end < DATE_ADD(CURDATE(), INTERVAL 1 DAY)";
-    	return $this->fetch($sql);
-    }
-
 }

@@ -17,13 +17,13 @@
 $container = $app->getContainer();
 
 // Monolog instance - logger
-$container['logger'] = function ($container) {
-    $conf = $container['settings']['logger'];
-    $logger = new \Monolog\Logger($conf['name']);
-    $file_handler = new \Monolog\Handler\StreamHandler($conf['file']);
-    $logger->pushHandler($file_handler);
-    return $logger;
-};
+// $container['logger'] = function ($container) {
+//     $conf = $container['settings']['logger'];
+//     $logger = new \Monolog\Logger($conf['name']);
+//     $file_handler = new \Monolog\Handler\StreamHandler($conf['file']);
+//     $logger->pushHandler($file_handler);
+//     return $logger;
+// };
 
 // CSRF protection instance - csrf
 $container['csrf'] = function ($container) {
@@ -38,6 +38,10 @@ $container['validator'] = function ($container) {
 // Authorization instance - auth
 $container['auth'] = function ($container) {
     return new \App\Classes\Auth(new \App\Models\Korisnik());
+};
+
+$container['logger'] = function ($container) {
+    return new \App\Classes\Logger($container->auth->user());
 };
 
 // Flash messages instance - flash

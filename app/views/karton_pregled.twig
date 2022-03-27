@@ -34,9 +34,11 @@
           class="uk-button uk-button-secondary uk-button-small">
           <span uk-icon="pencil" class="ikonica"></span> Izmeni karton
         </a>
+        {% if auth.logged and auth.user.nivo == 0 %}
         <a class="uk-button uk-button-danger uk-button-small" href="#modal-brisanje" uk-toggle>
           <span uk-icon="trash" class="ikonica"></span> Obriši karton
         </a>
+        {% endif %}
         <a href="{{ path_for('kartoni.mapa', { 'id': karton.id }) }}"
           class="uk-button uk-button-primary uk-button-small">
           <span uk-icon="location" class="ikonica"></span> Mapa
@@ -128,12 +130,14 @@
                 <span uk-icon="pencil"></span>
               </a>
             </li>
+            {% if auth.logged and auth.user.nivo == 0 %}
             <li>
               <a title="Brisanje" href="#modal-brisanje-staraoca" data-id="{{ st.id }}" onclick="setStarId(this);"
                 uk-toggle>
                 <span uk-icon="trash"></span>
               </a>
             </li>
+            {% endif %}
           </ul>
         </td>
       </tr>
@@ -200,12 +204,14 @@
                 <span uk-icon="pencil"></span>
               </a>
             </li>
+            {% if auth.logged and auth.user.nivo == 0 %}
             <li>
               <a title="Brisanje" href="#modal-brisanje-pokojnika" data-id="{{ pok.id }}" onclick="setPokId(this);"
                 uk-toggle>
                 <span uk-icon="trash"></span>
               </a>
             </li>
+            {% endif %}
           </ul>
         </td>
       </tr>
@@ -257,12 +263,14 @@
               <a href="{{ path_for('dokumenti.izmena', { 'id': dok.id }) }}" title="Izmena"><span
                   uk-icon="pencil"></span></a>
             </li>
+            {% if auth.logged and auth.user.nivo == 0 %}
             <li>
               <a href="#modal-brisanje-dokumenta" title="Brisanje" data-id="{{ dok.id }}" onclick="setDocId(this);"
                 uk-toggle>
                 <span uk-icon="trash"></span>
               </a>
             </li>
+            {% endif %}
           </ul>
         </td>
       </tr>
@@ -296,12 +304,14 @@
               <a href="{{ path_for('raspored.izmena', { 'id': ter.id }) }}" title="Izmena"><span
                   uk-icon="pencil"></span></a>
             </li>
+            {% if auth.logged and auth.user.nivo == 0 %}
             <li>
               <a href="#modal-brisanje-termina" title="Brisanje" data-id="{{ ter.id }}" onclick="setTerId(this);"
                 uk-toggle>
                 <span uk-icon="trash"></span>
               </a>
             </li>
+            {% endif %}
           </ul>
         </td>
       </tr>

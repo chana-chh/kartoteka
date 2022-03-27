@@ -53,11 +53,13 @@
                 <span uk-icon="pencil"></span>
               </a>
             </li>
+            {% if auth.logged and auth.user.nivo == 0 %}
             <li>
               <a title="Brisanje" href="#modal-brisanje-termina" data-id="{{ termin.id }}" onclick="setTerminId(this);" uk-toggle>
                 <span uk-icon="trash"></span>
               </a>
             </li>
+            {% endif %}
           </ul>
         </td>
       </tr>
