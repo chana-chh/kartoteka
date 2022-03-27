@@ -1,3 +1,6 @@
 /vendor
 /pub/img/Mape
 /pub/doc
+/app/tmp/err
+/app/tmp/log
+/app/tmp/ses
