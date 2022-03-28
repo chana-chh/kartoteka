@@ -70,7 +70,7 @@ class KartoniController extends Controller
             $modelKarton = new Karton();
             $modelKarton->insert($data);
             $id = $modelKarton->getLastId();
-            $karton = $modelGroblja->find($id);
+            $karton = $modelKarton->find($id);
             $this->log($this::DODAVANJE, $karton, ['groblje_id', 'parcela', 'grobno_mesto'], $karton);
             $this->flash->addMessage('success', 'Novi karton je uspešno upisan.');
             return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $id]));
