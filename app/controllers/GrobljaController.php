@@ -55,6 +55,9 @@ class GrobljaController extends Controller
             $this->flash->addMessage('success', 'Novo groblje je uspešno dodato.');
             $modelGroblja = new Groblje();
             $modelGroblja->insert($data);
+            $id = $modelGroblja->getLastId();
+            $groblje = $modelGroblja->find($id);
+            $this->log($this::DODAVANJE, $groblje, 'naziv', $groblje);
             return $response->withRedirect($this->router->pathFor('groblja'));
         }
     }
@@ -63,9 +66,11 @@ class GrobljaController extends Controller
     {
         $id = (int)$request->getParam('modal_groblje_id');
         $modelGroblja = new Groblje();
+        $groblje = $modelGroblja->find($id);
         $success = $modelGroblja->deleteOne($id);
         if ($success) {
             $this->flash->addMessage('success', "Groblje je uspešno obrisano.");
+            $this->log($this::BRISANJE, $groblje, 'naziv', $groblje);
             return $response->withRedirect($this->router->pathFor('groblja'));
         } else {
             $this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja groblja.");
@@ -119,7 +124,10 @@ class GrobljaController extends Controller
         } else {
             $this->flash->addMessage('success', 'Podaci o groblju su uspešno izmenjeni.');
             $modelGroblja = new Groblje();
+            $stari = $modelGroblja->find($id);
             $modelGroblja->update($data, $id);
+            $groblje = $modelGroblja->find($id);
+            $this->log($this::IZMENA, $groblje, 'naziv', $stari);
             return $response->withRedirect($this->router->pathFor('groblja'));
         }
     }

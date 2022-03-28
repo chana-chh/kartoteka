@@ -70,6 +70,8 @@ class KartoniController extends Controller
             $modelKarton = new Karton();
             $modelKarton->insert($data);
             $id = $modelKarton->getLastId();
+            $karton = $modelGroblja->find($id);
+            $this->log($this::DODAVANJE, $karton, ['groblje_id', 'parcela', 'grobno_mesto'], $karton);
             $this->flash->addMessage('success', 'Novi karton je uspešno upisan.');
             return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $id]));
         }
@@ -125,7 +127,11 @@ class KartoniController extends Controller
             $aktivan = isset($data['aktivan']) ? 1 : 0;
             $data['aktivan'] = $aktivan;
             $modelKarton = new Karton();
+            $stari = $modelKarton->find($id);
+            $broj = $stari->broj();
             $modelKarton->update($data, $id);
+            $karton = $modelKarton->find($id);
+            $this->log($this::IZMENA, $karton, $broj, $stari);
             $this->flash->addMessage('success', 'Izmene u kartonu su uspešno upisane.');
             return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $id]));
         }
@@ -140,6 +146,7 @@ class KartoniController extends Controller
         if(!$karton->rasporedi() && !$karton->staraoci() && !$karton->pokojnici() && !$karton->dokumenti()){
             $success = $modelKarton->deleteOne($id);
         if ($success) {
+                $this->log($this::BRISANJE, $karton, $broj, $karton);
                 $this->flash->addMessage('success', "Karton broj [{$broj}] je uspešno obrisan.");
                 return $response->withRedirect($this->router->pathFor('kartoni'));
             } else {

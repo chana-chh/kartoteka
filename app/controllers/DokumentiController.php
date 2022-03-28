@@ -63,7 +63,7 @@ class DokumentiController extends Controller
             $modelDokument->insert($data);
             $id_dokumenta = $modelDokument->getLastId();
             $dokument = $modelDokument->find($id_dokumenta);
-            $this->log($this::DODAVANJE, $dokument, ['karton_id','tip','opis']);
+            $this->log($this::DODAVANJE, $dokument, ['karton_id','tip','opis'], $dokument);
             $this->flash->addMessage('success', 'Dokument je uspešno sačuvan.');
             return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $id_kartona]));
         }
