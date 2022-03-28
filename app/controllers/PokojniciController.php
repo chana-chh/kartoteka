@@ -132,6 +132,9 @@ class PokojniciController extends Controller
             $data['datum_ekshumacije'] = strlen($data['datum_ekshumacije']) === 0 ? null : $data['datum_ekshumacije'];
             $model = new Pokojnik();
             $model->insert($data);
+            $id = $model->getLastId();
+            $pokojnik = $model->find($id);
+            $this->log($this::DODAVANJE, $pokojnik, ['ime', 'prezime'], $pokojnik);
             $this->flash->addMessage('success', 'Novi pokojnik je uspešno upisan.');
             return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $data['karton_id']]));
         }
@@ -142,8 +145,10 @@ class PokojniciController extends Controller
         $id = (int)$request->getParam('modal_pokojnik_id');
         $karton_id = (int)$request->getParam('modal_pokojnik_karton_id');
         $model = new Pokojnik();
+        $pokojnik = $model->find($id);
         $success = $model->deleteOne($id);
         if ($success) {
+            $this->log($this::BRISANJE, $pokojnik, ['ime', 'prezime'], $pokojnik);
             $this->flash->addMessage('success', "Pokojnik je uspešno obrisan.");
             return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $karton_id]));
         } else {
@@ -198,6 +203,7 @@ class PokojniciController extends Controller
             return $response->withRedirect($this->router->pathFor('pokojnici.izmena', ['id' => $id_kartona]));
         } else {
             $model = new Pokojnik();
+            $stari = $model->find($id);
             unset($data['karton_id']);
             $dupla_raka = isset($data['dupla_raka']) ? 1 : 0;
             $data['dupla_raka'] = $dupla_raka;
@@ -206,6 +212,8 @@ class PokojniciController extends Controller
             $data['datum_sahrane'] = strlen($data['datum_sahrane']) === 0 ? null : $data['datum_sahrane'];
             $data['datum_ekshumacije'] = strlen($data['datum_ekshumacije']) === 0 ? null : $data['datum_ekshumacije'];
             $model->update($data, $id);
+            $pokojnik = $model->find($id);
+            $this->log($this::IZMENA, $pokojnik, ['ime', 'prezime'], $stari);
             $this->flash->addMessage('success', 'Izmene pokojnika su uspešno sačuvane.');
             return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $id_kartona]));
         }

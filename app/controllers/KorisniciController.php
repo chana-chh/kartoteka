@@ -60,6 +60,9 @@ class KorisniciController extends Controller
             unset($data['lozinka_potvrda']);
             $data['lozinka'] = password_hash($data['lozinka'], PASSWORD_BCRYPT);
             $modelKorisnik->insert($data);
+            $id = $modelKorisnik->getLastId();
+            $korisnik = $modelKorisnik->find($id);
+            $this->log($this::DODAVANJE, $korisnik, ['ime', 'korisnicko_ime'], $korisnik);
             return $response->withRedirect($this->router->pathFor('korisnici'));
         }
     }
@@ -68,8 +71,10 @@ class KorisniciController extends Controller
     {
         $id = (int)$request->getParam('modal_korisnik_id');
         $modelKorisnika = new Korisnik();
+        $korisnik = $modelKorisnika->find($id);
         $success = $modelKorisnika->deleteOne($id);
         if ($success) {
+            $this->log($this::BRISANJE, $korisnik, ['ime', 'korisnicko_ime'], $korisnik);
             $this->flash->addMessage('success', "Korisnik je uspešno obrisan.");
             return $response->withRedirect($this->router->pathFor('korisnici'));
         } else {
@@ -132,8 +137,8 @@ class KorisniciController extends Controller
             $this->flash->addMessage('danger', 'Došlo je do greške prilikom izmene podataka korisnika.');
             return $response->withRedirect($this->router->pathFor('korisnici.izmena', ['id' => $id]));
         } else {
-            $this->flash->addMessage('success', 'Podaci o korisniku su uspešno izmenjeni.');
             $modelKorisnik = new Korisnik();
+            $stari = $modelKorisnik->find($id);
             unset($data['lozinka_potvrda']);
             if (!empty($data['lozinka'])) {
                 $data['lozinka'] = password_hash($data['lozinka'], PASSWORD_BCRYPT);
@@ -141,6 +146,9 @@ class KorisniciController extends Controller
                 unset($data['lozinka']);
             }
             $modelKorisnik->update($data, $id);
+            $korisnik = $modelKorisnik->find($id);
+            $this->log($this::IZMENA, $korisnik, ['ime', 'korisnicko_ime'], $stari);
+            $this->flash->addMessage('success', 'Podaci o korisniku su uspešno izmenjeni.');
             return $response->withRedirect($this->router->pathFor('korisnici'));
         }
     }
