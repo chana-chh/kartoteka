@@ -45,6 +45,9 @@ class RacuniController extends Controller
             $data['korisnik_id_zaduzio'] = $this->auth->user()->id;
             $model = new Racun();
             $model->insert($data);
+            $id = $model->getLastId();
+            $racun = $model->find($id);
+            $this->log($this::DODAVANJE, $racun, ['broj', 'datum'], $racun);
             $this->flash->addMessage('success', 'Karton je uspešno zadužen računom.');
             return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $data['karton_id']]));
         }
@@ -55,8 +58,10 @@ class RacuniController extends Controller
         $id = (int) $request->getParam('modal_racun_id');
         $karton_id = (int) $request->getParam('karton_id');
         $model = new Racun();
+        $racun = $model->find($id);
         $success = $model->deleteOne($id);
         if ($success) {
+            $this->log($this::BRISANJE, $racun, ['broj', 'datum'], $racun);
             $this->flash->addMessage('success', "Račun je uspešno obrisano.");
             return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $karton_id]));
         } else {
