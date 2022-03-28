@@ -54,9 +54,11 @@ class CeneController extends Controller
             return $response->withRedirect($this->router->pathFor('cene'));
         } else {
             $modelCena = new Cena();
+            $stari = $modelCena->find($id);
             $modelCena->update($data, $id);
+            $modelCena = $modelCena->find($id);
             $modelCena->odrediVazece();
-
+            $this->log($this::IZMENA, $modelCena, ['datum', 'taksa', 'zakup'], $stari);
             $this->flash->addMessage('success', 'Cene su uspešno izmenjene.');
             return $response->withRedirect($this->router->pathFor('cene'));
         }
@@ -94,7 +96,6 @@ class CeneController extends Controller
             $modelCena->insert($data);
             $id = $modelCena->getLastId();
             $modelCena->odrediVazece();
-            
             $cena = $modelCena->find($id);
             $this->log($this::DODAVANJE, $cena, 'datum', $cena);
 

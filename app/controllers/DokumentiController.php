@@ -56,11 +56,14 @@ class DokumentiController extends Controller
             $extension = pathinfo($dokument->getClientFilename(), PATHINFO_EXTENSION);
             $name = "{$id_kartona}_{$data['tip']}_{$data['datum']}_{$unique}";
             $filename = "{$name}.{$extension}";
-            $veza = URL . "/doc/{$filename}";
+            $veza = URL . "doc/{$filename}";
             $data['veza'] = $veza;
             $dokument->moveTo('doc/' . $filename);
             $modelDokument = new Dokument();
             $modelDokument->insert($data);
+            $id_dokumenta = $modelDokument->getLastId();
+            $dokument = $modelDokument->find($id_dokumenta);
+            $this->log($this::DODAVANJE, $dokument, ['karton_id','tip','opis']);
             $this->flash->addMessage('success', 'Dokument je uspešno sačuvan.');
             return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $id_kartona]));
         }
@@ -78,6 +81,7 @@ class DokumentiController extends Controller
         if ($success) {
             unlink($file);
             $this->flash->addMessage('success', "Dokument je uspešno obrisan.");
+            $this->log($this::BRISANJE, $dok, ['karton_id','tip','opis'], $dok);
             return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $karton_id]));
         } else {
             $this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja dokumenta.");
@@ -136,11 +140,14 @@ class DokumentiController extends Controller
                 $extension = pathinfo($dokument->getClientFilename(), PATHINFO_EXTENSION);
                 $name = "{$id_kartona}_{$data['tip']}_{$data['datum']}_{$unique}";
                 $filename = "{$name}.{$extension}";
-                $veza = URL . "/doc/{$filename}";
+                $veza = URL . "doc/{$filename}";
                 $data['veza'] = $veza;
                 $dokument->moveTo('doc/' . $filename);
             }
+            $stari = $modelDokument->find($id);
             $modelDokument->update($data, $id);
+            $cena = $modelDokument->find($id);
+            $this->log($this::IZMENA, $cena, ['karton_id','tip','opis'], $stari);
             $this->flash->addMessage('success', 'Izmene dokumenta su uspešno sačuvane.');
             return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $id_kartona]));
         }

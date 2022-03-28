@@ -13,7 +13,7 @@ class StaraociController extends Controller
         parse_str($request->getUri()->getQuery(), $query);
         $page = isset($query['page']) ? (int)$query['page'] : 1;
 
-        $modelStaraoc = new Staraoc;
+        $modelStaraoc = new Staraoc();
         $sql = "SELECT * FROM staraoci ORDER BY karton_id, redni_broj;";
         $staraoci = $modelStaraoc->paginate($page, $sql);
 

@@ -89,6 +89,8 @@ $app->group('', function () {
     $this->post('/pokojnici/izmena', '\App\Controllers\PokojniciController:postPokojniciIzmena')->setName('pokojnici.izmena.post');
     // Logovi
     $this->get('/administracija/logovi', '\App\Controllers\LogController:getLog')->setName('logovi');
+    $this->get('/administracija/logovi/pretraga', '\App\Controllers\LogController:getLogoviPretraga')->setName('logovi.pretraga');
+    $this->post('/administracija/logovi/pretraga', '\App\Controllers\LogController:postLogoviPretraga');
     // Korisnici
     $this->get('/administracija/korisnici', '\App\Controllers\KorisniciController:getKorisnici')->setName('korisnici');
     $this->post('/administracija/korisnici/dodavanje', '\App\Controllers\KorisniciController:postKorisniciDodavanje')->setName('korisnici.dodavanje');

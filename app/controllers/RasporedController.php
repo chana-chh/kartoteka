@@ -206,7 +206,7 @@ class RasporedController extends Controller
         }
 
         $l = $k->user()->ime;
-        $modelLog->insert(['opis' => $l." je dodao termin za sahranu sa id brojem ".$id_rasporeda,  'tip_id' => 1, 'korisnik_id' => $idzaracun]);
+        //$modelLog->insert(['opis' => $l." je dodao termin za sahranu sa id brojem ".$id_rasporeda,  'tip' => 1, 'korisnik_id' => $idzaracun]);
 
         $this->flash->addMessage('success', "Zakazivanje termina je uspešno završeno.");
         return $response->withRedirect($this->router->pathFor('raspored'));

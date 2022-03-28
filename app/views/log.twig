@@ -1,7 +1,29 @@
 {% extends "templates/app.twig" %}
 
-{% block sadrzaj %}
-<h1 id="top">Logovi</h1>
+{% block naslov %}
+<h1 class="uk-text-danger">
+    LOGOVI
+    {% if data %}
+    <small><em class="uk-text-warning">[filtrirano]</em></small>
+    {% else %}
+    <small><em class="uk-text-success">[svi logovi]</em></small>
+    {% endif %}
+</h1>
+<div class="uk-panel uk-background-muted uk-padding-small">
+    <form action="{{ path_for('logovi.pretraga') }}" method="POST">
+        {{ csrf|raw }}
+        <input type="text" name="opis" id="opis" class="uk-input uk-form-width-small uk-form-small"
+            value="{{ data.opis }}" maxlength="13" autocomplete="off" placeholder="OPIS">
+        <input type="text" name="izmene" id="izmene" class="uk-input uk-form-width-small uk-form-small"
+            value="{{ data.izmene }}" autocomplete="off" placeholder="IZMENE">
+        <input type="text" name="tip" id="tip" class="uk-input uk-form-width-small uk-form-small" value="{{ data.tip }}"
+            autocomplete="off" placeholder="TIP">
+        <div class="uk-button-group">
+            <input type="submit" value="Filtriraj" class="uk-button uk-button-primary uk-button-small">
+            <a href="{{ path_for('logovi') }}" class="uk-button uk-button-secondary uk-button-small">Svi logovi</a>
+        </div>
+    </form>
+</div>
 <hr>
 {% if logovi %}
 <div class="uk-overflow-auto">
@@ -9,18 +31,26 @@
     <thead>
       <tr>
         <th class="w-10">Id</th>
-        <th class="w-60">Opis</th>
-        <th class="w-30">Vreme</th>
+        <th class="w-10">Tip</th>
+        <th class="w-20">Opis</th>
+        <th class="w-40">Izmene</th>
+        <th class="w-20">Vreme</th>
       </tr>
     </thead>
     <tbody>
-      {% for log in logovi %}
+      {% for log in logovi.data %}
       <tr>
         <td>
           <em>{{ log.id }}</em>
         </td>
         <td>
+          {{ log.tip }}
+        </td>
+        <td>
             <strong>{{ log.opis }}</strong>
+        </td>
+        <td>
+            {{ log.izmene }}
         </td>
         <td>{{ log.datum }}</td>
       </tr>
@@ -44,4 +74,4 @@
 {% else %}
   <h3 class="uk-panel uk-background-muted uk-margin-top uk-padding-small">Nema zapisa o akcijama korisnika.</h3>
 {% endif %}
-{% endblock sadrzaj %}
+{% endblock naslov %}
