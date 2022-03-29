@@ -32,9 +32,9 @@ class Logger
         }
 
         $data = [
-            'opis' => "{$model->id}, {$model->getTable()} - {$tekst}",
+            'opis' => "{$model->id}-{$model->getTable()}, {$tekst}",
             'tip' => $tip,
-            'izmene' => $model_stari === null ? '' : serialize(get_object_vars($model_stari)),
+            'izmene' => json_encode($model_stari),
             'korisnik_id' => $this->korisnik->id,
         ];
 

@@ -52,69 +52,80 @@ class RasporedController extends Controller
         unset($data['csrf_value']);
 
         //Za sada ako su popunjena sva tri polja, koja će biti obavezna. Nigde nema validacije.
+        
+        $modelKarton = new Karton();
+        $karton = null;
+        $id_kartona = null;
 
-        if (!empty($data['groblje_id']) && !empty($data['parcela']) && !empty($data['grobno_mesto'])) {
+        if (!empty($data['groblje_id']) && !empty($data['parcela']) && !empty($data['grobno_mesto']))
+        {
             $parcela = '%' . filter_var($data['parcela'], FILTER_SANITIZE_STRING) . '%';
             $where = "groblje_id = :groblje_id AND parcela LIKE :parcela AND grobno_mesto = :grobno_mesto";
-            $params = [':groblje_id' => $data['groblje_id' ], ':parcela' => $parcela, ':grobno_mesto' => $data['grobno_mesto' ]];
-
-            $model = new Karton();
+            $params = [':groblje_id' => $data['groblje_id'], ':parcela' => $parcela, ':grobno_mesto' => $data['grobno_mesto']];
+            
             $sql = "SELECT * FROM {$model->getTable()} WHERE {$where} LIMIT 1;";
-            $karton = $model->fetch($sql, $params);
-            if(!empty($karton)){
-                $id_kartona = $karton[0]->id;
-            }else{
-                $modelKartona = new Karton();
-                $karton = $modelKartona->insert(
-                [
+            $karton = $modelKarton->fetch($sql, $params);
+
+            if(!empty($karton))
+            {
+                $karton = $karton[0];
+                $id_kartona = $karton->id;
+            }
+            else
+            {
+                $modelKartona->insert([
                     'groblje_id' => $data['groblje_id'],
                     'parcela' => $data['parcela'],
                     'grobno_mesto' => $data['grobno_mesto'],
                     'broj_mesta' => 1,
                     'aktivan' => 1,
                     'tip_groba' => $data['tip_groba']
-                ]
-                );
+                ]);
 
                 $id_kartona = $modelKartona->getLastId();
+                $karton = $modelKartona->find($id_kartona);
+                $this->log($this::DODAVANJE, $karton, ['groblje_id', 'parcela', 'grobno_mesto'], $karton);
             }
         }
+        
+        $dupla_raka = isset($data['dupla_raka']) ? 1 : 0;
 
-            $modelKartonTitle = new Karton();
-            $karton_title = $modelKartonTitle->find($id_kartona);
-            $redni_broj = count($karton_title->pokojnici()) + 1;
+        // podaci za pokojnika
+        $redni_broj = count($karton->pokojnici()) + 1;
+        $jmbg = filter_var($data['jmbg'], FILTER_SANITIZE_STRING);
+        $prezime = filter_var($data['prezime'], FILTER_SANITIZE_STRING);
+        $ime = filter_var($data['ime'], FILTER_SANITIZE_STRING);
+        $srednje_ime = filter_var($data['srednje_ime'], FILTER_SANITIZE_STRING);
+        $mesto = filter_var($data['mesto'], FILTER_SANITIZE_STRING);
+        $prebivaliste = filter_var($data['prebivaliste'], FILTER_SANITIZE_STRING);
+        $datum_rodjenja = strlen($data['datum_rodjenja']) === 0 ? null : $data['datum_rodjenja'];
+        $datum_smrti = strlen($data['datum_smrti']) === 0 ? null : $data['datum_smrti'];
+        $datum_ekshumacije = null;
 
-            $dupla_raka = isset($data['dupla_raka']) ? 1 : 0;
-            $jmbg = filter_var($data['jmbg'], FILTER_SANITIZE_STRING);
-            $prezime = filter_var($data['prezime'], FILTER_SANITIZE_STRING);
-            $ime = filter_var($data['ime'], FILTER_SANITIZE_STRING);
-            $srednje_ime = filter_var($data['srednje_ime'], FILTER_SANITIZE_STRING);
-            $mesto = filter_var($data['mesto'], FILTER_SANITIZE_STRING);
-            $prebivaliste = filter_var($data['prebivaliste'], FILTER_SANITIZE_STRING);
-            $datum_rodjenja = strlen($data['datum_rodjenja']) === 0 ? null : $data['datum_rodjenja'];
-            $datum_smrti = strlen($data['datum_smrti']) === 0 ? null : $data['datum_smrti'];
-            $datum_ekshumacije = null;
+        $modelPokojnik = new Pokojnik();
 
-            $model_Pokojnika = new Pokojnik();
-            $pokojnik = $model_Pokojnika->insert(
-                [
-                    'karton_id' => $id_kartona,
-                    'redni_broj' => $redni_broj,
-                    'prezime' => $prezime,
-                    'ime' => $ime,
-                    'srednje_ime' => $srednje_ime,
-                    'jmbg' => $jmbg,
-                    'mesto' => $mesto,
-                    'prebivaliste' => $prebivaliste,
-                    'dupla_raka' => $dupla_raka,
-                    'datum_rodjenja' => $datum_rodjenja,
-                    'datum_smrti' => $datum_smrti,
-                    'datum_sahrane' => $data['start'],
-                ]
-                );
+        // proveriti da li postoji pokojnik po jmbg !!!
 
-            $id_pokojnika = $model_Pokojnika->getLastId();
+        $modelPokojnik->insert([
+            'karton_id' => $id_kartona,
+            'redni_broj' => $redni_broj,
+            'prezime' => $prezime,
+            'ime' => $ime,
+            'srednje_ime' => $srednje_ime,
+            'jmbg' => $jmbg,
+            'mesto' => $mesto,
+            'prebivaliste' => $prebivaliste,
+            'dupla_raka' => $dupla_raka,
+            'datum_rodjenja' => $datum_rodjenja,
+            'datum_smrti' => $datum_smrti,
+            'datum_sahrane' => $data['start'],
+        ]);
 
+        $id_pokojnika = $modelPokojnik->getLastId();
+        $pokojnik = $modelPokojnik->find($id_pokojnika);
+        $this->log($this::DODAVANJE, $pokojnik, ['prezime', 'ime'], $pokojnik);
+
+        // podaci za raspored (prijavu sahrane)
         $prezime_prijavioca = filter_var($data['prezime_prijavioca'], FILTER_SANITIZE_STRING);
         $ime_prijavioca = filter_var($data['ime_prijavioca'], FILTER_SANITIZE_STRING);
         $prezime_troskovi = filter_var($data['prezime_troskovi'], FILTER_SANITIZE_STRING);
@@ -124,89 +135,80 @@ class RasporedController extends Controller
         $ovlascen = filter_var($data['ovlascen'], FILTER_SANITIZE_STRING);
         $mup = filter_var($data['mup'], FILTER_SANITIZE_STRING);
         $telefon = filter_var($data['telefon'], FILTER_SANITIZE_STRING);
-
         $pio = isset($data['pio']) ? 1 : 0;
 
         $modelRaspored = new Raspored();
-        $raspored = $modelRaspored->insert([
-                    'start' => $data['start'],
-                    'end' => $data['end'],
-                    'title' => $karton_title->broj().", ".$ime." ".$prezime,
-                    'karton_id' => $id_kartona,
-                    'pokojnik_id' => $id_pokojnika,
-                    'broj_lk' => $data['broj_lk'],
-                    'prezime_prijavioca' => $prezime_prijavioca,
-                    'ime_prijavioca' => $ime_prijavioca,
-                    'prezime_troskovi' => $prezime_troskovi,
-                    'ime_troskovi' => $ime_troskovi,
-                    'jmbg_troskovi' => $jmbg_troskovi,
-                    'prebivaliste_troskovi' => $prebivaliste_troskovi,
-                    'ovlascen' => $ovlascen,
-                    'mup' => $mup,
-                    'telefon' => $telefon,
-                    'uplata_do' => $data['uplata_do'],
-                    'datum_prijave' => $data['datum_prijave'],
-                    'pio' => $pio,
-                    'napomena' => $data['napomena'],
-                    'prevoz' => $data['prevoz']
-                ]);
+        $modelRaspored->insert([
+            'start' => $data['start'],
+            'end' => $data['end'],
+            'title' => $karton_title->broj() . ", " . $ime . " " . $prezime,
+            'karton_id' => $id_kartona,
+            'pokojnik_id' => $id_pokojnika,
+            'broj_lk' => $data['broj_lk'],
+            'prezime_prijavioca' => $prezime_prijavioca,
+            'ime_prijavioca' => $ime_prijavioca,
+            'prezime_troskovi' => $prezime_troskovi,
+            'ime_troskovi' => $ime_troskovi,
+            'jmbg_troskovi' => $jmbg_troskovi,
+            'prebivaliste_troskovi' => $prebivaliste_troskovi,
+            'ovlascen' => $ovlascen,
+            'mup' => $mup,
+            'telefon' => $telefon,
+            'uplata_do' => $data['uplata_do'],
+            'datum_prijave' => $data['datum_prijave'],
+            'pio' => $pio,
+            'napomena' => $data['napomena'],
+            'prevoz' => $data['prevoz']
+        ]);
+
         $id_rasporeda = $modelRaspored->getLastId();
+        $dataUrl['url'] = URL."/raspored/izmena/". $id_rasporeda;
+        $modelRaspored->update($dataUrl, $id_rasporeda);
+        
+        $raspored = $modelRaspored->find($id_rasporeda);
+        $this->log($this::DODAVANJE, $raspored, ['title', 'start'], $raspored);
 
-        $modelR = new Raspored();
-        $dataU['url'] = URL."/raspored/izmena/". $id_rasporeda;
-        $modelR->update($dataU, $id_rasporeda);
+        $idzaracun = $this->korisnik->id;
 
-        $modelLog= new Log();
-        $k = new Auth();
-        $idzaracun = $k->user()->id;
+        if(!empty($data['broj']) && !empty($data['datum']) && !empty($data['iznos']))
+        {
+            $modelRacun = new Racun();
 
-        if (!empty($data['broj']) && !empty($data['datum']) && !empty($data['iznos'])) {
-            
-        $razduzeno = isset($data['razduzeno']) ? 1 : 0;
+            $modelRacun->insert([
+                'karton_id' => $id_kartona,
+                'broj' => $data['broj'],
+                'datum' => $data['datum'],
+                'iznos' => $data['iznos'],
+                'napomena' => $data['napomena_racun'],
+                'razduzeno' => $razduzeno,
+                'datum_razduzenja' => $data['datum_razduzenja'],
+                'korisnik_id_zaduzio' => $idzaracun,
+                'korisnik_id_razduzio' => $idzaracun,
+                'rok' => $data['uplata_do']
+            ]);
 
-        $modelRacun = new Racun();
-        $modelUplata = new Uplata();
+            $id_racuna = $modelRacun->getLastId();
+            $racun = $modelRacun->find($id_racuna);
+            $this->log($this::DODAVANJE, $racun, ['karton_id', 'broj', 'datum'], $racun);
 
-        if($razduzeno == 1){
+            $razduzeno = isset($data['razduzeno']) ? 1 : 0;
 
-            $racun = $modelRacun->insert([
+            if($razduzeno == 1)
+            {
+                $modelUplata = new Uplata();
+                $modelUplata->insert([
                     'karton_id' => $id_kartona,
-                    'broj' => $data['broj'],
-                    'datum' => $data['datum'],
-                    'iznos' => $data['iznos'],
-                    'napomena' => $data['napomena_racun'],
-                    'razduzeno' => $razduzeno,
-                    'datum_razduzenja' => $data['datum_razduzenja'],
-                    'korisnik_id_zaduzio' => $idzaracun,
-                    'korisnik_id_razduzio' => $idzaracun,
-                    'rok' => $data['uplata_do']
-                ]);
-
-            $uplata = $modelUplata->insert([
-                    'karton_id' => $id_kartona,
                     'iznos' => $data['iznos'],
                     'datum' => $data['datum'],
-                    'napomena' => "Uplata uz zakazivanje termina za račun sa brojem - ".$data['broj'],
+                    'napomena' => "Uplata uz zakazivanje termina za račun sa brojem - " . $data['broj'],
                     'korisnik_id' => $idzaracun,
                 ]);
 
-        }else{
-                $racun = $modelRacun->insert([
-                    'karton_id' => $id_kartona,
-                    'broj' => $data['broj'],
-                    'datum' => $data['datum'],
-                    'iznos' => $data['iznos'],
-                    'napomena' => $data['napomena_racun'],
-                    'razduzeno' => $razduzeno,
-                    'datum_razduzenja' => $data['datum_razduzenja'],
-                    'korisnik_id_zaduzio' => $idzaracun,
-                    'rok' => $data['uplata_do']
-                ]);
+                $id_uplate = $modelUplata->getLastId();
+                $uplata = $modelUplata->find($id_uplate);
+                $this->log($this::DODAVANJE, $uplata, ['karton_id', 'datum', 'priznanica'], $uplata);
             }
         }
-
-        $l = $k->user()->ime;
-        //$modelLog->insert(['opis' => $l." je dodao termin za sahranu sa id brojem ".$id_rasporeda,  'tip' => 1, 'korisnik_id' => $idzaracun]);
 
         $this->flash->addMessage('success', "Zakazivanje termina je uspešno završeno.");
         return $response->withRedirect($this->router->pathFor('raspored'));
@@ -250,6 +252,11 @@ class RasporedController extends Controller
         $data['pio'] = $pio;
 
         $model = new Raspored();
+
+        $raspored = $model->find($id);
+
+        $this->log($this::IZMENA, $raspored, ['title', 'start'], $raspored);
+
         $model->update($data, $id);
 
         $this->flash->addMessage('success', "Podaci termina su uspešno izmenjeni.");
@@ -260,8 +267,10 @@ class RasporedController extends Controller
     {
         $id = (int)$request->getParam('termin_modal_id');
         $model = new Raspored();
+        $raspored = $model->find($id);
         $success = $model->deleteOne($id);
         if ($success) {
+            $this->log($this::BRISANJE, $raspored, ['title', 'start'], $raspored);
             $this->flash->addMessage('success', "Termin je uspešno obrisan.");
             return $response->withRedirect($this->router->pathFor('raspored'));
         } else {

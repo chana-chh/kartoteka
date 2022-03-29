@@ -234,12 +234,14 @@
                   <span uk-icon="refresh"></span> {{ rn.reprogramLbl(rn.reprogram_id)|raw }}
                   {% endif %}
                 </td>
+                {% if auth.logged and auth.user.nivo == 0 %}
                 <td class="uk-text-right">
                   <a title="Brisanje" href="#modal-brisanje-racuna" data-id="{{ rn.id }}" onclick="setRacunId(this);"
                     uk-toggle>
                     <span uk-icon="trash"></span>
                   </a>
                 </td>
+                {% endif %}
               </tr>
               {% endfor %}
             </tbody>

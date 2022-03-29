@@ -28,7 +28,9 @@
 
 - nema fine podele autorizacije (postoji samo korisnik i admin) -
 
-- test
+- da li snimati model u log ako je dodavanje
+    - kod logovanja u modele ubaciti polja za logovanje
+    - u Logger proslediti samo tip loga i model pre izmene/brisanja
 
 
 

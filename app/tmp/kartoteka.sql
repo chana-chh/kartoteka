@@ -107,11 +107,11 @@ CREATE TABLE IF NOT EXISTS `korisnici` (
   UNIQUE KEY `username` (`korisnicko_ime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table kartoteka.korisnici: ~0 rows (approximately)
+-- Dumping data for table kartoteka.korisnici: ~2 rows (approximately)
 /*!40000 ALTER TABLE `korisnici` DISABLE KEYS */;
 INSERT IGNORE INTO `korisnici` (`id`, `ime`, `korisnicko_ime`, `lozinka`, `nivo`) VALUES
-	(1, 'Администратор', 'admin', '$2y$10$RWD9bVOhe1GlWER7DVKMAukc2/OAwpoAvC/8A.wYOpGtqMFTezQHm', 0),
-	(2, 'Корисник', 'korisnik', '$2y$10$.LdcfGIVu4uqvJgw5oznteEzqvkfy/50I2gteHAsj0vpfZ9rOAqf2', 10);
+	(1, 'Administrator', 'admin', '$2y$10$RWD9bVOhe1GlWER7DVKMAukc2/OAwpoAvC/8A.wYOpGtqMFTezQHm', 0),
+	(2, 'Korisnik', 'korisnik', '$2y$10$.LdcfGIVu4uqvJgw5oznteEzqvkfy/50I2gteHAsj0vpfZ9rOAqf2', 10);
 /*!40000 ALTER TABLE `korisnici` ENABLE KEYS */;
 
 -- Dumping structure for table kartoteka.logovi
@@ -175,7 +175,7 @@ CREATE TABLE IF NOT EXISTS `pokojnici` (
   CONSTRAINT `FK_umrli_kartoni` FOREIGN KEY (`karton_id`) REFERENCES `kartoni` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table kartoteka.pokojnici: ~1 rows (approximately)
+-- Dumping data for table kartoteka.pokojnici: ~0 rows (approximately)
 /*!40000 ALTER TABLE `pokojnici` DISABLE KEYS */;
 /*!40000 ALTER TABLE `pokojnici` ENABLE KEYS */;
 
