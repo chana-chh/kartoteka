@@ -114,6 +114,10 @@ class CeneController extends Controller
         $id = (int)$request->getParam('modal_cena_id');
         $modelCena = new Cena();
         $cena = $modelCena->find($id);
+        if ($cena->vazece == 1) {
+            $this->flash->addMessage('danger', "Nije moguće obrisati trenutno važeće cene.");
+            return $response->withRedirect($this->router->pathFor('cene'));
+        }
         $success = $modelCena->deleteOne($id);
         if ($success) {
             $this->log($this::BRISANJE, $cena, 'datum', $cena);

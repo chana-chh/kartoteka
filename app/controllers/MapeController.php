@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\Karton;
 use App\Models\Groblje;
 use App\Models\Mapa;
+use App\Models\Log;
 
 use \Exception;
 
@@ -91,7 +92,15 @@ class MapeController extends Controller
                 ]
                 );
             }
-
+            //LOG Ručno
+            $modelGroblja = new Groblje();
+            $groblje = $modelGroblja->find($data['groblje_id']);
+            $modelLoga = new Log();
+            $datal['tip'] = "dodavanje";
+            $datal['opis'] = "Mapa: " . $groblje->naziv . ", " . $data['opis'];
+            $datal['izmene'] = "Parcele: " . implode(",", $data['parcela']);
+            $datal['korisnik_id'] = $this->auth->user()->id;
+            $modelLoga->insert($datal);
             $this->flash->addMessage('success', 'Mapa '. $filename. ' je uspešno sačuvana');
             return $response->withRedirect($this->router->pathFor('mape'));
             }
@@ -142,10 +151,11 @@ class MapeController extends Controller
     {
         $id = (int)$request->getParam('brisanje_id');
         $modelMape = new Mapa();
+        $mapa = $modelMape->find($id);
         $veza = $modelMape->find($id)->veza;
+        $broj = count($modelMape->isteMape($veza));
         $success = $modelMape->deleteOne($id);
 
-        $broj = count($modelMape->isteMape($veza));
 
         if ($broj < 1) {
             $thumb = 'img/Mape/Thumb/'.$veza;  
@@ -162,9 +172,11 @@ class MapeController extends Controller
         }
 
         if ($success and $success_thumb and $success_mapa) {
+            $this->log($this::BRISANJE, $mapa, 'opis', $mapa);
             $this->flash->addMessage('success', "Mapa sa nazivom [{$veza}] je uspešno obrisana.");
             return $response->withRedirect($this->router->pathFor('mape'));
         } elseif($success and !$success_thumb and !$success_thumb) {
+            $this->log($this::BRISANJE, $mapa, 'opis', $mapa);
             $this->flash->addMessage('warning', "Mapa sa nazivom [{$veza}] je uspešno obrisana, ali samo iz baze.");
             return $response->withRedirect($this->router->pathFor('mape'));
         }else {
@@ -219,7 +231,11 @@ class MapeController extends Controller
         } else {
             $modelMape = new Mapa();
             $data['veza'] = $veza;
+            $data['opis_mape'] = $mapapolaz->opis_mape;
             $modelMape->insert($data);
+            $id = $modelMape->getLastId();
+            $mapa = $modelMape->find($id);
+            $this->log($this::DODAVANJE, $mapa, ['groblje_id', 'parcela'], $mapa);
             $this->flash->addMessage('success', 'Uspešno ste povezali parcelu sa postojećom mapom.');
             return $response->withRedirect($this->router->pathFor('mape'));
         }
