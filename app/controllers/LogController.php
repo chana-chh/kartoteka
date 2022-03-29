@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Raspored;
+use App\Models\Korisnik;
 use App\Models\Log;
 
 class LogController extends Controller
@@ -18,7 +19,10 @@ class LogController extends Controller
         $sql = "SELECT * FROM logovi ORDER BY datum DESC;";
         $logovi = $modelLog->paginate($page, $sql);
 
-        $this->render($response, 'log.twig', compact('logovi'));
+        $modelKorisnika = new Korisnik();
+        $korisnici = $modelKorisnika->all();
+
+        $this->render($response, 'log.twig', compact('logovi', 'korisnici'));
     }
 
     public function postLogoviPretraga($request, $response)
@@ -32,15 +36,18 @@ class LogController extends Controller
         $data = $_SESSION['DATA_LOGOVI_PRETRAGA'];
         array_shift($data);
         array_shift($data);
-        if (empty($data['opis']) && empty($data['izmene']) && empty($data['tip'])) {
+        if (empty($data['opis']) && 
+            empty($data['izmene']) && 
+            empty($data['tip']) &&
+            empty($data['datum_1']) &&
+            empty($data['datum_2']) &&
+            empty($data['korisnik_id'])) {
             $this->getLog($request, $response);
         }
         $data['opis'] = str_replace('%', '', $data['opis']);
         $data['izmene'] = str_replace('%', '', $data['izmene']);
-        $data['tip'] = str_replace('%', '', $data['tip']);
         $opis = '%' . filter_var($data['opis'], FILTER_SANITIZE_STRING) . '%';
         $izmene = '%' . filter_var($data['izmene'], FILTER_SANITIZE_STRING) . '%';
-        $tip = '%' . filter_var($data['tip'], FILTER_SANITIZE_STRING) . '%';
         $query = [];
         parse_str($request->getUri()->getQuery(), $query);
         $page = isset($query['page']) ? (int)$query['page'] : 1;
@@ -63,9 +70,35 @@ class LogController extends Controller
                 $where .= " AND ";
             }
             $where .= "tip LIKE :tip";
-            $params[':tip'] = $tip;
+            $params[':tip'] = $data['tip'];
         }
+        if (!empty($data['korisnik_id'])) {
+            if ($where !== " WHERE ") {
+                $where .= " AND ";
+            }
+            $where .= "korisnik_id = :korisnik_id";
+            $params[':korisnik_id'] = $data['korisnik_id'];
+        }
+        if (!empty($data['datum_1']) && empty($data['datum_2'])) {
+            if ($where !== " WHERE ") {
+                $where .= " AND ";
+            }
+            $where .= "DATE(datum) = :datum_1";
+            $params[':datum_1'] = $data['datum_1'];
+        }
+
+        if (!empty($data['datum_1']) && !empty($data['datum_2'])) {
+            if ($where !== " WHERE ") {
+                $where .= " AND ";
+            }
+            $where .= "DATE(datum) >= :datum_1 AND DATE(datum) <= :datum_2 ";
+            $params[':datum_1'] = $data['datum_1'];
+            $params[':datum_2'] = $data['datum_2'];
+        }
+        
         $where = $where === " WHERE " ? "" : $where;
+        $modelKorisnika = new Korisnik();
+        $korisnici = $modelKorisnika->all();
         $model = new Log();
         $sql = "SELECT * FROM {$model->getTable()}{$where} ORDER BY datum DESC;";
         $logovi = $model->paginate($page, $sql, $params);

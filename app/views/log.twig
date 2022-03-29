@@ -12,12 +12,27 @@
 <div class="uk-panel uk-background-muted uk-padding-small">
     <form action="{{ path_for('logovi.pretraga') }}" method="POST">
         {{ csrf|raw }}
+        <select name="tip" id="tip" class="uk-select uk-form-width-small uk-form-small">
+          <option value="" disabled selected>TIP AKCIJE</option>
+          <option value="dodavanje" {{ data.tip == "dodavanje" ? ' selected' : '' }}>DODAVANJE</option>
+          <option value="izmena" {{ data.tip == "izmena" ? ' selected' : '' }}>IZMENA</option>
+          <option value="brisanje" {{ data.tip == "brisanje" ? ' selected' : '' }}>BRISANJE</option>
+        </select>
         <input type="text" name="opis" id="opis" class="uk-input uk-form-width-small uk-form-small"
-            value="{{ data.opis }}" maxlength="13" autocomplete="off" placeholder="OPIS">
+            value="{{ data.opis }}" autocomplete="off" placeholder="OPIS">
         <input type="text" name="izmene" id="izmene" class="uk-input uk-form-width-small uk-form-small"
             value="{{ data.izmene }}" autocomplete="off" placeholder="IZMENE">
-        <input type="text" name="tip" id="tip" class="uk-input uk-form-width-small uk-form-small" value="{{ data.tip }}"
-            autocomplete="off" placeholder="TIP">
+        <select name="korisnik_id" id="korisnik_id" class="uk-select uk-form-width-small uk-form-small" autofocus>
+          <option value="" disabled selected>KORISNIK</option>
+          {% for korisnik in korisnici %}
+          <option value="{{ korisnik.id }}" {{ data.korisnik_id == korisnik.id ? ' selected' : '' }}>{{ korisnik.ime }}
+          </option>
+          {% endfor %}
+        </select>
+        <input type="date" name="datum_1" id="datum_1" value="{{ data.datum_1 }}"
+        class="uk-input uk-form-width-medium uk-form-small" autocomplete="off">
+        <input type="date" name="datum_2" id="datum_2" value="{{ data.datum_2 }}"
+        class="uk-input uk-form-width-medium uk-form-small" autocomplete="off">
         <div class="uk-button-group">
             <input type="submit" value="Filtriraj" class="uk-button uk-button-primary uk-button-small">
             <a href="{{ path_for('logovi') }}" class="uk-button uk-button-secondary uk-button-small">Svi logovi</a>
@@ -34,7 +49,8 @@
         <th class="w-10">Tip</th>
         <th class="w-20">Opis</th>
         <th class="w-40">Izmene</th>
-        <th class="w-20">Vreme</th>
+        <th class="w-10">Vreme</th>
+        <th class="w-10">Korisnik</th>
       </tr>
     </thead>
     <tbody>
@@ -53,6 +69,7 @@
             {{ log.izmene }}
         </td>
         <td>{{ log.datum }}</td>
+        <td>{{ log.korisnik.ime }}</td>
       </tr>
       {% endfor %}
     </tbody>

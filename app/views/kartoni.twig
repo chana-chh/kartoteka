@@ -13,15 +13,16 @@
       <form action="{{ path_for('kartoni.pretraga') }}" method="POST">
         {{ csrf | raw }}
         <select name="groblje_id" id="groblje_id" class="uk-select uk-form-width-small uk-form-small" autofocus>
+          <option value="" disabled selected>GROBLJE</option>
           {% for groblje in groblja %}
           <option value="{{ groblje.id }}" {{ data.groblje_id == groblje.id ? ' selected' : '' }}>{{ groblje.naziv }}
           </option>
           {% endfor %}
         </select>
         <input type="text" name="parcela" id="parcela" class="uk-input uk-form-width-small uk-form-small"
-          value="{{ data.parcela }}" autocomplete="off" placeholder="Parcela" />
+          value="{{ data.parcela }}" autocomplete="off" placeholder="PARCELA" />
         <input type="text" name="grobno_mesto" id="grobno_mesto" class="uk-input uk-form-width-small uk-form-small"
-          value="{{ data.grobno_mesto }}" autocomplete="off" placeholder="Grobno mesto" />
+          value="{{ data.grobno_mesto }}" autocomplete="off" placeholder="GROBNO MESTO" />
 
         <div class="uk-button-group">
           <input type="submit" value="Filtriraj" class="uk-button uk-button-primary uk-button-small" />
