@@ -39,5 +39,6 @@ class Logger
         ];
 
         $this->model->insert($data);
+        
     }
 }
