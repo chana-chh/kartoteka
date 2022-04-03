@@ -95,6 +95,7 @@
         <div class="uk-margin">
             <legend for="groblje_id">Groblje:</legend>
             <select name="groblje_id" id="groblje_id" class="uk-select uk-width-2-3">
+                <option value="" disabled selected>ODABERI GROBLJE SA LISTE</option>
                 {% for groblje in groblja %}
                 <option value="{{ groblje.id }}">{{ groblje.naziv }}</option>
                 {% endfor %}
@@ -105,7 +106,7 @@
             <legend for="parcela">Parcela:</legend>
             <select name="parcela[]" id="parcela" multiple class="uk-select uk-width-2-3">
                 {% for par in parcele %}
-                <option value="{{ par.parcela }}">{{ par.parcela }}</option>
+                <option value="{{ par.parcela }}" data-zafilter="{{ par.groblje_id }}">{{ par.parcela }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -157,6 +158,16 @@ document.getElementById("groblje_id").onchange = function(){
 var value = this.value;
 var tekst = getSelectedText('groblje_id');
 sakriven.value = tekst;
+var parcela = document.getElementById("parcela");
+for (var i = 0; i < parcela.length; i++) {
+            var txt = parcela.options[i].getAttribute('data-zafilter');
+            if (txt == value) {
+                parcela.options[i].style.display = 'block';
+            } else {
+                parcela.options[i].style.display = 'none';
+            }
+
+        }
 };
 
 function getSelectedText(elementId) {

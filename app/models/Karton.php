@@ -75,7 +75,7 @@ class Karton extends Model
 
     public function vratiParcele()
     {
-        $sql = "SELECT parcela FROM {$this->table} GROUP BY parcela";
+        $sql = "SELECT DISTINCT groblje_id,parcela FROM {$this->table}";
         return $this->fetch($sql);
     }
 
