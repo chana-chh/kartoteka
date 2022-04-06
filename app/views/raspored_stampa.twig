@@ -7,7 +7,23 @@ p {
 }
 
 @media print {
-	
+	html, body {
+            width: 210mm;
+            height: 297mm;        
+        }
+        
+	.page {
+        width: 200mm;
+        min-height: 280mm;
+        padding: 20mm;
+        margin: 0;
+        border: 1px #D3D3D3 solid;
+        border-radius: 5px;
+        background: white;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        page-break-after: always;
+    }
+
 	p {
   font-size: 0.875em;
 }
@@ -33,6 +49,7 @@ p {
     </div>
   </div>
 </div>
+<div class="page">
 <h2 class="uk-text-center">JKP Šumadija</h2>
 <h4 class="uk-text-center">FORMULAR ZA INTERNU UPOTREBU - ZAKAZIVANJE SAHRANE</h4>
 <hr>
@@ -117,6 +134,7 @@ p {
 		<br>
 		<hr>
 	</div>
+</div>
 </div>
 <div uk-grid class="ne_stampaj">
 	<div class="uk-button-group uk-width-1-4 uk-margin-medium-bottom">

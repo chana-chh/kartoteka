@@ -63,7 +63,7 @@ class RasporedController extends Controller
             $where = "groblje_id = :groblje_id AND parcela LIKE :parcela AND grobno_mesto = :grobno_mesto";
             $params = [':groblje_id' => $data['groblje_id'], ':parcela' => $parcela, ':grobno_mesto' => $data['grobno_mesto']];
             
-            $sql = "SELECT * FROM {$model->getTable()} WHERE {$where} LIMIT 1;";
+            $sql = "SELECT * FROM {$modelKarton->getTable()} WHERE {$where} LIMIT 1;";
             $karton = $modelKarton->fetch($sql, $params);
 
             if(!empty($karton))
@@ -73,7 +73,7 @@ class RasporedController extends Controller
             }
             else
             {
-                $modelKartona->insert([
+                $modelKarton->insert([
                     'groblje_id' => $data['groblje_id'],
                     'parcela' => $data['parcela'],
                     'grobno_mesto' => $data['grobno_mesto'],
@@ -82,8 +82,8 @@ class RasporedController extends Controller
                     'tip_groba' => $data['tip_groba']
                 ]);
 
-                $id_kartona = $modelKartona->getLastId();
-                $karton = $modelKartona->find($id_kartona);
+                $id_kartona = $modelKarton->getLastId();
+                $karton = $modelKarton->find($id_kartona);
                 $this->log($this::DODAVANJE, $karton, ['groblje_id', 'parcela', 'grobno_mesto'], $karton);
             }
         }
@@ -141,7 +141,7 @@ class RasporedController extends Controller
         $modelRaspored->insert([
             'start' => $data['start'],
             'end' => $data['end'],
-            'title' => $karton_title->broj() . ", " . $ime . " " . $prezime,
+            'title' => $karton->broj() . ", " . $ime . " " . $prezime,
             'karton_id' => $id_kartona,
             'pokojnik_id' => $id_pokojnika,
             'broj_lk' => $data['broj_lk'],
@@ -168,7 +168,7 @@ class RasporedController extends Controller
         $raspored = $modelRaspored->find($id_rasporeda);
         $this->log($this::DODAVANJE, $raspored, ['title', 'start'], $raspored);
 
-        $idzaracun = $this->korisnik->id;
+        $idzaracun = $this->auth->user()->id;
 
         if(!empty($data['broj']) && !empty($data['datum']) && !empty($data['iznos']))
         {
