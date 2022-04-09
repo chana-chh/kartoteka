@@ -174,6 +174,8 @@ class RasporedController extends Controller
         {
             $modelRacun = new Racun();
 
+            $razduzeno = isset($data['razduzeno']) ? 1 : 0;
+
             $modelRacun->insert([
                 'karton_id' => $id_kartona,
                 'broj' => $data['broj'],
@@ -190,8 +192,6 @@ class RasporedController extends Controller
             $id_racuna = $modelRacun->getLastId();
             $racun = $modelRacun->find($id_racuna);
             $this->log($this::DODAVANJE, $racun, ['karton_id', 'broj', 'datum'], $racun);
-
-            $razduzeno = isset($data['razduzeno']) ? 1 : 0;
 
             if($razduzeno == 1)
             {

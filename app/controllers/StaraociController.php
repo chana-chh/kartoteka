@@ -105,7 +105,9 @@ class StaraociController extends Controller
                 'jmbg' => true,
             ],
         ];
+
         $this->validator->validate($data, $validation_rules);
+
         if ($this->validator->hasErrors()) {
             $this->flash->addMessage('danger', 'Došlo je do greške prilikom dodavanja novog staraoca.');
             return $response->withRedirect($this->router->pathFor('staraoci.dodavanje', ['id' => $data['karton_id']]));
@@ -116,6 +118,9 @@ class StaraociController extends Controller
             $data['sukorisnik'] = $sukorisnik;
             $model = new Staraoc();
             $model->insert($data);
+            $id = $model->getLastId();
+            $staraoc = $model->find($id);
+            $this->log($this::DODAVANJE, $staraoc, ['jmbg', 'prezime', 'ime'], $staraoc);
             $this->flash->addMessage('success', 'Novi staraoc je uspešno upisan.');
             return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $data['karton_id']]));
         }
@@ -126,8 +131,10 @@ class StaraociController extends Controller
         $id = (int)$request->getParam('modal_staraoc_id');
         $karton_id = (int)$request->getParam('modal_staraoc_karton_id');
         $modelStaraoc = new Staraoc();
+        $staraoc = $model->find($id);
         $success = $modelStaraoc->deleteOne($id);
         if ($success) {
+            $this->log($this::BRISANJE, $staraoc, ['jmbg', 'prezime', 'ime'], $staraoc);
             $this->flash->addMessage('success', "Staraoc je uspešno obrisan.");
             return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $karton_id]));
         } else {
@@ -176,18 +183,23 @@ class StaraociController extends Controller
                 'jmbg' => true,
             ],
         ];
+
         $this->validator->validate($data, $validation_rules);
+
         if ($this->validator->hasErrors()) {
             $this->flash->addMessage('danger', 'Došlo je do greške prilikom izmene dokumenta.');
             return $response->withRedirect($this->router->pathFor('staraoci.izmena', ['id' => $id_kartona]));
         } else {
             $modelStaraoc = new Staraoc();
+            $staraoc_old = $model->find($id);
             unset($data['karton_id']);
             $aktivan = isset($data['aktivan']) ? 1 : 0;
             $data['aktivan'] = $aktivan;
             $sukorisnik = isset($data['sukorisnik']) ? 1 : 0;
             $data['sukorisnik'] = $sukorisnik;
             $modelStaraoc->update($data, $id);
+            $staraoc = $model->find($id);
+            $this->log($this::IZMENA, $staraoc, ['jmbg', 'prezime', 'ime'], $staraoc_old);
             $this->flash->addMessage('success', 'Izmene staraoca su uspešno sačuvane.');
             return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $id_kartona]));
         }
