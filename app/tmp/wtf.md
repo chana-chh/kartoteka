@@ -24,13 +24,12 @@
 - ukloniti sve vezano za robu (artikli, porezi ...) +
 - kad se zavrsi komplet doraditi uputstvo
 
-- brise cene koje su aktivne i kartoni su zaduzeni njima - onemoguciti brisanje / brisanje samo mi direktno iz baze
+- brise cene koje su aktivne i kartoni su zaduzeni njima - onemoguciti brisanje / brisanje samo mi direktno iz baze +
 
 - nema fine podele autorizacije (postoji samo korisnik i admin) -
 
 - da li snimati model u log ako je dodavanje
     - kod logovanja u modele ubaciti polja za logovanje
     - u Logger proslediti samo tip loga i model pre izmene/brisanja
-
 
 

@@ -49,10 +49,153 @@ class TransakcijeController extends Controller
         $this->render($response, 'transakcije_razduzivanje.twig', compact('karton', 'cena_takse', 'cena_zakupa'));
     }
 
+    public function getZaduzivanje($request, $response)
+    {
+        $model = new Cena();
+        $taksa = $model->taksa();
+        $zakup = $model->zakup();
+
+        $zaduzena_godina = false;
+        $upozorenje = '';
+
+        $curr_year = (int) date('Y');
+
+        $model_karton = new Karton();
+        $model_zaduzenje = new Zaduzenje();
+
+        $sql_broj_kartona = "SELECT COUNT(*) AS broj_kartona FROM kartoni WHERE aktivan = 1;";
+        $sql_broj_zaduzenja = "SELECT COUNT(*) AS broj_zaduzenja FROM zaduzenja WHERE godina = {$curr_year};";
+
+        $broj_kartona = $model_karton->fetch($sql_broj_kartona)[0]->broj_kartona;
+        $broj_zaduzenja = $model_zaduzenje->fetch($sql_broj_zaduzenja)[0]->broj_zaduzenja;
+
+        // vise 75% kartona je zaduzeno za godinu
+        if ($broj_zaduzenja > ($broj_kartona * 1.5)) {
+            $upozorenje = "Većina kartona je zadužena za tekuću godinu ({$curr_year})";
+            $zaduzena_godina = true;
+        }
+        else
+        {
+            $upozorenje = "Većina kartona nije zadužena za tekuću godinu ({$curr_year})";
+            $zaduzena_godina = false;
+        }
+
+        $this->render($response, 'zaduzivanje.twig', compact('taksa', 'zakup', 'upozorenje', 'zaduzena_godina'));
+    }
+
+    public function postZaduzivanje($request, $response)
+    {
+        $data = $request->getParams();
+        unset($data['csrf_name']);
+        unset($data['csrf_value']);
+
+        $cur_year = (int) date('Y');
+
+        $validation_rules = [
+            'taksa' => [
+                'required' => true,
+            ],
+            'zakup' => [
+                'required' => true,
+            ],
+            'godina' => [
+                'required' => true,
+                'min' => $cur_year - 1,
+                'max' => $cur_year + 1,
+            ],
+        ];
+
+        $this->validator->validate($data, $validation_rules);
+
+        if ($this->validator->hasErrors()) {
+            $this->flash->addMessage('danger', 'Došlo je do greške prilikom zaduživanja kartona.');
+            return $response->withRedirect($this->router->pathFor('transakcije.zaduzivanje'));
+        } else {
+            $model_karton = new Karton();
+            $model_zaduzenja = new Zaduzenje();
+
+            $taksa =  (float) $data['taksa'];
+            $zakup =  (float) $data['zakup'];
+            $godina = (int) $data['godina'];
+
+            $podaci = [
+                ':karton_id' => 0,
+                ':staraoc_id' => 0,
+                ':tip' => 'taksa',
+                ':godina' => $godina,
+                ':iznos_zaduzeno' => 0,
+                ':iznos_razduzeno' => 0,
+                ':razduzeno' => 0,
+                ':datum_zaduzenja' => date('Y-m-d'),
+                ':korisnik_id_zaduzio' => $this->auth->user()->id,
+            ];
+
+            
+            $kartoni = $model_karton->sviAktivni();
+            $pdo = $model_karton->getDb()->getPDO();
+            $sql = "INSERT INTO `zaduzenja` (karton_id, staraoc_id, tip, iznos_zaduzeno, iznos_razduzeno, godina, razduzeno, datum_zaduzenja, korisnik_id_zaduzio)
+                    VALUES (:karton_id, :staraoc_id, :tip, :iznos_zaduzeno, :iznos_razduzeno, :godina, :razduzeno, :datum_zaduzenja, :korisnik_id_zaduzio);";
+            $stmt = $pdo->prepare($sql);
+
+            $pdo->beginTransaction();
+
+            foreach ($kartoni as $karton) {
+                $staraoci = $karton->aktivniStaraoci();
+                $br_mesta = $karton->broj_mesta;
+                $br_staraoca = count($staraoci);
+                echo "{$karton->broj()} - mesta: {$br_mesta}, staraoca: {$br_staraoca}<br>";
+                foreach ($staraoci as $staraoc)
+                {
+                    // proveriti da li je zaduzen taksom
+                    $tip = 1;
+                    $sql_taksa = "SELECT COUNT(*) AS br_taksi FROM zaduzenja WHERE karton_id = {$karton->id}
+                                    AND staraoc_id = {$staraoc->id} AND tip = {$tip} AND godina = {$godina}";
+                    $br_taksi = $model_zaduzenja->fetch($sql_taksa)[0]->br_taksi;
+                    if ($br_taksi === 0)
+                    {
+                        // odrediti taksu
+                        $iznos_takse = (float) ($taksa * $br_mesta / $br_staraoca);
+                        
+                        $podaci[':karton_id'] = $karton->id;
+                        $podaci[':staraoc_id'] = $staraoc->id;
+                        $podaci[':tip'] = 'taksa';
+                        $podaci[':iznos_zaduzeno'] = $iznos_takse;
+
+                        $stmt->execute($podaci);
+                    }
+
+                    // proveriti da li je zaduzen zakupom
+                    $tip = 2;
+                    $sql_zakup = "SELECT COUNT(*) AS br_zakupa FROM zaduzenja WHERE karton_id = {$karton->id}
+                                    AND staraoc_id = {$staraoc->id} AND tip = {$tip} AND godina = {$godina}";
+                    $br_zakupa = $model_zaduzenja->fetch($sql_zakup)[0]->br_zakupa;
+                    if ($br_zakupa === 0)
+                    {
+                        // odrediti zakup
+                        $iznos_zakupa = (float) ($zakup * $br_mesta / $br_staraoca);
+
+                        $podaci[':karton_id'] = $karton->id;
+                        $podaci[':staraoc_id'] = $staraoc->id;
+                        $podaci[':tip'] = 'zakup';
+                        $podaci[':iznos_zaduzeno'] = $iznos_zakupa;
+
+                        $stmt->execute($podaci);
+                    }
+                }                
+            }
+
+            $pdo->commit();
+
+            $this->flash->addMessage('success', 'Svi aktivni kartoni su uspešno zaduženi.');
+            return $response->withRedirect($this->router->pathFor('transakcije.zaduzivanje'));
+        }
+    }
+    
     public function getZaduzivanjeTakse($request, $response)
     {
-        $model_cene = new Cena();
-        $takse = $model_cene->all();
+        $model = new Cena();
+        $taksa = $model->taksa();
+        $zakup = $model->zakup();
 
         $this->render($response, 'zaduzivanje_taksi.twig', compact('takse'));
     }

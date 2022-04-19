@@ -16,13 +16,13 @@
 
 <form action="{{ path_for('cene.dodavanje.post') }}" method="POST" class="uk-form-stacked uk-margin-medium" uk-grid>
 	{{ csrf|raw }}
-		<div class="uk-width-1-4">
+	<div class="uk-width-1-4">
 		<label for="datum" class="uk-form-label">Datum:</label>
 		<div class="uk-form-controls">
 			<input type="date" name="datum" id="datum" value="{{ old.datum ? : 'now'|date('Y-m-d') }}"
-				class="uk-input{{ errors.datum[0] ? ' uk-form-danger': ''}}" autocomplete="off" required>
+					class="uk-input{{ errors.datum[0] ? ' uk-form-danger': ''}}" autocomplete="off" required>
 		</div>
-		<small class="uk-text-danger">{{ errors.datum[0] ? :'' }}</small>
+	<small class="uk-text-danger">{{ errors.datum[0] ? :'' }}</small>
 	</div>
 	<div class="uk-width-1-4">
 		<label for="taksa" class="uk-form-label">Iznos za taksu</label>
@@ -45,6 +45,14 @@
 			<button class="uk-button uk-button-primary uk-width-1-2">Dodaj</button>
 			<a href="{{ path_for('cene') }}" class="uk-button uk-button-secondary uk-width-1-2">Otkaži</a>
 		</div>
+	</div>
+	<div class="uk-width-3-4">
+		<label for="napomena" class="uk-form-label">Napomena</label>
+		<div class="uk-form-controls">
+			<textarea class="uk-textarea{{ errors.napomena[0] ? ' uk-form-danger': ''}}" rows="3" name="napomena"
+				id="napomena">{{ old.napomena ? : '' }}</textarea>
+		</div>
+		<small class=" uk-text-danger">{{ errors.napomena[0] ? :'' }}</small>
 	</div>
 </form>
 {% endblock naslov %}

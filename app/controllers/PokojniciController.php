@@ -32,7 +32,7 @@ class PokojniciController extends Controller
         array_shift($data);
         array_shift($data);
         if (empty($data['jmbg']) && empty($data['prezime']) && empty($data['ime']) && empty($data['datum_smrti']) && empty($data['datum_sahrane'])) {
-            $this->getPokojnici($request, $response);
+            return $this->getPokojnici($request, $response);
         }
         $data['jmbg'] = str_replace('%', '', $data['jmbg']);
         $data['prezime'] = str_replace('%', '', $data['prezime']);

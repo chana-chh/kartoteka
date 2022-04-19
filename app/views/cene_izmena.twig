@@ -47,5 +47,13 @@
 			<a href="{{ path_for('cene') }}" class="uk-button uk-button-secondary uk-width-1-2">Otkaži</a>
 		</div>
 	</div>
+	<div class="uk-width-3-4">
+		<label for="napomena" class="uk-form-label">Napomena</label>
+		<div class="uk-form-controls">
+			<textarea class="uk-textarea{{ errors.napomena[0] ? ' uk-form-danger': ''}}" rows="3" name="napomena"
+				id="napomena">{{ old.napomena ? : cene.napomena }}</textarea>
+		</div>
+		<small class=" uk-text-danger">{{ errors.napomena[0] ? :'' }}</small>
+	</div>
 </form>
 {% endblock naslov %}

@@ -125,10 +125,12 @@ $app->group('', function () {
     $this->post('/transakcije/cene/izmena', '\App\Controllers\CeneController:postCeneIzmena')->setName('cene.izmena.post');
     $this->post('/transakcije/cene/brisanje', '\App\Controllers\CeneController:postCeneBrisanje')->setName('cene.brisanje.post');
     // Transakcije
-    $this->get('/transakcije/zaduzivanje/takse', '\App\Controllers\TransakcijeController:getZaduzivanjeTakse')->setName('transakcije.zaduzivanje.takse');
-    $this->post('/transakcije/zaduzivanje/takse', '\App\Controllers\TransakcijeController:postZaduzivanjeTakse')->setName('transakcije.zaduzivanje.takse.post');
-    $this->get('/transakcije/zaduzivanje/zakup', '\App\Controllers\TransakcijeController:getZaduzivanjeZakup')->setName('transakcije.zaduzivanje.zakup');
-    $this->post('/transakcije/zaduzivanje/zakup', '\App\Controllers\TransakcijeController:postZaduzivanjeZakup')->setName('transakcije.zaduzivanje.zakup.post');
+    $this->get('/transakcije/zaduzivanje', '\App\Controllers\TransakcijeController:getZaduzivanje')->setName('transakcije.zaduzivanje');
+    $this->post('/transakcije/zaduzivanje', '\App\Controllers\TransakcijeController:postZaduzivanje')->setName('transakcije.zaduzivanje.post');
+    // $this->get('/transakcije/zaduzivanje/takse', '\App\Controllers\TransakcijeController:getZaduzivanjeTakse')->setName('transakcije.zaduzivanje.takse');
+    // $this->post('/transakcije/zaduzivanje/takse', '\App\Controllers\TransakcijeController:postZaduzivanjeTakse')->setName('transakcije.zaduzivanje.takse.post');
+    // $this->get('/transakcije/zaduzivanje/zakup', '\App\Controllers\TransakcijeController:getZaduzivanjeZakup')->setName('transakcije.zaduzivanje.zakup');
+    // $this->post('/transakcije/zaduzivanje/zakup', '\App\Controllers\TransakcijeController:postZaduzivanjeZakup')->setName('transakcije.zaduzivanje.zakup.post');
     $this->get('/transakcije/opomene', '\App\Controllers\TransakcijeController:getOpomene')->setName('transakcije.opomene');
     $this->post('/transakcije/zaduzivanje/brisanje', '\App\Controllers\TransakcijeController:postZaduzenjeBrisanje')->setName('transakcije.zaduzivanje.brisanje');
     $this->post('/transakcije/sve/brisanje', '\App\Controllers\TransakcijeController:postSveBrisanje')->setName('sve.brisanje');

@@ -24,6 +24,7 @@ class Staraoc extends Model
         return $this->belongsTo('App\Models\Karton', 'karton_id');
     }
 
+    // prikaz chk aktivan na pogledu
     public function aktivan()
     {
         $chk = $this->aktivan === 1 ? ' checked' : '';
@@ -31,24 +32,11 @@ class Staraoc extends Model
         return "<input type=\"checkbox\" name=\"aktivan\" data-id=\"{$this->$pk}\"{$chk}>";
     }
 
+    // prikaz chk aktivan na pogledu (nije moguce promeniti klikom)
     public function aktivanDisabled()
     {
         $chk = $this->aktivan === 1 ? ' checked' : '';
         $pk = $this->pk;
         return "<input type=\"checkbox\" name=\"aktivan\" data-id=\"{$this->$pk}\"{$chk} disabled>";
-    }
-
-    public function sukorisnik()
-    {
-        $chk = $this->sukorisnik === 1 ? ' checked' : '';
-        $pk = $this->pk;
-        return "<input type=\"checkbox\" name=\"sukorisnik\" data-id=\"{$this->$pk}\"{$chk}>";
-    }
-
-    public function sukorisnikDisabled()
-    {
-        $chk = $this->sukorisnik === 1 ? ' checked' : '';
-        $pk = $this->pk;
-        return "<input type=\"checkbox\" name=\"sukorisnik\" data-id=\"{$this->$pk}\"{$chk} disabled>";
     }
 }

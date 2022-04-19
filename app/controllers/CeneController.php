@@ -10,19 +10,17 @@ class CeneController extends Controller
     public function getCene($request, $response)
     {
         $model = new Cena();
-        $cene = $model->all();
+        $sql = "SELECT * FROM cene ORDER BY datum DESC;";
+        $cene = $model->fetch($sql);
         $taksa = $model->taksa();
         $zakup = $model->zakup();
 
-        usort($cene, function($a, $b) {
-        return new DateTime($a->datum) <=> new DateTime($b->datum);
-        });
         $this->render($response, 'cene.twig', compact('cene', 'taksa', 'zakup'));
     }
 
     public function getCeneIzmena($request, $response, $args)
     {
-        $id = (int)$args['id'];
+        $id = (int) $args['id'];
         $modelCena = new Cena();
         $cene = $modelCena->find($id);
         $this->render($response, 'cene_izmena.twig', compact('cene'));

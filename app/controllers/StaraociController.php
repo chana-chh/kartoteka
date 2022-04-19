@@ -31,15 +31,17 @@ class StaraociController extends Controller
         $data = $_SESSION['DATA_STARAOCI_PRETRAGA'];
         array_shift($data);
         array_shift($data);
-        if (empty($data['jmbg']) && empty($data['prezime']) && empty($data['ime'])) {
-            $this->getStaraoci($request, $response);
+        if (empty($data['jmbg']) && empty($data['prezime']) && empty($data['ime']) && empty($data['aktivan'])) {
+            return $this->getStaraoci($request, $response);
         }
         $data['jmbg'] = str_replace('%', '', $data['jmbg']);
         $data['prezime'] = str_replace('%', '', $data['prezime']);
         $data['ime'] = str_replace('%', '', $data['ime']);
+        $data['aktivan'] = isset($data['aktivan']) ? 1 : 0;
         $jmbg = '%' . filter_var($data['jmbg'], FILTER_SANITIZE_STRING) . '%';
         $prezime = '%' . filter_var($data['prezime'], FILTER_SANITIZE_STRING) . '%';
         $ime = '%' . filter_var($data['ime'], FILTER_SANITIZE_STRING) . '%';
+        $aktivan = $data['aktivan'];
         $query = [];
         parse_str($request->getUri()->getQuery(), $query);
         $page = isset($query['page']) ? (int)$query['page'] : 1;
@@ -63,6 +65,13 @@ class StaraociController extends Controller
             }
             $where .= "ime LIKE :ime";
             $params[':ime'] = $ime;
+        }
+        if ($aktivan === 1) {
+            if ($where !== " WHERE ") {
+                $where .= " AND ";
+            }
+            $where .= "aktivan LIKE :aktivan";
+            $params[':aktivan'] = $aktivan;
         }
         $where = $where === " WHERE " ? "" : $where;
         $model = new Staraoc();
@@ -113,9 +122,9 @@ class StaraociController extends Controller
             return $response->withRedirect($this->router->pathFor('staraoci.dodavanje', ['id' => $data['karton_id']]));
         } else {
             $aktivan = isset($data['aktivan']) ? 1 : 0;
-            $sukorisnik = isset($data['sukorisnik']) ? 1 : 0;
+            // $sukorisnik = isset($data['sukorisnik']) ? 1 : 0;
             $data['aktivan'] = $aktivan;
-            $data['sukorisnik'] = $sukorisnik;
+            // $data['sukorisnik'] = $sukorisnik;
             $model = new Staraoc();
             $model->insert($data);
             $id = $model->getLastId();
@@ -191,14 +200,14 @@ class StaraociController extends Controller
             return $response->withRedirect($this->router->pathFor('staraoci.izmena', ['id' => $id_kartona]));
         } else {
             $modelStaraoc = new Staraoc();
-            $staraoc_old = $model->find($id);
+            $staraoc_old = $modelStaraoc->find($id);
             unset($data['karton_id']);
             $aktivan = isset($data['aktivan']) ? 1 : 0;
             $data['aktivan'] = $aktivan;
-            $sukorisnik = isset($data['sukorisnik']) ? 1 : 0;
-            $data['sukorisnik'] = $sukorisnik;
+            // $sukorisnik = isset($data['sukorisnik']) ? 1 : 0;
+            // $data['sukorisnik'] = $sukorisnik;
             $modelStaraoc->update($data, $id);
-            $staraoc = $model->find($id);
+            $staraoc = $modelStaraoc->find($id);
             $this->log($this::IZMENA, $staraoc, ['jmbg', 'prezime', 'ime'], $staraoc_old);
             $this->flash->addMessage('success', 'Izmene staraoca su uspešno sačuvane.');
             return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $id_kartona]));

@@ -20,6 +20,7 @@
             value="{{ data.prezime }}" autocomplete="off" placeholder="Prezime">
         <input type="text" name="ime" id="ime" class="uk-input uk-form-width-small uk-form-small" value="{{ data.ime }}"
             autocomplete="off" placeholder="Ime">
+		<label><input class="uk-checkbox" type="checkbox" name="aktivan"{{ data.aktivan == 1 ? ' checked' : '' }}> Aktivan</label>
         <div class="uk-button-group">
             <input type="submit" value="Filtriraj" class="uk-button uk-button-primary uk-button-small">
             <a href="{{ path_for('staraoci') }}" class="uk-button uk-button-secondary uk-button-small">Svi staraoci</a>
@@ -36,10 +37,9 @@
                 <th class="w-5 danger-bg">RB</th>
                 <th class="w-20 danger-bg">Ime</th>
                 <th class="w-10 danger-bg">JMBG</th>
-                <th class="w-20 danger-bg">Adresa</th>
+                <th class="w-25 danger-bg">Adresa</th>
                 <th class="w-15 danger-bg">Telefon</th>
                 <th class="w-5 danger-bg">Aktivan</th>
-                <th class="w-5 danger-bg">Sukorisnik</th>
                 <th class="w-10 uk-text-right"><span uk-icon="cog"></span></th>
             </tr>
         </thead>
@@ -58,7 +58,6 @@
                 <td>{{ st.adresa() }}</td>
                 <td>{{ st.telefon }}</td>
                 <td>{{ st.aktivanDisabled()|raw }}</td>
-                <td>{{ st.sukorisnikDisabled()|raw }}</td>
                 <td class="uk-clearfix">
                     <ul class="uk-iconnav uk-float-right">
                         <li>

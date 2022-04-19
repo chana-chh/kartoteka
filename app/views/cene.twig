@@ -11,7 +11,7 @@
                 <span class="uk-text-success">{{ taksa|number_format(2, '.', ',') }}</span>
                 din za jednu godinu, Zakup:
                 <span class="uk-text-success">{{ zakup|number_format(2, '.', ',') }}</span>
-                din za deset godina
+                din za jednu godinu
             </strong>
         </div>
         <div class="uk-float-right">
@@ -26,11 +26,12 @@
         <thead>
             <tr>
                 <th class="w-10">Id</th>
-                <th class="w-20">Datum</th>
-                <th class="w-20 uk-text-right">Taksa (za 1 godinu)</th>
-                <th class="w-20 uk-text-right">Zakup (za 10 godina)</th>
+                <th class="w-10">Datum</th>
+                <th class="w-10 uk-text-right">Taksa (za 1 godinu)</th>
+                <th class="w-10 uk-text-right">Zakup (za 1 godinu)</th>
                 <th class="w-10 uk-text-right">Važeće cene</th>
-                <th class="w-20 uk-text-right"><span uk-icon="cog"></span></th>
+                <th class="w-40">Napomena</th>
+                <th class="w-10 uk-text-right"><span uk-icon="cog"></span></th>
             </tr>
         </thead>
         <tbody>
@@ -45,6 +46,7 @@
                 <td class="uk-text-right">{{ cena.taksa|number_format(2, '.', ',') }}</td>
                 <td class="uk-text-right">{{ cena.zakup|number_format(2, '.', ',') }}</td>
                 <td class="uk-text-right">{{ cena.vazecaDisabled | raw }}</td>
+                <th>{{ cena.napomena }}</th>
                 <td class="uk-clearfix">
                     <ul class="uk-iconnav uk-float-right">
                         <li>
@@ -63,7 +65,7 @@
         </tbody>
     </table>
 </div>
-<!-- MODAL BRISANJE KORISNIKA -->
+<!-- MODAL BRISANJE CENE -->
 {% include 'inc/cene_brisanje.twig' %}
 {% endblock naslov %}
 {% block skripta %}

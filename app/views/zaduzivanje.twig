@@ -1,0 +1,45 @@
+{% extends "templates/app.twig" %}
+
+{% block naslov %}
+<h1>Zaduživanje kartona</h1>
+<hr>
+<div class="uk-panel uk-background-muted uk-padding-small uk-margin">
+	<p class="uk-text-danger">
+		Pre zaduživanja kartona obavezno proveriti aktuelni cenovnik. Na ovoj formi može se samo izmeniti godina, a cene se preuzimaju
+		iz aktuelnog cenovnika. Godina može biti samo prethodna, tekuća ili naredna.
+	</p>
+</div>
+<form action="{{ path_for('transakcije.zaduzivanje.post') }}" method="POST" class="uk-form-stacked" uk-grid>
+	{{ csrf|raw }}
+	<div class="uk-width-1-4">
+		<label for="taksa" class="uk-form-label">Iznos takse iz cenovnika</label>
+		<div class="uk-form-controls">
+			<input type="number" name="taksa" id="taksa" class="uk-input{{ errors.taksa[0] ? ' uk-form-danger': ''}}"
+				value="{{ taksa }}" readonly>
+		</div>
+	</div>
+	<div class="uk-width-1-4">
+		<label for="zakup" class="uk-form-label">Iznos zakupa iz cenovnika</label>
+		<div class="uk-form-controls">
+			<input type="number" name="zakup" id="zakup" class="uk-input{{ errors.zakup[0] ? ' uk-form-danger': ''}}"
+				value="{{ zakup }}" readonly>
+		</div>
+	</div>
+	<div class="uk-width-1-4">
+		<label for="godina" class="uk-form-label">Godina za koju se zadužuju kartoni</label>
+		<div class="uk-form-controls">
+			<input type="number" name="godina" id="godina" class="uk-input{{ errors.godina[0] ? ' uk-form-danger': ''}}"
+					value="{{ 'now' | date('Y') }}">
+		</div>
+	</div>
+	<div class="uk-width-1-4 uk-flex uk-flex-bottom">
+		<div class="uk-button-group uk-width-1-1">
+			<button class="uk-button uk-button-primary uk-width-1-2">Zaduži</button>
+			<a href="{{ path_for('kartoni') }}" class="uk-button uk-button-secondary uk-width-1-2">Otkaži</a>
+		</div>
+	</div>
+</form>
+<div class="uk-panel uk-background-muted uk-padding-small uk-margin">
+	<p class="{{ zaduzena_godina ? 'uk-form-danger': 'uk-form-success'}}">{{ upozorenje }}</p>
+</div>
+{% endblock naslov %}

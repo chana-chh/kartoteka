@@ -34,9 +34,17 @@ class Karton extends Model
         return $this->belongsTo('App\Models\Groblje', 'groblje_id');
     }
 
+    // svi staraoci
     public function staraoci()
     {
         return $this->hasMany('App\Models\Staraoc', 'karton_id');
+    }
+
+    // aktivni staraoci
+    public function aktivniStaraoci()
+    {
+        $sql = "SELECT * FROM staraoci WHERE karton_id = :kid AND aktivan = 1;";
+        return $this->fetch($sql, [':kid' => $this->id], '\App\Models\Staraoc');
     }
 
     public function pokojnici()
