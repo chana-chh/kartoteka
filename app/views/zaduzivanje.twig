@@ -8,6 +8,9 @@
 		Pre zaduživanja kartona obavezno proveriti aktuelni cenovnik. Na ovoj formi može se samo izmeniti godina, a cene se preuzimaju
 		iz aktuelnog cenovnika. Godina može biti samo prethodna, tekuća ili naredna.
 	</p>
+	<p class="uk-text-danger">
+		Ova operacija, u zavisnosti od broja kartona, može potrajati nekoliko minuta!
+	</p>
 </div>
 <form action="{{ path_for('transakcije.zaduzivanje.post') }}" method="POST" class="uk-form-stacked" uk-grid>
 	{{ csrf|raw }}
@@ -40,6 +43,6 @@
 	</div>
 </form>
 <div class="uk-panel uk-background-muted uk-padding-small uk-margin">
-	<p class="{{ zaduzena_godina ? 'uk-form-danger': 'uk-form-success'}}">{{ upozorenje }}</p>
+	<p class="{{ zaduzena_godina ? 'uk-text-warning': 'uk-text-success'}}">{{ upozorenje }}</p>
 </div>
 {% endblock naslov %}

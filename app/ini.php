@@ -29,6 +29,10 @@ require DIR . 'app/dic.php';
 
 define('URL', HOST . $container['request']->getUri()->getBasePath() . '/');
 
+$god = (int) date('Y');
+
+Define('GOD', $god);
+
 require DIR . 'app/mid.php';
 require DIR . 'app/routes.php';
 

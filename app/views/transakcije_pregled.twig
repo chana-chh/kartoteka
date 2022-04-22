@@ -6,20 +6,29 @@
     top: -2px;
   }
 </style>
-<h1 class="uk-text-danger">
-  Pregled zaduženja za karton
-  <small><em class="uk-text-primary">[{{ karton.broj() }}]</em></small>
+<h1 class="uk-text-primary">
+  Zaduženja za
+  <span class="uk-text-success">{{ staraoc.punoIme() | upper }}</span>
+  - <small class="uk-text-muted">
+      <a href="{{ path_for('kartoni.pregled', { id: staraoc.karton().id }) }}">[{{ staraoc.karton().broj() }}]</a>
+    </small>
 </h1>
 <div class="uk-panel uk-background-muted uk-padding-small">
   <div class="uk-clearfix">
     <div class="uk-float-left">
       <div class="uk-button-group">
-        <button onclick="window.history.back();" class="uk-button uk-button-primary uk-button-small">
-          <span uk-icon="chevron-left"></span> Nazad
-        </button>
-        <a href="{{ path_for('kartoni.pregled', { id: karton.id }) }}"
-          class="uk-button uk-button-primary uk-button-small">
-          <span uk-icon="chevron-double-left"></span> Otvori karton
+        <a href="{{ path_for('kartoni.pregled', { id: staraoc.karton().id }) }}"
+          class="uk-button uk-button-primary uk-button-small uk-margin-right">
+          <span uk-icon="chevron-double-left"></span> Karton
+        </a>
+        <a href="{{ path_for('transakcije.pregled', { id: staraoc.id, z: 0 }) }}"
+          class="uk-button uk-button-primary uk-button-small">Sve
+        </a>
+        <a href="{{ path_for('transakcije.pregled', { id: staraoc.id, z: 1 }) }}"
+          class="uk-button uk-button-secondary uk-button-small">Razduženo
+        </a>
+        <a href="{{ path_for('transakcije.pregled', { id: staraoc.id, z: 2 }) }}"
+          class="uk-button uk-button-danger uk-button-small">Nerazduženo
         </a>
       </div>
     </div>
@@ -48,14 +57,14 @@
           </div>
         </div>
         <a href="{{ path_for('transakcije.razduzivanje', { id: karton.id }) }}"
-          class="uk-button uk-button-secondary uk-button-small">
+          class="uk-button uk-button-primary uk-button-small">
           <span uk-icon="database" class="ikonica"></span> Razduživanje
         </a>
-        <a href="{{ path_for('uplate', { id: karton.id }) }}" class="uk-button uk-button-default uk-button-small">
-          <span class="uk-badge">{{broj_uplate}}</span> Pregled uplata
+        <a href="{{ path_for('uplate', { id: karton.id }) }}" class="uk-button uk-button-primary uk-button-small">
+          <span class="uk-badge">{{broj_uplata}}</span> Pregled uplata
         </a>
         <a href="{{ path_for('transakcije.reprogrami', { id: karton.id }) }}"
-          class="uk-button uk-button-danger uk-button-small">
+          class="uk-button uk-button-primary uk-button-small">
           <span uk-icon="refresh" class="ikonica"></span> Reprogrami
         </a>
         <a href="{{ path_for('transakcije.pregled.stampa', { id: karton.id }) }}" target="_blank"
@@ -67,14 +76,28 @@
   </div>
 </div>
 
+<div class="uk-panel uk-background-muted uk-padding-small uk-margin-small uk-border-rounded">
+  {% if zaduzenost == 0 %}
+    <p class="uk-text-primary"><strong>SVA ZADUŽENJA</strong></p>
+  {% endif %}
+  {% if zaduzenost == 1 %}
+    <p class="uk-text-success"><strong>RAZDUŽENO</strong></p>
+  {% endif %}
+  {% if zaduzenost == 2 %}
+    <p class="uk-text-danger"><strong>NERAZDUŽENO</strong></p>
+  {% endif %}
+</div>
+
 <div class="uk-width-1-1 uk-margin-top">
   <ul uk-accordion="multiple: true">
     <li>
       <a class="uk-accordion-title" href="#">
         <h2>
           Takse
-          <em class="uk-text-success">[{{ karton.takse()|length }}]</em>
-          <em class="uk-text-danger">[{{ karton.nerazduzeneTakse()|length }}]</em>
+          <em class="uk-text-primary">[{{ staraoc.sveTakse() | length }}]</em>
+          <em class="uk-text-success">[{{ staraoc.razduzeneTakse() | length }}]</em>
+          <em class="uk-text-danger">[{{ staraoc.zaduzeneTakse() | length }}]</em>
+          <small><em class="uk-text-danger">[{{ staraoc.dugZaTakse() | number_format(2, '.', ',') }}]</em></small>
         </h2>
       </a>
       <div class="uk-accordion-content">
@@ -83,16 +106,25 @@
           <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
             <thead>
               <tr>
-                <th class="w-15">Godina</th>
-                <th class="w-20 uk-text-right">Iznos</th>
-                <th class="w-20 uk-text-right">Za razduženje</th>
-                <th class="w-15 uk-text-center">Razduženo</th>
-                <th class="w-20">Reprogram</th>
-                <th class="w-10 uk-text-right"><span uk-icon="cog"></span></th>
+                <th class="w-5">Godina</th>
+                <th class="w-20">Ime</th>
+                <th class="w-15 uk-text-right">Iznos (zaduženo)</th>
+                <th class="w-15 uk-text-right">Iznos (razduženo)</th>
+                <th class="w-15 uk-text-right">Za razduženje</th>
+                <th class="w-10 uk-text-center">Razduženo</th>
+                <th class="w-15">Reprogram</th>
+                <th class="w-5 uk-text-right"><span uk-icon="cog"></span></th>
               </tr>
             </thead>
             <tbody>
-              {% for taksa in karton.takse() %}
+              {% set takse =  staraoc.sveTakse() %}
+              {% if zaduzenost == 1 %}
+                {% set takse =  staraoc.razduzeneTakse() %}
+              {% endif %}
+              {% if zaduzenost == 2 %}
+                {% set takse =  staraoc.zaduzeneTakse() %}
+              {% endif %}
+              {% for taksa in takse %}
               {% if taksa.razduzeno == 0  %}
               {% set cls = "uk-text-danger" %}
               {% endif %}
@@ -104,11 +136,15 @@
               {% endif %}
               <tr class="{{ cls }}">
                 <td>{{ taksa.godina }}</td>
+                <td>{{ taksa.staraoc().punoIme() | upper }}</td>
                 <td class="uk-text-right">
-                  {{ taksa.iznos|number_format(2, '.', ',') }}
+                  {{ taksa.iznos_zaduzeno | number_format(2, '.', ',') }}
                 </td>
                 <td class="uk-text-right">
-                  {{ (cena_takse * karton.broj_mesta)|number_format(2, '.', ',') }}
+                  {{ taksa.iznos_razduzeno | number_format(2, '.', ',') }}
+                </td>
+                <td class="uk-text-right">
+                  {{ (cena_takse * staraoc.karton().broj_mesta / staraoc.karton().brojAktivnihStaraoca()) | number_format(2, '.', ',') }}
                 </td>
                 <td class="uk-text-center">{{ taksa.razduzenoDisabled() | raw }}</td>
                 <td>
@@ -133,8 +169,10 @@
       <a class="uk-accordion-title" href="#">
         <h2>
           Zakup
-          <em class="uk-text-success">[{{ karton.zakupi()|length }}]</em>
-          <em class="uk-text-danger">[{{ karton.nerazduzeniZakupi()|length }}]</em>
+          <em class="uk-text-primary">[{{ staraoc.sviZakupi() | length }}]</em>
+          <em class="uk-text-success">[{{ staraoc.razduzeniZakupi() | length }}]</em>
+          <em class="uk-text-danger">[{{ staraoc.zaduzeniZakupi() | length }}]</em>
+          <small><em class="uk-text-danger">[{{ staraoc.dugZaZakupe() | number_format(2, '.', ',') }}]</em></small>
         </h2>
       </a>
       <div class="uk-accordion-content">
@@ -143,16 +181,25 @@
           <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
             <thead>
               <tr>
-                <th class="w-15">Godina</th>
-                <th class="w-20 uk-text-right">Iznos</th>
-                <th class="w-20 uk-text-right">Za razduženje</th>
-                <th class="w-15 uk-text-center">Razduženo</th>
-                <th class="w-20">Reprogram</th>
-                <th class="w-10 uk-text-right"><span uk-icon="cog"></span></th>
+                <th class="w-5">Godina</th>
+                <th class="w-20">Ime</th>
+                <th class="w-15 uk-text-right">Iznos (zaduženo)</th>
+                <th class="w-15 uk-text-right">Iznos (razduženo)</th>
+                <th class="w-15 uk-text-right">Za razduženje</th>
+                <th class="w-10 uk-text-center">Razduženo</th>
+                <th class="w-15">Reprogram</th>
+                <th class="w-5 uk-text-right"><span uk-icon="cog"></span></th>
               </tr>
             </thead>
             <tbody>
-              {% for zakup in karton.zakupi() %}
+              {% set zakupi =  staraoc.sviZakupi() %}
+              {% if zaduzenost == 1 %}
+                {% set zakupi =  staraoc.razduzeniZakupi() %}
+              {% endif %}
+              {% if zaduzenost == 2 %}
+                {% set zakupi =  staraoc.zaduzeniZakupi() %}
+              {% endif %}
+              {% for zakup in zakupi %}
               {% if zakup.razduzeno == 0  %}
               {% set cls = "uk-text-danger" %}
               {% endif %}
@@ -164,11 +211,15 @@
               {% endif %}
               <tr class="{{ cls }}">
                 <td>{{ zakup.godina }}</td>
+                <td>{{ zakup.staraoc().punoIme() | upper }}</td>
                 <td class="uk-text-right">
-                  {{ zakup.iznos|number_format(2, '.', ',') }}
+                  {{ zakup.iznos_zaduzeno | number_format(2, '.', ',') }}
                 </td>
                 <td class="uk-text-right">
-                  {{ (cena_zakupa * karton.broj_mesta)|number_format(2, '.', ',') }}
+                  {{ zakup.iznos_razduzeno | number_format(2, '.', ',') }}
+                </td>
+                <td class="uk-text-right">
+                  {{ (cena_zakupa * staraoc.karton().broj_mesta / staraoc.karton().brojAktivnihStaraoca()) | number_format(2, '.', ',') }}
                 </td>
                 <td class="uk-text-center">{{ zakup.razduzenoDisabled() | raw }}</td>
                 <td>
@@ -311,18 +362,13 @@
 {% block traka %}
 <div uk-grid>
   <div class="uk-width-1-2">
-    <h2 class="uk-text-right">Saldo kartona</h2>
-    <div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
-      <h1 class="uk-text-success" id="saldo">
-        {{ karton.saldo | number_format(2, '.', ',') }}
-      </h1>
-    </div>
+    <h2>Stanje zaključno sa {{ "now" | date("Y") }}. godinom</h2>
   </div>
   <div class="uk-width-1-2">
     <h2 class="uk-text-right">Ukupan dug</h2>
     <div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
       <h1 class="uk-text-danger" id="ukupan-dug">
-        {% set dug = karton.dugZaTakse() + karton.dugZaZakupe() + karton.dugZaRacune() + karton.dugZaReprograme() %}
+        {% set dug = staraoc.dugZaTakse() + staraoc.dugZaZakupe() + staraoc.dugZaRacune() + staraoc.dugZaReprograme() %}
         {{ dug | number_format(2, '.', ',') }}
       </h1>
     </div>
@@ -333,7 +379,7 @@
   <div class="uk-width-1-2">
     <div class="uk-panel uk-background-muted uk-text-large uk-text-bold uk-text-right">
       <h3 class="uk-text-danger" id="takse-dug">
-        {{ karton.dugZaTakse() | number_format(2, '.', ',') }}
+        {{ staraoc.dugZaTakse() | number_format(2, '.', ',') }}
       </h3>
     </div>
   </div>
@@ -343,7 +389,7 @@
   <div class="uk-width-1-2">
     <div class="uk-panel uk-background-muted uk-text-large uk-text-bold uk-text-right">
       <h3 class="uk-text-danger" id="takse-dug">
-        {{ karton.dugZaZakupe() | number_format(2, '.', ',') }}
+        {{ staraoc.dugZaZakupe() | number_format(2, '.', ',') }}
       </h3>
     </div>
   </div>
@@ -353,7 +399,7 @@
   <div class="uk-width-1-2">
     <div class="uk-panel uk-background-muted uk-text-large uk-text-bold uk-text-right">
       <h3 class="uk-text-danger" id="takse-dug">
-        {{ karton.dugZaRacune() | number_format(2, '.', ',') }}
+        {{ staraoc.dugZaRacune() | number_format(2, '.', ',') }}
       </h3>
     </div>
   </div>
@@ -363,7 +409,7 @@
   <div class="uk-width-1-2">
     <div class="uk-panel uk-background-muted uk-text-large uk-text-bold uk-text-right">
       <h3 class="uk-text-danger" id="takse-dug">
-        {{ karton.dugZaReprograme() | number_format(2, '.', ',') }}
+        {{ staraoc.dugZaReprograme() | number_format(2, '.', ',') }}
       </h3>
     </div>
   </div>

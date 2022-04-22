@@ -39,4 +39,96 @@ class Staraoc extends Model
         $pk = $this->pk;
         return "<input type=\"checkbox\" name=\"aktivan\" data-id=\"{$this->$pk}\"{$chk} disabled>";
     }
+
+    // jedan prema vise na zaduzenje
+    public function zaduzenja()
+    {
+        return $this->hasMany('App\Models\Zaduzenje', 'staraoc_id');
+    }
+
+    // new ****************************************************************************************************************************
+
+    public function sveTakse()
+    {
+        $sql = "SELECT * FROM zaduzenja WHERE tip = 'taksa' AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
+    }
+
+    public function zaduzeneTakse()
+    {
+        $sql = "SELECT * FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0
+                AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
+    }
+
+    public function razduzeneTakse()
+    {
+        $sql = "SELECT * FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 1
+                AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
+    }
+
+    public function saldoZaTakse()
+    {
+        $god = GOD;
+        $sql = "SELECT SUM(iznos_razduzeno) AS saldo FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0 AND iznos_razduzeno > 0
+                AND godina <= {$god} AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+        $saldo = $this->fetch($sql)[0]->saldo;
+        return round((float) $saldo, 2);
+    }
+
+    public function dugZaTakse()
+    {
+        $god = GOD;
+        $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0
+                AND godina <= {$god} AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+        $broj = (int) $this->fetch($sql)[0]->broj;
+        $cena = (float) (new Cena())->taksa();
+        $br_mesta = $this->karton()->broj_mesta;
+        $br_staraoca = $this->karton()->brojAktivnihStaraoca();
+        $saldo = $this->saldoZaTakse();
+        return round((float) ($broj * $cena * $br_mesta / $br_staraoca) - $saldo, 2);
+    }
+
+    public function sviZakupi()
+    {
+        $sql = "SELECT * FROM zaduzenja WHERE tip = 'zakup' AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
+    }
+
+    public function zaduzeniZakupi()
+    {
+        $sql = "SELECT * FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0
+                AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
+    }
+
+    public function razduzeniZakupi()
+    {
+        $sql = "SELECT * FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 1
+                AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
+    }
+
+    public function saldoZaZakupe()
+    {
+        $god = GOD;
+        $sql = "SELECT SUM(iznos_razduzeno) AS saldo FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0 AND iznos_razduzeno > 0
+                AND godina <= {$god} AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+        $saldo = $this->fetch($sql)[0]->saldo;
+        return round((float) $saldo, 2);
+    }
+
+    public function dugZaZakupe()
+    {
+        $god = GOD;
+        $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0
+                AND godina <= {$god} AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+        $broj = (int) $this->fetch($sql)[0]->broj;
+        $cena = (float) (new Cena())->zakup();
+        $br_mesta = (int) $this->karton()->broj_mesta;
+        $br_staraoca = (int) $this->karton()->brojAktivnihStaraoca();
+        $saldo = $this->saldoZaZakupe();
+        return round((float) ($broj * $cena * $br_mesta / $br_staraoca) - $saldo, 2);
+    }
 }

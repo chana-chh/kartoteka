@@ -38,4 +38,10 @@ class Zaduzenje extends Model
 		$pk = $this->pk;
 		return "<input type=\"checkbox\" name=\"razduzeno-zaduzenje[]\" value=\"{$this->$pk}\" data-tip=\"{$this->tip}\" class=\"razduzeno-zaduzenja\"{$chk} disabled>";
 	}
+
+	// vise prema jedan na staraoca
+	public function staraoc()
+    {
+        return $this->belongsTo('App\Models\Staraoc', 'staraoc_id');
+    }
 }
