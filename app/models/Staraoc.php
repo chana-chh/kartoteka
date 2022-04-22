@@ -46,7 +46,12 @@ class Staraoc extends Model
         return $this->hasMany('App\Models\Zaduzenje', 'staraoc_id');
     }
 
+
+
     // new ****************************************************************************************************************************
+
+
+    // takse
 
     public function sveTakse()
     {
@@ -90,6 +95,8 @@ class Staraoc extends Model
         return round((float) ($broj * $cena * $br_mesta / $br_staraoca) - $saldo, 2);
     }
 
+    // zakupi
+
     public function sviZakupi()
     {
         $sql = "SELECT * FROM zaduzenja WHERE tip = 'zakup' AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
@@ -130,5 +137,41 @@ class Staraoc extends Model
         $br_staraoca = (int) $this->karton()->brojAktivnihStaraoca();
         $saldo = $this->saldoZaZakupe();
         return round((float) ($broj * $cena * $br_mesta / $br_staraoca) - $saldo, 2);
+    }
+
+    // racuni
+
+    public function racuni()
+    {
+        $sql = "SELECT * FROM racuni WHERE staraoc_id = {$this->id};";
+        return $this->fetch($sql, null, '\App\Models\Racun');
+    }
+
+    public function sviRacuni()
+    {
+        $sql = "SELECT * FROM racuni WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+        return $this->fetch($sql, null, '\App\Models\Racun');
+    }
+
+    public function zaduzeniRacuni()
+    {
+        $sql = "SELECT * FROM racuni WHERE razduzeno = 0 AND reprogram_id IS NULL
+                AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+        return $this->fetch($sql, null, '\App\Models\Racun');
+    }
+
+    public function razduzeniRacuni()
+    {
+        $sql = "SELECT * FROM racuni WHERE razduzeno = 1 AND reprogram_id IS NULL
+                AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+        return $this->fetch($sql, null, '\App\Models\Racun');
+    }
+
+    public function dugZaRacune()
+    {
+        $sql = "SELECT SUM(iznos) AS iznos FROM racuni WHERE razduzeno = 0
+                AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+        $iznos = (float) $this->fetch($sql)[0]->iznos;
+        return round($iznos, 2);
     }
 }

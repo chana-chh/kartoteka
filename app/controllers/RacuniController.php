@@ -3,17 +3,17 @@
 namespace App\Controllers;
 
 use App\Models\Karton;
+use App\Models\Staraoc;
 use App\Models\Racun;
 
 class RacuniController extends Controller
 {
     public function getRacun($request, $response, $args)
     {
-        $karton_id = $args['id'];
-        $model_karton = new Karton();
-        $karton = $model_karton->find($karton_id);
+        $staraoc_id = $args['id'];
+        $staraoc = (new Staraoc())->find($staraoc_id);
 
-        $this->render($response, 'racun.twig', compact('karton'));
+        $this->render($response, 'racun.twig', compact('staraoc'));
     }
 
     public function postRacun($request, $response)
@@ -24,6 +24,12 @@ class RacuniController extends Controller
 
         $validation_rules = [
             'karton_id' => [
+                'required' => true,
+            ],
+            'staraoc_id' => [
+                'required' => true,
+            ],
+            'broj' => [
                 'required' => true,
             ],
             'datum' => [
@@ -39,7 +45,7 @@ class RacuniController extends Controller
 
         if ($this->validator->hasErrors()) {
             $this->flash->addMessage('danger', 'Došlo je do greške prilikom zaduženja računa.');
-            return $response->withRedirect($this->router->pathFor('racun', ['id' => $data['karton_id']]));
+            return $response->withRedirect($this->router->pathFor('racun', ['id' => $data['staraoc_id']]));
         } else {
             $data['razduzeno'] = 0;
             $data['korisnik_id_zaduzio'] = $this->auth->user()->id;
@@ -49,7 +55,7 @@ class RacuniController extends Controller
             $racun = $model->find($id);
             $this->log($this::DODAVANJE, $racun, ['broj', 'datum'], $racun);
             $this->flash->addMessage('success', 'Karton je uspešno zadužen računom.');
-            return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $data['karton_id']]));
+            return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $data['staraoc_id']]));
         }
     }
 

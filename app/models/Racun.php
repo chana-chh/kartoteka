@@ -70,4 +70,16 @@ class Racun extends Model
 		$sql = "SELECT * FROM {$this->table} WHERE razduzeno = 0 AND rok IS NOT NULL AND rok < CURDATE()";
     	return $this->fetch($sql);
 	}
+
+	public function karton()
+    {
+        $sql = "SELECT * FROM kartoni WHERE id = {$this->karton_id};";
+        return $this->fetch($sql, null, '\App\Models\Karton')[0];
+    }
+
+	public function staraoc()
+    {
+        $sql = "SELECT * FROM staraoci WHERE id = {$this->staraoc_id};";
+        return $this->fetch($sql, null, '\App\Models\Staraoc')[0];
+    }
 }

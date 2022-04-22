@@ -23,7 +23,7 @@ class TransakcijeController extends Controller
         }
         $staraoc = (new Staraoc())->find($staraoc_id);
 
-        // dd($zaduzenost, true, false);
+        // dd($staraoc->dugZaRacune());
 
         // broj uplata prepraviti po staraocu, a ne kartonu
         $broj_uplata = count($staraoc->karton()->uplate());
