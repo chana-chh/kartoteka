@@ -1,7 +1,8 @@
 {% extends "templates/app.twig" %} {% block sadrzaj %}
-<h1 class="uk-text-danger">
-  Razduživanje za karton
-  <small><em class="uk-text-primary">[{{ karton.broj() }}]</em></small>
+<h1 class="uk-text-primary">
+  Razduživanje
+  <span class="uk-text-success">{{ staraoc.punoIme() | upper }}</span>
+  - <small class="uk-text-muted">[{{ staraoc.karton().broj() }}]</small>
 </h1>
 <div class="uk-panel uk-background-muted uk-padding-small">
   <div class="uk-clearfix">
@@ -10,7 +11,7 @@
         <button onclick="window.history.back();" class="uk-button uk-button-primary uk-button-small">
           <span uk-icon="chevron-left"></span> Nazad
         </button>
-        <a href="{{ path_for('kartoni.pregled', { id: karton.id }) }}"
+        <a href="{{ path_for('kartoni.pregled', { id: staraoc.karton().id }) }}"
           class="uk-button uk-button-primary uk-button-small">
           <span uk-icon="chevron-double-left"></span> Otvori karton
         </a>
@@ -18,11 +19,11 @@
     </div>
     <div class="uk-float-right">
       <div class="uk-button-group">
-        <a href="{{ path_for('transakcije.pregled', { id: karton.id }) }}"
+        <a href="{{ path_for('transakcije.pregled', { id: staraoc.id }) }}"
           class="uk-button uk-button-secondary uk-button-small">
           <span uk-icon="list"></span> Pregled zaduženja
         </a>
-        <a href="{{ path_for('transakcije.reprogrami', { id: karton.id }) }}"
+        <a href="{{ path_for('transakcije.reprogrami', { id: staraoc.id }) }}"
           class="uk-button uk-button-danger uk-button-small">
           <span uk-icon="refresh"></span> Reprogrami
         </a>
@@ -33,7 +34,8 @@
 
 <form action="{{ path_for('transakcije.uplata') }}" method="POST" id="foram_uplata" class="uk-form-stacked" uk-grid>
   {{ csrf | raw }}
-  <input type="hidden" name="karton_id" value="{{ karton.id }}">
+  <input type="hidden" name="staraoc_id" value="{{ staraoc.id }}">
+  <input type="hidden" id="tacan_iznos" name="tacan_iznos" value="0">
   <div class="uk-width-1-5">
     <label for="uplata_iznos" class="uk-form-label">Iznos</label>
     <div class="uk-form-controls">
@@ -70,8 +72,9 @@
   </div>
 
   <div class="uk-button-group uk-width-3-5">
-    <a href="#modal-uplata" onclick="uporediPolja();" uk-toggle class="uk-button uk-button-primary uk-width-2-3">Snimi
-      uplatu i razduži odabrane stavke</a>
+    <a href="#modal-uplata" onclick="uporediPolja();" uk-toggle class="uk-button uk-button-primary uk-width-2-3">
+      Snimi uplatu i razduži odabrane stavke
+    </a>
     <input type="reset" value="Otkaži" class="uk-button uk-button-secondary uk-width-1-3" onclick="resetRazduzenje();">
   </div>
   <div class="uk-width-1-1">
@@ -79,7 +82,11 @@
       <li>
         <a class="uk-accordion-title" href="#">
           <h2>
-            Takse <em class="uk-text-danger">[{{ karton.nerazduzeneTakse()|length }}]</em>
+            Takse
+            <em class="uk-text-primary">[{{ staraoc.sveTakse() | length }}]</em>
+            <em class="uk-text-success">[{{ staraoc.razduzeneTakse() | length }}]</em>
+            <em class="uk-text-danger">[{{ staraoc.zaduzeneTakse() | length }}]</em>
+            <small><em class="uk-text-danger">[{{ staraoc.dugZaTakse() | number_format(2, '.', ',') }}]</em></small>
           </h2>
         </a>
         <div class="uk-accordion-content">
@@ -88,21 +95,27 @@
             <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
               <thead>
                 <tr>
-                  <th class="w-25">Godina</th>
-                  <th class="w-25 uk-text-right">Iznos</th>
-                  <th class="w-25 uk-text-right">Za razduženje</th>
-                  <th class="w-25 uk-text-center">Razduzeno</th>
+                  <th class="w-5">Godina</th>
+                  <th class="w-25">Ime</th>
+                  <th class="w-20 uk-text-right">Iznos (zaduženo)</th>
+                  <th class="w-20 uk-text-right">Iznos (razduženo)</th>
+                  <th class="w-20 uk-text-right">Za razduženje</th>
+                  <th class="w-10 uk-text-center">Razduženo</th>
                 </tr>
               </thead>
               <tbody>
-                {% for taksa in karton.nerazduzeneTakse() %}
+                {% for taksa in staraoc.zaduzeneTakse() %}
                 <tr>
                   <td>{{ taksa.godina }}</td>
+                  <td>{{ taksa.staraoc().punoIme() | upper }}</td>
                   <td class="uk-text-right">
-                    {{ taksa.iznos|number_format(2, '.', ',') }}
+                    {{ taksa.iznos_zaduzeno | number_format(2, '.', ',') }}
                   </td>
                   <td class="uk-text-right">
-                    {{ (cena_takse * karton.broj_mesta)|number_format(2, '.', ',') }}
+                    {{ taksa.iznos_razduzeno | number_format(2, '.', ',') }}
+                  </td>
+                  <td class="uk-text-right">
+                    {{ taksa.zaRazduzenje() | number_format(2, '.', ',') }}
                   </td>
                   <td class="uk-text-center">{{ taksa.razduzeno() | raw }}</td>
                 </tr>
@@ -116,7 +129,10 @@
         <a class="uk-accordion-title" href="#">
           <h2>
             Zakup
-            <em class="uk-text-danger">[{{ karton.nerazduzeniZakupi()|length }}]</em>
+            <em class="uk-text-primary">[{{ staraoc.sviZakupi() | length }}]</em>
+            <em class="uk-text-success">[{{ staraoc.razduzeniZakupi() | length }}]</em>
+            <em class="uk-text-danger">[{{ staraoc.zaduzeniZakupi() | length }}]</em>
+            <small><em class="uk-text-danger">[{{ staraoc.dugZaZakupe() | number_format(2, '.', ',') }}]</em></small>
           </h2>
         </a>
         <div class="uk-accordion-content">
@@ -125,21 +141,27 @@
             <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
               <thead>
                 <tr>
-                  <th class="w-25">Godina</th>
-                  <th class="w-25 uk-text-right">Iznos</th>
-                  <th class="w-25 uk-text-right">Za razduženje</th>
-                  <th class="w-25 uk-text-center">Razduzeno</th>
+                  <th class="w-5">Godina</th>
+                  <th class="w-25">Ime</th>
+                  <th class="w-20 uk-text-right">Iznos (zaduženo)</th>
+                  <th class="w-20 uk-text-right">Iznos (razduženo)</th>
+                  <th class="w-20 uk-text-right">Za razduženje</th>
+                  <th class="w-10 uk-text-center">Razduženo</th>
                 </tr>
               </thead>
               <tbody>
-                {% for zakup in karton.nerazduzeniZakupi() %}
+                {% for zakup in staraoc.zaduzeniZakupi() %}
                 <tr>
                   <td>{{ zakup.godina }}</td>
+                  <td>{{ zakup.staraoc().punoIme() | upper }}</td>
                   <td class="uk-text-right">
-                    {{ zakup.iznos|number_format(2, '.', ',') }}
+                    {{ zakup.iznos_zaduzeno | number_format(2, '.', ',') }}
                   </td>
                   <td class="uk-text-right">
-                    {{ (cena_zakupa * karton.broj_mesta)|number_format(2, '.', ',') }}
+                    {{ zakup.iznos_razduzeno | number_format(2, '.', ',') }}
+                  </td>
+                  <td class="uk-text-right">
+                    {{ zakup.zaRazduzenje() | number_format(2, '.', ',') }}
                   </td>
                   <td class="uk-text-center">{{ zakup.razduzeno() | raw }}</td>
                 </tr>
@@ -153,7 +175,10 @@
         <a class="uk-accordion-title" href="#">
           <h2>
             Računi
-            <em class="uk-text-danger">[{{ karton.nerazduzeniRacuni()|length }}]</em>
+            <em class="uk-text-primary">[{{ staraoc.sviRacuni() | length }}]</em>
+            <em class="uk-text-success">[{{ staraoc.razduzeniRacuni() | length }}]</em>
+            <em class="uk-text-danger">[{{ staraoc.zaduzeniRacuni() | length }}]</em>
+            <small><em class="uk-text-danger">[{{ staraoc.dugZaRacune() | number_format(2, '.', ',') }}]</em></small>
           </h2>
         </a>
         <div class="uk-accordion-content">
@@ -162,20 +187,20 @@
             <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
               <thead>
                 <tr>
-                  <th class="w-25">Broj</th>
-                  <th class="w-25">Datum</th>
-                  <th class="w-25 uk-text-right">Iznos</th>
-                  <th class="w-25 uk-text-center">Razduzeno</th>
+                  <th class="w-15">Broj</th>
+                  <th class="w-10">Datum</th>
+                  <th class="w-20">Ime</th>
+                  <th class="w-15 uk-text-right">Iznos</th>
+                  <th class="w-10 uk-text-center">Razduženo</th>
                 </tr>
               </thead>
               <tbody>
-                {% for rn in karton.nerazduzeniRacuni() %}
+                {% for rn in staraoc.zaduzeniRacuni() %}
                 <tr>
                   <td>{{ rn.broj }}</td>
                   <td>{{ rn.datum() }}</td>
-                  <td class="uk-text-right">
-                    {{ rn.iznos|number_format(2, '.', ',') }}
-                  </td>
+                  <td>{{ zakup.staraoc().punoIme() | upper }}</td>
+                  <td class="uk-text-right">{{ rn.iznos | number_format(2, '.', ',') }}</td>
                   <td class="uk-text-center">{{ rn.razduzeno() | raw }}</td>
                 </tr>
                 {% endfor %}
@@ -235,19 +260,13 @@
 {% block traka %}
 <div uk-grid>
   <div class="uk-width-1-2">
-    <h2 class="uk-text-right">Saldo kartona</h2>
-    <div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
-      <h1 class="uk-text-success" id="saldo">
-        {{ karton.saldo }}
-      </h1>
-    </div>
+    <h3 class="uk-text-warning"><strong>Stanje zaključno sa {{ "now" | date("Y") }}. godinom</strong></h3>
   </div>
   <div class="uk-width-1-2">
     <h2 class="uk-text-right">Ukupan dug</h2>
     <div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
       <h1 class="uk-text-danger" id="ukupan-dug">
-        {% set dug = karton.dugZaTakse() + karton.dugZaZakupe() + karton.dugZaRacune() + karton.dugZaReprograme() %}
-        {{ dug | number_format(2, '.', ',') }}
+        {{ staraoc.ukupanDug() | number_format(2, '.', ',') }}
       </h1>
     </div>
   </div>
@@ -289,10 +308,35 @@
   </div>
 </div>
 {% endblock traka %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 {% block skripta %}
 <script>
-  var taksa = Number("{{ cena_takse }}") * Number("{{ karton.broj_mesta }}");
-  var zakup = Number("{{ cena_zakupa }}") * Number("{{ karton.broj_mesta }}");
+  var taksa = Number("{{ cene.taksa() }}") * Number("{{ staraoc.karton().broj_mesta }}") / Number("{{ staraoc.karton().brojAktivnihStaraoca() }}");
+  var zakup = Number("{{ cene.zakup() }}") * Number("{{ staraoc.karton().broj_mesta }}") / Number("{{ staraoc.karton().brojAktivnihStaraoca() }}");
   var razduzenje = document.getElementById("razduzenje");
   var chk_zaduzenja = document.getElementsByClassName("razduzeno-zaduzenja");
   var chk_racuni = document.getElementsByClassName("razduzeno-racuni");
@@ -308,63 +352,71 @@
     }
   });
 
-  function uporediPolja() {
-    var polje_uplata =
-      parseFloat(document.getElementById("uplata_iznos").value) +
-      parseFloat(document.getElementById("saldo").textContent);
+  function uporediPolja()
+  {
+    var polje_uplata =  parseFloat(document.getElementById("uplata_iznos").value);
     var polje_razduzenje = parseFloat(document.getElementById("razduzenje").textContent);
-    if (polje_razduzenje == 0) {
+    document.getElementById("tacan_iznos").value = polje_razduzenje;
+    if (polje_razduzenje == 0)
+    {
       poruka.innerHTML = "Nije odabrana/čekirana nijedna stavka za razduženje!";
-      sub = true;
-    } else if (polje_uplata === polje_razduzenje) {
+      sub = false;
+    }
+    else if (polje_uplata === polje_razduzenje)
+    {
       poruka.innerHTML = "Da li ste sigurni da želite da izvršite uplatu i razdužite odabrana zaduženja.";
       sub = true;
-    } else if (polje_uplata > polje_razduzenje) {
+    }
+    else if (polje_uplata > polje_razduzenje)
+    {
       poruka.innerHTML = "Uplata je veća nego iznos za razduženje.";
       sub = true;
-    } else {
+    }
+    else
+    {
       poruka.innerHTML = "Uplata nije dovoljna da pokrije iznos za razduženje.";
+      sub = false;
     };
   }
 
-  for (i = 0; i < chk_zaduzenja.length; i++) {
+  for (i = 0; i < chk_zaduzenja.length; i++)
+  {
     chk_zaduzenja[i].addEventListener(
       "click",
-      function () {
+      function (e) {
         var razd = Number(razduzenje.textContent);
         var tip = this.getAttribute("data-tip");
-        if (this.checked) {
-          if (tip === "taksa") {
-            razduzenje.textContent = (razd + taksa).toFixed(2);
-            uplata_iznos.value = (razd + taksa).toFixed(2);
-          } else {
-            razduzenje.textContent = (razd + zakup).toFixed(2);
-            uplata_iznos.value = (razd + zakup).toFixed(2);
-          }
-        } else {
-          if (tip === "taksa") {
-            razduzenje.textContent = (razd - taksa).toFixed(2);
-            uplata_iznos.value = (razd - taksa).toFixed(2);
-          } else {
-            razduzenje.textContent = (razd - zakup).toFixed(2);
-            uplata_iznos.value = (razd - zakup).toFixed(2);
-          }
+        var iznos = Number(this.getAttribute("data-iznos"));
+
+        if (this.checked)
+        {
+          razduzenje.textContent = (razd + iznos).toFixed(2);
+          uplata_iznos.value = (razd + iznos).toFixed(2);
+        }
+        else
+        {
+          razduzenje.textContent = (razd - iznos).toFixed(2);
+          uplata_iznos.value = (razd - iznos).toFixed(2);
         }
       },
       false
     );
   }
 
-  for (i = 0; i < chk_racuni.length; i++) {
+  for (i = 0; i < chk_racuni.length; i++)
+  {
     chk_racuni[i].addEventListener(
       "click",
       function () {
         var razd = Number(razduzenje.textContent);
         var iznos = Number(this.getAttribute("data-iznos"));
-        if (this.checked) {
+        if (this.checked)
+        {
           razduzenje.textContent = (razd + iznos).toFixed(2);
           uplata_iznos.value = (razd + iznos).toFixed(2);
-        } else {
+        }
+        else
+        {
           razduzenje.textContent = (razd - iznos).toFixed(2);
           uplata_iznos.value = (razd - iznos).toFixed(2);
         }

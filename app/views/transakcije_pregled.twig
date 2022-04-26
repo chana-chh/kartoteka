@@ -41,11 +41,11 @@
           <div uk-dropdown="mode: click; boundary: ! .uk-button-group; boundary-align: true;">
             <ul class="uk-nav uk-dropdown-nav">
               <li>
-                <a href="{{ path_for('taksa', { id: karton.id }) }}">
+                <a href="{{ path_for('taksa', { id: staraoc.id }) }}">
                   <span uk-icon="bookmark"></span>&emsp;Zaduži taksu
                 </a>
               </li>
-              <li><a href="{{ path_for('zakup', { id: karton.id }) }}">
+              <li><a href="{{ path_for('zakup', { id: staraoc.id }) }}">
                   <span uk-icon="bookmark"></span>&emsp;Zaduži zakup
                 </a>
               </li>
@@ -56,7 +56,7 @@
             </ul>
           </div>
         </div>
-        <a href="{{ path_for('transakcije.razduzivanje', { id: karton.id }) }}"
+        <a href="{{ path_for('transakcije.razduzivanje', { id: staraoc.id }) }}"
           class="uk-button uk-button-primary uk-button-small">
           <span uk-icon="database" class="ikonica"></span> Razduživanje
         </a>
@@ -67,7 +67,7 @@
           class="uk-button uk-button-primary uk-button-small">
           <span uk-icon="refresh" class="ikonica"></span> Reprogrami
         </a>
-        <a href="{{ path_for('transakcije.pregled.stampa', { id: karton.id }) }}" target="_blank"
+        <a href="{{ path_for('transakcije.pregled.stampa', { id: staraoc.id }) }}" target="_blank"
           class="uk-button uk-button-primary uk-button-small">
           <span uk-icon="print" class="ikonica"></span> Štampa
         </a>
@@ -91,7 +91,7 @@
 <div class="uk-width-1-1 uk-margin-top">
   <ul uk-accordion="multiple: true">
     <li>
-      <a class="uk-accordion-title" href="#">
+      <a class="uk-accordion-title uk-background-muted" href="#" style="padding: 0 0.5rem;">
         <h2>
           Takse
           <em class="uk-text-primary">[{{ staraoc.sveTakse() | length }}]</em>
@@ -144,7 +144,7 @@
                   {{ taksa.iznos_razduzeno | number_format(2, '.', ',') }}
                 </td>
                 <td class="uk-text-right">
-                  {{ ((cena_takse * staraoc.karton().broj_mesta / staraoc.karton().brojAktivnihStaraoca()) - taksa.iznos_razduzeno) | number_format(2, '.', ',') }}
+                  {{ taksa.zaRazduzenje() | number_format(2, '.', ',') }}
                 </td>
                 <td class="uk-text-center">{{ taksa.razduzenoDisabled() | raw }}</td>
                 <td>
@@ -166,7 +166,7 @@
       </div>
     </li>
     <li>
-      <a class="uk-accordion-title" href="#">
+      <a class="uk-accordion-title uk-background-muted" href="#" style="padding: 0 0.5rem;">
         <h2>
           Zakup
           <em class="uk-text-primary">[{{ staraoc.sviZakupi() | length }}]</em>
@@ -219,7 +219,7 @@
                   {{ zakup.iznos_razduzeno | number_format(2, '.', ',') }}
                 </td>
                 <td class="uk-text-right">
-                  {{ ((cena_zakupa * staraoc.karton().broj_mesta / staraoc.karton().brojAktivnihStaraoca()) - zakup.iznos_razduzeno) | number_format(2, '.', ',') }}
+                  {{ zakup.zaRazduzenje() | number_format(2, '.', ',') }}
                 </td>
                 <td class="uk-text-center">{{ zakup.razduzenoDisabled() | raw }}</td>
                 <td>
@@ -241,7 +241,7 @@
       </div>
     </li>
     <li>
-      <a class="uk-accordion-title" href="#">
+      <a class="uk-accordion-title uk-background-muted" href="#" style="padding: 0 0.5rem;">
         <h2>
           Računi
           <em class="uk-text-primary">[{{ staraoc.sviRacuni() | length }}]</em>
@@ -312,7 +312,7 @@
       </div>
     </li>
     <li>
-      <a class="uk-accordion-title" href="#">
+      <a class="uk-accordion-title uk-background-muted" href="#" style="padding: 0 0.5rem;">
         <h2>
           Reprogrami
           <em class="uk-text-success">[{{ karton.reprogrami()|length }}]</em>
@@ -380,8 +380,7 @@
     <h3 class="uk-text-right"><strong>Ukupan dug</strong></h3>
     <div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
       <h2 class="uk-text-danger" id="ukupan-dug">
-        {% set dug = staraoc.dugZaTakse() + staraoc.dugZaZakupe() + staraoc.dugZaRacune() + staraoc.dugZaReprograme() %}
-        {{ dug | number_format(2, '.', ',') }}
+        {{ staraoc.ukupanDug() | number_format(2, '.', ',') }}
       </h2>
     </div>
   </div>

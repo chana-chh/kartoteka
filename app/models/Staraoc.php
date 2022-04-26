@@ -174,4 +174,9 @@ class Staraoc extends Model
         $iznos = (float) $this->fetch($sql)[0]->iznos;
         return round($iznos, 2);
     }
+
+    public function ukupanDug()
+    {
+        return $this->dugZaTakse() + $this->dugZaZakupe() + $this->dugZaRacune();
+    }
 }

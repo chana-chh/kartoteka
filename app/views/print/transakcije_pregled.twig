@@ -1,6 +1,10 @@
 {% extends "templates/print.twig" %}
 {% block sadrzaj %}
-<h1 class="prn-h1">Pregled dugovanja za karton <em>[ {{ karton.broj() }} ]</em></h1>
+<h1 class="uk-text-primary">
+  Pregled dugovanja
+  <span class="uk-text-success">{{ staraoc.punoIme() | upper }}</span>
+  - <small class="uk-text-muted">[{{ staraoc.karton().broj() }}]</small>
+</h1>
 <hr>
 <table class="prn-table">
   <tbody>
@@ -8,44 +12,43 @@
       <th class="w-40 prn-text-left">Dug za takse</th>
       <td class="w-60 prn-text-right">
         <ol>
-          {% for taksa in karton.nerazduzeneTakse() %}
-          <li>za godinu {{ taksa.godina }}. po ceni od {{ taksa_vazeca|number_format(2, '.', ',') }} din</li>
+          {% for taksa in staraoc.zaduzeneTakse() %}
+          <li>za godinu {{ taksa.godina }}. po ceni od {{ cene.taksa() | number_format(2, '.', ',') }} din</li>
           {% endfor %}
         </ol>
       </td>
     </tr>
     <tr>
       <th class="prn-text-right">Ukupno za takse</th>
-      <td class="prn-text-right"><strong>{{ karton.dugZaTakse()|number_format(2, '.', ',') }}</strong> din</td>
+      <td class="prn-text-right"><strong>{{ staraoc.dugZaTakse() | number_format(2, '.', ',') }}</strong> din</td>
     </tr>
     <tr>
-      <th class="prn-text-left">Dug za desetogodišnji zakup</th>
+      <th class="prn-text-left">Dug za zakup</th>
       <td class="prn-text-right">
         <ol>
-          {% for zakup in karton.nerazduzeniZakupi() %}
-          <li>za godinu {{ zakup.godina }}. po ceni od {{ zakup_vazeci|number_format(2, '.', ',') }} din</li>
+          {% for zakup in staraoc.zaduzeniZakupi() %}
+          <li>za godinu {{ zakup.godina }}. po ceni od {{ cene.zakup() | number_format(2, '.', ',') }} din</li>
           {% endfor %}
         </ol>
       </td>
     </tr>
     <tr>
       <th class="prn-text-right">Ukupno za zakup</th>
-      <td class="prn-text-right"><strong>{{ karton.dugZaZakupe()|number_format(2, '.', ',') }}</strong> din</td>
+      <td class="prn-text-right"><strong>{{ staraoc.dugZaZakupe() | number_format(2, '.', ',') }}</strong> din</td>
     </tr>
     <tr>
       <th class="prn-text-left">Dug za račune</th>
       <td class="prn-text-right">
         <ol>
-          {% for racun in karton.nerazduzeniRacuni() %}
-          <li>račun broj {{ racun.broj }} od {{ racun.datum() }} u iznosu od
-            {{ racun.iznos|number_format(2, '.', ',') }} din</li>
+          {% for racun in staraoc.zaduzeniRacuni() %}
+          <li>račun broj {{ racun.broj }} od {{ racun.datum() }} u iznosu od {{ racun.iznos | number_format(2, '.', ',') }} din</li>
           {% endfor %}
         </ol>
       </td>
     </tr>
     <tr>
       <th class="prn-text-right">Ukupno za račune</th>
-      <td class="prn-text-right"><strong>{{ karton.dugZaRacune()|number_format(2, '.', ',') }}</strong> din</td>
+      <td class="prn-text-right"><strong>{{ staraoc.dugZaRacune() | number_format(2, '.', ',') }}</strong> din</td>
     </tr>
     <tr>
       <th class="prn-text-left">Dug za reprograme</th>
@@ -66,7 +69,7 @@
   <tfoot>
     <tr>
       <th class="prn-text-left">Ukupan dug</th>
-      <td class="prn-text-right"> <strong> {{ karton.dug()|number_format(2, '.', ',') }} </strong> din</td>
+      <td class="prn-text-right"> <strong> {{ staraoc.ukupanDug() | number_format(2, '.', ',') }} </strong> din</td>
     </tr>
   </tfoot>
 </table>

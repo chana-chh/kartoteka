@@ -1,26 +1,37 @@
 {% extends "templates/app.twig" %}
 
 {% block sadrzaj %}
-<h1>
-	Zaduživanje kartona <small><em class="uk-text-success">[{{ karton.broj() }}]</em></small> taksom
+<h1 class="uk-text-primary">
+  Zaduživanje taksom
+  <span class="uk-text-success">{{ staraoc.punoIme() | upper }}</span>
+  - <small class="uk-text-muted">[{{ staraoc.karton().broj() }}]</small>
 </h1>
 <hr>
 <form action="{{ path_for('taksa.post') }}" method="POST" class="uk-form-stacked" uk-grid>
 	{{ csrf|raw }}
-	<input type="hidden" value="{{ karton.id }}" name="karton_id">
-	<div class="uk-width-1-2">
-		<label for="taksa_id" class="uk-form-label">Dostupne takse iz cenovnika</label>
+	<input type="hidden" value="{{ staraoc.id }}" name="staraoc_id">
+	<div class="uk-width-1-1">
+    	<label for="napomena" class="uk-form-label">Napomena</label>
 		<div class="uk-form-controls">
-			<select name="taksa_id" id="taksa_id" class="uk-select{{ errors.taksa[0] ? ' uk-form-danger': ''}}"
-			 required>
-				{% for taksa in cene %}
-				<option value="{{ taksa.id }}"{{ old.taksa == taksa.id ? ' selected' : '' }}>
-					Taksa iz {{ taksa.datum|date('d.m.Y') }} sa iznosom od: {{ taksa.taksa }}
-				</option>
-				{% endfor %}
-			</select>
+			<textarea class="uk-textarea{{ errors.napomena[0] ? ' uk-form-danger': ''}}" rows="2" name="napomena" id="napomena">{{ old.napomena ? : '' }}</textarea>
+			<small class=" uk-text-danger">{{ errors.napomena[0] ? :'' }}</small>
+		</div>
+	</div>
+	<div class="uk-width-1-4">
+		<label for="iznos_zaduzeno" class="uk-form-label">Važeća taksa iz cenovnika</label>
+		<div class="uk-form-controls">
+			<input type="number" name="iznos_zaduzeno" id="iznos_zaduzeno" value="{{ old.iznos_zaduzeno ? : cene.taksa() }}" class="uk-input"
+				autocomplete="off" readonly>
 		</div>
 		<small class="uk-text-danger">{{ errors.taksa[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-4">
+		<label for="godina" class="uk-form-label">Godina zaduženja</label>
+		<div class="uk-form-controls">
+			<input type="number" name="godina" id="godina" value="{{ old.godina ? : 'now'|date('Y') + 1 }}" class="uk-input"
+				autocomplete="off" required>
+		</div>
+		<small class=" uk-text-danger">{{ errors.datum_zaduzenja[0] ? : '' }}</small>
 	</div>
 	<div class="uk-width-1-4">
 		<label for="datum_zaduzenja" class="uk-form-label">Datum zaduženja</label>
@@ -33,16 +44,17 @@
 	<div class="uk-width-1-4 uk-flex uk-flex-bottom">
 		<div class="uk-button-group uk-width-1-1">
 			<button class="uk-button uk-button-primary uk-width-1-2">Zaduži</button>
-			<a href="{{ path_for('transakcije.pregled', { id: karton.id }) }}"
+			<a href="{{ path_for('transakcije.pregled', { id: staraoc.id }) }}"
 				class="uk-button uk-button-secondary uk-width-1-2">Otkaži</a>
 		</div>
 	</div>
 </form>
 {% endblock sadrzaj %}
+
 {% block traka %}
 	<div class="uk-background-muted uk-margin-large-top uk-padding-small">
-	<h4>Pregled taksi trenutno vezanih za karton</h4>
-	        <div class="uk-overflow-auto">
+	<h4>Pregled taksi staraoca</h4>
+	    <div class="uk-overflow-auto">
           <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small" style="font-size: 0.875em;">
             <thead>
               <tr>
@@ -53,7 +65,7 @@
               </tr>
             </thead>
             <tbody>
-              {% for taksa in takse %}
+              {% for taksa in staraoc.sveTakse() %}
               <tr>
                 <td>{{ taksa.godina }}</td>
                 <td class="uk-text-right">

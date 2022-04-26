@@ -12,13 +12,15 @@
 	{{ csrf|raw }}
 	<input type="hidden" value="{{ staraoc.karton().id }}" name="karton_id">
 	<input type="hidden" value="{{ staraoc.id }}" name="staraoc_id">
+
 	<div class="uk-width-1-1">
-    <label for="napomena" class="uk-form-label">Napomena / opis uplate</label>
-    <div class="uk-form-controls">
-      <textarea class="uk-textarea{{ errors.napomena[0] ? ' uk-form-danger': ''}}" rows="2" name="napomena" id="napomena">{{ old.napomena ? : '' }}</textarea>
-    </div>
-    <small class=" uk-text-danger">{{ errors.napomena[0] ? :'' }}</small>
-  </div>
+    	<label for="napomena" class="uk-form-label">Napomena / opis uplate</label>
+		<div class="uk-form-controls">
+			<textarea class="uk-textarea{{ errors.napomena[0] ? ' uk-form-danger': ''}}" rows="2" name="napomena" id="napomena">{{ old.napomena ? : '' }}</textarea>
+			<small class=" uk-text-danger">{{ errors.napomena[0] ? :'' }}</small>
+		</div>
+	</div>
+
 	<div class="uk-width-1-5">
 		<label for="broj" class="uk-form-label">Broj računa</label>
 		<div class="uk-form-controls">

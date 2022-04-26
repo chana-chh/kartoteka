@@ -23,8 +23,6 @@ class TransakcijeController extends Controller
         }
         $staraoc = (new Staraoc())->find($staraoc_id);
 
-        // dd($staraoc->dugZaRacune());
-
         // broj uplata prepraviti po staraocu, a ne kartonu
         $broj_uplata = count($staraoc->karton()->uplate());
         $model_cene = new Cena();
@@ -36,26 +34,20 @@ class TransakcijeController extends Controller
 
     public function getKartonPregledStampa($request, $response, $args)
     {
-        $karton_id = $args['id'];
-        $model_karton = new Karton();
-        $karton = $model_karton->find($karton_id);
-        $model_cena = new Cena();
-        $taksa_vazeca = $model_cena->taksa();
-        $zakup_vazeci = $model_cena->zakup() / 10;
-        $this->render($response, 'print/transakcije_pregled.twig', compact('karton', 'taksa_vazeca', 'zakup_vazeci'));
+        $id = (int) $args['id'];
+        $staraoc = (new Staraoc())->find($id);
+        $cene = new Cena();
+        $this->render($response, 'print/transakcije_pregled.twig', compact('staraoc', 'cene'));
     }
 
     public function getKartonRazduzivanje($request, $response, $args)
     {
-        $karton_id = $args['id'];
-        $model_karton = new Karton();
-        $karton = $model_karton->find($karton_id);
+        $id = (int) $args['id'];
+        $staraoc = (new Staraoc())->find($id);
 
-        $model_cene = new Cena();
-        $cena_takse = $model_cene->taksa();
-        $cena_zakupa = $model_cene->zakup() / 10;
-
-        $this->render($response, 'transakcije_razduzivanje.twig', compact('karton', 'cena_takse', 'cena_zakupa'));
+        $cene = new Cena();
+        
+        $this->render($response, 'transakcije_razduzivanje.twig', compact('staraoc', 'cene'));
     }
 
     public function getZaduzivanje($request, $response)
@@ -357,14 +349,18 @@ class TransakcijeController extends Controller
     public function postUplata($request, $response)
     {
         $data = $request->getParams();
-        $karton_id = $data['karton_id'];
-        $model_karton = new Karton();
-        $karton = $model_karton->find($karton_id);
+
+        $id = $data['staraoc_id'];
+        $staraoc = (new Staraoc())->find($id);
         $korisnik_id = $this->auth->user()->id;
         $iznos = (float) $data['uplata_iznos'];
+        $iznos_razduzenja = (float) $data['tacan_iznos'];
+        $privremeni_saldo = (float) ($iznos - $iznos_razduzenja);
+
         // podaci za uplatu
         $uplata_data = [
-            'karton_id' => $karton_id,
+            'karton_id' => $staraoc->karton()->id,
+            'staraoc_id' => $staraoc->id,
             'iznos' => $iznos,
             'datum' => $data['uplata_datum'],
             'priznanica' => $data['uplata_priznanica'],
@@ -376,10 +372,10 @@ class TransakcijeController extends Controller
         // niz id-a racuna
         $racuni_data = isset($data['razduzeno-racuni']) ? $data['razduzeno-racuni'] : [];
         // niz id-a reprograma
-        $reprogrami_data = isset($data['razduzeno-reprogrami']) ? $data['razduzeno-reprogrami'] : [];
+        // $reprogrami_data = isset($data['razduzeno-reprogrami']) ? $data['razduzeno-reprogrami'] : [];
 
         $validation_rules = [
-            'karton_id' => [
+            'staraoc_id' => [
                 'required' => true,
             ],
             'uplata_iznos' => [
@@ -395,87 +391,129 @@ class TransakcijeController extends Controller
         $model_zaduzenje = new Zaduzenje();
         $model_racun = new Racun();
         $model_reprogram = new Reprogram();
-        $model_cena = new Cena();
+        $cene = new Cena();
 
-        $taksa = $model_cena->taksa();
-        $zakup = $model_cena->zakup() / 10;
+        $zaduzenja = null;
+        $racuni = null;
 
         $iznos_za_razduzenje = 0;
 
-        if (!empty($zaduzenja_data)) {
+        if (!empty($zaduzenja_data))
+        {
             $zad = implode(", ", $zaduzenja_data);
-            $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE id IN ($zad) AND tip = 'taksa';";
-            $br = (int) $model_zaduzenje->fetch($sql)[0]->broj;
-            $iznos_za_razduzenje += $br * $taksa * $karton->broj_mesta;
-            $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE id IN ($zad) AND tip = 'zakup';";
-            $br = (int) $model_zaduzenje->fetch($sql)[0]->broj;
-            $iznos_za_razduzenje += $br * $zakup * $karton->broj_mesta;
-        }
-        if (!empty($racuni_data)) {
-            $rac = implode(", ", $racuni_data);
-            $sql = "SELECT SUM(iznos) AS zbir FROM racuni WHERE id IN ($rac);";
-            $zbir = $model_racun->fetch($sql)[0]->zbir;
-            $iznos_za_razduzenje += $zbir;
-        }
-        if (!empty($reprogrami_data)) {
-            $rep = implode(", ", $reprogrami_data);
-            $sql = "SELECT * FROM reprogrami WHERE id IN ($rep);";
-            $reprogrami = $model_reprogram->fetch($sql);
-            $zbir = 0;
-            foreach ($reprogrami as $rep) {
-                $zbir += $rep->dug();
+            $sql = "SELECT * FROM zaduzenja WHERE id IN ($zad);";
+            $zaduzenja = $model_zaduzenje->fetch($sql);
+
+            foreach ($zaduzenja as $zad)
+            {
+                $iznos_za_razduzenje += $zad->zaRazduzenje();
             }
-            $iznos_za_razduzenje += $zbir;
         }
+        
+        if (!empty($racuni_data))
+        {
+            $rac = implode(", ", $racuni_data);
+            $sql = "SELECT * FROM racuni WHERE id IN ($rac);";
+            $racuni = $model_racun->fetch($sql);
+            
+            foreach ($racuni as $rn)
+            {
+                $iznos_za_razduzenje += $rn->iznos;
+            }
+        }
+        
+        // if (!empty($reprogrami_data)) {
+        //     $rep = implode(", ", $reprogrami_data);
+        //     $sql = "SELECT * FROM reprogrami WHERE id IN ($rep);";
+        //     $reprogrami = $model_reprogram->fetch($sql);
+        //     $zbir = 0;
+        //     foreach ($reprogrami as $rep) {
+        //         $zbir += $rep->dug();
+        //     }
+        //     $iznos_za_razduzenje += $zbir;
+        // }
 
-        $razlika = $iznos + $karton->saldo - $iznos_za_razduzenje;
+        $razlika = $iznos - $iznos_za_razduzenje;
 
-        if ($razlika < 0) {
+        if ($razlika < 0)
+        {
             $this->flash->addMessage('danger', 'Iznos uplate nije daovoljan za razduživanje.');
-            return $response->withRedirect($this->router->pathFor('transakcije.razduzivanje', ['id' => $karton_id]));
+            return $response->withRedirect($this->router->pathFor('transakcije.razduzivanje', ['id' => $id]));
         }
+
+        unset($data['csrf_name']);
+        unset($data['csrf_value']);
+        unset($data['razduzeno-zaduzenje']);
+        unset($data['razduzeno-racuni']);
 
         $this->validator->validate($data, $validation_rules);
 
-        if ($this->validator->hasErrors()) {
+        if ($this->validator->hasErrors())
+        {
             $this->flash->addMessage('danger', 'Došlo je do greške prilikom snimanja uplate i razduživanja.');
-            return $response->withRedirect($this->router->pathFor('transakcije.razduzivanje', ['id' => $karton_id]));
-        } else {
+            return $response->withRedirect($this->router->pathFor('transakcije.razduzivanje', ['id' => $id]));
+        }
+        else
+        {
+            // upisujem uplatu
+            // preuzimam id uplate
+            // dodajem uplata_id na sva zaduzenja i racune
+            // razduzujem sva zaduzenja i racune
+            // upisujem privremeni_saldo kod staraoca
+
+            // update iznos_razduzeno na trenutnu cenu
+
             $model_uplata = new Uplata();
             $model_uplata->insert($uplata_data);
-            $sql = "UPDATE kartoni SET saldo = {$razlika} WHERE id={$karton_id};";
-            $model_karton->run($sql);
-            if (!empty($zaduzenja_data)) {
+            $uplata_id = $model_uplata->getLastId();
+
+            $sql = "UPDATE staraoci SET privremeni_saldo = privremeni_saldo + {$razlika} WHERE id = {$id};";
+            $staraoc->run($sql);
+
+            if (!empty($zaduzenja_data))
+            {
                 $zad = implode(", ", $zaduzenja_data);
-                $sql_zaduzenja = "UPDATE zaduzenja
-                    SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id}
-                    WHERE id IN ($zad);";
-                $model_uplata->run($sql_zaduzenja);
+
+                $sql = "UPDATE zaduzenja
+                        SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id},
+                        uplata_id = {$uplata_id}, iznos_razduzeno = {$cene->taksa()}
+                        WHERE id IN ($zad) AND tip = 'taksa';";
+                $model_uplata->run($sql);
+
+                $sql = "UPDATE zaduzenja
+                        SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id},
+                        uplata_id = {$uplata_id}, iznos_razduzeno = {$cene->zakup()}
+                        WHERE id IN ($zad) AND tip = 'zakup';";
+                $model_uplata->run($sql);
             }
-            if (!empty($racuni_data)) {
+            
+            if (!empty($racuni_data))
+            {
                 $rac = implode(", ", $racuni_data);
-                $sql_racuni = "UPDATE racuni
-                    SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id}
-                    WHERE id IN ($rac);";
-                $model_uplata->run($sql_racuni);
+                $sql = "UPDATE racuni
+                        SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id}, uplata_id = {$uplata_id}
+                        WHERE id IN ($rac);";
+                $model_uplata->run($sql);
             }
-            if (!empty($reprogrami_data)) {
-                $rep = implode(", ", $reprogrami_data);
-                $sql_zaduzenja = "UPDATE zaduzenja
-                    SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id}
-                    WHERE reprogram_id IN ($rep);";
-                $model_uplata->run($sql_zaduzenja);
-                $sql_racuni = "UPDATE racuni
-                    SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id}
-                    WHERE reprogram_id IN ($rep);";
-                $model_uplata->run($sql_racuni);
-                $sql_reprogram = "UPDATE reprogrami
-                    SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id}, preostalo_rata = 0
-                    WHERE id IN ($rep);";
-                $model_uplata->run($sql_reprogram);
-            }
+            
+            // if (!empty($reprogrami_data)) {
+            //     $rep = implode(", ", $reprogrami_data);
+            //     $sql_zaduzenja = "UPDATE zaduzenja
+            //         SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id}
+            //         WHERE reprogram_id IN ($rep);";
+            //     $model_uplata->run($sql_zaduzenja);
+            //     $sql_racuni = "UPDATE racuni
+            //         SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id}
+            //         WHERE reprogram_id IN ($rep);";
+            //     $model_uplata->run($sql_racuni);
+            //     $sql_reprogram = "UPDATE reprogrami
+            //         SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id}, preostalo_rata = 0
+            //         WHERE id IN ($rep);";
+            //     $model_uplata->run($sql_reprogram);
+            // }
+
             $this->flash->addMessage('success', 'Uplata je uspešno sačuvana, a odabrane stavke su razdužene.');
-            return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $karton_id]));
+            return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $id]));
         }
     }
 

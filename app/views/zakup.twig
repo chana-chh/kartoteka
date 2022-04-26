@@ -1,57 +1,58 @@
 {% extends "templates/app.twig" %}
 
 {% block sadrzaj %}
-<h1>
-	Zaduživanje kartona <small><em class="uk-text-success">[{{ karton.broj() }}]</em></small> zakupom
+<h1 class="uk-text-primary">
+  Zaduživanje zakupom
+  <span class="uk-text-success">{{ staraoc.punoIme() | upper }}</span>
+  - <small class="uk-text-muted">[{{ staraoc.karton().broj() }}]</small>
 </h1>
 <hr>
 <form action="{{ path_for('zakup.post') }}" method="POST" class="uk-form-stacked">
 	{{ csrf|raw }}
 	<div uk-grid>
-	<input type="hidden" value="{{ karton.id }}" name="karton_id">
-	<div class="uk-width-3-4">
-		<label for="zakup_id" class="uk-form-label">Dostupni godišnji iznosi zakupa iz cenovnika</label>
-		<div class="uk-form-controls">
-			<select name="zakup_id" id="zakup_id" class="uk-select{{ errors.zakup[0] ? ' uk-form-danger': ''}}"
-			 required>
-				{% for zakup in cene %}
-				<option value="{{ zakup.id }}"{{ old.zakup == zakup.id ? ' selected' : '' }}>
-					Godina - {{ zakup.datum|date('d.m.Y') }} sa iznosom zaduženja za 10 godina od: {{ zakup.zakup }}
-				</option>
-				{% endfor %}
-			</select>
+		<input type="hidden" value="{{ staraoc.id }}" name="staraoc_id">
+		<div class="uk-width-1-1">
+			<label for="napomena" class="uk-form-label">Napomena</label>
+			<div class="uk-form-controls">
+				<textarea class="uk-textarea{{ errors.napomena[0] ? ' uk-form-danger': ''}}" rows="2" name="napomena" id="napomena">{{ old.napomena ? : '' }}</textarea>
+				<small class=" uk-text-danger">{{ errors.napomena[0] ? :'' }}</small>
+			</div>
 		</div>
-		<small class="uk-text-danger">{{ errors.zakup[0] ? :'' }}</small>
-	</div>
-	<div class="uk-width-1-4">
-		<label for="datum_zaduzenja" class="uk-form-label">Datum zaduženja</label>
-		<div class="uk-form-controls">
-			<input type="date" name="datum_zaduzenja" id="datum_zaduzenja" value="{{ old.datum_zaduzenja ? : 'now'|date('Y-m-d') }}" class="uk-input"
-				autocomplete="off" required>
+		<div class="uk-width-1-4">
+			<label for="iznos_zaduzeno" class="uk-form-label">Važeći zakup iz cenovnika</label>
+			<div class="uk-form-controls">
+				<input type="number" name="iznos_zaduzeno" id="iznos_zaduzeno" value="{{ old.iznos_zaduzeno ? : cene.zakup() }}" class="uk-input"
+					autocomplete="off" readonly>
+			</div>
+			<small class="uk-text-danger">{{ errors.zakup[0] ? :'' }}</small>
 		</div>
-		<small class=" uk-text-danger">{{ errors.datum_zaduzenja[0] ? : '' }}</small>
-	</div>
-	</div>
-	<div uk-grid>
-	<div class="uk-width-3-4">
-		<label for="deset" class="uk-form-label">Vrsta zaduženja</label>
-		<div class="uk-form-controls">
-			<input type="radio" name="deset" value="1" required> Zaduži karton iznosom samo za izabranu godinu<br>
-  			<input type="radio" name="deset" value="10" required> Zaduži karton za period od deset godina počevši od izabrane godine<br>
+		<div class="uk-width-1-4">
+			<label for="godina" class="uk-form-label">Godina zaduženja</label>
+			<div class="uk-form-controls">
+				<input type="number" name="godina" id="godina" value="{{ old.godina ? : 'now'|date('Y') + 1 }}" class="uk-input"
+					autocomplete="off" required>
+			</div>
+			<small class=" uk-text-danger">{{ errors.datum_zaduzenja[0] ? : '' }}</small>
 		</div>
-		<small class=" uk-text-danger">{{ errors.deset[0] ? : '' }}</small>
-	</div>
-	<div class="uk-width-1-4 uk-flex uk-flex-bottom">
-		<div class="uk-button-group uk-width-1-1">
-			<button class="uk-button uk-button-primary uk-width-1-2">Zaduži</button>
-			<a href="{{ path_for('transakcije.pregled', { id: karton.id }) }}"
-				class="uk-button uk-button-secondary uk-width-1-2">Otkaži</a>
+		<div class="uk-width-1-4">
+			<label for="datum_zaduzenja" class="uk-form-label">Datum zaduženja</label>
+			<div class="uk-form-controls">
+				<input type="date" name="datum_zaduzenja" id="datum_zaduzenja" value="{{ old.datum_zaduzenja ? : 'now'|date('Y-m-d') }}" class="uk-input"
+					autocomplete="off" required>
+			</div>
+			<small class=" uk-text-danger">{{ errors.datum_zaduzenja[0] ? : '' }}</small>
+		</div>
+		<div class="uk-width-1-4 uk-flex uk-flex-bottom">
+			<div class="uk-button-group uk-width-1-1">
+				<button class="uk-button uk-button-primary uk-width-1-2">Zaduži</button>
+				<a href="{{ path_for('transakcije.pregled', { id: staraoc.id }) }}"
+					class="uk-button uk-button-secondary uk-width-1-2">Otkaži</a>
+			</div>
 		</div>
 	</div>
-</div>
 </form>
-<small class="uk-text-warning">U slučaju da ste odabrali prvu opciju biće zadužen deseti deo iznosa sa liste, obzirom da se radi o zaduživanju za samo jednu godinu!</small>
 {% endblock sadrzaj %}
+
 {% block traka %}
 	<div class="uk-background-muted uk-margin-large-top uk-padding-small">
 	<h4>Pregled zakupa trenutno vezanih za karton</h4>
@@ -66,7 +67,7 @@
               </tr>
             </thead>
             <tbody>
-              {% for zakup in zakupi %}
+              {% for zakup in staraoc.sviZakupi() %}
               <tr>
                 <td>{{ zakup.godina }}</td>
                 <td class="uk-text-right">

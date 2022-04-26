@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Cena;
-use App\Models\Karton;
+use App\Models\Staraoc;
 use App\Models\Zaduzenje;
 use DateTime;
 
@@ -12,29 +12,11 @@ class TaksaController extends Controller
 
     public function getTaksa($request, $response, $args)
     {
-        $karton_id = $args['id'];
-        $model_karton = new Karton();
-        $karton = $model_karton->find($karton_id);
-        $takse = $karton->takse();
+        $staraoc_id = (int) $args['id'];
+        $staraoc = (new Staraoc())->find($staraoc_id);
+        $cene = new Cena();
 
-        $model_cene = new Cena();
-        $cene = $model_cene->all();
-
-        usort($cene, function($a, $b) {
-        return new DateTime($a->datum) <=> new DateTime($b->datum);
-        });
-
-        usort($takse, function($a, $b) {
-            if ($a->godina == $b->godina) {
-                  return 0;
-            } else if ($a->godina > $b->godina) {
-                  return 1;
-            } else {
-                  return -1;
-            }
-        });
-
-        $this->render($response, 'taksa.twig', compact('cene', 'karton', 'takse'));
+        $this->render($response, 'taksa.twig', compact('cene', 'staraoc'));
     }
 
     public function postTaksa($request, $response)
@@ -42,42 +24,37 @@ class TaksaController extends Controller
         $data = $request->getParams();
         unset($data['csrf_name']);
         unset($data['csrf_value']);
-
-        $model_cene = new Cena();
-        $cena = $model_cene->find($data['taksa_id']);
-
-        $iznos = $cena->taksa;
-        $godina = $cena->godina();
-
-
-        $model_karton = new Karton();
-        $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE karton_id = :kar AND godina = :god AND tip = 1;";
-        $broj = $model_karton->fetch($sql, [':god' => $godina, ':kar' => $data['karton_id']])[0]->broj;
+        
+        $model = new Staraoc();
+        $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE staraoc_id = :star AND godina = :god AND tip = 1;";
+        $broj = $model->fetch($sql, [':god' => $data['godina'], ':star' => $data['staraoc_id']])[0]->broj;
         if ($broj > 0) {
             $this->flash->addMessage('danger', 'Već postoji zaduženje za odabranu godinu');
-            return $response->withRedirect($this->router->pathFor('taksa', ['id' => $data['karton_id']]));
+            return $response->withRedirect($this->router->pathFor('taksa', ['id' => $data['staraoc_id']]));
         } else {
-                $modelKarton = new Karton();
-                $karton = $modelKarton->find($data['karton_id']);
-                $bm = $karton->broj_mesta;
-                
-                $modelZaduzenja = new Zaduzenje();
-                $karton = $modelZaduzenja->insert(
-                [
-                    'karton_id' => $data['karton_id'],
-                    'tip' => 'taksa',
-                    'godina' => (int) $godina,
-                    'iznos' => (float) ($iznos * $bm),
-                    'razduzeno' => 0,
-                    'datum_zaduzenja' =>$data['datum_zaduzenja'],
-                    'korisnik_id_zaduzio' => $this->auth->user()->id
-                ]
-                );
+            $staraoc = $model->find($data['staraoc_id']);
+            $bm = $staraoc->karton()->broj_mesta;
+            $bs = $staraoc->karton()->brojAktivnihStaraoca();
 
-            $this->flash->addMessage('success', 'Kartoni je uspešno zadužen odgovarajućom taksom.');
-            return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $data['karton_id']]));
+            $model_zaduzenje = new Zaduzenje();
+            $model_zaduzenje->insert([
+                'karton_id' => $staraoc->karton()->id,
+                'staraoc_id' => $staraoc->id,
+                'tip' => 'taksa',
+                'godina' => (int) $data['godina'],
+                'iznos_zaduzeno' => (float) ($data['iznos_zaduzeno'] * $bm / $bs),
+                'iznos_razduzeno' => 0,
+                'razduzeno' => 0,
+                'datum_zaduzenja' =>$data['datum_zaduzenja'],
+                'korisnik_id_zaduzio' => $this->auth->user()->id,
+                'napomena' =>$data['napomena'],
+            ]);
+
+            $id = $model_zaduzenje->getLastId();
+            $zazduzenje = $model_zaduzenje->find($id);
+            $this->log($this::DODAVANJE, $zazduzenje, ['tip', 'godina'], $zazduzenje);
+            $this->flash->addMessage('success', 'Staraoc je uspešno zadužen odgovarajućom taksom.');
+            return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $data['staraoc_id']]));
         }
     }
-
-    
 }

@@ -29,7 +29,7 @@ class Zaduzenje extends Model
 	{
 		$chk = $this->razduzeno === 1 ? ' checked' : '';
 		$pk = $this->pk;
-		return "<input type=\"checkbox\" name=\"razduzeno-zaduzenje[]\" value=\"{$this->$pk}\" data-tip=\"{$this->tip}\" class=\"razduzeno-zaduzenja\"{$chk}>";
+		return "<input type=\"checkbox\" name=\"razduzeno-zaduzenje[]\" value=\"{$this->$pk}\" data-tip=\"{$this->tip}\" data-iznos=\"{$this->zaRazduzenje()}\" class=\"razduzeno-zaduzenja\"{$chk}>";
 	}
 
 	public function razduzenoDisabled()
@@ -44,4 +44,29 @@ class Zaduzenje extends Model
     {
         return $this->belongsTo('App\Models\Staraoc', 'staraoc_id');
     }
+	
+	public function karton()
+    {
+        return $this->belongsTo('App\Models\Karton', 'karton_id');
+    }
+
+	public function zaRazduzenje()
+	{
+		if($this->razduzeno === 1)
+		{
+			return 0;
+		}
+
+		$cene = new Cena();
+		$cena = $cene->taksa();
+
+		if ($this->tip === 'zakup')
+		{
+			$cena = $cene->zakup();
+		}
+
+		$obracunato = (float) ($cena * $this->karton()->broj_mesta / $this->karton()->brojAktivnihStaraoca());
+
+		return round($obracunato - $this->iznos_razduzeno, 2);
+	}
 }
