@@ -1,7 +1,13 @@
 {% extends "templates/app.twig" %}
 
 {% block sadrzaj %}
-<h1 id="top">Pregled uplata po kartonu <small><em class="uk-text-success">[{{ karton.broj() }}]</em></small></h1>
+<h1 class="uk-text-primary">
+  Uplate za
+  <span class="uk-text-success">{{ staraoc.punoIme() | upper }}</span>
+  - <small class="uk-text-muted">
+      <a href="{{ path_for('kartoni.pregled', { id: staraoc.karton().id }) }}">[{{ staraoc.karton().broj() }}]</a>
+    </small>
+</h1>
 <div class="uk-panel uk-background-muted uk-padding-small">
   <div class="uk-clearfix">
     <div class="uk-float-left">
@@ -9,11 +15,14 @@
         <button onclick="window.history.back();" class="uk-button uk-button-primary uk-button-small">
           <span uk-icon="chevron-left"></span> Nazad
         </button>
+        <a href="{{ path_for('transakcije.pregled', { id: staraoc.id }) }}" class="uk-button uk-button-primary uk-button-small">
+          <span uk-icon="chevron-double-left"></span> Zaduženja
+        </a>
       </div>
     </div>
   </div>
 </div>
-{% if uplate %}
+{% if staraoc.uplate() %}
 <div class="uk-overflow-auto">
   <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
     <thead>
@@ -28,7 +37,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for uplata in uplate %}
+      {% for uplata in staraoc.uplate() %}
       <tr>
         <td>
           <em>{{ uplata.id }}</em>

@@ -21,6 +21,7 @@
         <input type="text" name="ime" id="ime" class="uk-input uk-form-width-small uk-form-small" value="{{ data.ime }}"
             autocomplete="off" placeholder="Ime">
 		<label><input class="uk-checkbox" type="checkbox" name="aktivan"{{ data.aktivan == 1 ? ' checked' : '' }}> Aktivan</label>
+		<label><input class="uk-checkbox" type="checkbox" name="saldo"{{ data.saldo == 1 ? ' checked' : '' }}> Ima saldo</label>
         <div class="uk-button-group">
             <input type="submit" value="Filtriraj" class="uk-button uk-button-primary uk-button-small">
             <a href="{{ path_for('staraoci') }}" class="uk-button uk-button-secondary uk-button-small">Svi staraoci</a>
@@ -45,10 +46,15 @@
         </thead>
         <tbody>
             {% for st in staraoci.data %}
-            <tr>
+            {% if st.imaSaldo() %}
+              {% set cls = "uk-text-danger" %}
+            {% else %}
+                {% set cls = "" %}
+            {% endif %}
+            <tr class="{{ cls }}">
                 <td><em>{{ st.id }}</em></td>
                 <td>
-                    <a href="{{ path_for('kartoni.pregled', { 'id': st.karton_id }) }}">
+                    <a href="{{ path_for('kartoni.pregled', { 'id': st.karton_id }) }}" class="{{ cls }}">
                         <strong>{{ st.karton.broj() }}</strong>
                     </a>
                 </td>
@@ -66,7 +72,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ path_for('transakcije.pregled', { id: st.karton_id }) }}"
+                            <a href="{{ path_for('transakcije.pregled', { id: st.id }) }}"
                                 title="Transakcije"><span uk-icon="credit-card"></span></a>
                         </li>
                     </ul>

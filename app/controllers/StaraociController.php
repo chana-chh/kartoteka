@@ -31,17 +31,21 @@ class StaraociController extends Controller
         $data = $_SESSION['DATA_STARAOCI_PRETRAGA'];
         array_shift($data);
         array_shift($data);
-        if (empty($data['jmbg']) && empty($data['prezime']) && empty($data['ime']) && empty($data['aktivan'])) {
+
+        if (empty($data['jmbg']) && empty($data['prezime']) && empty($data['ime']) && empty($data['aktivan']) && empty($data['saldo'])) {
             return $this->getStaraoci($request, $response);
         }
+        
         $data['jmbg'] = str_replace('%', '', $data['jmbg']);
         $data['prezime'] = str_replace('%', '', $data['prezime']);
         $data['ime'] = str_replace('%', '', $data['ime']);
         $data['aktivan'] = isset($data['aktivan']) ? 1 : 0;
+        $data['saldo'] = isset($data['saldo']) ? 1 : 0;
         $jmbg = '%' . filter_var($data['jmbg'], FILTER_SANITIZE_STRING) . '%';
         $prezime = '%' . filter_var($data['prezime'], FILTER_SANITIZE_STRING) . '%';
         $ime = '%' . filter_var($data['ime'], FILTER_SANITIZE_STRING) . '%';
         $aktivan = $data['aktivan'];
+        $saldo = $data['saldo'];
         $query = [];
         parse_str($request->getUri()->getQuery(), $query);
         $page = isset($query['page']) ? (int)$query['page'] : 1;
@@ -72,6 +76,13 @@ class StaraociController extends Controller
             }
             $where .= "aktivan LIKE :aktivan";
             $params[':aktivan'] = $aktivan;
+        }
+        if ($saldo === 1) {
+            if ($where !== " WHERE ") {
+                $where .= " AND ";
+            }
+            $where .= "privremeni_saldo > :saldo";
+            $params[':saldo'] = $saldo;
         }
         $where = $where === " WHERE " ? "" : $where;
         $model = new Staraoc();

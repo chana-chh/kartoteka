@@ -160,4 +160,7 @@ $app->group('', function () {
     $this->post('/transakcije/uplate/brisanje', '\App\Controllers\UplataController:postUplataBrisanje')->setName('uplate.brisanje');
     // Statistika
     $this->get('/statistika', '\App\Controllers\StatistikaController:getStatistika')->setName('statistika');
+
+    // Razduzivanje viska para
+    $this->post('/transakcije/visak', '\App\Controllers\UplataController:postVisak')->setName('transakcije.visak');
 })->add(new AuthMiddleware($container));

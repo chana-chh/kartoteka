@@ -24,6 +24,11 @@ class Staraoc extends Model
         return $this->belongsTo('App\Models\Karton', 'karton_id');
     }
 
+    public function uplate()
+    {
+        return $this->hasMany('App\Models\Uplata', 'staraoc_id');
+    }
+
     // prikaz chk aktivan na pogledu
     public function aktivan()
     {
@@ -49,9 +54,36 @@ class Staraoc extends Model
 
 
     // new ****************************************************************************************************************************
+    public function svaZaduzenja()
+    {
+        $sql = "SELECT * FROM zaduzenja WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id} ORDER BY godina ASC;";
+        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
+    }
 
+    public function zaduzenaZaduzenja()
+    {
+        $sql = "SELECT * FROM zaduzenja WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id}
+                AND razduzeno = 0 AND reprogram_id IS NULL ORDER BY godina ASC, tip ASC;";
+        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
+    }
+
+    public function razduzenaZaduzenja()
+    {
+        $sql = "SELECT * FROM zaduzenja WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id}
+                AND razduzeno = 1 ORDER BY godina ASC;";
+        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
+    }
 
     // takse
+
+    public function taksaZaGodinu()
+    {
+        $cena = (float) (new Cena())->taksa();
+        $br_mesta = $this->karton()->broj_mesta;
+        $br_staraoca = $this->karton()->brojAktivnihStaraoca();
+        $taksa = $cena * $br_mesta / $br_staraoca;
+        return (float) $taksa;
+    }
 
     public function sveTakse()
     {
@@ -75,18 +107,16 @@ class Staraoc extends Model
 
     public function saldoZaTakse()
     {
-        $god = GOD;
         $sql = "SELECT SUM(iznos_razduzeno) AS saldo FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0 AND iznos_razduzeno > 0
-                AND godina <= {$god} AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+                AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
         $saldo = $this->fetch($sql)[0]->saldo;
         return round((float) $saldo, 2);
     }
 
     public function dugZaTakse()
     {
-        $god = GOD;
         $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0
-                AND godina <= {$god} AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+                AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
         $broj = (int) $this->fetch($sql)[0]->broj;
         $cena = (float) (new Cena())->taksa();
         $br_mesta = $this->karton()->broj_mesta;
@@ -95,7 +125,25 @@ class Staraoc extends Model
         return round((float) ($broj * $cena * $br_mesta / $br_staraoca) - $saldo, 2);
     }
 
+    public function taksePosleTekuceGodine()
+    {
+        $god = GOD;
+        $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0
+                AND godina > {$god} AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+        $broj = (int) $this->fetch($sql)[0]->broj;
+        return $broj;
+    }
+
     // zakupi
+
+    public function zakupZaGodinu()
+    {
+        $cena = (float) (new Cena())->zakup();
+        $br_mesta = $this->karton()->broj_mesta;
+        $br_staraoca = $this->karton()->brojAktivnihStaraoca();
+        $zakup = $cena * $br_mesta / $br_staraoca;
+        return (float) $zakup;
+    }
 
     public function sviZakupi()
     {
@@ -119,24 +167,31 @@ class Staraoc extends Model
 
     public function saldoZaZakupe()
     {
-        $god = GOD;
         $sql = "SELECT SUM(iznos_razduzeno) AS saldo FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0 AND iznos_razduzeno > 0
-                AND godina <= {$god} AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+                AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
         $saldo = $this->fetch($sql)[0]->saldo;
         return round((float) $saldo, 2);
     }
 
     public function dugZaZakupe()
     {
-        $god = GOD;
         $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0
-                AND godina <= {$god} AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+                AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
         $broj = (int) $this->fetch($sql)[0]->broj;
         $cena = (float) (new Cena())->zakup();
         $br_mesta = (int) $this->karton()->broj_mesta;
         $br_staraoca = (int) $this->karton()->brojAktivnihStaraoca();
         $saldo = $this->saldoZaZakupe();
         return round((float) ($broj * $cena * $br_mesta / $br_staraoca) - $saldo, 2);
+    }
+
+    public function zakupiPosleTekuceGodine()
+    {
+        $god = GOD;
+        $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0
+                AND godina > {$god} AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+        $broj = (int) $this->fetch($sql)[0]->broj;
+        return $broj;
     }
 
     // racuni
@@ -178,5 +233,10 @@ class Staraoc extends Model
     public function ukupanDug()
     {
         return $this->dugZaTakse() + $this->dugZaZakupe() + $this->dugZaRacune();
+    }
+
+    public function imaSaldo()
+    {
+        return $this->privremeni_saldo > 0 ? true : false;
     }
 }

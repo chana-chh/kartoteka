@@ -17,19 +17,191 @@ class TransakcijeController extends Controller
     {
         $staraoc_id = $args['id'];
         $zaduzenost = isset($args['z']) ? (int) $args['z'] : 0;
+
         if($zaduzenost < 0 | $zaduzenost > 2)
         {
             $zaduzenost = 0;
         }
+
         $staraoc = (new Staraoc())->find($staraoc_id);
+        $broj_uplata = count($staraoc->uplate());
 
-        // broj uplata prepraviti po staraocu, a ne kartonu
-        $broj_uplata = count($staraoc->karton()->uplate());
-        $model_cene = new Cena();
-        $cena_takse = $model_cene->taksa();
-        $cena_zakupa = $model_cene->zakup();
+        // ako ima privremeni_saldo (pretekle mu pare posle razduzenja)
+        // preuzeti sva nerazduzena zaduzenja
+        // sloziti po godinama ASC
+        // krenuti redom i smanjivati iznos
+        // razduzivati stare godine
+        // ako nema vise sarih godin zaduzivati/razduzivati nove
+        // od toga napraviti izvestaj
+        // istu foru koristiti kod razduzivanja viska para
+        $visak = [];
+        if($staraoc->privremeni_saldo > 0)
+        {
+            // sva nerazduzena zaduzenja
+            $zaduzenja = $staraoc->zaduzenaZaduzenja();
 
-        $this->render($response, 'transakcije_pregled.twig', compact('staraoc', 'broj_uplata', 'cena_takse', 'cena_zakupa', 'zaduzenost'));
+            // iznos viska para
+            $iznos = (float) $staraoc->privremeni_saldo;
+            // ostatak viska
+            $ostatak = $iznos;
+
+            // pocetni parametri
+
+            // broj celih taksi koje mogu da se razduze
+            $br_taksi = 0;
+            // broj celih zakupa koje mogu da se razduze
+            $br_zakupa = 0;
+            // taksa ili zakup koji moze delimicno da se razduzi
+            $deo = 0;
+            // vrsta (taksa ili zakup) za delimicno razduzivanje
+            $vrsta = '';
+            // godina takse ili zakupa za delimicno razduzivanje
+            $godina = 0;
+            // godine taksi koje mogu cele da se razduze
+            $godine_taksi = '';
+            // godine zakupa koji mogu celi da se razduze
+            $godine_zakupa = '';
+
+            foreach ($zaduzenja as $zad)
+            {
+                $iznos = $ostatak;
+                $razlika = (float) $ostatak - $zad->zaRazduzenje();
+
+                if($razlika < 0)
+                {
+                    $deo = $iznos;
+                    $vrsta = $zad->tip;
+                    $godina = $zad->godina;
+                    $ostatak = 0;
+                    break;
+                }
+                else
+                {
+                    if($zad->tip === 'taksa')
+                    {
+                        $br_taksi++;
+                        $godine_taksi .= ', ' . $zad->godina;
+                        $ostatak = $razlika;
+                    }
+                    elseif($zad->tip === 'zakup')
+                    {
+                        $br_zakupa++;
+                        $godine_zakupa .= ', ' . $zad->godina;
+                        $ostatak = $razlika;
+                    }
+                }
+            }
+            
+            // dovde je za stare dugove
+
+
+            // ako postoji ostatak dodaju se nova zaduzenja taksa, zakup, taksa, zakup
+            // dok se ne potrosi ostatak
+
+            if($ostatak > 0)
+            {
+                // za nova zaduzenja koja ne postoje
+
+                // broj celih taksi koje mogu da se razduze
+                $n_br_taksi = 0;
+                // broj celih zakupa koje mogu da se razduze
+                $n_br_zakupa = 0;
+                // taksa ili zakup koji moze delimicno da se razduzi
+                $n_deo = 0;
+                // vrsta (taksa ili zakup) za delimicno razduzivanje
+                $n_vrsta = '';
+                // godina takse ili zakupa za delimicno razduzivanje
+                $n_godina = 0;
+                // godine taksi koje mogu cele da se razduze
+                $n_godine_taksi = '';
+                // godine zakupa koji mogu celi da se razduze
+                $n_godine_zakupa = '';
+
+                // pocetna godina za nove takse
+                $sql = "SELECT MAX(godina) AS max_godina FROM zaduzenja WHERE tip = 'taksa' AND staraoc_id = {$staraoc->id};";
+                $godina_za_taksu = (int) $staraoc->fetch($sql)[0]->max_godina + 1;
+                // pocetna godina za nove zakupe
+                $sql = "SELECT MAX(godina) AS max_godina FROM zaduzenja WHERE tip = 'zakup' AND staraoc_id = {$staraoc->id};";
+                $godina_za_zakup = (int) $staraoc->fetch($sql)[0]->max_godina + 1;
+
+                // odrediti manji pocetnu godinu i krenuti odatle (taksa ili zakup)
+                // da li voziti isto dok se ne stigne druga pocetna godina ili
+                // samo terati taksa, zakup
+
+                $radi_taksu = $godina_za_taksu <= $godina_za_zakup ? true : false;
+                // petlja dok ima ostatka
+                do
+                {
+                    $iznos = $ostatak;
+
+                    if($radi_taksu)
+                    {
+                        $razlika = (float) $ostatak - $staraoc->taksaZaGodinu();
+                    }
+                    else
+                    {
+                        $razlika = (float) $ostatak - $staraoc->zakupZaGodinu();
+                    }
+                    
+
+                    if($razlika < 0)
+                    {
+                        $n_deo = $iznos;
+
+                        if($radi_taksu)
+                        {
+                            $n_vrsta = 'taksa';
+                            $n_godina = $godina_za_taksu;
+                        }
+                        else
+                        {
+                            $n_vrsta = 'zakup';
+                            $n_godina = $godina_za_zakup;
+                        }
+
+                        $ostatak = 0;
+                    }
+                    else
+                    {
+                        if($radi_taksu)
+                        {
+                            $n_br_taksi++;
+                            $n_godine_taksi .= ', ' . $godina_za_taksu;
+                            $ostatak = $razlika;
+                            $godina_za_taksu++;
+                        }
+                        else
+                        {
+                            $n_br_zakupa++;
+                            $n_godine_zakupa .= ', ' . $godina_za_zakup;
+                            $ostatak = $razlika;
+                            $godina_za_zakup++;
+                        }
+                    }
+                    $radi_taksu = $godina_za_taksu <= $godina_za_zakup ? true : false;
+                } while ($ostatak > 0);
+                
+            }
+
+            $visak = [
+                'br_taksi' => $br_taksi,
+                'godine_taksi' => trim($godine_taksi, ','),
+                'br_zakupa' => $br_zakupa,
+                'godine_zakupa' => trim($godine_zakupa, ','),
+                'godina' => $godina,
+                'vrsta' => $vrsta,
+                'deo' => round($deo, 2),
+                'n_br_taksi' => $n_br_taksi,
+                'n_godine_taksi' => trim($n_godine_taksi, ','),
+                'n_br_zakupa' => $n_br_zakupa,
+                'n_godine_zakupa' => trim($n_godine_zakupa, ','),
+                'n_godina' => $n_godina,
+                'n_vrsta' => $n_vrsta,
+                'n_deo' => round($n_deo, 2),
+            ];
+        }
+
+        $this->render($response, 'transakcije_pregled.twig', compact('staraoc', 'broj_uplata', 'zaduzenost', 'visak'));
     }
 
     public function getKartonPregledStampa($request, $response, $args)
@@ -198,153 +370,6 @@ class TransakcijeController extends Controller
         }
     }
     
-    // public function getZaduzivanjeTakse($request, $response)
-    // {
-    //     $model = new Cena();
-    //     $taksa = $model->taksa();
-    //     $zakup = $model->zakup();
-
-    //     $this->render($response, 'zaduzivanje_taksi.twig', compact('takse'));
-    // }
-
-    // public function postZaduzivanjeTakse($request, $response)
-    // {
-    //     $data = $request->getParams();
-    //     unset($data['csrf_name']);
-    //     unset($data['csrf_value']);
-
-    //     $model_cene = new Cena();
-    //     $cena = $model_cene->find($data['taksa_id']);
-
-    //     $iznos =  (float) $cena->taksa;
-    //     $godina = $cena->godina();
-
-    //     $validation_rules = [
-    //         'taksa_id' => [
-    //             'required' => true,
-    //         ]
-    //     ];
-
-    //     $this->validator->validate($data, $validation_rules);
-
-    //     $model_karton = new Karton();
-    //     $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE godina = :god AND tip = 1;";
-    //     $broj = $model_karton->fetch($sql, [':god' => $godina])[0]->broj;
-    //     if ($broj > 0) {
-    //         $this->flash->addMessage('danger', 'Vec postoji zaduženje za odabranu godinu');
-    //         return $response->withRedirect($this->router->pathFor('transakcije.zaduzivanje.takse'));
-    //     }
-    //     if ($this->validator->hasErrors()) {
-    //         $this->flash->addMessage('danger', 'Došlo je do greške prilikom zaduživanja kartona.');
-    //         return $response->withRedirect($this->router->pathFor('transakcije.zaduzivanje.takse'));
-    //     } else {
-    //         $podaci = [
-    //             ':karton_id' => 0,
-    //             ':tip' => 'taksa',
-    //             ':iznos' => 0,
-    //             ':godina' => (int) $godina,
-    //             ':razduzeno' => 0,
-    //             ':datum_zaduzenja' => date('Y-m-d'),
-    //             ':korisnik_id_zaduzio' => $this->auth->user()->id,
-    //         ];
-
-    //         $kartoni = $model_karton->sviAktivni();
-    //         $pdo = $model_karton->getDb()->getPDO();
-    //         $sql = "INSERT INTO `zaduzenja` (karton_id, tip, iznos, godina, razduzeno, datum_zaduzenja, korisnik_id_zaduzio)
-    //             VALUES (:karton_id, :tip, :iznos, :godina, :razduzeno, :datum_zaduzenja, :korisnik_id_zaduzio);";
-    //         $stmt = $pdo->prepare($sql);
-
-    //         $pdo->beginTransaction();
-    //         foreach ($kartoni as $karton) {
-    //             $podaci[':karton_id'] = $karton->id;
-    //             $podaci[':iznos'] = $iznos * $karton->broj_mesta;
-    //             $stmt->execute($podaci);
-    //         }
-    //         $pdo->commit();
-    //         $this->flash->addMessage('success', 'Svi aktivni kartoni su uspešno zaduženi.');
-    //         return $response->withRedirect($this->router->pathFor('transakcije.zaduzivanje.takse'));
-    //     }
-    // }
-
-    // public function getZaduzivanjeZakup($request, $response)
-    // {
-    //     $model_cene = new Cena();
-    //     $model_kartoni = new Karton();
-    //     $cene = $model_cene->all();
-
-    //     $tekuca_godina = (int) date('Y');
-    //     $sql = "SELECT * FROM kartoni
-    //             WHERE id NOT IN (
-    //                 SELECT karton_id FROM  zaduzenja
-    //                 WHERE  tip = 2 AND godina = {$tekuca_godina}
-    //             ) AND aktivan = 1 ORDER BY kartoni.id;";
-    //     $nezaduzeni_kartoni = $model_kartoni->fetch($sql);
-
-    //     $this->render($response, 'zaduzivanje_zakupa.twig', compact('cene', 'nezaduzeni_kartoni'));
-    // }
-
-    // public function postZaduzivanjeZakup($request, $response)
-    // {
-    //     $data = $request->getParams();
-    //     unset($data['csrf_name']);
-    //     unset($data['csrf_value']);
-
-    //     $model_cene = new Cena();
-    //     $cena = $model_cene->find($data['zakup_id']);
-
-    //     $iznos = (float) $cena->zakup / 10;
-    //     $godina = $cena->godina();
-
-    //     $validation_rules = [
-    //         'zakup_id' => [
-    //             'required' => true,
-    //         ]
-    //     ];
-
-    //     $this->validator->validate($data, $validation_rules);
-
-    //     if ($this->validator->hasErrors()) {
-    //         $this->flash->addMessage('danger', 'Došlo je do greške prilikom zaduživanja kartona.');
-    //         return $response->withRedirect($this->router->pathFor('transakcije.zaduzivanje.zakup'));
-    //     } else {
-    //         $model_karton = new Karton();
-    //         $pocetna_godina = (int) $godina;
-    //         $sql = "SELECT * FROM kartoni
-    //             WHERE id NOT IN (
-    //                 SELECT karton_id FROM  zaduzenja
-    //                 WHERE  tip = 2 AND godina = {$pocetna_godina}
-    //             ) AND aktivan = 1 ORDER BY kartoni.id;";
-    //         $kartoni = $model_karton->fetch($sql);
-    //         $podaci = [
-    //             ':karton_id' => 0,
-    //             ':tip' => 'zakup',
-    //             ':iznos' => 0,
-    //             ':godina' => (int) $pocetna_godina,
-    //             ':razduzeno' => 0,
-    //             ':datum_zaduzenja' => date('Y-m-d'),
-    //             ':korisnik_id_zaduzio' => $this->auth->user()->id,
-    //         ];
-
-    //         $pdo = $model_karton->getDb()->getPDO();
-    //         $sql = "INSERT INTO `zaduzenja` (karton_id, tip, iznos, godina, razduzeno, datum_zaduzenja, korisnik_id_zaduzio)
-    //             VALUES (:karton_id, :tip, :iznos, :godina, :razduzeno, :datum_zaduzenja, :korisnik_id_zaduzio);";
-    //         $stmt = $pdo->prepare($sql);
-    //         $pdo->beginTransaction();
-
-    //         for ($i = 0; $i < 10; $i++) {
-    //             $podaci[':godina'] = $pocetna_godina + $i;
-    //             foreach ($kartoni as $karton) {
-    //                 $podaci[':karton_id'] = $karton->id;
-    //                 $podaci[':iznos'] = $iznos * $karton->broj_mesta;
-    //                 $stmt->execute($podaci);
-    //             }
-    //         }
-
-    //         $pdo->commit();
-    //         $this->flash->addMessage('success', 'Svi aktivni kartoni su uspešno zaduženi.');
-    //         return $response->withRedirect($this->router->pathFor('transakcije.zaduzivanje.zakup'));
-    //     }
-    // }
 
     public function postUplata($request, $response)
     {
@@ -421,17 +446,6 @@ class TransakcijeController extends Controller
                 $iznos_za_razduzenje += $rn->iznos;
             }
         }
-        
-        // if (!empty($reprogrami_data)) {
-        //     $rep = implode(", ", $reprogrami_data);
-        //     $sql = "SELECT * FROM reprogrami WHERE id IN ($rep);";
-        //     $reprogrami = $model_reprogram->fetch($sql);
-        //     $zbir = 0;
-        //     foreach ($reprogrami as $rep) {
-        //         $zbir += $rep->dug();
-        //     }
-        //     $iznos_za_razduzenje += $zbir;
-        // }
 
         $razlika = $iznos - $iznos_za_razduzenje;
 
@@ -467,7 +481,7 @@ class TransakcijeController extends Controller
             $model_uplata->insert($uplata_data);
             $uplata_id = $model_uplata->getLastId();
 
-            $sql = "UPDATE staraoci SET privremeni_saldo = privremeni_saldo + {$razlika} WHERE id = {$id};";
+            $sql = "UPDATE staraoci SET privremeni_saldo = privremeni_saldo + {$razlika}, uplata_id = {$uplata_id} WHERE id = {$id};";
             $staraoc->run($sql);
 
             if (!empty($zaduzenja_data))
@@ -476,13 +490,13 @@ class TransakcijeController extends Controller
 
                 $sql = "UPDATE zaduzenja
                         SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id},
-                        uplata_id = {$uplata_id}, iznos_razduzeno = {$cene->taksa()}
+                        uplata_id = {$uplata_id}, iznos_razduzeno = {$staraoc->taksaZaGodinu()}
                         WHERE id IN ($zad) AND tip = 'taksa';";
                 $model_uplata->run($sql);
 
                 $sql = "UPDATE zaduzenja
                         SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id},
-                        uplata_id = {$uplata_id}, iznos_razduzeno = {$cene->zakup()}
+                        uplata_id = {$uplata_id}, iznos_razduzeno = {$staraoc->zakupZaGodinu()}
                         WHERE id IN ($zad) AND tip = 'zakup';";
                 $model_uplata->run($sql);
             }
@@ -495,22 +509,6 @@ class TransakcijeController extends Controller
                         WHERE id IN ($rac);";
                 $model_uplata->run($sql);
             }
-            
-            // if (!empty($reprogrami_data)) {
-            //     $rep = implode(", ", $reprogrami_data);
-            //     $sql_zaduzenja = "UPDATE zaduzenja
-            //         SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id}
-            //         WHERE reprogram_id IN ($rep);";
-            //     $model_uplata->run($sql_zaduzenja);
-            //     $sql_racuni = "UPDATE racuni
-            //         SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id}
-            //         WHERE reprogram_id IN ($rep);";
-            //     $model_uplata->run($sql_racuni);
-            //     $sql_reprogram = "UPDATE reprogrami
-            //         SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id}, preostalo_rata = 0
-            //         WHERE id IN ($rep);";
-            //     $model_uplata->run($sql_reprogram);
-            // }
 
             $this->flash->addMessage('success', 'Uplata je uspešno sačuvana, a odabrane stavke su razdužene.');
             return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $id]));

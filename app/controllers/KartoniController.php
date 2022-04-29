@@ -170,33 +170,46 @@ class KartoniController extends Controller
         $data = $_SESSION['DATA_KARTONI_PRETRAGA'];
         array_shift($data);
         array_shift($data);
+        
+        if (!isset($data['groblje_id']) && empty($data['parcela']) && empty($data['grobno_mesto']) && !isset($data['aktivan'])) {
+            return $this->getKartoni($request, $response);
+        }
+        $groblje_id = isset($data['groblje_id']) ? (int) str_replace('%', '', filter_var($data['groblje_id'], FILTER_SANITIZE_STRING)): 0;
+        $data['parcela'] = str_replace('%', '', filter_var($data['parcela'], FILTER_SANITIZE_STRING));
+        $data['grobno_mesto'] = str_replace('%', '', filter_var($data['grobno_mesto'], FILTER_SANITIZE_STRING));
+        $parcela = '%' . $data['parcela'] . '%';
+        $grobno_mesto = '%' . $data['grobno_mesto'] . '%';
+        $aktivan = isset($data['aktivan']) ? 1 : 0;
         $query = [];
         parse_str($request->getUri()->getQuery(), $query);
         $page = isset($query['page']) ? (int)$query['page'] : 1;
 
-        if (empty($data['groblje_id']) && empty($data['parcela']) && empty($data['grobno_mesto'])) {
-            $this->getKartoni($request, $response);
-        }
-
         $where = " WHERE ";
         $params = [];
-        if (!empty($data['groblje_id'])) {
+        if ($groblje_id !== 0) {
             $where .= "groblje_id = :groblje_id";
-            $params[':groblje_id'] = $data['groblje_id'];
+            $params[':groblje_id'] = $groblje_id;
         }
         if (!empty($data['parcela'])) {
             if ($where !== " WHERE ") {
                 $where .= " AND ";
             }
             $where .= "parcela LIKE :parcela";
-            $params[':parcela'] = $data['parcela'];
+            $params[':parcela'] = $parcela;
         }
         if (!empty($data['grobno_mesto'])) {
             if ($where !== " WHERE ") {
                 $where .= " AND ";
             }
             $where .= "grobno_mesto LIKE :grobno_mesto";
-            $params[':grobno_mesto'] = $data['grobno_mesto'];
+            $params[':grobno_mesto'] = $grobno_mesto;
+        }
+        if ($aktivan === 1) {
+            if ($where !== " WHERE ") {
+                $where .= " AND ";
+            }
+            $where .= "aktivan = :aktivan";
+            $params[':aktivan'] = $aktivan;
         }
         $where = $where === " WHERE " ? "" : $where;
 
@@ -205,6 +218,7 @@ class KartoniController extends Controller
 
         $model = new Karton();
         $sql = "SELECT * FROM {$model->getTable()} {$where};";
+
         $kartoni = $model->paginate($page, $sql, $params);
 
         $this->render($response, 'kartoni.twig', compact('kartoni', 'groblja', 'data'));

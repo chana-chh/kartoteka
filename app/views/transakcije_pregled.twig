@@ -32,6 +32,7 @@
         </a>
       </div>
     </div>
+    {% if staraoc.imaSaldo() == false %}
     <div class="uk-float-right">
       <div class="uk-button-group">
         <button class="uk-button uk-button-primary uk-button-small">Zaduživanje</button>
@@ -60,7 +61,7 @@
           class="uk-button uk-button-primary uk-button-small">
           <span uk-icon="database" class="ikonica"></span> Razduživanje
         </a>
-        <a href="{{ path_for('uplate', { id: karton.id }) }}" class="uk-button uk-button-primary uk-button-small">
+        <a href="{{ path_for('uplate', { id: staraoc.id }) }}" class="uk-button uk-button-primary uk-button-small">
           <span class="uk-badge">{{broj_uplata}}</span> Pregled uplata
         </a>
         <a href="{{ path_for('transakcije.reprogrami', { id: karton.id }) }}"
@@ -73,9 +74,44 @@
         </a>
       </div>
     </div>
+    {% endif %}
   </div>
 </div>
 
+{% if staraoc.imaSaldo() %}
+
+
+
+<div class="uk-panel uk-background-muted uk-padding-small uk-margin-small uk-border-rounded">
+  <h2 class="uk-text-danger">Staraoc ima neraspoređen novac u iznosu od {{ staraoc.privremeni_saldo }} din</h2>
+  {% if visak.br_taksi > 0 %}
+    <p class="uk-text-primary">Razdužiće se [{{ visak.br_taksi }}] taksa za {{ visak.godine_taksi }} god.</p>
+  {% endif %}
+  {% if visak.br_zakupa > 0 %}
+    <p class="uk-text-primary">Razdužiće se [{{ visak.br_zakupa }}] zakup za {{ visak.godine_zakupa }} god.</p>
+  {% endif %}
+  {% if visak.deo > 0 %}
+    <p class="uk-text-primary">Razdužiće se delimično {{ visak.vrsta }} za {{ visak.godina }} god. za iznos od {{ visak.deo | number_format(2, '.', ',') }} din.</p>
+  {% endif %}
+  {% if visak.n_br_taksi > 0 %}
+    <p class="uk-text-success">Zadužiće se i razdužiti [{{ visak.n_br_taksi }}] novih taksi za {{ visak.n_godine_taksi }} god.</p>
+  {% endif %}
+  {% if visak.n_br_zakupa > 0 %}
+    <p class="uk-text-success">Zadužiće se i razdužiti [{{ visak.n_br_zakupa }}] novih zakupa za {{ visak.n_godine_zakupa }} god.</p>
+  {% endif %}
+  {% if visak.n_deo > 0 %}
+    <p class="uk-text-success">Zadužiće se i delimično razdužiti {{ visak.n_vrsta }} za {{ visak.n_godina }} god. za iznos od {{ visak.n_deo | number_format(2, '.', ',') }} din.</p>
+  {% endif %}
+  <form  action="{{ path_for('transakcije.visak') }}" method="POST">
+    {{ csrf | raw }}
+    <input type="hidden" name="staraoc_id" value="{{ staraoc.id }}">
+    <input type="submit" value="POTVRDI" class="uk-button uk-button-danger uk-button-small" />
+  </form>
+</div>
+
+
+
+{% else %}
 <div class="uk-panel uk-background-muted uk-padding-small uk-margin-small uk-border-rounded">
   {% if zaduzenost == 0 %}
     <p class="uk-text-primary"><strong>SVA ZADUŽENJA</strong></p>
@@ -364,6 +400,7 @@
     </li>
   </ul>
 </div>
+{% endif %}
 <!-- MODAL BRISANJE ZADUŽENJA -->
 {% include 'inc/zaduzenje_brisanje.twig' %}
 <!-- MODAL BRISANJE RAČUNA -->
@@ -373,9 +410,17 @@
 {% block traka %}
 <div uk-grid>
 
-  <div class="uk-width-1-2">
-    <h3 class="uk-text-warning"><strong>Stanje zaključno sa {{ "now" | date("Y") }}. godinom</strong></h3>
+  <div class="uk-width-1-2 uk-text-warning">
+    {# <h3 class="uk-text-warning"><strong>Stanje zaključno sa {{ "now" | date("Y") }}. godinom</strong></h3> #}
+    {% if staraoc.taksePosleTekuceGodine() > 0 %}
+      <p>Takse posle tekuće godine [{{ staraoc.taksePosleTekuceGodine() }}]</p>
+    {% endif %}
+    {% if staraoc.zakupiPosleTekuceGodine() > 0 %}
+      <p>Zakupi posle tekuće godine [{{ staraoc.zakupiPosleTekuceGodine() }}]</p>
+    {% endif %}
   </div>
+
+
   <div class="uk-width-1-2">
     <h3 class="uk-text-right"><strong>Ukupan dug</strong></h3>
     <div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">

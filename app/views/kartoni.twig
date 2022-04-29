@@ -1,4 +1,6 @@
-{% extends "templates/app.twig" %} {% block naslov %}
+{% extends "templates/app.twig" %}
+
+{% block naslov %}
 <h1 class="uk-text-primary">
   Kartoni {% if data %}
   <small><em class="uk-text-warning">[filtrirano]</em></small>
@@ -23,7 +25,7 @@
           value="{{ data.parcela }}" autocomplete="off" placeholder="PARCELA" />
         <input type="text" name="grobno_mesto" id="grobno_mesto" class="uk-input uk-form-width-small uk-form-small"
           value="{{ data.grobno_mesto }}" autocomplete="off" placeholder="GROBNO MESTO" />
-
+        <label><input class="uk-checkbox" type="checkbox" name="aktivan"{{ data.aktivan == 1 ? ' checked' : '' }}> Aktivan</label>
         <div class="uk-button-group">
           <input type="submit" value="Filtriraj" class="uk-button uk-button-primary uk-button-small" />
           <a href="{{ path_for('kartoni') }}" class="uk-button uk-button-secondary uk-button-small">Svi kartoni</a>
