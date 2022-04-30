@@ -1,9 +1,10 @@
 {% extends "templates/app.twig" %} {% block sadrzaj %}
-<h1 class="uk-text-danger">
-  Izmena reprograma
-  <small><em class="uk-text-primary">[{{ reprogram.broj }}]</em></small>
-  za karton
-  <small><em class="uk-text-primary">[{{ reprogram.karton().broj() }}]</em></small>
+<h1 class="uk-text-primary">
+  Izmena reprograma za
+  <span class="uk-text-success">{{ staraoc.punoIme() | upper }}</span>
+  - <small class="uk-text-muted">
+      <a href="{{ path_for('kartoni.pregled', { id: staraoc.karton().id }) }}">[{{ staraoc.karton().broj() }}]</a>
+    </small>
 </h1>
 <div class="uk-panel uk-background-muted uk-padding-small">
   <div class="uk-clearfix">

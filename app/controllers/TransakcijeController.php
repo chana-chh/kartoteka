@@ -374,7 +374,7 @@ class TransakcijeController extends Controller
     public function postUplata($request, $response)
     {
         $data = $request->getParams();
-
+        
         $id = $data['staraoc_id'];
         $staraoc = (new Staraoc())->find($id);
         $korisnik_id = $this->auth->user()->id;
@@ -382,16 +382,6 @@ class TransakcijeController extends Controller
         $iznos_razduzenja = (float) $data['tacan_iznos'];
         $privremeni_saldo = (float) ($iznos - $iznos_razduzenja);
 
-        // podaci za uplatu
-        $uplata_data = [
-            'karton_id' => $staraoc->karton()->id,
-            'staraoc_id' => $staraoc->id,
-            'iznos' => $iznos,
-            'datum' => $data['uplata_datum'],
-            'priznanica' => $data['uplata_priznanica'],
-            'napomena' => $data['uplata_napomena'],
-            'korisnik_id' => $korisnik_id,
-        ];
         // niz id-a zaduzenja
         $zaduzenja_data = isset($data['razduzeno-zaduzenje']) ? $data['razduzeno-zaduzenje'] : [];
         // niz id-a racuna
@@ -461,6 +451,18 @@ class TransakcijeController extends Controller
         unset($data['razduzeno-racuni']);
 
         $this->validator->validate($data, $validation_rules);
+
+        // podaci za uplatu
+        $uplata_data = [
+            'karton_id' => $staraoc->karton()->id,
+            'staraoc_id' => $staraoc->id,
+            'iznos' => $iznos,
+            'datum' => $data['uplata_datum'],
+            'priznanica' => $data['uplata_priznanica'],
+            'napomena' => $data['uplata_napomena'],
+            'korisnik_id' => $korisnik_id,
+            'rok' => $data['rok'],
+        ];
 
         if ($this->validator->hasErrors())
         {

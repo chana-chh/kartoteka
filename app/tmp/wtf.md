@@ -15,21 +15,11 @@
 - ukloniti digme za brisanje svih transakcija kartona (ako je zajeb ne bi trebalo da bude ikakvih transakcija)
     ako i ima neke transakcije u zajebu brisati rucno (ovo je samo za admina)
 
-- srediti logovanje
-    - ubaciti klasu Logger +
-    - izmeniti bazicni Controller +
-    - dodati tabelu za logove +
-    - prepraviti logovanje u svim kontrolerima
+## NOVO
 
-- ukloniti sve vezano za robu (artikli, porezi ...) +
-- kad se zavrsi komplet doraditi uputstvo
+- logovi nisu skoro nigde odradjeni (za transakcije)
+- na vise mesta se samo vrsi upis u bazu bez neke provere ispravnosti
+- onemoguciti brisanje taksi, zakupa i racuna koji su u reprogramu (puca brisanje???)
 
-- brise cene koje su aktivne i kartoni su zaduzeni njima - onemoguciti brisanje / brisanje samo mi direktno iz baze +
-
-- nema fine podele autorizacije (postoji samo korisnik i admin) -
-
-- da li snimati model u log ako je dodavanje
-    - kod logovanja u modele ubaciti polja za logovanje
-    - u Logger proslediti samo tip loga i model pre izmene/brisanja
 
 

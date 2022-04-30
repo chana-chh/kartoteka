@@ -14,6 +14,11 @@ class Reprogram extends Model
 		return $this->belongsTo('App\Models\Karton', 'karton_id');
 	}
 
+	public function staraoc()
+    {
+        return $this->belongsTo('App\Models\Staraoc', 'staraoc_id');
+    }
+
 	public function zaduzenja()
 	{
 		return $this->hasMany('App\Models\Zaduzenje', 'reprogram_id');
@@ -76,5 +81,28 @@ class Reprogram extends Model
 		} else {
 			return DateTime::createFromFormat('Y-m-d', $this->datum)->format('d.m.Y');
 		}
+	}
+
+	public function rate()
+	{
+		$rate = [];
+		$iznos = $this->iznos_rate;
+		$prva_rata = $this->datum_prve_rate;
+		$br_rata = $this->period;
+		$preostalo = $this->preostalo_rata;
+		$isplaceno = $br_rata - $preostalo;
+
+		for ($i=1; $i <= $br_rata; $i++)
+		{ 
+			$rate[$i] = [
+				'datum' => $prva_rata,
+				'iznos' => round($iznos, 2),
+				'isplacena' => ($i <= $isplaceno) ? true : false,
+			];
+
+			$prva_rata = date('Y-m-d', strtotime("+1 month", strtotime($prva_rata)));
+		}
+
+		return $rate;
 	}
 }

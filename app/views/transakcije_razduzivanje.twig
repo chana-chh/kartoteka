@@ -209,49 +209,6 @@
           </div>
         </div>
       </li>
-      {# <li>
-        <a class="uk-accordion-title" href="#">
-          <h2>
-            Reprogrami
-            <em class="uk-text-danger">[{{ karton.nerazduzeniReprogrami()|length }}]</em>
-          </h2>
-        </a>
-        <div class="uk-accordion-content">
-          <hr>
-          <div class="uk-overflow-auto">
-            <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
-              <thead>
-                <tr>
-                  <th class="w-15">Broj</th>
-                  <th class="w-10 uk-text-right">Datum</th>
-                  <th class="w-15 uk-text-right">Peroid</th>
-                  <th class="w-15 uk-text-right">Preostalo rata</th>
-                  <th class="w-20 uk-text-right">Iznos</th>
-                  <th class="w-25 uk-text-center">Razduzeno</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for rep in karton.nerazduzeniReprogrami() %}
-                <tr>
-                  <td>{{ rep.broj }}</td>
-                  <td class="uk-text-right">{{ rep.datum() }}</td>
-                  <td class="uk-text-right">
-                    {{ rep.period }}
-                  </td>
-                  <td class="uk-text-right">
-                    {{ rep.preostalo_rata }}
-                  </td>
-                  <td class="uk-text-right">
-                    {{ rep.iznos|number_format(2, '.', ',') }}
-                  </td>
-                  <td class="uk-text-center">{{ rep.razduzeno() | raw }}</td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </li> #}
     </ul>
   </div>
 </form>
@@ -309,38 +266,11 @@
 </div>
 {% endblock traka %}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 {% block skripta %}
 <script>
-  var taksa = Number("{{ cene.taksa() }}") * Number("{{ staraoc.karton().broj_mesta }}") / Number("{{ staraoc.karton().brojAktivnihStaraoca() }}");
-  var zakup = Number("{{ cene.zakup() }}") * Number("{{ staraoc.karton().broj_mesta }}") / Number("{{ staraoc.karton().brojAktivnihStaraoca() }}");
   var razduzenje = document.getElementById("razduzenje");
   var chk_zaduzenja = document.getElementsByClassName("razduzeno-zaduzenja");
   var chk_racuni = document.getElementsByClassName("razduzeno-racuni");
-  var chk_reprogrami = document.getElementsByClassName("razduzeno-reprogrami");
   var forma = document.getElementById("foram_uplata");
   var poruka = document.getElementById("poruka");
   var uplata_iznos = document.getElementById("uplata_iznos");
@@ -423,22 +353,6 @@
       },
       false
     );
-  }
-
-  for (i = 0; i < chk_reprogrami.length; i++) {
-    chk_reprogrami[i].addEventListener("click", function () {
-        var
-          razd = Number(razduzenje.textContent);
-        var iznos = Number(this.getAttribute("data-iznos"));
-        if (this.checked) {
-          razduzenje.textContent = (razd + iznos).toFixed(2);
-          uplata_iznos.value = (razd + iznos).toFixed(2);
-        } else {
-          razduzenje.textContent = (razd - iznos).toFixed(2);
-          uplata_iznos.value = (razd - iznos).toFixed(2);
-        }
-      },
-      false);
   }
 
   function resetRazduzenje() {

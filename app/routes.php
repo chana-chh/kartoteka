@@ -139,7 +139,8 @@ $app->group('', function () {
     $this->get('/transakcije/karton/{id}', '\App\Controllers\TransakcijeController:getKartonRazduzivanje')->setName('transakcije.razduzivanje'); // razduzivanje
     $this->post('/transakcije/uplata', '\App\Controllers\TransakcijeController:postUplata')->setName('transakcije.uplata'); // post razduzivanje
     // Reprogrami
-    $this->get('/transakcije/reprogrami/karton/{id}', '\App\Controllers\ReprogramiController:getKartonReprogrami')->setName('transakcije.reprogrami'); // reprogram
+    $this->get('/transakcije/reprogrami/staraoc/{id}', '\App\Controllers\ReprogramiController:getKartonReprogrami')->setName('transakcije.reprogrami'); // reprogram
+    $this->get('/transakcije/reprogram/{id}', '\App\Controllers\ReprogramiController:getReprogram')->setName('transakcije.reprogram');
     $this->get('/transakcije/reprogram/dodavanje/{id}', '\App\Controllers\ReprogramiController:getReprogramDodavanje')->setName('transakcije.reprogram.dodavanje');
     $this->get('/transakcije/reprogram/izmena/{id}', '\App\Controllers\ReprogramiController:getReprogramIzmena')->setName('transakcije.reprogram.izmena');
     $this->post('/transakcije/reprogram/dodavanje', '\App\Controllers\ReprogramiController:postReprogramDodavanje')->setName('transakcije.reprogram.dodavanje.post');

@@ -21,7 +21,7 @@ class RacuniController extends Controller
         $data = $request->getParams();
         unset($data['csrf_name']);
         unset($data['csrf_value']);
-
+        $data['rok'] = empty($data['rok']) ? null : $data['rok'];
         $validation_rules = [
             'karton_id' => [
                 'required' => true,

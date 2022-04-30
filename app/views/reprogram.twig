@@ -1,0 +1,135 @@
+{% extends "templates/app.twig" %} {% block sadrzaj %}
+<h1 class="uk-text-primary">
+  Reprogram <span class="uk-text-danger">{{ reprogram.broj | upper }}</span> za
+  <span class="uk-text-success">{{ reprogram.staraoc().punoIme() | upper }}</span>
+  - <small class="uk-text-muted">
+      <a href="{{ path_for('kartoni.pregled', { id: reprogram.staraoc().karton().id }) }}">[{{ reprogram.staraoc().karton().broj() }}]</a>
+    </small>
+</h1>
+
+<div class="uk-panel uk-background-muted uk-padding-small uk-margin-bottom">
+  <div class="uk-clearfix">
+    <div class="uk-float-left">
+      <div class="uk-button-group">
+        <a href="{{ path_for('kartoni.pregled', { id: reprogram.staraoc().karton().id }) }}"
+          class="uk-button uk-button-primary uk-button-small uk-margin-right">
+          <span uk-icon="chevron-double-left"></span> Karton
+        </a>
+      </div>
+    </div>
+    <div class="uk-float-right">
+      <div class="uk-button-group">
+        <a href="{{ path_for('transakcije.pregled', { id: reprogram.staraoc().id }) }}"
+          class="uk-button uk-button-secondary uk-button-small">
+          <span uk-icon="list"></span> Pregled zaduzenja
+        </a>
+        <a href="{{ path_for('transakcije.reprogrami', { id: reprogram.staraoc().id }) }}"
+          class="uk-button uk-button-primary uk-button-small">
+          <span uk-icon="refresh" class="ikonica"></span> Reprogrami
+        </a>
+        <a href="{{ path_for('transakcije.reprogram.izmena', { id: reprogram.id }) }}"
+          class="uk-button uk-button-primary uk-button-small">
+          <span uk-icon="pencil"></span> Izmena reprograma
+        </a>
+        <button class="uk-button uk-button-primary uk-button-small" uk-toggle="target: #toggle_forma">
+          <span uk-icon="credit-card"></span> Uplata rate reprograma
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="uk-panel uk-padding-small uk-margin-bottom uk-box-shadow-large" id="toggle_forma" hidden>
+  forma za uplatu rate reprograma
+</div>
+
+<div class="uk-overflow-auto">
+  <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+    <tbody>
+      <tr>
+        <th class="w-30">Broj kartona</th>
+        <td class="w-70">{{ reprogram.staraoc().karton().broj() | upper }}</td>
+      </tr>
+      <tr>
+        <th class="w-30">Ime staraoca</th>
+        <td class="w-70">{{ reprogram.staraoc().punoIme() | upper }}</td>
+      </tr>
+      <tr>
+        <th class="w-30">Broj reprograma/ugovora</th>
+        <td class="w-70 uk-text-primary uk-text-bold">{{ reprogram.broj | upper }}</td>
+      </tr>
+      <tr>
+        <th class="w-30">Datum zaklučenja reprograma</th>
+        <td class="w-70">{{ reprogram.datum | date('d.m.Y') }}</td>
+      </tr>
+      <tr>
+        <th class="w-30">Ukupan iznos reprograma</th>
+        <td class="w-70">{{ reprogram.iznos | number_format(2, '.', ',') }} din</td>
+      </tr>
+      <tr>
+        <th class="w-30">Datum prispeća prve rate</th>
+        <td class="w-70">{{ reprogram.datum_prve_rate | date('d.m.Y') }}</td>
+      </tr>
+      <tr>
+        <th class="w-30">Iznos rate</th>
+        <td class="w-70">{{ reprogram.iznos_rate | number_format(2, '.', ',') }} din</td>
+      </tr>
+      <tr>
+        <th class="w-30">Period otplate</th>
+        <td class="w-70">{{ reprogram.period }} meseci</td>
+      </tr>
+      <tr>
+        <th class="w-30">Isplaćeno/preostalo rata</th>
+        <td class="w-70">
+          <span class="uk-text-success">{{ reprogram.period - reprogram.preostalo_rata }}</span> / 
+          <span class="uk-text-danger">{{ reprogram.preostalo_rata }}</span>
+        </td>
+      </tr>
+      <tr>
+        <th class="w-30">Razduženo</th>
+        <td class="w-70{{ reprogram.razduzeno == 1 ? ' uk-text-success' : ' uk-text-danger' }}">{{ reprogram.razduzeno == 1 ? 'DA' : 'NE' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p>Treba da se ubaci dugme za izmenu i brisanje reprograma i forma za placanje rata.</p>
+
+{% endblock sadrzaj %}
+
+{% block traka %}
+
+<h1>Rate reprograma</h1>
+<div class="uk-overflow-auto">
+  <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+    <thead>
+      <tr>
+        <th class="w-25 uk-text-center">Br rate</th>
+        <th class="w-25 uk-text-right">Datum</th>
+        <th class="w-25 uk-text-right">Iznos</th>
+        <th class="w-25 uk-text-center">Isplaćeno</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for key, rata in reprogram.rate() %}
+      {% set cls = "" %}
+      {% if rata.isplacena %}
+        {% set cls = "uk-text-success" %}
+      {% else %}
+        {% set cls = "uk-text-danger" %}
+      {% endif %}
+      <tr class="{{ cls }}">
+        <td class="uk-text-center">{{ key }}</td>
+        <td class="uk-text-right">{{ rata.datum | date('d.m.Y') }}</td>
+        <td class="uk-text-right">{{ rata.iznos | number_format(2, '.', ',') }}</td>
+        <td class="uk-text-center">{{ rata.isplacena ? 'DA' : 'NE' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock traka %}
+
+{% block skripta %}
+{% endblock skripta %}

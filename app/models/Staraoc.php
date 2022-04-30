@@ -51,6 +51,40 @@ class Staraoc extends Model
         return $this->hasMany('App\Models\Zaduzenje', 'staraoc_id');
     }
 
+    // jedan prema vise na reprograme
+    public function reprogrami()
+    {
+        return $this->hasMany('App\Models\Reprogram', 'staraoc_id');
+    }
+
+    public function sviReprogrami()
+    {
+        $sql = "SELECT * FROM reprogrami WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id} ORDER BY datum DESC;";
+        return $this->fetch($sql, null, '\App\Models\Reprogram');
+    }
+
+    public function zaduzeniReprogrami()
+    {
+        $sql = "SELECT * FROM reprogrami WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id}
+                AND razduzeno = 0 ORDER BY datum DESC;";
+        return $this->fetch($sql, null, '\App\Models\Reprogram');
+    }
+
+    public function razduzeniReprogrami()
+    {
+        $sql = "SELECT * FROM reprogrami WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id}
+                AND razduzeno = 1 ORDER BY datum DESC;";
+        return $this->fetch($sql, null, '\App\Models\Reprogram');
+    }
+
+    public function dugZaReprograme()
+    {
+        $sql = "SELECT SUM(iznos_rate * preostalo_rata) AS dug FROM reprogrami WHERE razduzeno = 0
+                AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+        $dug = (float) $this->fetch($sql)[0]->dug;
+        return round($dug, 2);
+    }
+
 
 
     // new ****************************************************************************************************************************

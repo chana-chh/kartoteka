@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Classes\Model;
+use App\Models\Korisnik;
+use App\Models\Uplata;
 
 class Zaduzenje extends Model
 {
@@ -69,4 +71,22 @@ class Zaduzenje extends Model
 
 		return round($obracunato - $this->iznos_razduzeno, 2);
 	}
+
+	public function korisnikZaduzio()
+    {
+		$korisnik = (new Korisnik())->find((int) $this->korisnik_id_zaduzio);
+        return $korisnik;
+    }
+	
+	public function korisnikRazduzio()
+    {
+		$korisnik = (new Korisnik())->find((int) $this->korisnik_id_razduzio);
+        return $korisnik;
+    }
+	
+	public function uplata()
+    {
+        $uplata = (new Uplata())->find((int) $this->uplata_id);
+        return $uplata;
+    }
 }

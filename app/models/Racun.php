@@ -82,4 +82,22 @@ class Racun extends Model
         $sql = "SELECT * FROM staraoci WHERE id = {$this->staraoc_id};";
         return $this->fetch($sql, null, '\App\Models\Staraoc')[0];
     }
+
+	public function korisnikZaduzio()
+    {
+		$korisnik = (new Korisnik())->find((int) $this->korisnik_id_zaduzio);
+        return $korisnik;
+    }
+	
+	public function korisnikRazduzio()
+    {
+		$korisnik = (new Korisnik())->find((int) $this->korisnik_id_razduzio);
+        return $korisnik;
+    }
+	
+	public function uplata()
+    {
+        $uplata = (new Uplata())->find((int) $this->uplata_id);
+        return $uplata;
+    }
 }

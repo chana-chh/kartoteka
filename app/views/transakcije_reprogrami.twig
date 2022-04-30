@@ -1,7 +1,12 @@
-{% extends "templates/app.twig" %} {% block sadrzaj %}
-<h1 class="uk-text-danger">
-  Reprogrami za karton
-  <small><em class="uk-text-primary">[{{ karton.broj() }}]</em></small>
+{% extends "templates/app.twig" %}
+
+{% block sadrzaj %}
+<h1 class="uk-text-primary">
+  Reprogrami za
+  <span class="uk-text-success">{{ staraoc.punoIme() | upper }}</span>
+  - <small class="uk-text-muted">
+      <a href="{{ path_for('kartoni.pregled', { id: staraoc.karton().id }) }}">[{{ staraoc.karton().broj() }}]</a>
+    </small>
 </h1>
 <div class="uk-panel uk-background-muted uk-padding-small">
   <div class="uk-clearfix">
@@ -10,7 +15,7 @@
         <button onclick="window.history.back();" class="uk-button uk-button-primary uk-button-small">
           <span uk-icon="chevron-left"></span> Nazad
         </button>
-        <a href="{{ path_for('kartoni.pregled', { id: karton.id }) }}"
+        <a href="{{ path_for('kartoni.pregled', { id: staraoc.karton().id }) }}"
           class="uk-button uk-button-primary uk-button-small">
           <span uk-icon="chevron-double-left"></span> Otvori karton
         </a>
@@ -18,11 +23,11 @@
     </div>
     <div class="uk-float-right">
       <div class="uk-button-group">
-        <a href="{{ path_for('transakcije.pregled', { id: karton.id }) }}"
+        <a href="{{ path_for('transakcije.pregled', { id: staraoc.id }) }}"
           class="uk-button uk-button-secondary uk-button-small">
           <span uk-icon="list"></span> Pregled zaduzenja
         </a>
-        <a href="{{ path_for('transakcije.reprogram.dodavanje', { id: karton.id }) }}"
+        <a href="{{ path_for('transakcije.reprogram.dodavanje', { id: staraoc.id }) }}"
           class="uk-button uk-button-primary uk-button-small">
           <span uk-icon="plus"></span> Dodavanje reprograma
         </a>
@@ -31,9 +36,63 @@
   </div>
 </div>
 
+<h2>
+  Reprogrami
+  <em class="uk-text-primary">[{{ staraoc.sviReprogrami() | length }}]</em>
+  <em class="uk-text-success">[{{ staraoc.razduzeniReprogrami() | length }}]</em>
+  <em class="uk-text-danger">[{{ staraoc.zaduzeniReprogrami() | length }}]</em>
+  <small><em class="uk-text-danger">[{{ staraoc.dugZaReprograme() | number_format(2, '.', ',') }}]</em></small>
+</h2>
+
+<div class="uk-overflow-auto">
+  <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+    <thead>
+      <tr>
+        <th class="w-15">Broj</th>
+        <th class="w-10 uk-text-right">Datum</th>
+        <th class="w-10 uk-text-right">Prva rata</th>
+        <th class="w-10 uk-text-right">Iznos</th>
+        <th class="w-10 uk-text-right">Rata</th>
+        <th class="w-15 uk-text-right">Broj rata</th>
+        <th class="w-15 uk-text-right">Dug</th>
+        <th class="w-10 uk-text-center">Razduženo</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for rep in staraoc.sviReprogrami() %}
+      {% set cls = "" %}
+      {% if rep.razduzeno == 0  %}
+      {% set cls = "uk-text-danger" %}
+      {% endif %}
+      {% if rep.razduzeno == 1  %}
+      {% set cls = "uk-text-success" %}
+      {% endif %}
+      <tr class="{{ cls }}">
+        <td>
+          <a href="{{ path_for('transakcije.reprogram', { id: rep.id }) }}"
+              class="uk-button uk-button-link uk-button-small uk-text-bold">
+              {{ rep.broj }}
+          </a>
+        </td>
+        <td class="uk-text-right">{{ rep.datum | date('d.m.Y') }}</td>
+        <td class="uk-text-right">{{ rep.datum_prve_rate | date('d.m.Y') }}</td>
+        <td class="uk-text-right">{{ rep.iznos | number_format(2, '.', ',') }}</td>
+        <td class="uk-text-right">{{ rep.iznos_rate | number_format(2, '.', ',') }}</td>
+        <td class="uk-text-right">{{ rep.preostalo_rata }} od {{ rep.period }}</td>
+        <td class="uk-text-right">{{ (rep.iznos_rate * rep.preostalo_rata) | number_format(2, '.', ',') }}</td>
+        <td class="uk-text-center">{{ rep.razduzenoDisabled() | raw }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+{# 
+
 <div class="uk-width-1-1">
 
-  {% for rep in karton.reprogrami() %}
+  {% for rep in staraoc.reprogrami() %}
   <div class="uk-button-group uk-margin-top uk-margin-bottom uk-width-1-1">
     <button
       class="uk-button uk-text-large uk-padding-small w-5{{ rep.razduzeno == 1 ? ' uk-button-primary' : ' uk-button-danger' }}">
@@ -193,17 +252,26 @@
     </div>
   </div>
   {% endfor %}
-</div>
+</div> #}
+
+
+
+
 {% endblock sadrzaj %}
 
 {% block traka %}
-<h2 class="uk-text-right">Saldo kartona</h2>
+<h2 class="uk-text-right">Dug za reprograme</h2>
 <div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
-  <h1 class="uk-text-success" id="saldo">
-    {{ karton.saldo }}
-  </h1>
+  <h1 class="uk-text-success">{{ staraoc.dugZaReprograme() | number_format(2, '.', ',') }}</h1>
 </div>
+
+
+
+
+
 {% endblock traka %}
+
+
 
 {% block skripta %}
 
