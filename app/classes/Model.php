@@ -1,64 +1,46 @@
 <?php
 
-/**
- * Osnovni model
- *
- * Svaki model mora da nasledi ovu klasu
- *
- * @version v 0.0.1
- * @author ChaSha
- * @copyright Copyright (c) 2019, ChaSha
- */
-
 namespace App\Classes;
 
-use App\Classes\Paginator;
-
-/**
- * Model
- *
- * @author ChaSha
- * @abstract
- */
 abstract class Model
 {
 
     /**
-	 * PDO wrapper
-	 * @var \App\Classes\Db
-	 */
+     * PDO wrapper
+     * @var \App\Classes\Db
+     */
     protected $db;
 
     /**
-	 * Naziv tabele modela
-	 * @var string
-	 */
+     * Naziv tabele modela
+     * @var string
+     */
     protected $table;
 
     /**
-	 * Primarni kljuc tabele modela
-	 * @var string
-	 */
+     * Primarni kljuc tabele modela
+     * @var string
+     */
     protected $pk = 'id';
 
     /**
-	 * Naziv momdela
-	 * @var string
-	 */
+     * Naziv momdela
+     * @var string
+     */
     protected $model;
 
     /**
-	 * Konfiguracija za paginaciju
-	 * @var array
-	 */
+     * Konfiguracija za paginaciju
+     * @var array
+     */
     protected $pagination_config;
 
     /**
-	 * Konstruktor
-	 *
-	 * @param \App\Classes\QueryBuilder Query builder
-	 * @throws \Exception Ako tabele u QueryBuilder-u i Model-u nisu iste
-	 */
+     * Konstruktor
+     *
+     * @param \App\Classes\QueryBuilder Query builder
+     * @throws \Exception Ako tabele u QueryBuilder-u i Model-u nisu iste
+     */
     public function __construct()
     {
         $this->db = Db::instance();
@@ -67,30 +49,30 @@ abstract class Model
     }
 
     /**
-	 * Izvrsava upit preko PDO
-	 *
-	 * Za upite koji menjaju podatke u bazi
-	 * INSERT, UPDATE, DELETE
-	 *
-	 * @param string $sql SQL izraz
-	 * @param array $params Parametri za parametrizovani upit
-	 * @return \PDOStatement
-	 */
+     * Izvrsava upit preko PDO
+     *
+     * Za upite koji menjaju podatke u bazi
+     * INSERT, UPDATE, DELETE
+     *
+     * @param string $sql SQL izraz
+     * @param array $params Parametri za parametrizovani upit
+     * @return \PDOStatement
+     */
     public function run(string $sql, array $params = null)
     {
         return Db::run($sql, $params);
     }
 
     /**
-	 * Izvrsava upit preko PDO
-	 *
-	 * Za upite koji vracaju podatke iz baze
-	 * SELECT
-	 *
-	 * @param string $sql SQL izraz
-	 * @param array $params Parametri za parametrizovani upit
-	 * @return array Niz rezultata (instanci Model-a) upita
-	 */
+     * Izvrsava upit preko PDO
+     *
+     * Za upite koji vracaju podatke iz baze
+     * SELECT
+     *
+     * @param string $sql SQL izraz
+     * @param array $params Parametri za parametrizovani upit
+     * @return array Niz rezultata (instanci Model-a) upita
+     */
     public function fetch(string $sql, array $params = null, string $model = null)
     {
         $model = ($model === null) ? $this->model : $model;
@@ -98,18 +80,19 @@ abstract class Model
     }
 
     /**
-	 * Vraca sve zapise iz tabele (sortirane)
-	 *
-	 * @param string $sort_column Naziv kolone za sortiranje
-	 * @param string $sort Nacin sortiranja
-	 * @return array|\App\Classes\Model Niz modela ili jedan model
-	 */
+     * Vraca sve zapise iz tabele (sortirane)
+     *
+     * @param string $sort_column Naziv kolone za sortiranje
+     * @param string $sort Nacin sortiranja
+     * @return array|\App\Classes\Model Niz modela ili jedan model
+     */
     public function all(string $sort_column = null, $sort = 'ASC')
     {
         $order_by = '';
         $params = null;
         $sort = ($sort === 'DESC') ? $sort : 'ASC';
-        if ($sort_column !== null && !empty(trim($sort_column))) {
+        if ($sort_column !== null && !empty(trim($sort_column)))
+        {
             $order_by = " ORDER BY :{$sort_column} {$sort}";
             $params = [":{$sort_column}" => $sort_column];
         }
@@ -118,11 +101,11 @@ abstract class Model
     }
 
     /**
-	 * Pronalazi red po PK
-	 *
-	 * @param $id Vrednost PK reda koji se trazi
-	 * @return \App\Classes\Model
-	 */
+     * Pronalazi red po PK
+     *
+     * @param $id Vrednost PK reda koji se trazi
+     * @return \App\Classes\Model
+     */
     public function find(int $id)
     {
         $sql = "SELECT * FROM {$this->table} WHERE {$this->pk} = :id LIMIT 1;";
@@ -131,8 +114,8 @@ abstract class Model
     }
 
     /**
-	 * Vraca SELECT sa navedenim kolonama
-	 */
+     * Vraca SELECT sa navedenim kolonama
+     */
     public function select(array $columns)
     {
         $cols = implode(', ', $columns);
@@ -141,8 +124,8 @@ abstract class Model
     }
 
     /**
-	 * Vraca broj redova u tabeli
-	 */
+     * Vraca broj redova u tabeli
+     */
     public function countTable()
     {
         $sql = "SELECT COUNT(*) AS table_count FROM {$this->table}";
@@ -150,11 +133,12 @@ abstract class Model
     }
 
     /**
-	 * Upisuje red u tabelu
-	 */
+     * Upisuje red u tabelu
+     */
     public function insert(array $data)
     {
-        foreach ($data as $key => $value) {
+        foreach ($data as $key => $value)
+        {
             $cols[] = $key;
             $pars[] = ':' . $key;
             $vals[] = $value;
@@ -167,11 +151,12 @@ abstract class Model
     }
 
     /**
-	 * Menja red u tabeli
-	 */
+     * Menja red u tabeli
+     */
     public function update(array $data, int $id)
     {
-        foreach ($data as $key => $value) {
+        foreach ($data as $key => $value)
+        {
             $cols[] = $key;
             $pars[] = ':' . $key;
             $vals[] = $value;
@@ -180,7 +165,8 @@ abstract class Model
         $params[":{$this->pk}"] = $id;
         $cv = array_combine($cols, $pars);
         $c = '';
-        foreach ($cv as $key => $val) {
+        foreach ($cv as $key => $val)
+        {
             $c .= ", {$key} = {$val}";
         }
         $c = ltrim($c, ', ');
@@ -189,8 +175,8 @@ abstract class Model
     }
 
     /**
-	 * Brise red u tabeli sa prosledjenim ID
-	 */
+     * Brise red u tabeli sa prosledjenim ID
+     */
     public function deleteOne(int $id)
     {
         $sql = "DELETE FROM {$this->table} WHERE {$this->pk} = :{$this->pk}";
@@ -199,8 +185,8 @@ abstract class Model
     }
 
     /**
-	 * Brise redove u tabeli na osnovu prosledjenog kriterijuma
-	 */
+     * Brise redove u tabeli na osnovu prosledjenog kriterijuma
+     */
     public function delete(array $where)
     {
         list($column, $operator, $value) = $where;
@@ -210,13 +196,13 @@ abstract class Model
     }
 
     /**
-	 * Vraca listu vrednosti iz enum ili set kolone
-	 *
-	 * Za padajuci meini (<<select>>) sa predefinisanim vrednostima kolone
-	 *
-	 * @param string $column Enum ili set kolona u tabeli
-	 * @return array|null Lista vrednosti ili NULL ako kolona nije enum ili set
-	 */
+     * Vraca listu vrednosti iz enum ili set kolone
+     *
+     * Za padajuci meini (<<select>>) sa predefinisanim vrednostima kolone
+     *
+     * @param string $column Enum ili set kolona u tabeli
+     * @return array|null Lista vrednosti ili NULL ako kolona nije enum ili set
+     */
     public function enumOrSetList($column)
     {
         $sql = "SELECT DATA_TYPE, COLUMN_TYPE
@@ -224,7 +210,8 @@ abstract class Model
 				WHERE TABLE_NAME = :tn AND COLUMN_NAME = :cn;";
         $params = [':tn' => $this->table, ':cn' => $column];
         $result = $this->fetch($sql, $params)[0];
-        if ($result->DATA_TYPE === 'enum' || $result->DATA_TYPE === 'set') {
+        if ($result->DATA_TYPE === 'enum' || $result->DATA_TYPE === 'set')
+        {
             $list = explode(
                 ",",
                 str_replace(
@@ -233,21 +220,24 @@ abstract class Model
                     substr($result->COLUMN_TYPE, 5, (strlen($result->COLUMN_TYPE) - 6))
                 )
             );
-            if (is_array($list) && !empty($list)) {
+            if (is_array($list) && !empty($list))
+            {
                 return $list;
             }
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
 
     /**
-	 * Vraca podatke i linkove za stranicu
-	 *
-	 * @param integer $page Broj stranice
-	 * @param integer $perpage Broj redova na stranici
-	 * @return array podaci + linkovi
-	 */
+     * Vraca podatke i linkove za stranicu
+     *
+     * @param integer $page Broj stranice
+     * @param integer $perpage Broj redova na stranici
+     * @return array podaci + linkovi
+     */
     public function paginate(int $page, string $sql = null, array $params = null, int $perpage = null, int $span = null)
     {
         $sql = ($sql !== null) ? $sql : "SELECT * FROM {$this->table};";
@@ -257,16 +247,17 @@ abstract class Model
     }
 
     /**
-	 * Vraca podatke za stranicu
-	 *
-	 * @param integer $page Broj stranice
-	 * @param integer $perpage Broj redova na stranici
-	 * @return array \App\Classes\Model Niz modela sa podacima
-	 */
+     * Vraca podatke za stranicu
+     *
+     * @param integer $page Broj stranice
+     * @param integer $perpage Broj redova na stranici
+     * @return array \App\Classes\Model Niz modela sa podacima
+     */
     protected function pageData(int $page, string $sql, array $params = null, int $perpage = null)
     {
         $sql = str_replace('SELECT', 'SELECT SQL_CALC_FOUND_ROWS', $sql);
-        if ($perpage === null) {
+        if ($perpage === null)
+        {
             $perpage = $this->pagination_config['per_page'];
         }
         $limit = $perpage;
@@ -278,8 +269,8 @@ abstract class Model
     }
 
     /**
-	 * Vraca broj redova poslednjeg upita bez limita
-	 */
+     * Vraca broj redova poslednjeg upita bez limita
+     */
     protected function foundRows()
     {
         $sql = "SELECT FOUND_ROWS() AS count;";
@@ -287,14 +278,15 @@ abstract class Model
     }
 
     /**
-	 * Vraca linkove i dr. za paginaciju
-	 */
+     * Vraca linkove i dr. za paginaciju
+     */
     protected function pageLinks(int $page, int $perpage = null)
     {
         $css = $this->pagination_config['css'];
         $links = [];
         $links['current_page'] = $page;
-        if ($perpage === null) {
+        if ($perpage === null)
+        {
             $perpage = $this->pagination_config['per_page'];
         }
         $links['per_page'] = $perpage;
@@ -313,15 +305,18 @@ abstract class Model
         $links['next_page'] = $next;
         $start = $page - $span;
         $end = $page + $span;
-        if ($page <= $span + 1) {
+        if ($page <= $span + 1)
+        {
             $start = 1;
             $end = $full_span;
         }
-        if ($page >= $pages - $span) {
+        if ($page >= $pages - $span)
+        {
             $start = $pages - $span * 2;
             $end = $pages;
         }
-        if ($full_span >= $pages) {
+        if ($full_span >= $pages)
+        {
             $start = 1;
             $end = $pages;
         }
@@ -336,9 +331,11 @@ abstract class Model
         $buttons = "<ul class=\"{$css['buttons_container']}\">";
         $buttons .= "<li><a class=\"{$disabled_begin}\" href=\"{$url}?page=1\" tabindex=\"-1\">1</a></li>";
         $buttons .= "<li><a class=\"{$disabled_begin}\" href=\"{$url}?page={$prev}\" tabindex=\"-1\"><span uk-icon=\"chevron-left\"></span></a></li>";
-        for ($i = $start; $i <= $end; $i++) {
+        for ($i = $start; $i <= $end; $i++)
+        {
             $current = '';
-            if ($page === $i) {
+            if ($page === $i)
+            {
                 $current = $css['button_active'] . ' ' . $css['button_disabled'];
             }
             $buttons .= "<li><a class=\"{$current}\" href=\"{$url}?page={$i}\" tabindex=\"-1\">{$i}</a></li>";
@@ -348,9 +345,11 @@ abstract class Model
         $buttons .= "</ul>";
         $links['buttons'] = $buttons;
         $goto = "<select class=\"{$css['goto']}\" name=\"pgn-goto\" id=\"pgn-goto\">";
-        for ($i = 1; $i <= $pages; $i++) {
+        for ($i = 1; $i <= $pages; $i++)
+        {
             $selected = '';
-            if ($page === $i) {
+            if ($page === $i)
+            {
                 $selected = ' selected';
             }
             $goto .= "<option value=\"{$url}?page={$i}\"{$selected}>{$i}</option>";
@@ -362,14 +361,14 @@ abstract class Model
     }
 
     /**
-	 * Vraca Model povezan kao has one
-	 *
-	 * one to one (vraca dete)
-	 *
-	 * @param string $model_class Klasa deteta
-	 * @param string $foreign_table_fk
-	 * @return \App\Classes\Model Instanca deteta
-	 */
+     * Vraca Model povezan kao has one
+     *
+     * one to one (vraca dete)
+     *
+     * @param string $model_class Klasa deteta
+     * @param string $foreign_table_fk
+     * @return \App\Classes\Model Instanca deteta
+     */
     public function hasOne($model_class, $foreign_table_fk)
     {
         $m = new $model_class();
@@ -381,14 +380,14 @@ abstract class Model
     }
 
     /**
-	 * Vraca Modele povezane kao has many
-	 *
-	 * one to many (vraca decu)
-	 *
-	 * @param string $model_class Klasa deteta
-	 * @param string $foreign_table_fk
-	 * @return array \App\Classes\Model Niz instanci dece
-	 */
+     * Vraca Modele povezane kao has many
+     *
+     * one to many (vraca decu)
+     *
+     * @param string $model_class Klasa deteta
+     * @param string $foreign_table_fk
+     * @return array \App\Classes\Model Niz instanci dece
+     */
     public function hasMany($model_class, $foreign_table_fk, $order = null)
     {
         $m = new $model_class();
@@ -401,15 +400,15 @@ abstract class Model
     }
 
     /**
-	 * Vraca Model povezan kao belongs to
-	 *
-	 * one to one (vraca roditelja)
-	 * one to many (vraca roditelja)
-	 *
-	 * @param string $model_class Klasa roditelja
-	 * @param string $this_table_fk
-	 * @return \App\Classes\Model Instanca roditelja
-	 */
+     * Vraca Model povezan kao belongs to
+     *
+     * one to one (vraca roditelja)
+     * one to many (vraca roditelja)
+     *
+     * @param string $model_class Klasa roditelja
+     * @param string $this_table_fk
+     * @return \App\Classes\Model Instanca roditelja
+     */
     public function belongsTo($model_class, $this_table_fk)
     {
         $m = new $model_class();
@@ -420,16 +419,16 @@ abstract class Model
     }
 
     /**
-	 * Vraca Modele povezane kao belongs to many
-	 *
-	 * many to many (vraca drugu stranu pivot tabele)
-	 *
-	 * @param string $model_class Klasa druge strane
-	 * @param string $pivot_table Naziv pivot tabele
-	 * @param string $pt_this_table_fk FK ove strane u pivot tabeli
-	 * @param string $pt_foreign_table_fk FK druge strane u pivot tabeli
-	 * @return array \App\Classes\Model Niz instanci druge strane
-	 */
+     * Vraca Modele povezane kao belongs to many
+     *
+     * many to many (vraca drugu stranu pivot tabele)
+     *
+     * @param string $model_class Klasa druge strane
+     * @param string $pivot_table Naziv pivot tabele
+     * @param string $pt_this_table_fk FK ove strane u pivot tabeli
+     * @param string $pt_foreign_table_fk FK druge strane u pivot tabeli
+     * @return array \App\Classes\Model Niz instanci druge strane
+     */
     public function belongsToMany($model_class, $pivot_table, $pt_this_table_fk, $pt_foreign_table_fk, $order = null)
     {
         $m = new $model_class();
@@ -443,30 +442,30 @@ abstract class Model
     }
 
     /**
-	 * Vraca naziv tabele Model-a
-	 *
-	 * @return string
-	 */
+     * Vraca naziv tabele Model-a
+     *
+     * @return string
+     */
     public function getTable()
     {
         return $this->table;
     }
 
     /**
-	 * Vraca naziv primarnog kljuca tabele Model-a
-	 *
-	 * @return string
-	 */
+     * Vraca naziv primarnog kljuca tabele Model-a
+     *
+     * @return string
+     */
     public function getPrimaryKey()
     {
         return $this->pk;
     }
 
     /**
-	 * Vraca naziv Model-a
-	 *
-	 * @return string
-	 */
+     * Vraca naziv Model-a
+     *
+     * @return string
+     */
     public function getModel()
     {
         return $this->model;
@@ -478,50 +477,50 @@ abstract class Model
     }
 
     /**
-	 * Vraca poslednji uneti ID
-	 *
-	 * @return string
-	 */
+     * Vraca poslednji uneti ID
+     *
+     * @return string
+     */
     public function getLastId()
     {
         return Db::getLastInsertedId();
     }
 
     /**
-	 * Vraca poslednji broj redova tabele
-	 *
-	 * @return integer
-	 */
+     * Vraca poslednji broj redova tabele
+     *
+     * @return integer
+     */
     public function getLastCount()
     {
         return Db::getLastRowCount();
     }
 
     /**
-	 * Vraca poslednju PDO gresku
-	 *
-	 * @return string
-	 */
+     * Vraca poslednju PDO gresku
+     *
+     * @return string
+     */
     public function getLastError()
     {
         return Db::getLastError();
     }
 
     /**
-	 * Vraca poslednji izvrseni PDO upit
-	 *
-	 * @return string
-	 */
+     * Vraca poslednji izvrseni PDO upit
+     *
+     * @return string
+     */
     public function getLastQuery()
     {
         return Db::getLastQuery();
     }
 
     /**
-	 * Vraca kolone tabele
-	 *
-	 * @return array
-	 */
+     * Vraca kolone tabele
+     *
+     * @return array
+     */
     public function getTableFields()
     {
         $sql = "SHOW COLUMNS FROM {$this->table};";
@@ -529,10 +528,10 @@ abstract class Model
     }
 
     /**
-	 * Vraca kljuceve tabele
-	 *
-	 * @return array
-	 */
+     * Vraca kljuceve tabele
+     *
+     * @return array
+     */
     public function getTableKeys()
     {
         $sql = "SHOW KEYS FROM {$this->table};";

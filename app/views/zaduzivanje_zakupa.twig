@@ -1,36 +1,40 @@
 {% extends "templates/app.twig" %}
 
 {% block naslov %}
-<h1>Zaduživanje zakupa</h1>
-<hr>
-<form action="{{ path_for('transakcije.zaduzivanje.zakup.post') }}" method="POST" class="uk-form-stacked" uk-grid>
-	{{ csrf|raw }}
-	<div class="uk-width-1-2">
-		<label for="zakup_id" class="uk-form-label">Dostupni godišnji iznosi zakupa iz cenovnika</label>
-		<div class="uk-form-controls">
-			<select name="zakup_id" id="zakup_id" class="uk-select{{ errors.zakup[0] ? ' uk-form-danger': ''}}"
-			 required>
-				{% for zakup in cene %}
-				<option value="{{ zakup.id }}"{{ old.zakup == zakup.id ? ' selected' : '' }}>
-					Početna godina zaduženja {{ zakup.datum|date('d.m.Y') }} sa iznosom zaduženja za 10 godina od: {{ zakup.zakup }}
-				</option>
-				{% endfor %}
-			</select>
+	<h1>Zaduživanje zakupa</h1>
+	<hr>
+	<form action="{{ path_for('transakcije.zaduzivanje.zakup.post') }}" method="POST" class="uk-form-stacked" uk-grid>
+		{{ csrf|raw }}
+		<div class="uk-width-1-2">
+			<label for="zakup_id" class="uk-form-label">Dostupni godišnji iznosi zakupa iz cenovnika</label>
+			<div class="uk-form-controls">
+				<select name="zakup_id" id="zakup_id" class="uk-select{{ errors.zakup[0] ? ' uk-form-danger': ''}}" required>
+					{% for zakup in cene %}
+						<option value="{{ zakup.id }}" {{ old.zakup == zakup.id ? ' selected' : '' }}>
+							Početna godina zaduženja
+							{{ zakup.datum|date('d.m.Y') }}
+							sa iznosom zaduženja za 10 godina od:
+							{{ zakup.zakup }}
+						</option>
+					{% endfor %}
+				</select>
+			</div>
+			<small class="uk-text-danger">{{ errors.zakup[0] ? :'' }}</small>
 		</div>
-		<small class="uk-text-danger">{{ errors.zakup[0] ? :'' }}</small>
-	</div>
-	<div class="uk-width-1-4 uk-flex uk-flex-bottom">
-		<div class="uk-button-group uk-width-1-1">
-			<button class="uk-button uk-button-primary uk-width-1-2">Zaduži</button>
-			<a href="{{ path_for('kartoni') }}" class="uk-button uk-button-secondary uk-width-1-2">Otkaži</a>
+		<div class="uk-width-1-4 uk-flex uk-flex-bottom">
+			<div class="uk-button-group uk-width-1-1">
+				<button class="uk-button uk-button-primary uk-width-1-2">Zaduži</button>
+				<a href="{{ path_for('kartoni') }}" class="uk-button uk-button-secondary uk-width-1-2">Otkaži</a>
+			</div>
 		</div>
-	</div>
-</form>
-<hr>
-<h2>Kartoni kojima je istekao zakup (nisu zaduženi za tekuću godinu)</h2>
-<ul>
-	{% for karton in nezaduzeni_kartoni %}
-	<li>{{ karton.id }} - {{ karton.broj() }}</li>
-	{% endfor %}
-</ul>
+	</form>
+	<hr>
+	<h2>Kartoni kojima je istekao zakup (nisu zaduženi za tekuću godinu)</h2>
+	<ul>
+		{% for karton in nezaduzeni_kartoni %}
+			<li>{{ karton.id }}
+				-
+				{{ karton.broj() }}</li>
+		{% endfor %}
+	</ul>
 {% endblock naslov %}

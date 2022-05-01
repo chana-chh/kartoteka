@@ -1,35 +1,35 @@
 {% if flash('info') %}
-<div class="uk-alert-primary" uk-alert>
-	<a class="uk-alert-close" uk-close></a>
-	{% for msg in flash('info') %}
-	<p>{{ msg }}</p>
-	{% endfor %}
-</div>
+	<div class="uk-alert-primary" uk-alert>
+		<a class="uk-alert-close" uk-close></a>
+		{% for msg in flash('info') %}
+			<p>{{ msg }}</p>
+		{% endfor %}
+	</div>
 {% endif %}
 
 {% if flash('warning') %}
-<div class="uk-alert-warning" uk-alert>
-	<a class="uk-alert-close" uk-close></a>
-	{% for msg in flash('warning') %}
-	<p>{{ msg }}</p>
-	{% endfor %}
-</div>
+	<div class="uk-alert-warning" uk-alert>
+		<a class="uk-alert-close" uk-close></a>
+		{% for msg in flash('warning') %}
+			<p>{{ msg }}</p>
+		{% endfor %}
+	</div>
 {% endif %}
 
 {% if flash('success') %}
-<div class="uk-alert-success" uk-alert>
-	<a class="uk-alert-close" uk-close></a>
-	{% for msg in flash('success') %}
-	<p>{{ msg }}</p>
-	{% endfor %}
-</div>
+	<div class="uk-alert-success" uk-alert>
+		<a class="uk-alert-close" uk-close></a>
+		{% for msg in flash('success') %}
+			<p>{{ msg }}</p>
+		{% endfor %}
+	</div>
 {% endif %}
 
 {% if flash('danger') %}
-<div class="uk-alert-danger" uk-alert>
-	<a class="uk-alert-close" uk-close></a>
-	{% for msg in flash('danger') %}
-	<p>{{ msg }}</p>
-	{% endfor %}
-</div>
+	<div class="uk-alert-danger" uk-alert>
+		<a class="uk-alert-close" uk-close></a>
+		{% for msg in flash('danger') %}
+			<p>{{ msg }}</p>
+		{% endfor %}
+	</div>
 {% endif %}

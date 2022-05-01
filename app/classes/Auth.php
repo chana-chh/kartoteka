@@ -9,6 +9,7 @@
  * @author ChaSha
  * @copyright Copyright (c) 2019, ChaSha
  */
+
 namespace App\Classes;
 
 use App\Models\Korisnik;
@@ -50,10 +51,12 @@ class Auth
 	public function login($username, $password)
 	{
 		$user = $this->model->findByUsername($username);
-		if (!$user) {
+		if (!$user)
+		{
 			return false;
 		}
-		if ($this->checkPassword($password, $user->lozinka)) {
+		if ($this->checkPassword($password, $user->lozinka))
+		{
 			$_SESSION['user'] = $user->id;
 			return true;
 		}
@@ -77,7 +80,8 @@ class Auth
 	 */
 	public function user()
 	{
-		if (isset($_SESSION['user'])) {
+		if (isset($_SESSION['user']))
+		{
 			return $this->model->find((int)$_SESSION['user']);
 		}
 		return null;
@@ -100,5 +104,4 @@ class Auth
 	{
 		return password_verify($password, $hash);
 	}
-
 }

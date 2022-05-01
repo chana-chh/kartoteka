@@ -22,12 +22,14 @@ $app->get('/uputstvo-pokojnici', '\App\Controllers\HomeController:getHelpPokojni
 $app->get('/uputstvo-administracija', '\App\Controllers\HomeController:getHelpAdmin')->setName('uputstvo.admin');
 $app->get('/uputstvo-transakcije', '\App\Controllers\HomeController:getHelpTransakcije')->setName('uputstvo.transakcije');
 
-$app->group('', function () {
+$app->group('', function ()
+{
     $this->get('/prijava', '\App\Controllers\AuthController:getPrijava')->setName('prijava');
     $this->post('/prijava', '\App\Controllers\AuthController:postPrijava');
 })->add(new GuestMiddleware($container));
 
-$app->group('', function () {
+$app->group('', function ()
+{
     // Odjava
     $this->get('/odjava', '\App\Controllers\AuthController:getOdjava')->setName('odjava');
     // Kartoni
@@ -127,17 +129,13 @@ $app->group('', function () {
     // Transakcije
     $this->get('/transakcije/zaduzivanje', '\App\Controllers\TransakcijeController:getZaduzivanje')->setName('transakcije.zaduzivanje');
     $this->post('/transakcije/zaduzivanje', '\App\Controllers\TransakcijeController:postZaduzivanje')->setName('transakcije.zaduzivanje.post');
-    // $this->get('/transakcije/zaduzivanje/takse', '\App\Controllers\TransakcijeController:getZaduzivanjeTakse')->setName('transakcije.zaduzivanje.takse');
-    // $this->post('/transakcije/zaduzivanje/takse', '\App\Controllers\TransakcijeController:postZaduzivanjeTakse')->setName('transakcije.zaduzivanje.takse.post');
-    // $this->get('/transakcije/zaduzivanje/zakup', '\App\Controllers\TransakcijeController:getZaduzivanjeZakup')->setName('transakcije.zaduzivanje.zakup');
-    // $this->post('/transakcije/zaduzivanje/zakup', '\App\Controllers\TransakcijeController:postZaduzivanjeZakup')->setName('transakcije.zaduzivanje.zakup.post');
     $this->get('/transakcije/opomene', '\App\Controllers\TransakcijeController:getOpomene')->setName('transakcije.opomene');
     $this->post('/transakcije/zaduzivanje/brisanje', '\App\Controllers\TransakcijeController:postZaduzenjeBrisanje')->setName('transakcije.zaduzivanje.brisanje');
     $this->post('/transakcije/sve/brisanje', '\App\Controllers\TransakcijeController:postSveBrisanje')->setName('sve.brisanje');
     $this->get('/transakcije/pregled/straoc/{id}[/{z}]', '\App\Controllers\TransakcijeController:getKartonPregled')->setName('transakcije.pregled');
     $this->get('/transakcije/pregled/stampa/staraoc/{id}', '\App\Controllers\TransakcijeController:getKartonPregledStampa')->setName('transakcije.pregled.stampa'); // stampa
     $this->get('/transakcije/karton/{id}', '\App\Controllers\TransakcijeController:getKartonRazduzivanje')->setName('transakcije.razduzivanje'); // razduzivanje
-    $this->post('/transakcije/uplata', '\App\Controllers\TransakcijeController:postUplata')->setName('transakcije.uplata'); // post razduzivanje
+    $this->post('/transakcije/uplata', '\App\Controllers\TransakcijeController:postUplata')->setName('transakcije.uplata');
     // Reprogrami
     $this->get('/transakcije/reprogrami/staraoc/{id}', '\App\Controllers\ReprogramiController:getKartonReprogrami')->setName('transakcije.reprogrami'); // reprogram
     $this->get('/transakcije/reprogram/{id}', '\App\Controllers\ReprogramiController:getReprogram')->setName('transakcije.reprogram');

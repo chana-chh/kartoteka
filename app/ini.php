@@ -1,16 +1,5 @@
 <?php
 
-/**
- * ChaSha - Application initialization
- *
- * Definisanje globalnih promenjivih. Ukljucivanje potrebnih fajlova.
- * Instanciranje aplikacije. Podesavanje PHP-a
- *
- * @version v 0.0.1
- * @author ChaSha
- * @copyright Copyright (c) 2019, ChaSha
- */
-
 define('APP_NAME', 'ChaSha');
 
 define('DS', DIRECTORY_SEPARATOR);
@@ -56,7 +45,8 @@ ini_set('file_uploads', 0);
 ini_set('upload_max_filesize', '2M');
 ini_set('upload_tmp_dir', DIR . DS . 'app' . DS . 'tmp');
 
-if (in_array('sha512', hash_algos())) {
+if (in_array('sha512', hash_algos()))
+{
     ini_set('session.hash_function', 'sha512');
 }
 ini_set('session.hash_bits_per_character', 5);
@@ -69,10 +59,12 @@ session_start();
 // Session expiration time in minutes
 $sess_expire = 30;
 
-if (isset($_SESSION['LAST_ACTION'])) {
+if (isset($_SESSION['LAST_ACTION']))
+{
     $sec = time() - $_SESSION['LAST_ACTION'];
     $expire = $sess_expire * 60;
-    if ($sec >= $expire) {
+    if ($sec >= $expire)
+    {
         session_unset();
         session_destroy();
     }

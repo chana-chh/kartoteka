@@ -1,14 +1,5 @@
 <?php
 
-/**
- * Klasa za cuvanje podesavanja i
- * Slim\Container-a (zbog lakseg pristupa)
- *
- * @version v 0.0.1
- * @author ChaSha
- * @copyright Copyright (c) 2019, ChaSha
- */
-
 namespace App\Classes;
 
 use \Exception;
@@ -73,7 +64,8 @@ final class Config
      */
     public static function instance($container)
     {
-        if (!isset(static::$instance)) {
+        if (!isset(static::$instance))
+        {
             static::$instance = new static($container);
         }
         return static::$instance;
@@ -89,11 +81,14 @@ final class Config
         static::$container = $container;
     }
     private function __clone()
-    { }
+    {
+    }
     private function __sleep()
-    { }
+    {
+    }
     private function __wakeup()
-    { }
+    {
+    }
 
     /**
      * Vraca ceo kontejner ili instancu iz kontejnera
@@ -103,10 +98,12 @@ final class Config
      */
     public static function getContainer($instance_name = null)
     {
-        if ($instance_name === null) {
+        if ($instance_name === null)
+        {
             return static::$container;
         }
-        if (isset(static::$container[$instance_name])) {
+        if (isset(static::$container[$instance_name]))
+        {
             return static::$container[$instance_name];
         }
         throw new Exception("U kontejneru ne postoji instanca {$instance_name}");
@@ -124,25 +121,33 @@ final class Config
      */
     public static function get(string $key = null, $default = null)
     {
-        if ($key === null) {
+        if ($key === null)
+        {
             return static::$config;
         }
-        if (!is_string($key) || empty($key)) {
+        if (!is_string($key) || empty($key))
+        {
             throw new Exception("Naziv konfiguracije nije ispravan");
         }
         $data = static::$config;
-        if (strpos($key, '.') !== false) {
+        if (strpos($key, '.') !== false)
+        {
             $keys = explode('.', $key);
-            foreach ($keys as $k) {
-                if (!isset($data[$k])) {
+            foreach ($keys as $k)
+            {
+                if (!isset($data[$k]))
+                {
                     return $default;
                 }
-                if (!is_array($data)) {
+                if (!is_array($data))
+                {
                     return $default;
                 }
                 $data = $data[$k];
             }
-        } else {
+        }
+        else
+        {
             return isset($data[$key]) ? $data[$key] : $default;
         }
         return $data === null ? $default : $data;

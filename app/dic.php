@@ -1,56 +1,39 @@
 <?php
 
-/**
- * ChaSha - Slim dependency container
- *
- * Postavljanje instanci klasa u DC radi kasnijeg koriscenja
- *
- * @version v 0.0.1
- * @author ChaSha
- * @copyright Copyright (c) 2019, ChaSha
- */
-
-/**
- * App dependency container
- * @var array $container
- */
 $container = $app->getContainer();
 
-// Monolog instance - logger
-// $container['logger'] = function ($container) {
-//     $conf = $container['settings']['logger'];
-//     $logger = new \Monolog\Logger($conf['name']);
-//     $file_handler = new \Monolog\Handler\StreamHandler($conf['file']);
-//     $logger->pushHandler($file_handler);
-//     return $logger;
-// };
-
 // CSRF protection instance - csrf
-$container['csrf'] = function ($container) {
+$container['csrf'] = function ($container)
+{
     return new \Slim\Csrf\Guard;
 };
 
 // Validation instance - validator
-$container['validator'] = function ($container) {
+$container['validator'] = function ($container)
+{
     return new \App\Classes\Validator();
 };
 
 // Authorization instance - auth
-$container['auth'] = function ($container) {
+$container['auth'] = function ($container)
+{
     return new \App\Classes\Auth(new \App\Models\Korisnik());
 };
 
-$container['logger'] = function ($container) {
+$container['logger'] = function ($container)
+{
     return new \App\Classes\Logger($container->auth->user());
 };
 
 // Flash messages instance - flash
-$container['flash'] = function () {
+$container['flash'] = function ()
+{
     return new \Slim\Flash\Messages;
 };
 
 // Twig view instance - view
-$container['view'] = function ($container) {
+$container['view'] = function ($container)
+{
     $conf = $container['settings']['renderer'];
     $view = new \Slim\Views\Twig($conf['template_path'], ['cache' => $conf['cache_path'], 'debug' => true]);
     $router = $container->router;

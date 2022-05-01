@@ -1,22 +1,7 @@
 <?php
 
-/**
- * QueryBuilder za MySQL
- *
- * Svaki upit mora da pocne sa select(), insert(), update() ili delete()
- *
- * @version v 0.0.1
- * @author ChaSha
- * @copyright Copyright (c) 2019, ChaSha
- */
-
 namespace App\Classes;
 
-/**
- * QueryBuilder za MySQL
- *
- * @author ChaSha
- */
 class QueryBuilder
 {
 
@@ -160,7 +145,8 @@ class QueryBuilder
 	 */
 	public function select(array $columns = [])
 	{
-		if ($this->type) {
+		if ($this->type)
+		{
 			throw new \Exception('Vec je zapocet neki drugi tip upita!');
 		}
 		$this->type = $this::SELECT;
@@ -180,7 +166,8 @@ class QueryBuilder
 	 */
 	public function addSelect(array $columns)
 	{
-		if ($this->type !== $this::SELECT) {
+		if ($this->type !== $this::SELECT)
+		{
 			throw new \Exception('Nije zapocet SELECT tip upita!');
 		}
 		$columns = array_map('trim', $columns);
@@ -200,7 +187,8 @@ class QueryBuilder
 	 */
 	public function insert(array $columns)
 	{
-		if ($this->type) {
+		if ($this->type)
+		{
 			throw new \Exception('Vec je zapocet neki drugi tip upita!');
 		}
 		$this->type = $this::INSERT;
@@ -209,7 +197,8 @@ class QueryBuilder
 		$columns = array_combine($keys, $values);
 		$cols = [];
 		$pars = [];
-		foreach ($columns as $k => $v) {
+		foreach ($columns as $k => $v)
+		{
 			$cols[] = $k;
 			$pars[] = $v;
 		}
@@ -228,7 +217,8 @@ class QueryBuilder
 	 */
 	public function update(array $columns)
 	{
-		if ($this->type) {
+		if ($this->type)
+		{
 			throw new \Exception('Vec je zapocet neki drugi tip upita!');
 		}
 		$this->type = $this::UPDATE;
@@ -238,7 +228,8 @@ class QueryBuilder
 		$columns = array_combine($keys, $values);
 		$cols = [];
 		$pars = [];
-		foreach ($columns as $k => $v) {
+		foreach ($columns as $k => $v)
+		{
 			$cols[] = $k;
 			$pars[] = $v;
 		}
@@ -259,11 +250,13 @@ class QueryBuilder
 	 */
 	public function delete(int $id = null)
 	{
-		if ($this->type) {
+		if ($this->type)
+		{
 			throw new \Exception('Vec je zapocet neki drugi tip upita!');
 		}
 		$this->type = $this::DELETE;
-		if ($id !== null) {
+		if ($id !== null)
+		{
 			$this->addWhere($this->pk, '=', $id, 'AND');
 			return;
 		}
@@ -280,7 +273,8 @@ class QueryBuilder
 	 */
 	public function distinct()
 	{
-		if ($this->type !== $this::SELECT) {
+		if ($this->type !== $this::SELECT)
+		{
 			throw new \Exception('DISTINCT moze samo uz SELECT tip upita!');
 		}
 		$this->distinct = true;
@@ -297,7 +291,8 @@ class QueryBuilder
 	 */
 	public function calcFoundRows()
 	{
-		if ($this->type !== $this::SELECT) {
+		if ($this->type !== $this::SELECT)
+		{
 			throw new \Exception('SQL_CALC_FOUND_ROWS moze samo uz SELECT tip upita!');
 		}
 		$this->sql_calc_foun_rows = true;
@@ -317,7 +312,8 @@ class QueryBuilder
 	 */
 	public function join($join_table, $this_table_key, $join_table_key)
 	{
-		if ($this->type !== $this::SELECT) {
+		if ($this->type !== $this::SELECT)
+		{
 			throw new \Exception('JOIN moze samo uz SELECT tip upita!');
 		}
 		$join_table = trim($join_table);
@@ -341,7 +337,8 @@ class QueryBuilder
 	 */
 	public function leftJoin($join_table, $this_table_key, $join_table_key)
 	{
-		if ($this->type !== $this::SELECT) {
+		if ($this->type !== $this::SELECT)
+		{
 			throw new \Exception('JOIN moze samo uz SELECT tip upita!');
 		}
 		$join_table = trim($join_table);
@@ -365,7 +362,8 @@ class QueryBuilder
 	 */
 	public function rightJoin($join_table, $this_table_key, $join_table_key)
 	{
-		if ($this->type !== $this::SELECT) {
+		if ($this->type !== $this::SELECT)
+		{
 			throw new \Exception('JOIN moze samo uz SELECT tip upita!');
 		}
 		$join_table = trim($join_table);
@@ -389,7 +387,8 @@ class QueryBuilder
 	 */
 	public function fullJoin($join_table, $this_table_key, $join_table_key)
 	{
-		if ($this->type !== $this::SELECT) {
+		if ($this->type !== $this::SELECT)
+		{
 			throw new \Exception('JOIN moze samo uz SELECT tip upita!');
 		}
 		$join_table = trim($join_table);
@@ -415,16 +414,20 @@ class QueryBuilder
 	protected function addWhere(string $column, string $operator, $value, string $bool = 'AND')
 	{
 		$operator = mb_strtoupper($operator);
-		if (!$this->wheres && $bool === 'OR') {
+		if (!$this->wheres && $bool === 'OR')
+		{
 			throw new \Exception("Prvi WHERE ne moze da bude OR!");
 		}
-		if (!in_array($operator, $this->operators)) {
+		if (!in_array($operator, $this->operators))
+		{
 			throw new \Exception("Nedozvoljeni operator [{$operator}]!");
 		}
-		if ($operator === 'IN' || $operator === 'NOT IN') {
+		if ($operator === 'IN' || $operator === 'NOT IN')
+		{
 			$p = count($value);
 			$in = "";
-			foreach ($value as $k => $v) {
+			foreach ($value as $k => $v)
+			{
 				$in .= "?, ";
 				$this->parameters[] = $v;
 			}
@@ -432,7 +435,8 @@ class QueryBuilder
 			$this->wheres[] = " {$bool} {$column} {$operator} ({$in})";
 			return;
 		}
-		if ($operator === 'BETWEEN' || $operator === 'NOT BETWEEN') {
+		if ($operator === 'BETWEEN' || $operator === 'NOT BETWEEN')
+		{
 			$this->wheres[] = " {$bool} {$column} {$operator} ? AND ?";
 			$this->parameters[] = $value[0];
 			$this->parameters[] = $value[1];
@@ -453,10 +457,12 @@ class QueryBuilder
 	 */
 	public function where(array $wheres)
 	{
-		if ($this->type === $this::INSERT) {
+		if ($this->type === $this::INSERT)
+		{
 			throw new \Exception('WHERE ne moze uz INSERT tip upita!');
 		}
-		foreach ($wheres as $where) {
+		foreach ($wheres as $where)
+		{
 			$this->addWhere($where[0], $where[1], $where[2]);
 		}
 		return $this;
@@ -473,10 +479,12 @@ class QueryBuilder
 	 */
 	public function orWhere(array $wheres)
 	{
-		if ($this->type === $this::INSERT) {
+		if ($this->type === $this::INSERT)
+		{
 			throw new \Exception('WHERE ne moze uz INSERT tip upita!');
 		}
-		foreach ($wheres as $where) {
+		foreach ($wheres as $where)
+		{
 			$this->addWhere($where[0], $where[1], $where[2], 'OR');
 		}
 		return $this;
@@ -493,7 +501,8 @@ class QueryBuilder
 	 */
 	public function groupBy(array $groups)
 	{
-		if ($this->type !== $this::SELECT) {
+		if ($this->type !== $this::SELECT)
+		{
 			throw new \Exception('GROUP BY moze samo uz SELECT tip upita!');
 		}
 		$this->groups = array_map('trim', $groups);
@@ -512,16 +521,20 @@ class QueryBuilder
 	protected function addHaving(string $column, string $operator, $value, string $bool = 'AND')
 	{
 		$operator = mb_strtoupper($operator);
-		if (!$this->havings && $bool === 'OR') {
+		if (!$this->havings && $bool === 'OR')
+		{
 			throw new \Exception("Prvi HAVING ne moze da bude OR!");
 		}
-		if (!in_array($operator, $this->operators)) {
+		if (!in_array($operator, $this->operators))
+		{
 			throw new \Exception("Nepostojeci operator [{$operator}]!");
 		}
-		if ($operator === 'IN' || $operator === 'NOT IN') {
+		if ($operator === 'IN' || $operator === 'NOT IN')
+		{
 			$p = count($value);
 			$in = "";
-			foreach ($value as $k => $v) {
+			foreach ($value as $k => $v)
+			{
 				$in .= "?, ";
 				$this->parameters[] = $v;
 			}
@@ -529,7 +542,8 @@ class QueryBuilder
 			$this->havings[] = " {$bool} {$column} {$operator} ({$in})";
 			return;
 		}
-		if ($operator === 'BETWEEN' || $operator === 'NOT BETWEEN') {
+		if ($operator === 'BETWEEN' || $operator === 'NOT BETWEEN')
+		{
 			$this->havings[] = " {$bool} {$column} {$operator} ? AND ?";
 			$this->parameters[] = $value[0];
 			$this->parameters[] = $value[1];
@@ -550,10 +564,12 @@ class QueryBuilder
 	 */
 	public function having(array $havings)
 	{
-		if ($this->type !== $this::SELECT) {
+		if ($this->type !== $this::SELECT)
+		{
 			throw new \Exception('HAVING moze samo uz SELECT tip upita!');
 		}
-		foreach ($havings as $having) {
+		foreach ($havings as $having)
+		{
 			$this->addHaving($having[0], $having[1], $having[2]);
 		}
 		return $this;
@@ -570,10 +586,12 @@ class QueryBuilder
 	 */
 	public function orHaving(array $havings)
 	{
-		if ($this->type !== $this::SELECT) {
+		if ($this->type !== $this::SELECT)
+		{
 			throw new \Exception('HAVING moze samo uz SELECT tip upita!');
 		}
-		foreach ($havings as $having) {
+		foreach ($havings as $having)
+		{
 			$this->addHaving($having[0], $having[1], $having[2], 'OR');
 		}
 		return $this;
@@ -590,7 +608,8 @@ class QueryBuilder
 	 */
 	public function orderBy(array $orders)
 	{
-		if ($this->type === $this::INSERT) {
+		if ($this->type === $this::INSERT)
+		{
 			throw new \Exception('ORDER BY ne moze uz INSERT tip upita!');
 		}
 		$this->orders = array_map('trim', $orders);
@@ -608,7 +627,8 @@ class QueryBuilder
 	 */
 	public function limit(int $limit)
 	{
-		if ($this->type === $this::INSERT) {
+		if ($this->type === $this::INSERT)
+		{
 			throw new \Exception('LIMIT ne moze uz INSERT tip upita!');
 		}
 		$this->limit = $limit;
@@ -627,7 +647,8 @@ class QueryBuilder
 	 */
 	public function offset(int $offset)
 	{
-		if ($this->type !== $this::SELECT) {
+		if ($this->type !== $this::SELECT)
+		{
 			throw new \Exception('OFFSET moze samo uz SELECT tip upita!');
 		}
 		$this->offset = $offset;
@@ -643,10 +664,12 @@ class QueryBuilder
 	protected function compileSelect()
 	{
 		$sql = "SELECT ";
-		if ($this->distinct) {
+		if ($this->distinct)
+		{
 			$sql .= "DISTINCT ";
 		}
-		if ($this->sql_calc_foun_rows) {
+		if ($this->sql_calc_foun_rows)
+		{
 			$sql .= "SQL_CALC_FOUND_ROWS ";
 		}
 		$columns = $this->columns ? implode(', ', $this->columns) : '*';
@@ -686,13 +709,15 @@ class QueryBuilder
 	 */
 	protected function compileUpdate()
 	{
-		if (!$this->wheres && !$this->limit) {
+		if (!$this->wheres && !$this->limit)
+		{
 			throw new \Exception('Nije dozvoljeno menjanje cele tabele!');
 		}
 		$sql = "UPDATE {$this->table} SET ";
 		$pairs = [];
 		$keys = array_keys($this->parameters);
-		foreach ($this->columns as $col) {
+		foreach ($this->columns as $col)
+		{
 			$pairs[] = "{$col} = ?";
 		}
 		$set = implode(', ', $pairs);
@@ -712,7 +737,8 @@ class QueryBuilder
 	 */
 	protected function compileDelete()
 	{
-		if ($this->compileWheres() === '' && $this->compileLimit() === '') {
+		if ($this->compileWheres() === '' && $this->compileLimit() === '')
+		{
 			throw new \Exception('Nije dozvoljeno brisanje cele tabele!');
 		}
 		$sql = "DELETE FROM {$this->table}";
@@ -730,7 +756,8 @@ class QueryBuilder
 	 */
 	protected function compileJoins()
 	{
-		if (!$this->joins) {
+		if (!$this->joins)
+		{
 			return '';
 		}
 		$joins = implode('', $this->joins);
@@ -744,7 +771,8 @@ class QueryBuilder
 	 */
 	protected function compileWheres()
 	{
-		if (!$this->wheres) {
+		if (!$this->wheres)
+		{
 			return '';
 		}
 		$wheres = (array)$this->wheres;
@@ -763,7 +791,8 @@ class QueryBuilder
 	 */
 	protected function compileGroups()
 	{
-		if (!$this->groups) {
+		if (!$this->groups)
+		{
 			return '';
 		}
 		$groups = implode(', ', $this->groups);
@@ -778,7 +807,8 @@ class QueryBuilder
 	 */
 	protected function compileHavings()
 	{
-		if (!$this->havings) {
+		if (!$this->havings)
+		{
 			return '';
 		}
 		$havings = (array)$this->havings;
@@ -797,7 +827,8 @@ class QueryBuilder
 	 */
 	protected function compileOrders()
 	{
-		if (!$this->orders) {
+		if (!$this->orders)
+		{
 			return '';
 		}
 		$orders = implode(', ', $this->orders);
@@ -812,7 +843,8 @@ class QueryBuilder
 	 */
 	protected function compileLimit()
 	{
-		if (!$this->limit) {
+		if (!$this->limit)
+		{
 			return '';
 		}
 		return " LIMIT ?";
@@ -825,7 +857,8 @@ class QueryBuilder
 	 */
 	protected function compileOffset()
 	{
-		if (!$this->offset) {
+		if (!$this->offset)
+		{
 			return '';
 		}
 		return " OFFSET ?";
@@ -839,7 +872,8 @@ class QueryBuilder
 	protected function compileSQL()
 	{
 		$sql = "";
-		switch ($this->type) {
+		switch ($this->type)
+		{
 			case $this::SELECT:
 				$sql = $this->compileSelect();
 				break;
@@ -915,10 +949,12 @@ class QueryBuilder
 	 */
 	public function getParams()
 	{
-		if ($this->parameters && array_key_exists(0, $this->parameters)) {
+		if ($this->parameters && array_key_exists(0, $this->parameters))
+		{
 			$params = $this->parameters;
 			$this->parameters = [];
-			foreach ($params as $k => $v) {
+			foreach ($params as $k => $v)
+			{
 				$this->parameters[$k + 1] = $v;
 			}
 		}

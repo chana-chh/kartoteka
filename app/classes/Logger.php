@@ -23,11 +23,15 @@ class Logger
     public function log($tip, $model, $polje, $model_stari = null)
     {
         $tekst = '';
-        if (is_array($polje)) {
-            foreach ($polje as $p) {
+        if (is_array($polje))
+        {
+            foreach ($polje as $p)
+            {
                 $tekst .= "{$p}: {$model->$p}, ";
             }
-        } else {
+        }
+        else
+        {
             $tekst = "{$polje}: {$model->$polje}";
         }
 
@@ -39,6 +43,5 @@ class Logger
         ];
 
         $this->model->insert($data);
-        
     }
 }

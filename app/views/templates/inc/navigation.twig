@@ -35,31 +35,46 @@
 				</a>
 			</li>
 			{% if auth.logged and auth.user.nivo == 0 %}
-			<li>
-				<a href="">
-					<span uk-icon="settings" class="uk-margin-small-right"></span>
-					Administracija
-					<span uk-icon="chevron-down"></span>
-				</a>
-				<div class="uk-navbar-dropdown">
-					<ul class="uk-nav uk-navbar-dropdown-nav">
-						<li><a href="{{ path_for('korisnici') }}">Korisnici</a></li>
-						<li><a href="{{ path_for('logovi') }}">Logovi</a></li>
-						<li class="uk-nav-divider"></li>
-						<li><a href="{{ path_for('groblja') }}">Groblja</a></li>
-						<li><a href="{{ path_for('mape') }}">Mape</a></li>
-						<li class="uk-nav-divider"></li>
-						<li><a href="{{ path_for('cene') }}">Cene taksi i zakupa</a></li>
-						<li class="uk-nav-divider"></li>
-						<li><a href="{{ path_for('statistika') }}">Statistika</a></li>
-						<li class="uk-nav-divider"></li>
-						<li><a href="{{ path_for('transakcije.zaduzivanje') }}">Zaduživanje kartona</a></li>
-						{# <li><a href="{{ path_for('transakcije.zaduzivanje.zakup') }}">Masovno zaduživanje zakupa</a></li> #}
-						<li class="uk-nav-divider"></li>
-						<li><a href="{{ path_for('transakcije.opomene') }}" target="_blank">Štampanje opomena</a></li>
-					</ul>
-				</div>
-			</li>
+				<li>
+					<a href="">
+						<span uk-icon="settings" class="uk-margin-small-right"></span>
+						Administracija
+						<span uk-icon="chevron-down"></span>
+					</a>
+					<div class="uk-navbar-dropdown">
+						<ul class="uk-nav uk-navbar-dropdown-nav">
+							<li>
+								<a href="{{ path_for('korisnici') }}">Korisnici</a>
+							</li>
+							<li>
+								<a href="{{ path_for('logovi') }}">Logovi</a>
+							</li>
+							<li class="uk-nav-divider"></li>
+							<li>
+								<a href="{{ path_for('groblja') }}">Groblja</a>
+							</li>
+							<li>
+								<a href="{{ path_for('mape') }}">Mape</a>
+							</li>
+							<li class="uk-nav-divider"></li>
+							<li>
+								<a href="{{ path_for('cene') }}">Cene taksi i zakupa</a>
+							</li>
+							<li class="uk-nav-divider"></li>
+							<li>
+								<a href="{{ path_for('statistika') }}">Statistika</a>
+							</li>
+							<li class="uk-nav-divider"></li>
+							<li>
+								<a href="{{ path_for('transakcije.zaduzivanje') }}">Zaduživanje kartona</a>
+							</li>
+							<li class="uk-nav-divider"></li>
+							<li>
+								<a href="{{ path_for('transakcije.opomene') }}" target="_blank">Štampanje opomena</a>
+							</li>
+						</ul>
+					</div>
+				</li>
 			{% endif %}
 			<li>
 				<a href="">
@@ -69,27 +84,31 @@
 				</a>
 				<div class="uk-navbar-dropdown">
 					<ul class="uk-nav uk-navbar-dropdown-nav">
-						<li><a href="{{ path_for('uputstvo') }}">Uputstvo za korišćenje programa</a></li>
+						<li>
+							<a href="{{ path_for('uputstvo') }}">Uputstvo za korišćenje programa</a>
+						</li>
 						<li class="uk-nav-divider"></li>
-						<li><a href="{{ path_for('o_programu') }}">O programu</a></li>
+						<li>
+							<a href="{{ path_for('o_programu') }}">O programu</a>
+						</li>
 					</ul>
 				</div>
 			</li>
 
 			{% if auth.logged %}
-			<li>
-				<a href="{{ path_for('odjava') }}">
-					<span uk-icon="sign-out" class="uk-margin-small-right"></span>
-					Odjava
-				</a>
-			</li>
+				<li>
+					<a href="{{ path_for('odjava') }}">
+						<span uk-icon="sign-out" class="uk-margin-small-right"></span>
+						Odjava
+					</a>
+				</li>
 			{% else %}
-			<li>
-				<a href="{{ path_for('prijava') }}">
-					<span uk-icon="sign-in" class="uk-margin-small-right"></span>
-					Prijava
-				</a>
-			</li>
+				<li>
+					<a href="{{ path_for('prijava') }}">
+						<span uk-icon="sign-in" class="uk-margin-small-right"></span>
+						Prijava
+					</a>
+				</li>
 			{% endif %}
 		</ul>
 	</div>

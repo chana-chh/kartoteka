@@ -18,7 +18,7 @@ class TransakcijeController extends Controller
         $staraoc_id = $args['id'];
         $zaduzenost = isset($args['z']) ? (int) $args['z'] : 0;
 
-        if($zaduzenost < 0 | $zaduzenost > 2)
+        if ($zaduzenost < 0 | $zaduzenost > 2)
         {
             $zaduzenost = 0;
         }
@@ -35,7 +35,7 @@ class TransakcijeController extends Controller
         // od toga napraviti izvestaj
         // istu foru koristiti kod razduzivanja viska para
         $visak = [];
-        if($staraoc->privremeni_saldo > 0)
+        if ($staraoc->privremeni_saldo > 0)
         {
             // sva nerazduzena zaduzenja
             $zaduzenja = $staraoc->zaduzenaZaduzenja();
@@ -67,7 +67,7 @@ class TransakcijeController extends Controller
                 $iznos = $ostatak;
                 $razlika = (float) $ostatak - $zad->zaRazduzenje();
 
-                if($razlika < 0)
+                if ($razlika < 0)
                 {
                     $deo = $iznos;
                     $vrsta = $zad->tip;
@@ -77,13 +77,13 @@ class TransakcijeController extends Controller
                 }
                 else
                 {
-                    if($zad->tip === 'taksa')
+                    if ($zad->tip === 'taksa')
                     {
                         $br_taksi++;
                         $godine_taksi .= ', ' . $zad->godina;
                         $ostatak = $razlika;
                     }
-                    elseif($zad->tip === 'zakup')
+                    elseif ($zad->tip === 'zakup')
                     {
                         $br_zakupa++;
                         $godine_zakupa .= ', ' . $zad->godina;
@@ -91,14 +91,14 @@ class TransakcijeController extends Controller
                     }
                 }
             }
-            
+
             // dovde je za stare dugove
 
 
             // ako postoji ostatak dodaju se nova zaduzenja taksa, zakup, taksa, zakup
             // dok se ne potrosi ostatak
 
-            if($ostatak > 0)
+            if ($ostatak > 0)
             {
                 // za nova zaduzenja koja ne postoje
 
@@ -134,7 +134,7 @@ class TransakcijeController extends Controller
                 {
                     $iznos = $ostatak;
 
-                    if($radi_taksu)
+                    if ($radi_taksu)
                     {
                         $razlika = (float) $ostatak - $staraoc->taksaZaGodinu();
                     }
@@ -142,13 +142,12 @@ class TransakcijeController extends Controller
                     {
                         $razlika = (float) $ostatak - $staraoc->zakupZaGodinu();
                     }
-                    
 
-                    if($razlika < 0)
+                    if ($razlika < 0)
                     {
                         $n_deo = $iznos;
 
-                        if($radi_taksu)
+                        if ($radi_taksu)
                         {
                             $n_vrsta = 'taksa';
                             $n_godina = $godina_za_taksu;
@@ -163,7 +162,7 @@ class TransakcijeController extends Controller
                     }
                     else
                     {
-                        if($radi_taksu)
+                        if ($radi_taksu)
                         {
                             $n_br_taksi++;
                             $n_godine_taksi .= ', ' . $godina_za_taksu;
@@ -180,7 +179,6 @@ class TransakcijeController extends Controller
                     }
                     $radi_taksu = $godina_za_taksu <= $godina_za_zakup ? true : false;
                 } while ($ostatak > 0);
-                
             }
 
             $visak = [
@@ -218,7 +216,7 @@ class TransakcijeController extends Controller
         $staraoc = (new Staraoc())->find($id);
 
         $cene = new Cena();
-        
+
         $this->render($response, 'transakcije_razduzivanje.twig', compact('staraoc', 'cene'));
     }
 
@@ -306,7 +304,7 @@ class TransakcijeController extends Controller
                 ':datum_zaduzenja' => date('Y-m-d'),
                 ':korisnik_id_zaduzio' => $this->auth->user()->id,
             ];
-            
+
             $kartoni = $model_karton->sviAktivni();
             $pdo = $model_karton->getDb()->getPDO();
             $sql = "INSERT INTO `zaduzenja` (karton_id, staraoc_id, tip, iznos_zaduzeno, iznos_razduzeno, godina, razduzeno, datum_zaduzenja, korisnik_id_zaduzio)
@@ -320,7 +318,7 @@ class TransakcijeController extends Controller
                 $staraoci = $karton->aktivniStaraoci();
                 $br_mesta = $karton->broj_mesta;
                 $br_staraoca = count($staraoci);
-                
+
                 foreach ($staraoci as $staraoc)
                 {
                     // proveriti da li je zaduzen taksom
@@ -333,7 +331,7 @@ class TransakcijeController extends Controller
                     {
                         // odrediti taksu
                         $iznos_takse = (float) ($taksa * $br_mesta / $br_staraoca);
-                        
+
                         $podaci[':karton_id'] = $karton->id;
                         $podaci[':staraoc_id'] = $staraoc->id;
                         $podaci[':tip'] = 'taksa';
@@ -360,7 +358,7 @@ class TransakcijeController extends Controller
 
                         $stmt->execute($podaci);
                     }
-                }                
+                }
             }
 
             $pdo->commit();
@@ -369,12 +367,12 @@ class TransakcijeController extends Controller
             return $response->withRedirect($this->router->pathFor('transakcije.zaduzivanje'));
         }
     }
-    
+
 
     public function postUplata($request, $response)
     {
         $data = $request->getParams();
-        
+
         $id = $data['staraoc_id'];
         $staraoc = (new Staraoc())->find($id);
         $korisnik_id = $this->auth->user()->id;
@@ -424,13 +422,13 @@ class TransakcijeController extends Controller
                 $iznos_za_razduzenje += $zad->zaRazduzenje();
             }
         }
-        
+
         if (!empty($racuni_data))
         {
             $rac = implode(", ", $racuni_data);
             $sql = "SELECT * FROM racuni WHERE id IN ($rac);";
             $racuni = $model_racun->fetch($sql);
-            
+
             foreach ($racuni as $rn)
             {
                 $iznos_za_razduzenje += $rn->iznos;
@@ -502,7 +500,7 @@ class TransakcijeController extends Controller
                         WHERE id IN ($zad) AND tip = 'zakup';";
                 $model_uplata->run($sql);
             }
-            
+
             if (!empty($racuni_data))
             {
                 $rac = implode(", ", $racuni_data);
@@ -532,10 +530,13 @@ class TransakcijeController extends Controller
         $karton_id = (int) $request->getParam('karton_id');
         $modelZaduzenja = new Zaduzenje();
         $success = $modelZaduzenja->deleteOne($id);
-        if ($success) {
+        if ($success)
+        {
             $this->flash->addMessage('success', "Zaduženje je uspešno obrisano.");
             return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $karton_id]));
-        } else {
+        }
+        else
+        {
             $this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja zaduženja.");
             return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $karton_id]));
         }
@@ -561,10 +562,13 @@ class TransakcijeController extends Controller
         $modelUplata = new Uplata();
         $successu = $modelUplata->run($sqlu, [':kar' => $karton_id]);
 
-        if ($successz || $successr || $successe || $successu) {
+        if ($successz || $successr || $successe || $successu)
+        {
             $this->flash->addMessage('success', "Zaduženje, računi i uplate su uspešno obrisane.");
             return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $karton_id]));
-        } else {
+        }
+        else
+        {
             $this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja zaduženja.");
             return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $karton_id]));
         }

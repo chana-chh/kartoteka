@@ -1,25 +1,10 @@
 <?php
 
-/**
- * Validator
- *
- * Validator podataka proverava da li podaci odgovaraju zadatim kriterijumima
- *
- * @version v 0.0.1
- * @author ChaSha
- * @copyright Copyright (c) 2019, ChaSha
- */
-
 namespace App\Classes;
 
 use App\Classes\Db;
 use App\Classes\Config;
 
-/**
- * Validator podataka
- *
- * @author ChaSha
- */
 class Validator
 {
     /**
@@ -84,7 +69,8 @@ class Validator
     public function __construct()
     {
         $this->db = Db::instance();
-        if (Config::get('cyrillic')) {
+        if (Config::get('cyrillic'))
+        {
             $this->convert = true;
         }
     }
@@ -99,8 +85,10 @@ class Validator
     {
         $data = $this->sanitize($data);
         $this->items = array_map('trim', $this->sanitize($data));
-        foreach ($this->items as $item => $value) {
-            if (in_array($item, array_keys($rules))) {
+        foreach ($this->items as $item => $value)
+        {
+            if (in_array($item, array_keys($rules)))
+            {
                 $this->val([
                     'field' => $item,
                     'value' => $value,
@@ -108,7 +96,8 @@ class Validator
                 ]);
             }
         }
-        if ($this->hasErrors()) {
+        if ($this->hasErrors())
+        {
             $_SESSION['errors'] = $this->getErrors();
         }
     }
@@ -122,9 +111,12 @@ class Validator
     {
         $field = $item['field'];
         $value = $item['value'];
-        foreach ($item['rules'] as $rule => $option) {
-            if (in_array($rule, $this->rules)) {
-                if (!call_user_func_array([$this, $rule], [$field, $value, $option])) {
+        foreach ($item['rules'] as $rule => $option)
+        {
+            if (in_array($rule, $this->rules))
+            {
+                if (!call_user_func_array([$this, $rule], [$field, $value, $option]))
+                {
                     $text = str_replace(
                         [':field', ':option'],
                         ['[' . ucfirst(str_replace(['-', '_'], ' ', $field)) . ']', '[' . ucfirst($option) . ']'],
@@ -229,13 +221,16 @@ class Validator
      */
     protected function unique($field, $value, $option)
     {
-            // $option - tabela.kolona#id_col:id_val dodatni komentar zbog gita
-            $id_val = null;
-        if (strpos($option, '#') === false) {
+        // $option - tabela.kolona#id_col:id_val dodatni komentar zbog gita
+        $id_val = null;
+        if (strpos($option, '#') === false)
+        {
             $tmp = explode('.', $option);
             $table = $tmp[0];
             $column = $tmp[1];
-        } else {
+        }
+        else
+        {
             $tmp = explode('.', $option);
             $tmp1 = explode('#', $tmp[1]);
             $table = $tmp[0];
@@ -248,10 +243,11 @@ class Validator
         $wheres = [];
         $params = [];
 
-            $wheres[] = "$column = :{$column}";
-            $params[":{$column}"] = $value;
+        $wheres[] = "$column = :{$column}";
+        $params[":{$column}"] = $value;
 
-        if ($id_val !== null) {
+        if ($id_val !== null)
+        {
             $wheres[] = "{$id_col} <> :{$id_col}";
             $params[":{$id_col}"] = $id_val;
         }
@@ -279,11 +275,14 @@ class Validator
         // id_col = naziv pk, id_val = vrednost pk
         // $this->items su polja sa forme
         $id_val = null;
-        if (strpos($option, '#') === false) {
+        if (strpos($option, '#') === false)
+        {
             $tmp = explode('.', $option);
             $table = $tmp[0];
             $columns = explode(',', $tmp[1]);
-        } else {
+        }
+        else
+        {
             $tmp = explode('.', $option);
             $tmp1 = explode('#', $tmp[1]);
             $table = $tmp[0];
@@ -294,11 +293,13 @@ class Validator
         }
         $wheres = [];
         $params = [];
-        foreach ($columns as $col) {
+        foreach ($columns as $col)
+        {
             $wheres[] = "$col = :{$col}";
             $params[":{$col}"] = $this->items[$col];
         }
-        if ($id_val !== null) {
+        if ($id_val !== null)
+        {
             $wheres[] = "{$id_col} <> :{$id_col}";
             $params[":{$id_col}"] = $id_val;
         }
@@ -350,39 +351,45 @@ class Validator
     protected function jmbg($field, $value, $option)
     {
         $len = strlen($value);
-        if ($len != 13) {
+        if ($len != 13)
+        {
             return false;
         }
         $niz = str_split($value);
         $ok = true;
         $zbir = 0;
-        foreach($niz as $k=>$v) {
-            if(!is_numeric($v)) {
+        foreach ($niz as $k => $v)
+        {
+            if (!is_numeric($v))
+            {
                 return false;
             }
-            $niz[$k]=(int)$v;
+            $niz[$k] = (int)$v;
         }
         $zbir = $niz[0] * 7
-        + $niz[1] * 6
-        + $niz[2] * 5
-        + $niz[3] * 4
-        + $niz[4] * 3
-        + $niz[5] * 2
-        + $niz[6] * 7
-        + $niz[7] * 6
-        + $niz[8] * 5
-        + $niz[9] * 4
-        + $niz[10] * 3
-        + $niz[11] * 2;
+            + $niz[1] * 6
+            + $niz[2] * 5
+            + $niz[3] * 4
+            + $niz[4] * 3
+            + $niz[5] * 2
+            + $niz[6] * 7
+            + $niz[7] * 6
+            + $niz[8] * 5
+            + $niz[9] * 4
+            + $niz[10] * 3
+            + $niz[11] * 2;
         $ostatak = $zbir % 11;
-        if ($ostatak === 1) {
+        if ($ostatak === 1)
+        {
             return false;
         }
         $kontrolni = 11 - $ostatak;
-        if ($ostatak == 0) {
+        if ($ostatak == 0)
+        {
             $kontrolni = 0;
         }
-        if ($kontrolni != $niz[12]) {
+        if ($kontrolni != $niz[12])
+        {
             return false;
         }
         return true;
@@ -421,9 +428,12 @@ class Validator
      */
     public function getErrors(string $key = null)
     {
-        if ($key) {
+        if ($key)
+        {
             return isset($this->errors[$key]) ? $this->errors[$key] : null;
-        } else {
+        }
+        else
+        {
             return $this->hasErrors() ? $this->errors : null;
         }
     }
