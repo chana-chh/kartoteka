@@ -1,278 +1,270 @@
 {% extends "templates/app.twig" %}
 
 {% block sadrzaj %}
-<h1 class="uk-text-primary">
-  Reprogrami za
-  <span class="uk-text-success">{{ staraoc.punoIme() | upper }}</span>
-  - <small class="uk-text-muted">
-      <a href="{{ path_for('kartoni.pregled', { id: staraoc.karton().id }) }}">[{{ staraoc.karton().broj() }}]</a>
-    </small>
-</h1>
-<div class="uk-panel uk-background-muted uk-padding-small">
-  <div class="uk-clearfix">
-    <div class="uk-float-left">
-      <div class="uk-button-group">
-        <button onclick="window.history.back();" class="uk-button uk-button-primary uk-button-small">
-          <span uk-icon="chevron-left"></span> Nazad
-        </button>
-        <a href="{{ path_for('kartoni.pregled', { id: staraoc.karton().id }) }}"
-          class="uk-button uk-button-primary uk-button-small">
-          <span uk-icon="chevron-double-left"></span> Otvori karton
-        </a>
-      </div>
-    </div>
-    <div class="uk-float-right">
-      <div class="uk-button-group">
-        <a href="{{ path_for('transakcije.pregled', { id: staraoc.id }) }}"
-          class="uk-button uk-button-secondary uk-button-small">
-          <span uk-icon="list"></span> Pregled zaduzenja
-        </a>
-        <a href="{{ path_for('transakcije.reprogram.dodavanje', { id: staraoc.id }) }}"
-          class="uk-button uk-button-primary uk-button-small">
-          <span uk-icon="plus"></span> Dodavanje reprograma
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
+	<h1 class="uk-text-primary">
+		Reprogrami za
+		<span class="uk-text-success">{{ staraoc.punoIme() | upper }}</span>
+		-
+		<small class="uk-text-muted">
+			<a href="{{ path_for('kartoni.pregled', { id: staraoc.karton().id }) }}">[{{ staraoc.karton().broj() }}]</a>
+		</small>
+	</h1>
+	<div class="uk-panel uk-background-muted uk-padding-small">
+		<div class="uk-clearfix">
+			<div class="uk-float-left">
+				<div class="uk-button-group">
+					<button onclick="window.history.back();" class="uk-button uk-button-primary uk-button-small">
+						<span uk-icon="chevron-left"></span>
+						Nazad
+					</button>
+					<a href="{{ path_for('kartoni.pregled', { id: staraoc.karton().id }) }}" class="uk-button uk-button-primary uk-button-small">
+						<span uk-icon="chevron-double-left"></span>
+						Otvori karton
+					</a>
+				</div>
+			</div>
+			<div class="uk-float-right">
+				<div class="uk-button-group">
+					<a href="{{ path_for('transakcije.pregled', { id: staraoc.id }) }}" class="uk-button uk-button-secondary uk-button-small">
+						<span uk-icon="list"></span>
+						Pregled zaduzenja
+					</a>
+					<a href="{{ path_for('transakcije.reprogram.dodavanje', { id: staraoc.id }) }}" class="uk-button uk-button-primary uk-button-small">
+						<span uk-icon="plus"></span>
+						Dodavanje reprograma
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
 
-<h2>
-  Reprogrami
-  <em class="uk-text-primary">[{{ staraoc.sviReprogrami() | length }}]</em>
-  <em class="uk-text-success">[{{ staraoc.razduzeniReprogrami() | length }}]</em>
-  <em class="uk-text-danger">[{{ staraoc.zaduzeniReprogrami() | length }}]</em>
-  <small><em class="uk-text-danger">[{{ staraoc.dugZaReprograme() | number_format(2, '.', ',') }}]</em></small>
-</h2>
+	<h2>
+		Reprogrami
+		<em class="uk-text-primary">[{{ staraoc.sviReprogrami() | length }}]</em>
+		<em class="uk-text-success">[{{ staraoc.razduzeniReprogrami() | length }}]</em>
+		<em class="uk-text-danger">[{{ staraoc.zaduzeniReprogrami() | length }}]</em>
+		<small>
+			<em class="uk-text-danger">[{{ staraoc.dugZaReprograme() | number_format(2, '.', ',') }}]</em>
+		</small>
+	</h2>
 
-<div class="uk-overflow-auto">
-  <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
-    <thead>
-      <tr>
-        <th class="w-15">Broj</th>
-        <th class="w-10 uk-text-right">Datum</th>
-        <th class="w-10 uk-text-right">Prva rata</th>
-        <th class="w-10 uk-text-right">Iznos</th>
-        <th class="w-10 uk-text-right">Rata</th>
-        <th class="w-15 uk-text-right">Broj rata</th>
-        <th class="w-15 uk-text-right">Dug</th>
-        <th class="w-10 uk-text-center">Razduženo</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for rep in staraoc.sviReprogrami() %}
-      {% set cls = "" %}
-      {% if rep.razduzeno == 0  %}
-      {% set cls = "uk-text-danger" %}
-      {% endif %}
-      {% if rep.razduzeno == 1  %}
-      {% set cls = "uk-text-success" %}
-      {% endif %}
-      <tr class="{{ cls }}">
-        <td>
-          <a href="{{ path_for('transakcije.reprogram', { id: rep.id }) }}"
-              class="uk-button uk-button-link uk-button-small uk-text-bold">
-              {{ rep.broj }}
-          </a>
-        </td>
-        <td class="uk-text-right">{{ rep.datum | date('d.m.Y') }}</td>
-        <td class="uk-text-right">{{ rep.datum_prve_rate | date('d.m.Y') }}</td>
-        <td class="uk-text-right">{{ rep.iznos | number_format(2, '.', ',') }}</td>
-        <td class="uk-text-right">{{ rep.iznos_rate | number_format(2, '.', ',') }}</td>
-        <td class="uk-text-right">{{ rep.preostalo_rata }} od {{ rep.period }}</td>
-        <td class="uk-text-right">{{ (rep.iznos_rate * rep.preostalo_rata) | number_format(2, '.', ',') }}</td>
-        <td class="uk-text-center">{{ rep.razduzenoDisabled() | raw }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
-
-
-{# 
-
-<div class="uk-width-1-1">
-
-  {% for rep in staraoc.reprogrami() %}
-  <div class="uk-button-group uk-margin-top uk-margin-bottom uk-width-1-1">
-    <button
-      class="uk-button uk-text-large uk-padding-small w-5{{ rep.razduzeno == 1 ? ' uk-button-primary' : ' uk-button-danger' }}">
-      <span uk-icon="icon: info; ratio: 1.5"></span>
-    </button>
-    <div uk-dropdown="mode: click" class="uk-text-large uk-width-1-1">
-      Broj rata {{ rep.period }}, preostalo za uplatu {{ rep.preostalo_rata }} rata.<br>
-      Razduzen: <span
-        class="{{ rep.razduzeno == 0 ? 'uk-text-danger' : 'uk-text-success' }}">{{ rep.razduzeno == 0 ? 'NE' : 'DA' }}</span>.<br>
-      Preostali dug: {{ rep.dug()|number_format(2, '.', ',') }} din
-      {{ rep.datum_razduzenja ? 'Dana ' ~ rep.datum_razduzenja() ~ '. godine' : '' }}<br>
-      {{ rep.razduzenja|nl2br }}<br>
-      Napomene: {{ rep.napomena|nl2br }}
-    </div>
-    <div class="uk-button-secondary uk-text-large uk-text-center uk-padding-small w-80">
-      Reprogram broj:
-      <span class="uk-text-success">
-        <strong>{{ rep.broj }}</strong>
-      </span>
-      od {{ rep.datum() }}. godine. Iznos: {{ rep.iznos|number_format(2, '.', ',') }} dinara.
-    </div>
-    <a href="{{ path_for('transakcije.reprogram.izmena', { id: rep.id }) }}"
-      class="uk-button uk-button-default uk-text-large uk-padding-small w-5">
-      <span uk-icon="icon: pencil; ratio: 1.5"></span>
-    </a>
-    <a href="" class="uk-button uk-button-primary uk-text-success uk-text-large uk-padding-small w-10">
-      <span uk-icon="icon: tablet-landscape; ratio: 1.5"></span>
-    </a>
+	<div class="uk-overflow-auto">
+		<table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+			<thead>
+				<tr>
+					<th class="w-15">Broj</th>
+					<th class="w-10 uk-text-right">Datum</th>
+					<th class="w-10 uk-text-right">Prva rata</th>
+					<th class="w-10 uk-text-right">Iznos</th>
+					<th class="w-10 uk-text-right">Rata</th>
+					<th class="w-15 uk-text-right">Broj rata</th>
+					<th class="w-15 uk-text-right">Dug</th>
+					<th class="w-10 uk-text-center">Razduženo</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for rep in staraoc.sviReprogrami() %}
+					{% set cls = "" %}
+					{% if rep.razduzeno == 0  %}
+						{% set cls = "uk-text-danger" %}
+					{% endif %}
+					{% if rep.razduzeno == 1  %}
+						{% set cls = "uk-text-success" %}
+					{% endif %}
+					<tr class="{{ cls }}">
+						<td>
+							<a href="{{ path_for('transakcije.reprogram', { id: rep.id }) }}" class="uk-button uk-button-link uk-button-small uk-text-bold">
+								{{ rep.broj }}
+							</a>
+						</td>
+						<td class="uk-text-right">{{ rep.datum | date('d.m.Y') }}</td>
+						<td class="uk-text-right">{{ rep.datum_prve_rate | date('d.m.Y') }}</td>
+						<td class="uk-text-right">{{ rep.iznos | number_format(2, '.', ',') }}</td>
+						<td class="uk-text-right">{{ rep.iznos_rate | number_format(2, '.', ',') }}</td>
+						<td class="uk-text-right">{{ rep.preostalo_rata }}
+							od
+							{{ rep.period }}</td>
+						<td class="uk-text-right">{{ (rep.iznos_rate * rep.preostalo_rata) | number_format(2, '.', ',') }}</td>
+						<td class="uk-text-center">{{ rep.razduzenoDisabled() | raw }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
 
 
-
-
-    <div uk-dropdown="mode: click" class="uk-width-1-1">
-      <h3>Uplata rate reprograma</h3>
-      <form action="{{ path_for('transakcije.reprogram.uplata') }}" method="POST" id="forma_uplata"
-        class="uk-form-stacked" uk-grid>
-        {{ csrf | raw }}
-        <input type="hidden" name="reprogram_id" value="{{ rep.id }}">
-        <div class="uk-width-1-5">
-          <label for="iznos" class="uk-form-label">Iznos</label>
-          <div class="uk-form-controls">
-            <input type="number" name="iznos" id="iznos" value="{{ rep.rata() }}" min="0" step="0.01"
-              class="uk-input uk-text-right" autocomplete="off" required>
-          </div>
-          <small class="uk-text-danger">{{ errors.iznos[0] ? :'' }}</small>
-        </div>
-        <div class="uk-width-1-5">
-          <label for="datum" class="uk-form-label">Datum</label>
-          <div class="uk-form-controls">
-            <input type="date" name="datum" id="datum" value="{{ 'now'|date('Y-m-d') }}" class="uk-input"
-              autocomplete="off" required>
-          </div>
-          <small class=" uk-text-danger">{{ errors.datum[0] ? : '' }}</small>
-        </div>
-
-        <div class="uk-width-1-5">
-          <label for="priznanica" class="uk-form-label">Priznanica</label>
-          <div class="uk-form-controls">
-            <input type="text" name="priznanica" id="priznanica" value="{{ old.priznanica ? : '' }}" class="uk-input"
-              autocomplete="off">
-          </div>
-          <small class=" uk-text-danger">{{ errors.priznanica[0] ? : '' }}</small>
-        </div>
-
-        <div class="uk-width-2-5">
-          <label for="napomena" class="uk-form-label">Napomena</label>
-          <div class="uk-form-controls">
-            <textarea class="uk-textarea{{ errors.napomena[0] ? ' uk-form-danger': ''}}" rows="2" name="napomena"
-              id="napomena">{{ old.napomena ? : '' }}</textarea>
-          </div>
-          <small class=" uk-text-danger">{{ errors.napomena[0] ? :'' }}</small>
-        </div>
-        <div class="uk-button-group uk-width-1-2">
-          <input type="submit" value="Snimi uplatu rate" class="uk-button uk-button-primary uk-width-1-2"
-            onclick="resetRazduzenje();">
-          <input type="reset" value="Otkaži" class="uk-button uk-button-secondary uk-width-1-2">
-        </div>
-      </form>
-    </div>
-
-
-
-
-
-  </div>
-  <div class="uk-margin-large-left">
-    <h4 class="uk-text-primary">Takse</h4>
-    <div class="uk-overflow-auto">
-      <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
-        <thead>
-          <tr>
-            <th class="w-50">Godina</th>
-            <th class="w-25 uk-text-right">Iznos</th>
-            <th class="w-25 uk-text-center">Razduzeno</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for taksa in rep.takse() %}
-          <tr>
-            <td>{{ taksa.godina }}</td>
-            <td class="uk-text-right">
-              {{ taksa.iznos|number_format(2, '.', ',') }}
-            </td>
-            <td class="uk-text-center">{{ taksa.razduzenoDisabled() | raw }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-    <h4 class="uk-text-primary">Zakupi</h4>
-    <div class="uk-overflow-auto">
-      <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
-        <thead>
-          <tr>
-            <th class="w-50">Godina</th>
-            <th class="w-25 uk-text-right">Iznos</th>
-            <th class="w-25 uk-text-center">Razduzeno</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for zakup in rep.zakupi() %}
-          <tr>
-            <td>{{ zakup.godina }}</td>
-            <td class="uk-text-right">
-              {{ zakup.iznos|number_format(2, '.', ',') }}
-            </td>
-            <td class="uk-text-center">{{ zakup.razduzenoDisabled() | raw }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-    <h4 class="uk-text-primary">Računi</h4>
-    <div class="uk-overflow-auto">
-      <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
-        <thead>
-          <tr>
-            <th class="w-25">Broj</th>
-            <th class="w-25">Datum</th>
-            <th class="w-25 uk-text-right">Iznos</th>
-            <th class="w-25 uk-text-center">Razduzeno</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for rn in rep.racuni() %}
-          <tr>
-            <td>{{ rn.broj }}</td>
-            <td>{{ rn.datum() }}</td>
-            <td class="uk-text-right">
-              {{ rn.iznos|number_format(2, '.', ',') }}
-            </td>
-            <td class="uk-text-center">{{ rn.razduzenoDisabled() | raw }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
-  {% endfor %}
-</div> #}
-
-
+	{# 
+		
+		<div class="uk-width-1-1">
+		
+		  {% for rep in staraoc.reprogrami() %}
+		  <div class="uk-button-group uk-margin-top uk-margin-bottom uk-width-1-1">
+		    <button
+		      class="uk-button uk-text-large uk-padding-small w-5{{ rep.razduzeno == 1 ? ' uk-button-primary' : ' uk-button-danger' }}">
+		      <span uk-icon="icon: info; ratio: 1.5"></span>
+		    </button>
+		    <div uk-dropdown="mode: click" class="uk-text-large uk-width-1-1">
+		      Broj rata {{ rep.period }}, preostalo za uplatu {{ rep.preostalo_rata }} rata.<br>
+		      Razduzen: <span
+		        class="{{ rep.razduzeno == 0 ? 'uk-text-danger' : 'uk-text-success' }}">{{ rep.razduzeno == 0 ? 'NE' : 'DA' }}</span>.<br>
+		      Preostali dug: {{ rep.dug()|number_format(2, '.', ',') }} din
+		      {{ rep.datum_razduzenja ? 'Dana ' ~ rep.datum_razduzenja() ~ '. godine' : '' }}<br>
+		      {{ rep.razduzenja|nl2br }}<br>
+		      Napomene: {{ rep.napomena|nl2br }}
+		    </div>
+		    <div class="uk-button-secondary uk-text-large uk-text-center uk-padding-small w-80">
+		      Reprogram broj:
+		      <span class="uk-text-success">
+		        <strong>{{ rep.broj }}</strong>
+		      </span>
+		      od {{ rep.datum() }}. godine. Iznos: {{ rep.iznos|number_format(2, '.', ',') }} dinara.
+		    </div>
+		    <a href="{{ path_for('transakcije.reprogram.izmena', { id: rep.id }) }}"
+		      class="uk-button uk-button-default uk-text-large uk-padding-small w-5">
+		      <span uk-icon="icon: pencil; ratio: 1.5"></span>
+		    </a>
+		    <a href="" class="uk-button uk-button-primary uk-text-success uk-text-large uk-padding-small w-10">
+		      <span uk-icon="icon: tablet-landscape; ratio: 1.5"></span>
+		    </a>
+		
+		
+		
+		
+		    <div uk-dropdown="mode: click" class="uk-width-1-1">
+		      <h3>Uplata rate reprograma</h3>
+		      <form action="{{ path_for('transakcije.reprogram.uplata') }}" method="POST" id="forma_uplata"
+		        class="uk-form-stacked" uk-grid>
+		        {{ csrf | raw }}
+		        <input type="hidden" name="reprogram_id" value="{{ rep.id }}">
+		        <div class="uk-width-1-5">
+		          <label for="iznos" class="uk-form-label">Iznos</label>
+		          <div class="uk-form-controls">
+		            <input type="number" name="iznos" id="iznos" value="{{ rep.rata() }}" min="0" step="0.01"
+		              class="uk-input uk-text-right" autocomplete="off" required>
+		          </div>
+		          <small class="uk-text-danger">{{ errors.iznos[0] ? :'' }}</small>
+		        </div>
+		        <div class="uk-width-1-5">
+		          <label for="datum" class="uk-form-label">Datum</label>
+		          <div class="uk-form-controls">
+		            <input type="date" name="datum" id="datum" value="{{ 'now'|date('Y-m-d') }}" class="uk-input"
+		              autocomplete="off" required>
+		          </div>
+		          <small class=" uk-text-danger">{{ errors.datum[0] ? : '' }}</small>
+		        </div>
+		
+		        <div class="uk-width-1-5">
+		          <label for="priznanica" class="uk-form-label">Priznanica</label>
+		          <div class="uk-form-controls">
+		            <input type="text" name="priznanica" id="priznanica" value="{{ old.priznanica ? : '' }}" class="uk-input"
+		              autocomplete="off">
+		          </div>
+		          <small class=" uk-text-danger">{{ errors.priznanica[0] ? : '' }}</small>
+		        </div>
+		
+		        <div class="uk-width-2-5">
+		          <label for="napomena" class="uk-form-label">Napomena</label>
+		          <div class="uk-form-controls">
+		            <textarea class="uk-textarea{{ errors.napomena[0] ? ' uk-form-danger': ''}}" rows="2" name="napomena"
+		              id="napomena">{{ old.napomena ? : '' }}</textarea>
+		          </div>
+		          <small class=" uk-text-danger">{{ errors.napomena[0] ? :'' }}</small>
+		        </div>
+		        <div class="uk-button-group uk-width-1-2">
+		          <input type="submit" value="Snimi uplatu rate" class="uk-button uk-button-primary uk-width-1-2"
+		            onclick="resetRazduzenje();">
+		          <input type="reset" value="Otkaži" class="uk-button uk-button-secondary uk-width-1-2">
+		        </div>
+		      </form>
+		    </div>
+		
+		
+		
+		
+		
+		  </div>
+		  <div class="uk-margin-large-left">
+		    <h4 class="uk-text-primary">Takse</h4>
+		    <div class="uk-overflow-auto">
+		      <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+		        <thead>
+		          <tr>
+		            <th class="w-50">Godina</th>
+		            <th class="w-25 uk-text-right">Iznos</th>
+		            <th class="w-25 uk-text-center">Razduzeno</th>
+		          </tr>
+		        </thead>
+		        <tbody>
+		          {% for taksa in rep.takse() %}
+		          <tr>
+		            <td>{{ taksa.godina }}</td>
+		            <td class="uk-text-right">
+		              {{ taksa.iznos|number_format(2, '.', ',') }}
+		            </td>
+		            <td class="uk-text-center">{{ taksa.razduzenoDisabled() | raw }}</td>
+		          </tr>
+		          {% endfor %}
+		        </tbody>
+		      </table>
+		    </div>
+		    <h4 class="uk-text-primary">Zakupi</h4>
+		    <div class="uk-overflow-auto">
+		      <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+		        <thead>
+		          <tr>
+		            <th class="w-50">Godina</th>
+		            <th class="w-25 uk-text-right">Iznos</th>
+		            <th class="w-25 uk-text-center">Razduzeno</th>
+		          </tr>
+		        </thead>
+		        <tbody>
+		          {% for zakup in rep.zakupi() %}
+		          <tr>
+		            <td>{{ zakup.godina }}</td>
+		            <td class="uk-text-right">
+		              {{ zakup.iznos|number_format(2, '.', ',') }}
+		            </td>
+		            <td class="uk-text-center">{{ zakup.razduzenoDisabled() | raw }}</td>
+		          </tr>
+		          {% endfor %}
+		        </tbody>
+		      </table>
+		    </div>
+		    <h4 class="uk-text-primary">Računi</h4>
+		    <div class="uk-overflow-auto">
+		      <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+		        <thead>
+		          <tr>
+		            <th class="w-25">Broj</th>
+		            <th class="w-25">Datum</th>
+		            <th class="w-25 uk-text-right">Iznos</th>
+		            <th class="w-25 uk-text-center">Razduzeno</th>
+		          </tr>
+		        </thead>
+		        <tbody>
+		          {% for rn in rep.racuni() %}
+		          <tr>
+		            <td>{{ rn.broj }}</td>
+		            <td>{{ rn.datum() }}</td>
+		            <td class="uk-text-right">
+		              {{ rn.iznos|number_format(2, '.', ',') }}
+		            </td>
+		            <td class="uk-text-center">{{ rn.razduzenoDisabled() | raw }}</td>
+		          </tr>
+		          {% endfor %}
+		        </tbody>
+		      </table>
+		    </div>
+		  </div>
+		  {% endfor %}
+		</div> #}
 
 
 {% endblock sadrzaj %}
 
 {% block traka %}
-<h2 class="uk-text-right">Dug za reprograme</h2>
-<div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
-  <h1 class="uk-text-success">{{ staraoc.dugZaReprograme() | number_format(2, '.', ',') }}</h1>
-</div>
-
-
-
-
-
+	<h2 class="uk-text-right">Dug za reprograme</h2>
+	<div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
+		<h1 class="uk-text-success">{{ staraoc.dugZaReprograme() | number_format(2, '.', ',') }}</h1>
+	</div>
 {% endblock traka %}
-
-
-
-{% block skripta %}
-
-{% endblock skripta %}

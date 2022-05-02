@@ -26,7 +26,16 @@ class Staraoc extends Model
 
     public function uplate()
     {
-        return $this->hasMany('App\Models\Uplata', 'staraoc_id');
+		$sql = "SELECT * FROM uplate WHERE staraoc_id = {$this->id} ORDER BY datum DESC;";
+        return $this->fetch($sql, null, 'App\Models\Uplata');
+    }
+
+    public function ukupanIznosUplata()
+    {
+        $sql = "SELECT SUM(iznos) AS iznos_uplata FROM uplate WHERE staraoc_id = {$this->id};";
+        $iznos = (float) $this->fetch($sql)[0]->iznos_uplata;
+
+        return $iznos;
     }
 
     // prikaz chk aktivan na pogledu

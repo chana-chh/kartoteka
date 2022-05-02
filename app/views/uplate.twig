@@ -1,24 +1,38 @@
 {% extends "templates/app.twig" %}
 
 {% block sadrzaj %}
-	<h1 class="uk-text-primary">
+	<h1
+		class="uk-text-primary">
 		Uplate za
-		<span class="uk-text-success">{{ staraoc.punoIme() | upper }}</span>
+		<span
+			class="uk-text-success">{{ staraoc.punoIme()|upper }}</span>
 		-
-		<small class="uk-text-muted">
-			<a href="{{ path_for('kartoni.pregled', { id: staraoc.karton().id }) }}">[{{ staraoc.karton().broj() }}]</a>
+		<small
+			class="uk-text-muted">
+			<a
+				href==
+				="{{ path_for('kartoni.pregled', { id: staraoc.karton().id }) }}">[{{ staraoc.karton().broj() }}]</a>
 		</small>
 	</h1>
-	<div class="uk-panel uk-background-muted uk-padding-small">
-		<div class="uk-clearfix">
-			<div class="uk-float-left">
-				<div class="uk-button-group">
-					<button onclick="window.history.back();" class="uk-button uk-button-primary uk-button-small">
-						<span uk-icon="chevron-left"></span>
+	<div
+		class="uk-panel uk-background-muted uk-padding-small">
+		<div
+			class="uk-clearfix">
+			<div
+				class="uk-float-left">
+				<div
+					class="uk-button-group">
+					<button
+						onclick="window.history.back();"
+						class="uk-button uk-button-primary uk-button-small">
+						<span
+							uk-icon="chevron-left"></span>
 						Nazad
 					</button>
-					<a href="{{ path_for('transakcije.pregled', { id: staraoc.id }) }}" class="uk-button uk-button-primary uk-button-small">
-						<span uk-icon="chevron-double-left"></span>
+					<a
+						href="{{ path_for('transakcije.pregled', { id: staraoc.id }) }}" class="uk-button uk-button-primary uk-button-small">
+						<span
+							uk-icon="chevron-double-left"></span>
 						Zaduženja
 					</a>
 				</div>
@@ -26,18 +40,30 @@
 		</div>
 	</div>
 	{% if staraoc.uplate() %}
-		<div class="uk-overflow-auto">
-			<table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+		<div
+			class="uk-overflow-auto">
+			<table
+				class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
 				<thead>
 					<tr>
-						<th class="w-8">Id</th>
-						<th class="w-12">Iznos</th>
-						<th class="w-10">Datum</th>
-						<th class="w-20">Priznanica</th>
-						<th class="w-25">Napomena</th>
-						<th class="w-15">Uneo</th>
-						<th class="w-10 uk-text-right">
-							<span uk-icon="cog"></span>
+						<th
+							class="w-5">Id</th>
+						<th
+							class="w-10 uk-text-right">Iznos</th>
+						<th
+							class="w-10 uk-text-right">Datum</th>
+						<th
+							class="w-15">Priznanica</th>
+						<th
+							class="w-25">Napomena</th>
+						<th
+							class="w-20">Reprogram/br. rata</th>
+						<th
+							class="w-10">Uneo</th>
+						<th
+							class="w-10 uk-text-right">
+							<span
+								uk-icon="cog"></span>
 						</th>
 					</tr>
 				</thead>
@@ -47,25 +73,34 @@
 							<td>
 								<em>{{ uplata.id }}</em>
 							</td>
-							<td>
+							<td
+								class="uk-text-right">
 								<strong>{{ uplata.iznos|number_format(2, '.', ',') }}</strong>
 							</td>
-							<td>{{ uplata.datum|date("m.d.Y") }}</td>
+							<td
+								class="uk-text-right">{{ uplata.datum|date("m.d.Y") }}</td>
 							<td>{{ uplata.priznanica }}</td>
 							<td>
-								<small>{{ uplata.napomena }}</small>
+								<small>{{ uplata.napomena|nl2br }}</small>
+							</td>
+							<td>
+								{{ uplata.reprogram().broj }}
+								/
+								{{ uplata.broj_rata }}
 							</td>
 							<td>{{ uplata.korisnik().ime }}</td>
-							<td class="uk-clearfix">
-								<ul class="uk-iconnav uk-float-right">
+							<td
+								class="uk-clearfix">
+								<ul
+									class="uk-iconnav uk-float-right">
 									<li>
-										<a href="" title="Izmena">
-											<span uk-icon="pencil"></span>
-										</a>
-									</li>
-									<li>
-										<a title="Brisanje" href="#modal-brisanje" data-id="{{ uplata.id }}" onclick="setUplataId(this);" uk-toggle>
-											<span uk-icon="trash"></span>
+										<a
+											title="Brisanje"
+											href="#modal-brisanje"
+											data-id="{{ uplata.id }}" onclick="setUplataId(this);"
+											uk-toggle>
+											<span
+												uk-icon="trash"></span>
 										</a>
 									</li>
 								</ul>
@@ -78,17 +113,24 @@
 	{% else %}
 		<h3>Trenutno nema evidentiranih uplata</h3>
 	{% endif %}
-	<!-- MODAL BRISANJE KORISNIKA -->
+	{# MODAL BRISANJE uplate #}
 	{% include 'inc/uplate_brisanje.twig' %}
 {% endblock sadrzaj %}
 
 {% block traka %}
-	<div uk-grid class="uk-margin-small-top">
-		<div class="uk-width-1-1">
-			<h3 class="uk-text-right">Ukupan iznos uplata:</h3>
-			<div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
-				<h2 class="uk-text-success" id="sumaUplata">
-					{{ karton.sumaUplata() | number_format(2, '.', ',') }}
+	<div
+		uk-grid
+		class="uk-margin-small-top">
+		<div
+			class="uk-width-1-1">
+			<h3
+				class="uk-text-right">Ukupan iznos uplata:</h3>
+			<div
+				class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
+				<h2
+					class="uk-text-success"
+					id="sumaUplata">
+					{{ staraoc.ukupanIznosUplata()|number_format(2, '.', ',') }}
 				</h2>
 			</div>
 		</div>

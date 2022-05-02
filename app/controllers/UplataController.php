@@ -2,238 +2,256 @@
 
 namespace App\Controllers;
 
-
 use App\Models\Staraoc;
-use App\Models\Cena;
 use App\Models\Uplata;
-use DateTime;
 
 class UplataController extends Controller
 {
 
-    public function getUplate($request, $response, $args)
-    {
-        $id = (int) $args['id'];
-        $staraoc = (new Staraoc())->find($id);
+	public function getUplate($request, $response, array $args)
+	{
+		$id = (int) $args['id'];
+		$staraoc = (new Staraoc())->find($id);
 
-        $this->render($response, 'uplate.twig', compact('staraoc'));
-    }
+		$this->render($response, 'uplate.twig', compact('staraoc'));
+	}
 
-    public function postUplataBrisanje($request, $response)
-    {
-        $id = (int)$request->getParam('modal_uplata_id');
-        $karton_id = (int) $request->getParam('karton_id');
-        $modelUplata = new Uplata();
-        $success = $modelUplata->deleteOne($id);
-        if ($success) {
-            $this->flash->addMessage('success', "Uplata je uspešno obrisana.");
-            return $response->withRedirect($this->router->pathFor('uplate', ['id' => $karton_id]));
-        } else {
-            $this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja uplate.");
-            return $response->withRedirect($this->router->pathFor('uplate', ['id' => $karton_id]));
-        }
-    }
+	public function postUplataBrisanje($request, $response)
+	{
+		$id = (int) $request->getParam('modal_uplata_id');
+		$uplata = (new Uplata())->find($id);
 
-    public function postVisak($request, $response)
-    {
-        $id = (int) $request->getParam('staraoc_id');
-        $staraoc = (new Staraoc())->find($id);
+		if ($uplata->reprogram_id !== null)
+		{
+			$sql = "UPDATE reprogrami SET preostalo_rata = preostalo_rata + {$uplata->broj_rata}, korisnik_id_razduzio = NULL
+					WHERE id = {$uplata->reprogram_id};";
+			$uplata->run($sql);
+		}
+		else
+		{
+			$sql = "UPDATE zaduzenja SET razduzeno = 0, iznos_razduzeno = 0, korisnik_id_razduzio = NULL, uplata_id = NULL
+					WHERE uplata_id = {$uplata->id}";
+			$uplata->run($sql);
+			
+			$sql = "UPDATE racuni SET razduzeno = 0, korisnik_id_razduzio = NULL, uplata_id = NULL
+					WHERE uplata_id = {$uplata->id}";
+			$uplata->run($sql);
 
-        // sva nerazduzena zaduzenja
-        $zaduzenja = $staraoc->zaduzenaZaduzenja();
+		}
+		$staraoc_id = $uplata->staraoc()->id;
+		$success = $uplata->deleteOne($id);
+		
+		if ($success)
+		{
+		    $this->flash->addMessage('success', "Uplata je uspešno obrisana.");
+		    return $response->withRedirect($this->router->pathFor('uplate', ['id' => $staraoc_id]));
+		}
+		else
+		{
+		    $this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja uplate.");
+		    return $response->withRedirect($this->router->pathFor('uplate', ['id' => $staraoc_id]));
+		}
+	}
 
-        // iznos viska para
-        $iznos = (float) $staraoc->privremeni_saldo;
-        // ostatak viska
-        $ostatak = $iznos;
+	public function postVisak($request, $response)
+	{
+		$id = (int) $request->getParam('staraoc_id');
+		$staraoc = (new Staraoc())->find($id);
 
-        // ovde ide novi nacin razduzivanja viska para
+		// sva nerazduzena zaduzenja
+		$zaduzenja = $staraoc->zaduzenaZaduzenja();
 
-        // fiksno
-        $karton_id = $staraoc->karton()->id;
-        $staraoc_id = $staraoc->id;
-        $taksa = $staraoc->taksaZaGodinu();
-        $zakup = $staraoc->zakupZaGodinu();
-        $datum = date('Y-m-d');
-        $korisnik_id = $this->auth->user()->id;
-        $napomena = 'automatsko razduživanje viška uplate';
-        $uplata_id = $staraoc->uplata_id;
+		// iznos viska para
+		$iznos = (float) $staraoc->privremeni_saldo;
+		// ostatak viska
+		$ostatak = $iznos;
 
-        $za_stare = []; // UPDATE
-        $za_nove = []; // INSERT
+		// ovde ide novi nacin razduzivanja viska para
 
-        // prave se podaci za upis
-        
-        // taksa ili zakup koji moze delimicno da se razduzi
-        $deo = 0;
-        // vrsta (taksa ili zakup) za delimicno razduzivanje
-        $vrsta = '';
-        // godina takse ili zakupa za delimicno razduzivanje
-        $godina = 0;
+		// fiksno
+		$karton_id = $staraoc->karton()->id;
+		$staraoc_id = $staraoc->id;
+		$taksa = $staraoc->taksaZaGodinu();
+		$zakup = $staraoc->zakupZaGodinu();
+		$datum = date('Y-m-d');
+		$korisnik_id = $this->auth->user()->id;
+		$napomena = 'automatsko razduživanje viška uplate';
+		$uplata_id = $staraoc->uplata_id;
 
-        // podaci za stare
-        foreach ($zaduzenja as $zad)
-        {
-            $iznos = $ostatak;
-            $razlika = (float) $ostatak - $zad->zaRazduzenje();
+		$za_stare = []; // UPDATE
+		$za_nove = []; // INSERT
 
-            if($razlika < 0)
-            {
-                $deo = $iznos;
-                $ostatak = 0;
-                $za_stare[] = [
-                    ':id' => $zad->id,
-                    ':iznos_razduzeno' => $deo,
-                    ':razduzeno' => 0,
-                    ':datum_razduzenja' => null,
-                    ':korisnik_id_razduzio' => null,
-                    ':napomena' => $napomena,
-                    ':uplata_id' => $uplata_id,
-                ];
-                break;
-            }
-            else
-            {
-                $taksa_zakup = ($zad->tip === 'taksa') ? $taksa : $zakup;
-                $za_stare[] = [
-                    ':id' => $zad->id,
-                    ':iznos_razduzeno' => $taksa_zakup,
-                    ':razduzeno' => 1,
-                    ':datum_razduzenja' => $datum,
-                    ':korisnik_id_razduzio' => $korisnik_id,
-                    ':napomena' => $napomena,
-                    ':uplata_id' => $uplata_id,
-                ];
+		// prave se podaci za upis
 
-                $ostatak = $razlika;
-            }
-        }
+		// taksa ili zakup koji moze delimicno da se razduzi
+		$deo = 0;
+		// vrsta (taksa ili zakup) za delimicno razduzivanje
+		$vrsta = '';
+		// godina takse ili zakupa za delimicno razduzivanje
+		$godina = 0;
 
-        // podaci za nove
-        if($ostatak > 0)
-        {
-            // taksa ili zakup koji moze delimicno da se razduzi
-            $n_deo = 0;
-            // vrsta (taksa ili zakup) za delimicno razduzivanje
-            $n_vrsta = '';
-            // godina takse ili zakupa za delimicno razduzivanje
-            $n_godina = 0;
+		// podaci za stare
+		foreach ($zaduzenja as $zad)
+		{
+			$iznos = $ostatak;
+			$razlika = (float) $ostatak - $zad->zaRazduzenje();
 
-            // pocetna godina za nove takse
-            $sql = "SELECT MAX(godina) AS max_godina FROM zaduzenja WHERE tip = 'taksa' AND staraoc_id = {$staraoc->id};";
-            $godina_za_taksu = (int) $staraoc->fetch($sql)[0]->max_godina + 1;
-            // pocetna godina za nove zakupe
-            $sql = "SELECT MAX(godina) AS max_godina FROM zaduzenja WHERE tip = 'zakup' AND staraoc_id = {$staraoc->id};";
-            $godina_za_zakup = (int) $staraoc->fetch($sql)[0]->max_godina + 1;
+			if ($razlika < 0)
+			{
+				$deo = $iznos;
+				$ostatak = 0;
+				$za_stare[] = [
+					':id' => $zad->id,
+					':iznos_razduzeno' => $deo,
+					':razduzeno' => 0,
+					':datum_razduzenja' => null,
+					':korisnik_id_razduzio' => null,
+					':napomena' => $napomena,
+					':uplata_id' => $uplata_id,
+				];
+				break;
+			}
+			else
+			{
+				$taksa_zakup = ($zad->tip === 'taksa') ? $taksa : $zakup;
+				$za_stare[] = [
+					':id' => $zad->id,
+					':iznos_razduzeno' => $taksa_zakup,
+					':razduzeno' => 1,
+					':datum_razduzenja' => $datum,
+					':korisnik_id_razduzio' => $korisnik_id,
+					':napomena' => $napomena,
+					':uplata_id' => $uplata_id,
+				];
 
-            // odrediti manji pocetnu godinu i krenuti odatle (taksa ili zakup)
-            $radi_taksu = $godina_za_taksu <= $godina_za_zakup ? true : false;
+				$ostatak = $razlika;
+			}
+		}
 
-            // petlja dok ima ostatka
-            do
-            {
-                $iznos = $ostatak;
+		// podaci za nove
+		if ($ostatak > 0)
+		{
+			// taksa ili zakup koji moze delimicno da se razduzi
+			$n_deo = 0;
+			// vrsta (taksa ili zakup) za delimicno razduzivanje
+			$n_vrsta = '';
+			// godina takse ili zakupa za delimicno razduzivanje
+			$n_godina = 0;
 
-                if($radi_taksu)
-                {
-                    $razlika = (float) $ostatak - $taksa;
-                }
-                else
-                {
-                    $razlika = (float) $ostatak - $zakup;
-                }
-                
+			// pocetna godina za nove takse
+			$sql = "SELECT MAX(godina) AS max_godina FROM zaduzenja WHERE tip = 'taksa' AND staraoc_id = {$staraoc->id};";
+			$godina_za_taksu = (int) $staraoc->fetch($sql)[0]->max_godina + 1;
+			// pocetna godina za nove zakupe
+			$sql = "SELECT MAX(godina) AS max_godina FROM zaduzenja WHERE tip = 'zakup' AND staraoc_id = {$staraoc->id};";
+			$godina_za_zakup = (int) $staraoc->fetch($sql)[0]->max_godina + 1;
 
-                if($razlika < 0)
-                {
-                    $n_deo = $iznos;
+			// odrediti manji pocetnu godinu i krenuti odatle (taksa ili zakup)
+			$radi_taksu = $godina_za_taksu <= $godina_za_zakup ? true : false;
 
-                    if($radi_taksu)
-                    {
-                        $n_vrsta = 'taksa';
-                        $n_godina = $godina_za_taksu;
-                        $taksa_zakup = $taksa;
-                    }
-                    else
-                    {
-                        $n_vrsta = 'zakup';
-                        $n_godina = $godina_za_zakup;
-                        $taksa_zakup = $zakup;
-                    }
+			// petlja dok ima ostatka
+			do
+			{
+				$iznos = $ostatak;
 
-                    $za_nove[] = [
-                        ':karton_id' => $karton_id,
-                        ':staraoc_id' => $staraoc_id,
-                        ':tip' => $n_vrsta,
-                        ':godina' => $n_godina,
-                        ':iznos_zaduzeno' => $taksa_zakup,
-                        ':iznos_razduzeno' => $n_deo,
-                        ':razduzeno' => 0,
-                        ':datum_zaduzenja' => $datum,
-                        ':datum_razduzenja' => null,
-                        ':korisnik_id_zaduzio' => $korisnik_id,
-                        ':korisnik_id_razduzio' => null,
-                        ':reprogram_id' => null,
-                        ':napomena' => $napomena,
-                        ':uplata_id' => $uplata_id,
-                    ];
+				if ($radi_taksu)
+				{
+					$razlika = (float) $ostatak - $taksa;
+				}
+				else
+				{
+					$razlika = (float) $ostatak - $zakup;
+				}
 
-                    $ostatak = 0;
-                }
-                else
-                {
-                    if($radi_taksu)
-                    {
-                        $za_nove[] = [
-                            ':karton_id' => $karton_id,
-                            ':staraoc_id' => $staraoc_id,
-                            ':tip' => 'taksa',
-                            ':godina' => $godina_za_taksu,
-                            ':iznos_zaduzeno' => $taksa,
-                            ':iznos_razduzeno' => $taksa,
-                            ':razduzeno' => 1,
-                            ':datum_zaduzenja' => $datum,
-                            ':datum_razduzenja' => $datum,
-                            ':korisnik_id_zaduzio' => $korisnik_id,
-                            ':korisnik_id_razduzio' => $korisnik_id,
-                            ':reprogram_id' => null,
-                            ':napomena' => $napomena,
-                            ':uplata_id' => $uplata_id,
-                        ];
-                        $ostatak = $razlika;
-                        $godina_za_taksu++;
-                    }
-                    else
-                    {
-                        $za_nove[] = [
-                            ':karton_id' => $karton_id,
-                            ':staraoc_id' => $staraoc_id,
-                            ':tip' => 'zakup',
-                            ':godina' => $godina_za_zakup,
-                            ':iznos_zaduzeno' => $zakup,
-                            ':iznos_razduzeno' => $zakup,
-                            ':razduzeno' => 1,
-                            ':datum_zaduzenja' => $datum,
-                            ':datum_razduzenja' => $datum,
-                            ':korisnik_id_zaduzio' => $korisnik_id,
-                            ':korisnik_id_razduzio' => $korisnik_id,
-                            ':reprogram_id' => null,
-                            ':napomena' => $napomena,
-                            ':uplata_id' => $uplata_id,
-                        ];
-                        $ostatak = $razlika;
-                        $godina_za_zakup++;
-                    }
-                }
-                $radi_taksu = $godina_za_taksu <= $godina_za_zakup ? true : false;
-            } while ($ostatak > 0);
-            
-        }
 
-        $pdo = $staraoc->getDb()->getPDO();
+				if ($razlika < 0)
+				{
+					$n_deo = $iznos;
 
-        // strai UPDATE
-        $sql_s = "UPDATE `zaduzenja` SET
+					if ($radi_taksu)
+					{
+						$n_vrsta = 'taksa';
+						$n_godina = $godina_za_taksu;
+						$taksa_zakup = $taksa;
+					}
+					else
+					{
+						$n_vrsta = 'zakup';
+						$n_godina = $godina_za_zakup;
+						$taksa_zakup = $zakup;
+					}
+
+					$za_nove[] = [
+						':karton_id' => $karton_id,
+						':staraoc_id' => $staraoc_id,
+						':tip' => $n_vrsta,
+						':godina' => $n_godina,
+						':iznos_zaduzeno' => $taksa_zakup,
+						':iznos_razduzeno' => $n_deo,
+						':razduzeno' => 0,
+						':datum_zaduzenja' => $datum,
+						':datum_razduzenja' => null,
+						':korisnik_id_zaduzio' => $korisnik_id,
+						':korisnik_id_razduzio' => null,
+						':reprogram_id' => null,
+						':napomena' => $napomena,
+						':uplata_id' => $uplata_id,
+					];
+
+					$ostatak = 0;
+				}
+				else
+				{
+					if ($radi_taksu)
+					{
+						$za_nove[] = [
+							':karton_id' => $karton_id,
+							':staraoc_id' => $staraoc_id,
+							':tip' => 'taksa',
+							':godina' => $godina_za_taksu,
+							':iznos_zaduzeno' => $taksa,
+							':iznos_razduzeno' => $taksa,
+							':razduzeno' => 1,
+							':datum_zaduzenja' => $datum,
+							':datum_razduzenja' => $datum,
+							':korisnik_id_zaduzio' => $korisnik_id,
+							':korisnik_id_razduzio' => $korisnik_id,
+							':reprogram_id' => null,
+							':napomena' => $napomena,
+							':uplata_id' => $uplata_id,
+						];
+						$ostatak = $razlika;
+						$godina_za_taksu++;
+					}
+					else
+					{
+						$za_nove[] = [
+							':karton_id' => $karton_id,
+							':staraoc_id' => $staraoc_id,
+							':tip' => 'zakup',
+							':godina' => $godina_za_zakup,
+							':iznos_zaduzeno' => $zakup,
+							':iznos_razduzeno' => $zakup,
+							':razduzeno' => 1,
+							':datum_zaduzenja' => $datum,
+							':datum_razduzenja' => $datum,
+							':korisnik_id_zaduzio' => $korisnik_id,
+							':korisnik_id_razduzio' => $korisnik_id,
+							':reprogram_id' => null,
+							':napomena' => $napomena,
+							':uplata_id' => $uplata_id,
+						];
+						$ostatak = $razlika;
+						$godina_za_zakup++;
+					}
+				}
+				$radi_taksu = $godina_za_taksu <= $godina_za_zakup ? true : false;
+			} while ($ostatak > 0);
+		}
+
+		$pdo = $staraoc->getDb()->getPDO();
+
+		// strai UPDATE
+		$sql_s = "UPDATE `zaduzenja` SET
                 iznos_razduzeno = :iznos_razduzeno,
                 razduzeno = :razduzeno,
                 datum_razduzenja = :datum_razduzenja,
@@ -242,18 +260,18 @@ class UplataController extends Controller
                 uplata_id = :uplata_id
                 WHERE id = :id;";
 
-        $stmt = $pdo->prepare($sql_s);
-        $pdo->beginTransaction();
+		$stmt = $pdo->prepare($sql_s);
+		$pdo->beginTransaction();
 
-            foreach ($za_stare as $zaduzenje)
-            {
-                $stmt->execute($zaduzenje);
-            }
+		foreach ($za_stare as $zaduzenje)
+		{
+			$stmt->execute($zaduzenje);
+		}
 
-        $pdo->commit();
+		$pdo->commit();
 
-        // novi INSERT
-        $sql_n = "INSERT INTO `zaduzenja`
+		// novi INSERT
+		$sql_n = "INSERT INTO `zaduzenja`
                 (karton_id,
                 staraoc_id,
                 tip,
@@ -284,21 +302,21 @@ class UplataController extends Controller
                 :napomena,
                 :uplata_id);";
 
-        $stmt = $pdo->prepare($sql_n);
-        $pdo->beginTransaction();
+		$stmt = $pdo->prepare($sql_n);
+		$pdo->beginTransaction();
 
-            foreach ($za_nove as $zaduzenje)
-            {
-                $stmt->execute($zaduzenje);
-            }
+		foreach ($za_nove as $zaduzenje)
+		{
+			$stmt->execute($zaduzenje);
+		}
 
-        $pdo->commit();
+		$pdo->commit();
 
-        // posle upisa staraoc->privremeni_saldo se vraca na 0 i id uplate na null
-        $sql_s = "UPDATE staraoci SET privremeni_saldo = 0, uplata_id = NULL WHERE id = {$staraoc_id}";
-        $staraoc->run($sql_s);
+		// posle upisa staraoc->privremeni_saldo se vraca na 0 i id uplate na null
+		$sql_s = "UPDATE staraoci SET privremeni_saldo = 0, uplata_id = NULL WHERE id = {$staraoc_id}";
+		$staraoc->run($sql_s);
 
-        $this->flash->addMessage('success', 'Višak novca je uspešno raspoređen na razduživanje taksi i zakupa.');
-        return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $id]));
-    }
+		$this->flash->addMessage('success', 'Višak novca je uspešno raspoređen na razduživanje taksi i zakupa.');
+		return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $id]));
+	}
 }

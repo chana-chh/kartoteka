@@ -102,3 +102,26 @@ figcaption {
   font-size: 90%;
   font-style: italic;
 }
+
+/*
+ * Success
+ */
+ .uk-button-success {
+  background-color: #2cb683;
+  color: #fff;
+  border: 1px solid transparent;
+}
+
+/* Hover + Focus */
+.uk-button-success:hover,
+.uk-button-success:focus {
+  background-color: #1e9b6d;
+  color: #fff;
+}
+
+/* OnClick + Active */
+.uk-button-success:active,
+.uk-button-success.uk-active {
+  background-color: #148f62;
+  color: #fff;
+}

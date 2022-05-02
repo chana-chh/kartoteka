@@ -2222,10 +2222,34 @@ select.uk-form-width-xsmall {
 }
 
 /*
+ * Success
+ */
+.uk-button-success {
+  background-color: #32d296;
+  color: #fff;
+  border: 1px solid transparent;
+}
+
+/* Hover + Focus */
+.uk-button-success:hover,
+.uk-button-success:focus {
+  background-color: #27ce91;
+  color: #fff;
+}
+
+/* OnClick + Active */
+.uk-button-success:active,
+.uk-button-success.uk-active {
+  background-color: #1dce8d;
+  color: #fff;
+}
+
+/*
  * Disabled
  * The same for all style modifiers
  */
 .uk-button-default:disabled,
+.uk-button-success:disabled,
 .uk-button-primary:disabled,
 .uk-button-secondary:disabled,
 .uk-button-danger:disabled {

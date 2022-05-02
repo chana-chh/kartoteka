@@ -43,7 +43,7 @@ class Reprogram extends Model
 
 	public function dug()
 	{
-		return round(($this->iznos / $this->period), 2) * $this->preostalo_rata;
+		return round(($this->iznos / $this->period * $this->preostalo_rata), 2);
 	}
 
 	public function rata()
@@ -104,5 +104,23 @@ class Reprogram extends Model
 		}
 
 		return $rate;
+	}
+
+	public function korisnikZaduzio()
+    {
+		$korisnik = (new Korisnik())->find((int) $this->korisnik_id_zaduzio);
+        return $korisnik;
+    }
+	
+	public function korisnikRazduzio()
+    {
+		$korisnik = (new Korisnik())->find((int) $this->korisnik_id_razduzio);
+        return $korisnik;
+    }
+
+	public function uplate()
+	{
+		$sql = "SELECT * FROM uplate WHERE reprogram_id = {$this->id};";
+		return $this->fetch($sql, null, 'App\Models\Uplata');
 	}
 }

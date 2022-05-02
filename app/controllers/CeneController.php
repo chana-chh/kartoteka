@@ -34,7 +34,7 @@ class CeneController extends Controller
         unset($data['csrf_name']);
         unset($data['csrf_value']);
 
-         $validation_rules = [
+        $validation_rules = [
             'datum' => [
                 'required' => true
             ],
@@ -47,10 +47,13 @@ class CeneController extends Controller
         ];
         $this->validator->validate($data, $validation_rules);
 
-        if ($this->validator->hasErrors()) {
+        if ($this->validator->hasErrors())
+        {
             $this->flash->addMessage('danger', 'Došlo je do greške prilikom izmene cena.');
             return $response->withRedirect($this->router->pathFor('cene'));
-        } else {
+        }
+        else
+        {
             $modelCena = new Cena();
             $stari = $modelCena->find($id);
             $modelCena->update($data, $id);
@@ -62,7 +65,7 @@ class CeneController extends Controller
         }
     }
 
-     public function getCeneDodavanje($request, $response)
+    public function getCeneDodavanje($request, $response)
     {
         $this->render($response, 'cene_dodavanje.twig');
     }
@@ -86,10 +89,13 @@ class CeneController extends Controller
         ];
         $this->validator->validate($data, $validation_rules);
 
-        if ($this->validator->hasErrors()) {
+        if ($this->validator->hasErrors())
+        {
             $this->flash->addMessage('danger', 'Došlo je do greške prilikom dodavanja cena.');
             return $response->withRedirect($this->router->pathFor('cene'));
-        } else {
+        }
+        else
+        {
             $modelCena = new Cena();
             $modelCena->insert($data);
             $id = $modelCena->getLastId();
@@ -104,28 +110,34 @@ class CeneController extends Controller
 
     public function postCeneBrisanje($request, $response)
     {
-        if($this->auth->user()->nivo !== 0)
+        if ($this->auth->user()->nivo !== 0)
         {
+            $this->flash->addMessage('danger', "Samo je administratorima dozvoljeno brisanje cena.");
             return $response->withRedirect($this->router->pathFor('cene'));
         }
 
-        $id = (int)$request->getParam('modal_cena_id');
-        $modelCena = new Cena();
-        $cena = $modelCena->find($id);
-        if ($cena->vazece == 1) {
+        $id = (int) $request->getParam('modal_cena_id');
+        $cena = (new Cena())->find($id);
+
+        if ($cena->vazece == 1)
+        {
             $this->flash->addMessage('danger', "Nije moguće obrisati trenutno važeće cene.");
             return $response->withRedirect($this->router->pathFor('cene'));
         }
-        $success = $modelCena->deleteOne($id);
-        if ($success) {
+
+        $success = $cena->deleteOne($id);
+
+        if ($success)
+        {
             $this->log($this::BRISANJE, $cena, 'datum', $cena);
-            $modelCena->odrediVazece();
+            $cena->odrediVazece();
             $this->flash->addMessage('success', "Cene su uspešno obrisane.");
             return $response->withRedirect($this->router->pathFor('cene'));
-        } else {
+        }
+        else
+        {
             $this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja cena.");
             return $response->withRedirect($this->router->pathFor('cene'));
         }
     }
-
 }
