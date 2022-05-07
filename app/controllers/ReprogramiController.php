@@ -248,7 +248,8 @@ class ReprogramiController extends Controller
 			if ($preostalo_rata <= 0)
 			{
 				$sql_zaduzenja = "UPDATE zaduzenja
-                    SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id}
+                    SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id},
+					iznos_razduzeno = iznos_zaduzeno
                     WHERE reprogram_id = {$id};";
 				$model_uplata->run($sql_zaduzenja);
 

@@ -488,7 +488,7 @@
 										{% endif %}
 										<tr class="{{ cls }}">
 											<td>
-												<button class="uk-button uk-button-link uk-button-small {{ cls }}">{{ rep.broj }}</button>
+												<a href="{{ path_for('transakcije.reprogram', { id: rep.id }) }}" class="uk-button uk-button-link uk-text-bold uk-button-small {{ cls }}">{{ rep.broj }}</a>
 												<div class="uk-width-large uk-text-meta" uk-dropdown="mode: hover; pos: top-left">
 													Datum prispeća prve rate:
 													{{ rep.datum_prve_rate is empty ? '' : rep.datum_prve_rate|date('d.m.Y') }}<br>

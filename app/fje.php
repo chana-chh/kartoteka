@@ -97,14 +97,14 @@ function dd($var, $print = true, $die = true, $backtrace = false)
 {
 	if (gettype($var) === 'object')
 	{
-		echo '<h2 style="font-family:monospace;color:#900"><em>Object:</em> ' . get_class($var) . '</h2>';
+		echo '<h2 style="font-family:monospace;color:#900;padding:1rem;"><em>Object:</em> ' . get_class($var) . '</h2>';
 	}
 	else
 	{
-		echo '<h2 style="font-family:monospace;color:#900"><em>Variable:</em> ' . gettype($var) . '</h2>';
+		echo '<h2 style="font-family:monospace;color:#900;padding:1rem;"><em>Variable:</em> ' . gettype($var) . '</h2>';
 	}
 
-	echo '<pre style="background-color:#fdd; color:#000; padding:1rem;">';
+	echo '<pre style="background-color:#fdd;color:#000;padding:1rem;">';
 	if ($print)
 	{
 		print_r($var);
@@ -117,15 +117,16 @@ function dd($var, $print = true, $die = true, $backtrace = false)
 
 	if (gettype($var) === 'object')
 	{
-		echo '<pre style="background-color:#dfd; color:#000; padding:1rem;">';
+		echo '<h2 style="font-family:monospace;color:#090;padding:1rem;"><em>Object:</em> methods</h2>';
+		echo '<pre style="background-color:#dfd;color:#000;padding:1rem;">';
 		print_r(get_class_methods($var));
 		echo '</pre>';
 	}
 
 	if ($backtrace)
 	{
-		echo '<h2 style="font-family:monospace;color:#009">BACKTRACE</h2>';
-		echo '<pre style="background-color:#ddf; color:#000; padding:1rem;">';
+		echo '<h2 style="font-family:monospace;color:#009;padding:1rem;">Backtrace</h2>';
+		echo '<pre style="background-color:#ddf; color:#000;padding:1rem;">';
 		print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
 		echo '</pre>';
 	}
