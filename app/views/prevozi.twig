@@ -1,0 +1,150 @@
+{% extends "templates/app.twig" %}
+
+{% block naslov %}
+	<h1
+		class="uk-text-danger">
+		Prevozi
+		{% if data %}
+			<small>
+				<em
+					class="uk-text-warning">[filtrirano]</em>
+			</small>
+		{% else %}
+			<small>
+				<em
+					class="uk-text-success">[svi prevozi]</em>
+			</small>
+		{% endif %}
+
+	</h1>
+
+	<div
+		class="uk-panel uk-background-muted uk-padding-small">
+		<form
+			action="{{ path_for('prevozi.pretraga') }}" method="POST">
+			{{ csrf|raw }}
+			<input
+				type="text"
+				name="prezime"
+				id="prezime"
+				class="uk-input uk-form-width-small uk-form-small"
+				value="{{ data.prezime }}" autocomplete="off"
+				placeholder="Prezime">
+			<input
+				type="text"
+				name="ime"
+				id="ime"
+				class="uk-input uk-form-width-small uk-form-small"
+				value="{{ data.ime }}" autocomplete="off"
+				placeholder="Ime">
+			<input
+				type="date"
+				name="datum_1"
+				id="datum_1"
+				value="{{ data.datum_1|date('Y-m-d') }}" class="uk-input uk-form-width-medium uk-form-small"
+				autocomplete="off">
+			<input
+				type="date"
+				name="datum_2"
+				id="datum_2"
+				value="{{ data.datum_2 }}" class="uk-input uk-form-width-medium uk-form-small"
+				autocomplete="off">
+			<div
+				class="uk-button-group">
+				<input
+					type="submit"
+					value="Filtriraj"
+					class="uk-button uk-button-primary uk-button-small">
+				<a
+					href="{{ path_for('prevozi') }}" class="uk-button uk-button-secondary uk-button-small">Svi prevozi</a>
+			</div>
+		</form>
+	</div>
+
+	<div
+		class="uk-overflow-auto">
+		<table
+			class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+			<thead>
+				<tr>
+					<th
+						class="w-5">Id</th>
+					<th
+						class="w-15">Ime</th>
+					<th
+						class="w-10">Telefon</th>
+					<th
+						class="w-10">Datum</th>
+					<th
+						class="w-10">Vreme</th>
+					<th
+						class="w-15">Adresa OD</th>
+					<th
+						class="w-15">Adresa DO</th>
+					<th
+						class="w-15">Napomena</th>
+					<th
+						class="w-5 uk-text-right">
+						<span
+							uk-icon="cog"></span>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for prevoz in prevozi.data %}
+					<tr>
+						<td>
+							<em>{{ prevoz.id }}</em>
+						</td>
+						<td>
+							{{  prevoz.punoIme()|upper }}
+						</td>
+						<td>{{ prevoz.telefon }}</td>
+						<td>{{ prevoz.datum|date('d.m.Y') }}</td>
+						<td>{{ prevoz.vreme|date('H:i') }}</td>
+						<td>{{ prevoz.adresaOd() }}</td>
+						<td>{{ prevoz.adresaDo() }}</td>
+						<td>{{ prevoz.napomena|nl2br }}}</td>
+						<td
+							class="uk-clearfix">
+							{# <ul
+								class="uk-iconnav uk-float-right">
+								<li>
+									<a
+										href="{{ path_for('staraoci.pregled',{id:st.id}) }}" title="Pregled">
+										<span
+											uk-icon="search"></span>
+									</a>
+								</li>
+								<li>
+									<a
+										href="{{ path_for('transakcije.pregled', { id: st.id }) }}" title="Transakcije">
+										<span
+											uk-icon="credit-card"></span>
+									</a>
+								</li>
+							</ul> #}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<div
+		class="uk-flex uk-flex-between uk-margin-top">
+		<div>{{ staraoci.links.buttons|raw }}</div>
+		<div>Idi na stranu
+			{{ staraoci.links.select|raw }}</div>
+		<div
+			class="uk-text-right">
+			<p>
+				Prikazani redovi od
+				<em>{{ staraoci.links.row_from }}</em>
+				do
+				<em>{{ staraoci.links.row_to }}</em>
+				od ukupno
+				<em>{{ staraoci.links.total_rows }}</em>
+			</p>
+		</div>
+	</div>
+{% endblock naslov %}

@@ -163,4 +163,16 @@ $app->group('', function ()
 
 	// Razduzivanje viska para
 	$this->post('/transakcije/visak', '\App\Controllers\UplataController:postVisak')->setName('transakcije.visak');
+
+	// Prevoz
+	$this->get('/prevozi', '\App\Controllers\PrevoziController:getPrevozi')->setName('prevozi');
+	$this->get('/prevozi/pretraga', '\App\Controllers\PrevoziController:getPrevoziPretraga')->setName('prevozi.pretraga');
+	$this->post('/prevozi/pretraga', '\App\Controllers\PrevoziController:postPrevoziPretraga');
+
+	// $this->get('/staraoci/dodavanje/{id}', '\App\Controllers\PrevoziController:getStaraociDodavanje')->setName('staraoci.dodavanje');
+	// $this->post('/staraoci/dodavanje', '\App\Controllers\PrevoziController:postStaraociDodavanje')->setName('staraoci.dodavanje.post');
+	// $this->post('/staraoci/brisanje', '\App\Controllers\PrevoziController:postStaraociBrisanje')->setName('staraoci.brisanje');
+	// $this->get('/staraoci/izmena/{id}', '\App\Controllers\PrevoziController:getStaraociIzmena')->setName('staraoci.izmena');
+	// $this->get('/staraoci/pregled/{id}', '\App\Controllers\PrevoziController:getStaraociPregled')->setName('staraoci.pregled');
+	// $this->post('/staraoci/izmena', '\App\Controllers\PrevoziController:postStaraociIzmena')->setName('staraoci.izmena.post');
 })->add(new AuthMiddleware($container));

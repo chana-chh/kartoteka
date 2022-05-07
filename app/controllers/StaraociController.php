@@ -151,7 +151,7 @@ class StaraociController extends Controller
         $id = (int)$request->getParam('modal_staraoc_id');
         $karton_id = (int)$request->getParam('modal_staraoc_karton_id');
         $modelStaraoc = new Staraoc();
-        $staraoc = $model->find($id);
+        $staraoc = $modelStaraoc->find($id);
         $success = $modelStaraoc->deleteOne($id);
         if ($success) {
             $this->log($this::BRISANJE, $staraoc, ['jmbg', 'prezime', 'ime'], $staraoc);

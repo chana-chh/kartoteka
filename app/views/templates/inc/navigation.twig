@@ -34,6 +34,12 @@
 					Raspored
 				</a>
 			</li>
+			<li>
+				<a href="{{ path_for('prevozi') }}">
+					<span uk-icon="location" class="uk-margin-small-right"></span>
+					Prevoz
+				</a>
+			</li>
 			{% if auth.logged and auth.user.nivo == 0 %}
 				<li>
 					<a href="">
