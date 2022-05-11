@@ -139,6 +139,12 @@ class KartoniController extends Controller
 
     public function postKartoniBrisanje($request, $response)
     {
+
+		// nema brisanja kartona samo prelazi u neaktivan
+		// samo u slucaju greske moze da brise admin
+		
+		dd('postKartoniBrisanje');
+
         $id = (int)$request->getParam('brisanje_id');
         $modelKarton = new Karton();
         $karton = $modelKarton->find($id);

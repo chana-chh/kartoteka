@@ -142,6 +142,11 @@ class PokojniciController extends Controller
 
     public function postPokojniciBrisanje($request, $response)
     {
+		// nema brisanja pokojnika
+		// samo u slucaju greske moze da brise admin
+		
+		dd('postPokojniciBrisanje');
+
         $id = (int)$request->getParam('modal_pokojnik_id');
         $karton_id = (int)$request->getParam('modal_pokojnik_karton_id');
         $model = new Pokojnik();

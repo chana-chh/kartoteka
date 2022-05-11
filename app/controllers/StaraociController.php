@@ -102,6 +102,10 @@ class StaraociController extends Controller
 
     public function postStaraociDodavanje($request, $response)
     {
+
+		// ovde proveriti da li je nesto
+		// dd('postStaraociDodavanje');
+
         $data = $request->getParams();
         unset($data['csrf_name']);
         unset($data['csrf_value']);
@@ -148,7 +152,14 @@ class StaraociController extends Controller
 
     public function postStaraociBrisanje($request, $response)
     {
-        $id = (int)$request->getParam('modal_staraoc_id');
+		// nema brisanja samo prelazi u neaktivan
+		// samo u slucaju greske moze da brise admin
+
+		// ovde proveriti da li je nesto
+		dd('postStaraociBrisanje');
+
+
+		$id = (int)$request->getParam('modal_staraoc_id');
         $karton_id = (int)$request->getParam('modal_staraoc_karton_id');
         $modelStaraoc = new Staraoc();
         $staraoc = $modelStaraoc->find($id);
@@ -181,12 +192,19 @@ class StaraociController extends Controller
 
     public function postStaraociIzmena($request, $response)
     {
+
+		// ovde proveriti da li je jedini aktivan sukorisnik
+		// ako jeste ne dozvoliti promenu statusa aktivan
+		// deljenje sa nulom ako nema njednog aktivnog staraoca
+		// dd('postStaraociIzmena');
+
         $id = (int)$request->getParam('id');
-        $id_kartona = (int)$request->getParam('karton_id');
+        $id_kartona = (int) $request->getParam('karton_id');
         $data = $request->getParams();
         unset($data['csrf_name']);
         unset($data['csrf_value']);
         unset($data['id']);
+		unset($data['karton_id']);
         $validation_rules = [
             'redni_broj' => [
                 'required' => true,
@@ -212,11 +230,8 @@ class StaraociController extends Controller
         } else {
             $modelStaraoc = new Staraoc();
             $staraoc_old = $modelStaraoc->find($id);
-            unset($data['karton_id']);
             $aktivan = isset($data['aktivan']) ? 1 : 0;
             $data['aktivan'] = $aktivan;
-            // $sukorisnik = isset($data['sukorisnik']) ? 1 : 0;
-            // $data['sukorisnik'] = $sukorisnik;
             $modelStaraoc->update($data, $id);
             $staraoc = $modelStaraoc->find($id);
             $this->log($this::IZMENA, $staraoc, ['jmbg', 'prezime', 'ime'], $staraoc_old);

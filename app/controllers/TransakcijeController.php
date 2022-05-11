@@ -257,6 +257,7 @@ class TransakcijeController extends Controller
 
 	public function postZaduzivanje($request, $response)
 	{
+		// onemoguciti zaduzivanje i razduzivanje neaktivnih staraoca
 		$data = $request->getParams();
 		unset($data['csrf_name']);
 		unset($data['csrf_value']);
@@ -535,12 +536,11 @@ class TransakcijeController extends Controller
 		$this->render($response, 'print/opomene.twig', compact('kartoni'));
 	}
 
-
 	public function postZaduzenjeBrisanje($request, $response)
 	{
 		$id = (int) $request->getParam('modal_zaduzenje_id');
 		$zaduzenje = (new Zaduzenje())->find($id);
-		
+
 		// ne moze da se brise ako je
 		// razduzeno = 1
 		// iznos_razduzeno > 0
