@@ -137,9 +137,7 @@ class StaraociController extends Controller
             return $response->withRedirect($this->router->pathFor('staraoci.dodavanje', ['id' => $data['karton_id']]));
         } else {
             $aktivan = isset($data['aktivan']) ? 1 : 0;
-            // $sukorisnik = isset($data['sukorisnik']) ? 1 : 0;
             $data['aktivan'] = $aktivan;
-            // $data['sukorisnik'] = $sukorisnik;
             $model = new Staraoc();
             $model->insert($data);
             $id = $model->getLastId();
@@ -152,15 +150,15 @@ class StaraociController extends Controller
 
     public function postStaraociBrisanje($request, $response)
     {
-		// nema brisanja samo prelazi u neaktivan
-		// samo u slucaju greske moze da brise admin
-
-		// ovde proveriti da li je nesto
-		dd('postStaraociBrisanje');
-
+		$karton_id = (int)$request->getParam('modal_staraoc_karton_id');
+		
+		if($this->auth->user()->nivo !== 0)
+		{
+			$this->flash->addMessage('danger', "Samo administrator može da obriše staraoca.");
+            return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $karton_id]));
+		}
 
 		$id = (int)$request->getParam('modal_staraoc_id');
-        $karton_id = (int)$request->getParam('modal_staraoc_karton_id');
         $modelStaraoc = new Staraoc();
         $staraoc = $modelStaraoc->find($id);
         $success = $modelStaraoc->deleteOne($id);

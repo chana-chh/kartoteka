@@ -567,33 +567,5 @@ class TransakcijeController extends Controller
 
 	public function postSveBrisanje($request, $response)
 	{
-		// $karton_id = (int) $request->getParam('karton_id');
-
-		// $sqlz = "DELETE FROM zaduzenja WHERE karton_id = :kar;";
-		// $modelZaduzenja = new Zaduzenje();
-		// $successz = $modelZaduzenja->run($sqlz, [':kar' => $karton_id]);
-
-		// $sqlr = "DELETE FROM racuni WHERE karton_id = :kar;";
-		// $modelRacuna = new Racun();
-		// $successr = $modelRacuna->run($sqlr, [':kar' => $karton_id]);
-
-		// $sqle = "DELETE FROM reprogrami WHERE karton_id = :kar;";
-		// $modelReprogram = new Reprogram();
-		// $successe = $modelReprogram->run($sqle, [':kar' => $karton_id]);
-
-		// $sqlu = "DELETE FROM uplate WHERE karton_id = :kar;";
-		// $modelUplata = new Uplata();
-		// $successu = $modelUplata->run($sqlu, [':kar' => $karton_id]);
-
-		// if ($successz || $successr || $successe || $successu)
-		// {
-		// 	$this->flash->addMessage('success', "Zaduženje, računi i uplate su uspešno obrisane.");
-		// 	return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $karton_id]));
-		// }
-		// else
-		// {
-		// 	$this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja zaduženja.");
-		// 	return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $karton_id]));
-		// }
 	}
 }

@@ -64,6 +64,12 @@ class GrobljaController extends Controller
 
     public function postGrobljaBrisanje($request, $response)
     {
+		if ($this->auth->user()->nivo !== 0)
+		{
+			$this->flash->addMessage('danger', "Samo administrator može da obriše groblje.");
+            return $response->withRedirect($this->router->pathFor('groblja'));
+		}
+
         $id = (int)$request->getParam('modal_groblje_id');
         $modelGroblja = new Groblje();
         $groblje = $modelGroblja->find($id);

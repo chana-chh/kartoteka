@@ -275,7 +275,7 @@ class Staraoc extends Model
 
     public function ukupanDug()
     {
-        return $this->dugZaTakse() + $this->dugZaZakupe() + $this->dugZaRacune();
+        return $this->dugZaTakse() + $this->dugZaZakupe() + $this->dugZaRacune() + $this->dugZaReprograme();
     }
 
     public function imaSaldo()

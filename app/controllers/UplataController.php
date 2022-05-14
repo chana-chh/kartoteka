@@ -20,6 +20,13 @@ class UplataController extends Controller
 	{
 		$id = (int) $request->getParam('modal_uplata_id');
 		$uplata = (new Uplata())->find($id);
+		$staraoc_id = $uplata->staraoc()->id;
+
+		if ($this->auth->user()->nivo !== 0)
+		{
+			$this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja uplate.");
+			return $response->withRedirect($this->router->pathFor('uplate', ['id' => $staraoc_id]));
+		}
 
 		if ($uplata->reprogram_id !== null)
 		{
@@ -32,24 +39,23 @@ class UplataController extends Controller
 			$sql = "UPDATE zaduzenja SET razduzeno = 0, iznos_razduzeno = 0, korisnik_id_razduzio = NULL, uplata_id = NULL
 					WHERE uplata_id = {$uplata->id}";
 			$uplata->run($sql);
-			
+
 			$sql = "UPDATE racuni SET razduzeno = 0, korisnik_id_razduzio = NULL, uplata_id = NULL
 					WHERE uplata_id = {$uplata->id}";
 			$uplata->run($sql);
-
 		}
-		$staraoc_id = $uplata->staraoc()->id;
-		$success = $uplata->deleteOne($id);
 		
+		$success = $uplata->deleteOne($id);
+
 		if ($success)
 		{
-		    $this->flash->addMessage('success', "Uplata je uspešno obrisana.");
-		    return $response->withRedirect($this->router->pathFor('uplate', ['id' => $staraoc_id]));
+			$this->flash->addMessage('success', "Uplata je uspešno obrisana.");
+			return $response->withRedirect($this->router->pathFor('uplate', ['id' => $staraoc_id]));
 		}
 		else
 		{
-		    $this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja uplate.");
-		    return $response->withRedirect($this->router->pathFor('uplate', ['id' => $staraoc_id]));
+			$this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja uplate.");
+			return $response->withRedirect($this->router->pathFor('uplate', ['id' => $staraoc_id]));
 		}
 	}
 

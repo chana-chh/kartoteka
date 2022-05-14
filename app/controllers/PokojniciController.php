@@ -142,13 +142,15 @@ class PokojniciController extends Controller
 
     public function postPokojniciBrisanje($request, $response)
     {
-		// nema brisanja pokojnika
-		// samo u slucaju greske moze da brise admin
-		
-		dd('postPokojniciBrisanje');
+		$karton_id = (int)$request->getParam('modal_pokojnik_karton_id');
+
+		if($this->auth->user()->nivo !== 0)
+		{
+			$this->flash->addMessage('danger', "Samo administrator može da obriše pokojnika.");
+            return $response->withRedirect($this->router->pathFor('kartoni.pregled', ['id' => $karton_id]));
+		}
 
         $id = (int)$request->getParam('modal_pokojnik_id');
-        $karton_id = (int)$request->getParam('modal_pokojnik_karton_id');
         $model = new Pokojnik();
         $pokojnik = $model->find($id);
         $success = $model->deleteOne($id);

@@ -69,6 +69,12 @@ class KorisniciController extends Controller
 
     public function postKorisniciBrisanje($request, $response)
     {
+		if ($this->auth->user()->nivo !== 0)
+		{
+			$this->flash->addMessage('danger', "Samo administrator može da obriše korisnika.");
+			return $response->withRedirect($this->router->pathFor('korisnici'));
+		}
+
         $id = (int)$request->getParam('modal_korisnik_id');
         $modelKorisnika = new Korisnik();
         $korisnik = $modelKorisnika->find($id);

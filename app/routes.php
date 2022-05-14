@@ -168,6 +168,8 @@ $app->group('', function ()
 	$this->get('/prevozi', '\App\Controllers\PrevoziController:getPrevozi')->setName('prevozi');
 	$this->get('/prevozi/pretraga', '\App\Controllers\PrevoziController:getPrevoziPretraga')->setName('prevozi.pretraga');
 	$this->post('/prevozi/pretraga', '\App\Controllers\PrevoziController:postPrevoziPretraga');
+	$this->get('/prevozi/dodavanje', '\App\Controllers\PrevoziController:getPrevoziDodavanje')->setName('prevozi.dodavanje.get');
+	$this->post('/prevozi/dodavanje', '\App\Controllers\PrevoziController:postPrevoziDodavanje')->setName('prevozi.dodavanje.post');
 
 	// $this->get('/staraoci/dodavanje/{id}', '\App\Controllers\PrevoziController:getStaraociDodavanje')->setName('staraoci.dodavanje');
 	// $this->post('/staraoci/dodavanje', '\App\Controllers\PrevoziController:postStaraociDodavanje')->setName('staraoci.dodavanje.post');

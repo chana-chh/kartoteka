@@ -20,45 +20,70 @@
 
 	<div
 		class="uk-panel uk-background-muted uk-padding-small">
-		<form
-			action="{{ path_for('prevozi.pretraga') }}" method="POST">
-			{{ csrf|raw }}
-			<input
-				type="text"
-				name="prezime"
-				id="prezime"
-				class="uk-input uk-form-width-small uk-form-small"
-				value="{{ data.prezime }}" autocomplete="off"
-				placeholder="Prezime">
-			<input
-				type="text"
-				name="ime"
-				id="ime"
-				class="uk-input uk-form-width-small uk-form-small"
-				value="{{ data.ime }}" autocomplete="off"
-				placeholder="Ime">
-			<input
-				type="date"
-				name="datum_1"
-				id="datum_1"
-				value="{{ data.datum_1|date('Y-m-d') }}" class="uk-input uk-form-width-medium uk-form-small"
-				autocomplete="off">
-			<input
-				type="date"
-				name="datum_2"
-				id="datum_2"
-				value="{{ data.datum_2 }}" class="uk-input uk-form-width-medium uk-form-small"
-				autocomplete="off">
+		<div
+			class="uk-clearfix">
 			<div
-				class="uk-button-group">
-				<input
-					type="submit"
-					value="Filtriraj"
-					class="uk-button uk-button-primary uk-button-small">
-				<a
-					href="{{ path_for('prevozi') }}" class="uk-button uk-button-secondary uk-button-small">Svi prevozi</a>
+				class="uk-float-left">
+				<form
+					action="{{ path_for('prevozi.pretraga') }}" method="POST">
+					{{ csrf|raw }}
+					<input
+						type="text"
+						name="prezime"
+						id="prezime"
+						class="uk-input uk-form-width-small uk-form-small"
+						value="{{ data.prezime }}" autocomplete="off"
+						placeholder="Prezime">
+					<input
+						type="text"
+						name="ime"
+						id="ime"
+						class="uk-input uk-form-width-small uk-form-small"
+						value="{{ data.ime }}" autocomplete="off"
+						placeholder="Ime">
+					<input
+						type="text"
+						name="pok_prezime"
+						id="pok_prezime"
+						class="uk-input uk-form-width-small uk-form-small"
+						value="{{ data.pok_prezime }}" autocomplete="off"
+						placeholder="Prezime pokojnika">
+					<input
+						type="text"
+						name="pok_ime"
+						id="pok_ime"
+						class="uk-input uk-form-width-small uk-form-small"
+						value="{{ data.pok_ime }}" autocomplete="off"
+						placeholder="Ime pokojnika">
+					<input
+						type="date"
+						name="datum_1"
+						id="datum_1"
+						value="{{ data.datum_1 }}" class="uk-input uk-form-width-medium uk-form-small"
+						autocomplete="off">
+					<input
+						type="date"
+						name="datum_2"
+						id="datum_2"
+						value="{{ data.datum_2 }}" class="uk-input uk-form-width-medium uk-form-small"
+						autocomplete="off">
+					<div
+						class="uk-button-group">
+						<input
+							type="submit"
+							value="Filtriraj"
+							class="uk-button uk-button-primary uk-button-small">
+						<a
+							href="{{ path_for('prevozi') }}" class="uk-button uk-button-secondary uk-button-small">Svi prevozi</a>
+					</div>
+				</form>
 			</div>
-		</form>
+			<div
+				class="uk-float-right">
+				<a
+					href="{{ path_for('prevozi.dodavanje.get') }}" class="uk-button uk-button-primary uk-button-small">Dodaj prevoz</a>
+			</div>
+		</div>
 	</div>
 
 	<div
@@ -70,9 +95,11 @@
 					<th
 						class="w-5">Id</th>
 					<th
-						class="w-15">Ime</th>
+						class="w-10">Ime</th>
 					<th
 						class="w-10">Telefon</th>
+					<th
+						class="w-10">Pokojnik</th>
 					<th
 						class="w-10">Datum</th>
 					<th
@@ -82,7 +109,7 @@
 					<th
 						class="w-15">Adresa DO</th>
 					<th
-						class="w-15">Napomena</th>
+						class="w-10">Napomena</th>
 					<th
 						class="w-5 uk-text-right">
 						<span
@@ -100,30 +127,33 @@
 							{{  prevoz.punoIme()|upper }}
 						</td>
 						<td>{{ prevoz.telefon }}</td>
+						<td>
+							{{  prevoz.punoImePokojnika()|upper }}
+						</td>
 						<td>{{ prevoz.datum|date('d.m.Y') }}</td>
 						<td>{{ prevoz.vreme|date('H:i') }}</td>
 						<td>{{ prevoz.adresaOd() }}</td>
 						<td>{{ prevoz.adresaDo() }}</td>
-						<td>{{ prevoz.napomena|nl2br }}}</td>
+						<td>{{ prevoz.napomena|nl2br }}</td>
 						<td
 							class="uk-clearfix">
-							{# <ul
+							<ul
 								class="uk-iconnav uk-float-right">
 								<li>
 									<a
-										href="{{ path_for('staraoci.pregled',{id:st.id}) }}" title="Pregled">
+										href="" title="Izmena">
 										<span
-											uk-icon="search"></span>
+											uk-icon="pencil"></span>
 									</a>
 								</li>
 								<li>
 									<a
-										href="{{ path_for('transakcije.pregled', { id: st.id }) }}" title="Transakcije">
+										href="" title="Brisanje">
 										<span
-											uk-icon="credit-card"></span>
+											uk-icon="trash"></span>
 									</a>
 								</li>
-							</ul> #}
+							</ul>
 						</td>
 					</tr>
 				{% endfor %}

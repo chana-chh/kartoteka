@@ -27,6 +27,12 @@ class Prevoz extends Model
         return "{$this->prezime} {$si}{$this->ime}";
     }
 
+    public function punoImePokojnika()
+    {
+        $si = empty($this->pok_srednje_ime) ? "" : "({$this->pok_srednje_ime}) ";
+        return "{$this->pok_prezime} {$si}{$this->pok_ime}";
+    }
+
     public function adresaOd()
     {
 		$ptt = empty($this->od_ptt) ? "" : "({$this->od_ptt}) ";

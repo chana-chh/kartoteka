@@ -13,7 +13,7 @@ class PrevoziController extends Controller
 		$page = isset($query['page']) ? (int) $query['page'] : 1;
 
 		$model = new Prevoz();
-		$sql = "SELECT * FROM prevozi ORDER BY datum, vreme;";
+		$sql = "SELECT * FROM prevozi ORDER BY datum DESC, vreme DESC;";
 		$prevozi = $model->paginate($page, $sql);
 
 		$this->render($response, 'prevozi.twig', compact('prevozi'));
@@ -31,15 +31,19 @@ class PrevoziController extends Controller
 		array_shift($data);
 		array_shift($data);
 
-		if (empty($data['prezime']) && empty($data['ime']) && empty($data['datum_1']))
+		if (empty($data['prezime']) && empty($data['ime']) && empty($data['datum_1']) && empty($data['pok_ime']) && empty($data['pok_prezime']))
 		{
 			return $this->getPrevozi($request, $response);
 		}
 
 		$data['prezime'] = str_replace('%', '', $data['prezime']);
 		$data['ime'] = str_replace('%', '', $data['ime']);
+		$data['pok_prezime'] = str_replace('%', '', $data['pok_prezime']);
+		$data['pok_ime'] = str_replace('%', '', $data['pok_ime']);
 		$prezime = '%' . filter_var($data['prezime'], FILTER_SANITIZE_STRING) . '%';
 		$ime = '%' . filter_var($data['ime'], FILTER_SANITIZE_STRING) . '%';
+		$pok_prezime = '%' . filter_var($data['pok_prezime'], FILTER_SANITIZE_STRING) . '%';
+		$pok_ime = '%' . filter_var($data['pok_ime'], FILTER_SANITIZE_STRING) . '%';
 		$query = [];
 		parse_str($request->getUri()->getQuery(), $query);
 		$page = isset($query['page']) ? (int)$query['page'] : 1;
@@ -67,6 +71,26 @@ class PrevoziController extends Controller
 			$params[':ime'] = $ime;
 		}
 
+		if (!empty($data['pok_prezime']))
+		{
+			if ($where !== " WHERE ")
+			{
+				$where .= " AND ";
+			}
+			$where .= "pok_prezime LIKE :pok_prezime";
+			$params[':pok_prezime'] = $pok_prezime;
+		}
+
+		if (!empty($data['pok_ime']))
+		{
+			if ($where !== " WHERE ")
+			{
+				$where .= " AND ";
+			}
+			$where .= "pok_ime LIKE :pok_ime";
+			$params[':pok_ime'] = $pok_ime;
+		}
+
 		if (!empty($data['datum_1']) && empty($data['datum_2']))
 		{
 			if ($where !== " WHERE ")
@@ -90,9 +114,80 @@ class PrevoziController extends Controller
 
 		$where = $where === " WHERE " ? "" : $where;
 		$model = new Prevoz();
-		$sql = "SELECT * FROM prevozi{$where} ORDER BY datum, vreme;";
+		$sql = "SELECT * FROM prevozi{$where} ORDER BY datum DESC, vreme DESC;";
 		$prevozi = $model->paginate($page, $sql, $params);
-
 		$this->render($response, 'prevozi.twig', compact('prevozi', 'data'));
+	}
+
+	public function getPrevoziDodavanje($request, $response)
+	{
+		$this->render($response, 'prevoz_dodavanje.twig');
+	}
+
+	public function postPrevoziDodavanje($request, $response)
+	{
+		$data = $request->getParams();
+		unset($data['csrf_name']);
+        unset($data['csrf_value']);
+        $data['korisnik_id'] = $this->auth->user()->id;
+
+		// dd($data);
+
+		$validation_rules = [
+            'datum' => [
+                'required' => true,
+            ],
+            'vreme' => [
+                'required' => true,
+            ],
+            'prezime' => [
+                'required' => true,
+            ],
+            'ime' => [
+				'required' => true,
+            ],
+			'telefon' => [
+				'required' => true,
+			],
+			'pok_prezime' => [
+                'required' => true,
+            ],
+            'pok_ime' => [
+				'required' => true,
+            ],
+            'od_mesto' => [
+				'required' => true,
+            ],
+            'od_ulica' => [
+				'required' => true,
+            ],
+            'od_broj' => [
+				'required' => true,
+            ],
+            'do_mesto' => [
+				'required' => true,
+            ],
+            'do_ulica' => [
+				'required' => true,
+            ],
+            'do_broj' => [
+				'required' => true,
+            ],
+        ];
+
+        $this->validator->validate($data, $validation_rules);
+
+		if ($this->validator->hasErrors()) {
+            $this->flash->addMessage('danger', 'Došlo je do greške prilikom dodavanja prevoza.');
+            return $response->withRedirect($this->router->pathFor('prevozi.dodavanje.get'));
+        } else {
+            $model = new Prevoz();
+            $model->insert($data);
+            $id = $model->getLastId();
+            $prevoz = $model->find($id);
+            $this->log($this::DODAVANJE, $prevoz, ['prezime', 'ime'], $prevoz);
+            $this->flash->addMessage('success', 'Novi prevoz je uspešno upisan.');
+            return $response->withRedirect($this->router->pathFor('prevozi'));
+        }
 	}
 }

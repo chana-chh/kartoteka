@@ -1,0 +1,380 @@
+{% extends "templates/app.twig" %}
+
+{% block naslov %}
+	<h1>Dodavanje prevoza</h1>
+	<hr>
+	<form
+		action="{{ path_for('prevozi.dodavanje.post') }}" method="POST"
+		class="uk-form-stacked"
+		uk-grid>
+		{{ csrf|raw }}
+		<div
+			class="uk-width-1-1 uk-margin-small">
+			<h4
+				class="uk-text-primary">Datum i vreme prevoza</h4>
+		</div>
+		<div
+			class="uk-width-1-6 uk-margin-small">
+			<label
+				for="datum"
+				class="uk-form-label">Datum</label>
+			<div
+				class="uk-form-controls">
+				<input
+					type="date"
+					name="datum"
+					id="datum"
+					value="{{ data.datum|date('Y-m-d') }}" class="uk-input"
+					autocomplete="off"
+					autofocus
+					required>
+			</div>
+			<small
+				class="uk-text-danger">{{ errors.datum[0] ? :'' }}</small>
+		</div>
+		<div
+			class="uk-width-1-6 uk-margin-small">
+			<label
+				for="vreme"
+				class="uk-form-label">Vreme</label>
+			<div
+				class="uk-form-controls">
+				<input
+					type="time"
+					name="vreme"
+					id="vreme"
+					value="{{ data.vreme|date('H:i') }}" class="uk-input"
+					autocomplete="off"
+					required>
+			</div>
+			<small
+				class="uk-text-danger">{{ errors.vreme[0] ? :'' }}</small>
+		</div>
+		<div
+			class="uk-width-1-1 uk-margin-small">
+			<h4
+				class="uk-text-primary">Naručilac prevoza</h4>
+		</div>
+
+
+		<div
+			class="uk-width-1-6 uk-margin-small">
+			<label
+				for="prezime"
+				class="uk-form-label">Prezime naručioca</label>
+			<div
+				class="uk-form-controls">
+				<input
+					type="text"
+					name="prezime"
+					id="prezime"
+					class="uk-input{{ errors.prezime[0] ? ' uk-form-danger': ''}}"
+					value="{{ old.prezime ? : '' }}" autocomplete="off"
+					required>
+			</div>
+			<small
+				class="uk-text-danger">{{ errors.prezime[0] ? :'' }}</small>
+		</div>
+		<div
+			class="uk-width-1-6 uk-margin-small">
+			<label
+				for="ime"
+				class="uk-form-label">Ime naručioca</label>
+			<div
+				class="uk-form-controls">
+				<input
+					type="text"
+					name="ime"
+					id="ime"
+					class="uk-input{{ errors.ime[0] ? ' uk-form-danger': ''}}"
+					value="{{ old.ime ? : '' }}" autocomplete="off"
+					required>
+			</div>
+			<small
+				class="uk-text-danger">{{ errors.ime[0] ? :'' }}</small>
+		</div>
+		<div
+			class="uk-width-1-6 uk-margin-small">
+			<label
+				for="srednje_ime"
+				class="uk-form-label">Srednje ime naručioca</label>
+			<div
+				class="uk-form-controls">
+				<input
+					type="text"
+					name="srednje_ime"
+					id="srednje_ime"
+					class="uk-input{{ errors.srednje_ime[0] ? ' uk-form-danger': ''}}"
+					value="{{ old.srednje_ime ? : '' }}" autocomplete="off">
+			</div>
+			<small
+				class="uk-text-danger">{{ errors.srednje_ime[0] ? :'' }}</small>
+		</div>
+		<div
+			class="uk-width-1-6 uk-margin-small">
+			<label
+				for="telefon"
+				class="uk-form-label">Telefon naručioca</label>
+			<div
+				class="uk-form-controls">
+				<input
+					type="text"
+					name="telefon"
+					id="telefon"
+					class="uk-input{{ errors.telefon[0] ? ' uk-form-danger': ''}}"
+					value="{{ old.telefon ? : '' }}" autocomplete="off"
+					required>
+			</div>
+			<small
+				class="uk-text-danger">{{ errors.telefon[0] ? :'' }}</small>
+		</div>
+
+
+		<div
+			class="uk-width-1-1 uk-margin-small">
+			<h4
+				class="uk-text-primary">Pokojnik</h4>
+		</div>
+
+
+		<div
+			class="uk-width-1-6 uk-margin-small">
+			<label
+				for="pok_prezime"
+				class="uk-form-label">Prezime pokojnika</label>
+			<div
+				class="uk-form-controls">
+				<input
+					type="text"
+					name="pok_prezime"
+					id="pok_prezime"
+					class="uk-input{{ errors.pok_prezime[0] ? ' uk-form-danger': ''}}"
+					value="{{ old.pok_prezime ? : '' }}" autocomplete="off"
+					required>
+			</div>
+			<small
+				class="uk-text-danger">{{ errors.prezime[0] ? :'' }}</small>
+		</div>
+		<div
+			class="uk-width-1-6 uk-margin-small">
+			<label
+				for="pok_ime"
+				class="uk-form-label">Ime pokojnika</label>
+			<div
+				class="uk-form-controls">
+				<input
+					type="text"
+					name="pok_ime"
+					id="pok_ime"
+					class="uk-input{{ errors.pok_ime[0] ? ' uk-form-danger': ''}}"
+					value="{{ old.pok_ime ? : '' }}" autocomplete="off"
+					required>
+			</div>
+			<small
+				class="uk-text-danger">{{ errors.pok_ime[0] ? :'' }}</small>
+		</div>
+		<div
+			class="uk-width-1-6 uk-margin-small">
+			<label
+				for="pok_srednje_ime"
+				class="uk-form-label">Srednje ime pokojnika</label>
+			<div
+				class="uk-form-controls">
+				<input
+					type="text"
+					name="pok_srednje_ime"
+					id="pok_srednje_ime"
+					class="uk-input{{ errors.pok_srednje_ime[0] ? ' uk-form-danger': ''}}"
+					value="{{ old.pok_srednje_ime ? : '' }}" autocomplete="off">
+			</div>
+			<small
+				class="uk-text-danger">{{ errors.pok_srednje_ime[0] ? :'' }}</small>
+		</div>
+
+
+		<div
+			class="uk-width-1-1 uk-margin-small">
+			<h4
+				class="uk-text-primary">Početna destinacija</h4>
+		</div>
+
+
+		<div
+			class="uk-width-1-6 uk-margin-small">
+			<label
+				for="od_ptt"
+				class="uk-form-label">Poštanski broj</label>
+			<div
+				class="uk-form-controls">
+				<input
+					type="number"
+					name="od_ptt"
+					step="1"
+					id="od_ptt"
+					value="{{ old.od_ptt ? : '34000' }}" class="uk-input{{ errors.od_ptt[0] ? ' uk-form-danger': ''}}"
+					autocomplete="off"
+					min="1">
+			</div>
+			<small
+				class=" uk-text-danger">{{ errors.od_ptt[0] ? :'' }}</small>
+		</div>
+		<div
+			class="uk-width-1-6 uk-margin-small">
+			<label
+				for="od_mesto"
+				class="uk-form-label">Mesto</label>
+			<div
+				class="uk-form-controls">
+				<input
+					type="text"
+					name="od_mesto"
+					id="od_mesto"
+					class="uk-input{{ errors.od_mesto[0] ? ' uk-form-danger': ''}}"
+					value="{{ old.od_mesto ? : 'Kragujevac' }}" autocomplete="off"
+					required>
+			</div>
+			<small
+				class="uk-text-danger">{{ errors.od_mesto[0] ? :'' }}</small>
+		</div>
+		<div
+			class="uk-width-1-2 uk-margin-small">
+			<label
+				for="od_ulica"
+				class="uk-form-label">Ulica</label>
+			<div
+				class="uk-form-controls">
+				<input
+					type="text"
+					name="od_ulica"
+					id="od_ulica"
+					class="uk-input{{ errors.od_ulica[0] ? ' uk-form-danger': ''}}"
+					value="{{ old.od_ulica ? : '' }}" autocomplete="off"
+					required>
+			</div>
+			<small
+				class="uk-text-danger">{{ errors.od_ulica[0] ? :'' }}</small>
+		</div>
+		<div
+			class="uk-width-1-6 uk-margin-small">
+			<label
+				for="od_broj"
+				class="uk-form-label">Broj</label>
+			<div
+				class="uk-form-controls">
+				<input
+					type="text"
+					name="od_broj"
+					id="od_broj"
+					class="uk-input{{ errors.od_broj[0] ? ' uk-form-danger': ''}}"
+					value="{{ old.od_broj ? : '' }}" autocomplete="off"
+					required>
+			</div>
+			<small
+				class="uk-text-danger">{{ errors.od_broj[0] ? :'' }}</small>
+		</div>
+
+
+		<div
+			class="uk-width-1-1 uk-margin-small">
+			<h4
+				class="uk-text-primary">Krajnja destinacija</h4>
+		</div>
+
+		<div
+			class="uk-width-1-6 uk-margin-small">
+			<label
+				for="do_ptt"
+				class="uk-form-label">Poštanski broj</label>
+			<div
+				class="uk-form-controls">
+				<input
+					type="number"
+					name="do_ptt"
+					step="1"
+					id="do_ptt"
+					value="{{ old.do_ptt ? : '34000' }}" class="uk-input{{ errors.do_ptt[0] ? ' uk-form-danger': ''}}"
+					autocomplete="off"
+					min="1">
+			</div>
+			<small
+				class=" uk-text-danger">{{ errors.do_ptt[0] ? :'' }}</small>
+		</div>
+		<div
+			class="uk-width-1-6 uk-margin-small">
+			<label
+				for="do_mesto"
+				class="uk-form-label">Mesto</label>
+			<div
+				class="uk-form-controls">
+				<input
+					type="text"
+					name="do_mesto"
+					id="do_mesto"
+					class="uk-input{{ errors.do_mesto[0] ? ' uk-form-danger': ''}}"
+					value="{{ old.do_mesto ? : 'Kragujevac' }}" autocomplete="off"
+					required>
+			</div>
+			<small
+				class="uk-text-danger">{{ errors.do_mesto[0] ? :'' }}</small>
+		</div>
+		<div
+			class="uk-width-1-2 uk-margin-small">
+			<label
+				for="do_ulica"
+				class="uk-form-label">Ulica</label>
+			<div
+				class="uk-form-controls">
+				<input
+					type="text"
+					name="do_ulica"
+					id="do_ulica"
+					class="uk-input{{ errors.do_ulica[0] ? ' uk-form-danger': ''}}"
+					value="{{ old.do_ulica ? : '' }}" autocomplete="off"
+					required>
+			</div>
+			<small
+				class="uk-text-danger">{{ errors.do_ulica[0] ? :'' }}</small>
+		</div>
+		<div
+			class="uk-width-1-6 uk-margin-small">
+			<label
+				for="do_broj"
+				class="uk-form-label">Broj</label>
+			<div
+				class="uk-form-controls">
+				<input
+					type="text"
+					name="do_broj"
+					id="do_broj"
+					class="uk-input{{ errors.do_broj[0] ? ' uk-form-danger': ''}}"
+					value="{{ old.do_broj ? : '' }}" autocomplete="off"
+					required>
+			</div>
+			<small
+				class="uk-text-danger">{{ errors.do_broj[0] ? :'' }}</small>
+		</div>
+
+		<div
+			class="uk-width-3-4 uk-margin-small">
+			<label
+				for="napomena"
+				class="uk-form-label">Napomena</label>
+			<div
+				class="uk-form-controls">
+				<textarea
+					class="uk-textarea{{ errors.napomena[0] ? ' uk-form-danger': ''}}"
+					rows="3"
+					name="napomena"
+					id="napomena">{{ old.napomena ? : '' }}</textarea>
+			</div>
+			<small
+				class=" uk-text-danger">{{ errors.napomena[0] ? :'' }}</small>
+		</div>
+		<div class="uk-button-group uk-width-1-4 uk-margin-small uk-padding">
+			<button class="uk-button uk-button-primary uk-width-1-2 uk-button-small">Snimi</button>
+			<a href="{{ path_for('prevozi') }}" class="uk-button uk-button-secondary uk-width-1-2">Otkaži</a>
+		</div>
+
+	</form>
+
+{% endblock naslov %}
