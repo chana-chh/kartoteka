@@ -141,18 +141,21 @@
 								class="uk-iconnav uk-float-right">
 								<li>
 									<a
-										href="" title="Izmena">
+										href="{{ path_for('prevozi.izmena.get',{id:prevoz.id}) }}" title="Izmena">
 										<span
 											uk-icon="pencil"></span>
 									</a>
 								</li>
-								<li>
-									<a
-										href="" title="Brisanje">
-										<span
-											uk-icon="trash"></span>
-									</a>
-								</li>
+								{% if auth.logged and auth.user.nivo == 0 %}
+									<li>
+										<a
+											href=""
+											title="Brisanje">
+											<span
+												uk-icon="trash"></span>
+										</a>
+									</li>
+								{% endif %}
 							</ul>
 						</td>
 					</tr>
@@ -162,18 +165,18 @@
 	</div>
 	<div
 		class="uk-flex uk-flex-between uk-margin-top">
-		<div>{{ staraoci.links.buttons|raw }}</div>
+		<div>{{ prevozi.links.buttons|raw }}</div>
 		<div>Idi na stranu
-			{{ staraoci.links.select|raw }}</div>
+			{{ prevozi.links.select|raw }}</div>
 		<div
 			class="uk-text-right">
 			<p>
 				Prikazani redovi od
-				<em>{{ staraoci.links.row_from }}</em>
+				<em>{{ prevozi.links.row_from }}</em>
 				do
-				<em>{{ staraoci.links.row_to }}</em>
+				<em>{{ prevozi.links.row_to }}</em>
 				od ukupno
-				<em>{{ staraoci.links.total_rows }}</em>
+				<em>{{ prevozi.links.total_rows }}</em>
 			</p>
 		</div>
 	</div>

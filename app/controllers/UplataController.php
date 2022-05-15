@@ -92,9 +92,9 @@ class UplataController extends Controller
 		// taksa ili zakup koji moze delimicno da se razduzi
 		$deo = 0;
 		// vrsta (taksa ili zakup) za delimicno razduzivanje
-		$vrsta = '';
+		// $vrsta = '';
 		// godina takse ili zakupa za delimicno razduzivanje
-		$godina = 0;
+		// $godina = 0;
 
 		// podaci za stare
 		foreach ($zaduzenja as $zad)
@@ -147,9 +147,11 @@ class UplataController extends Controller
 			// pocetna godina za nove takse
 			$sql = "SELECT MAX(godina) AS max_godina FROM zaduzenja WHERE tip = 'taksa' AND staraoc_id = {$staraoc->id};";
 			$godina_za_taksu = (int) $staraoc->fetch($sql)[0]->max_godina + 1;
+			$godina_za_taksu = $godina_za_taksu === 1 ? $godina_za_taksu : GOD;
 			// pocetna godina za nove zakupe
 			$sql = "SELECT MAX(godina) AS max_godina FROM zaduzenja WHERE tip = 'zakup' AND staraoc_id = {$staraoc->id};";
 			$godina_za_zakup = (int) $staraoc->fetch($sql)[0]->max_godina + 1;
+			$godina_za_zakup = $godina_za_zakup === 1 ? $godina_za_zakup : GOD;
 
 			// odrediti manji pocetnu godinu i krenuti odatle (taksa ili zakup)
 			$radi_taksu = $godina_za_taksu <= $godina_za_zakup ? true : false;

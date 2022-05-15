@@ -4,10 +4,11 @@
 	<h1>Dodavanje prevoza</h1>
 	<hr>
 	<form
-		action="{{ path_for('prevozi.dodavanje.post') }}" method="POST"
+		action="{{ path_for('prevozi.izmena.post') }}" method="POST"
 		class="uk-form-stacked"
 		uk-grid>
 		{{ csrf|raw }}
+		<input type="hidden" name="prevoz_id" value="{{ prevoz.id }}">
 		<div
 			class="uk-width-1-1 uk-margin-small">
 			<h4
@@ -24,7 +25,7 @@
 					type="date"
 					name="datum"
 					id="datum"
-					value="{{ old.datum ? : datum|date('Y-m-d') }}" class="uk-input"
+					value="{{ old.datum ? : prevoz.datum|date('Y-m-d') }}" class="uk-input"
 					autocomplete="off"
 					autofocus
 					required>
@@ -43,7 +44,7 @@
 					type="time"
 					name="vreme"
 					id="vreme"
-					value="{{ old.vreme ? : vreme|date('H:i') }}" class="uk-input"
+					value="{{ old.vreme ? : prevoz.vreme|date('H:i') }}" class="uk-input"
 					autocomplete="off"
 					required>
 			</div>
@@ -55,8 +56,6 @@
 			<h4
 				class="uk-text-primary">Naručilac prevoza</h4>
 		</div>
-
-
 		<div
 			class="uk-width-1-6 uk-margin-small">
 			<label
@@ -69,7 +68,7 @@
 					name="prezime"
 					id="prezime"
 					class="uk-input{{ errors.prezime[0] ? ' uk-form-danger': ''}}"
-					value="{{ old.prezime ? : '' }}" autocomplete="off"
+					value="{{ old.prezime ? : prevoz.prezime }}" autocomplete="off"
 					required>
 			</div>
 			<small
@@ -87,7 +86,7 @@
 					name="ime"
 					id="ime"
 					class="uk-input{{ errors.ime[0] ? ' uk-form-danger': ''}}"
-					value="{{ old.ime ? : '' }}" autocomplete="off"
+					value="{{ old.ime ? : prevoz.ime }}" autocomplete="off"
 					required>
 			</div>
 			<small
@@ -105,7 +104,7 @@
 					name="srednje_ime"
 					id="srednje_ime"
 					class="uk-input{{ errors.srednje_ime[0] ? ' uk-form-danger': ''}}"
-					value="{{ old.srednje_ime ? : '' }}" autocomplete="off">
+					value="{{ old.srednje_ime ? : prevoz.srednje_ime }}" autocomplete="off">
 			</div>
 			<small
 				class="uk-text-danger">{{ errors.srednje_ime[0] ? :'' }}</small>
@@ -122,21 +121,17 @@
 					name="telefon"
 					id="telefon"
 					class="uk-input{{ errors.telefon[0] ? ' uk-form-danger': ''}}"
-					value="{{ old.telefon ? : '' }}" autocomplete="off"
+					value="{{ old.telefon ? : prevoz.telefon }}" autocomplete="off"
 					required>
 			</div>
 			<small
 				class="uk-text-danger">{{ errors.telefon[0] ? :'' }}</small>
 		</div>
-
-
 		<div
 			class="uk-width-1-1 uk-margin-small">
 			<h4
 				class="uk-text-primary">Pokojnik</h4>
 		</div>
-
-
 		<div
 			class="uk-width-1-6 uk-margin-small">
 			<label
@@ -149,7 +144,7 @@
 					name="pok_prezime"
 					id="pok_prezime"
 					class="uk-input{{ errors.pok_prezime[0] ? ' uk-form-danger': ''}}"
-					value="{{ old.pok_prezime ? : '' }}" autocomplete="off"
+					value="{{ old.pok_prezime ? : prevoz.pok_prezime }}" autocomplete="off"
 					required>
 			</div>
 			<small
@@ -167,7 +162,7 @@
 					name="pok_ime"
 					id="pok_ime"
 					class="uk-input{{ errors.pok_ime[0] ? ' uk-form-danger': ''}}"
-					value="{{ old.pok_ime ? : '' }}" autocomplete="off"
+					value="{{ old.pok_ime ? : prevoz.pok_ime }}" autocomplete="off"
 					required>
 			</div>
 			<small
@@ -185,20 +180,16 @@
 					name="pok_srednje_ime"
 					id="pok_srednje_ime"
 					class="uk-input{{ errors.pok_srednje_ime[0] ? ' uk-form-danger': ''}}"
-					value="{{ old.pok_srednje_ime ? : '' }}" autocomplete="off">
+					value="{{ old.pok_srednje_ime ? : prevoz.pok_srednje_ime }}" autocomplete="off">
 			</div>
 			<small
 				class="uk-text-danger">{{ errors.pok_srednje_ime[0] ? :'' }}</small>
 		</div>
-
-
 		<div
 			class="uk-width-1-1 uk-margin-small">
 			<h4
 				class="uk-text-primary">Početna destinacija</h4>
 		</div>
-
-
 		<div
 			class="uk-width-1-6 uk-margin-small">
 			<label
@@ -211,7 +202,7 @@
 					name="od_ptt"
 					step="1"
 					id="od_ptt"
-					value="{{ old.od_ptt ? : '34000' }}" class="uk-input{{ errors.od_ptt[0] ? ' uk-form-danger': ''}}"
+					value="{{ old.od_ptt ? : prevoz.od_ptt }}" class="uk-input{{ errors.od_ptt[0] ? ' uk-form-danger': ''}}"
 					autocomplete="off"
 					min="1">
 			</div>
@@ -230,7 +221,7 @@
 					name="od_mesto"
 					id="od_mesto"
 					class="uk-input{{ errors.od_mesto[0] ? ' uk-form-danger': ''}}"
-					value="{{ old.od_mesto ? : 'Kragujevac' }}" autocomplete="off"
+					value="{{ old.od_mesto ? : prevoz.od_mesto }}" autocomplete="off"
 					required>
 			</div>
 			<small
@@ -248,7 +239,7 @@
 					name="od_ulica"
 					id="od_ulica"
 					class="uk-input{{ errors.od_ulica[0] ? ' uk-form-danger': ''}}"
-					value="{{ old.od_ulica ? : '' }}" autocomplete="off"
+					value="{{ old.od_ulica ? : prevoz.od_ulica }}" autocomplete="off"
 					required>
 			</div>
 			<small
@@ -266,20 +257,17 @@
 					name="od_broj"
 					id="od_broj"
 					class="uk-input{{ errors.od_broj[0] ? ' uk-form-danger': ''}}"
-					value="{{ old.od_broj ? : '' }}" autocomplete="off"
+					value="{{ old.od_broj ? : prevoz.od_broj }}" autocomplete="off"
 					required>
 			</div>
 			<small
 				class="uk-text-danger">{{ errors.od_broj[0] ? :'' }}</small>
 		</div>
-
-
 		<div
 			class="uk-width-1-1 uk-margin-small">
 			<h4
 				class="uk-text-primary">Krajnja destinacija</h4>
 		</div>
-
 		<div
 			class="uk-width-1-6 uk-margin-small">
 			<label
@@ -292,7 +280,7 @@
 					name="do_ptt"
 					step="1"
 					id="do_ptt"
-					value="{{ old.do_ptt ? : '34000' }}" class="uk-input{{ errors.do_ptt[0] ? ' uk-form-danger': ''}}"
+					value="{{ old.do_ptt ? : prevoz.do_ptt }}" class="uk-input{{ errors.do_ptt[0] ? ' uk-form-danger': ''}}"
 					autocomplete="off"
 					min="1">
 			</div>
@@ -311,7 +299,7 @@
 					name="do_mesto"
 					id="do_mesto"
 					class="uk-input{{ errors.do_mesto[0] ? ' uk-form-danger': ''}}"
-					value="{{ old.do_mesto ? : 'Kragujevac' }}" autocomplete="off"
+					value="{{ old.do_mesto ? : prevoz.do_mesto }}" autocomplete="off"
 					required>
 			</div>
 			<small
@@ -329,7 +317,7 @@
 					name="do_ulica"
 					id="do_ulica"
 					class="uk-input{{ errors.do_ulica[0] ? ' uk-form-danger': ''}}"
-					value="{{ old.do_ulica ? : '' }}" autocomplete="off"
+					value="{{ old.do_ulica ? : prevoz.do_ulica }}" autocomplete="off"
 					required>
 			</div>
 			<small
@@ -347,13 +335,12 @@
 					name="do_broj"
 					id="do_broj"
 					class="uk-input{{ errors.do_broj[0] ? ' uk-form-danger': ''}}"
-					value="{{ old.do_broj ? : '' }}" autocomplete="off"
+					value="{{ old.do_broj ? : prevoz.do_broj }}" autocomplete="off"
 					required>
 			</div>
 			<small
 				class="uk-text-danger">{{ errors.do_broj[0] ? :'' }}</small>
 		</div>
-
 		<div
 			class="uk-width-3-4 uk-margin-small">
 			<label
@@ -365,16 +352,14 @@
 					class="uk-textarea{{ errors.napomena[0] ? ' uk-form-danger': ''}}"
 					rows="3"
 					name="napomena"
-					id="napomena">{{ old.napomena ? : '' }}</textarea>
+					id="napomena">{{ old.napomena ? : prevoz.napomena }}</textarea>
 			</div>
 			<small
 				class=" uk-text-danger">{{ errors.napomena[0] ? :'' }}</small>
 		</div>
 		<div class="uk-button-group uk-width-1-4 uk-margin-small uk-padding">
-			<button class="uk-button uk-button-primary uk-width-1-2 uk-button-small">Snimi</button>
+			<button class="uk-button uk-button-primary uk-width-1-2 uk-button-small">Snimi promene</button>
 			<a href="{{ path_for('prevozi') }}" class="uk-button uk-button-secondary uk-width-1-2">Otkaži</a>
 		</div>
-
 	</form>
-
 {% endblock naslov %}

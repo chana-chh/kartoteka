@@ -128,66 +128,143 @@ class PrevoziController extends Controller
 	{
 		$data = $request->getParams();
 		unset($data['csrf_name']);
-        unset($data['csrf_value']);
-        $data['korisnik_id'] = $this->auth->user()->id;
-
-		// dd($data);
+		unset($data['csrf_value']);
+		$data['korisnik_id'] = $this->auth->user()->id;
 
 		$validation_rules = [
-            'datum' => [
-                'required' => true,
-            ],
-            'vreme' => [
-                'required' => true,
-            ],
-            'prezime' => [
-                'required' => true,
-            ],
-            'ime' => [
+			'datum' => [
 				'required' => true,
-            ],
+			],
+			'vreme' => [
+				'required' => true,
+			],
+			'prezime' => [
+				'required' => true,
+			],
+			'ime' => [
+				'required' => true,
+			],
 			'telefon' => [
 				'required' => true,
 			],
 			'pok_prezime' => [
-                'required' => true,
-            ],
-            'pok_ime' => [
 				'required' => true,
-            ],
-            'od_mesto' => [
+			],
+			'pok_ime' => [
 				'required' => true,
-            ],
-            'od_ulica' => [
+			],
+			'od_mesto' => [
 				'required' => true,
-            ],
-            'od_broj' => [
+			],
+			'od_ulica' => [
 				'required' => true,
-            ],
-            'do_mesto' => [
+			],
+			'od_broj' => [
 				'required' => true,
-            ],
-            'do_ulica' => [
+			],
+			'do_mesto' => [
 				'required' => true,
-            ],
-            'do_broj' => [
+			],
+			'do_ulica' => [
 				'required' => true,
-            ],
-        ];
+			],
+			'do_broj' => [
+				'required' => true,
+			],
+		];
 
-        $this->validator->validate($data, $validation_rules);
+		$this->validator->validate($data, $validation_rules);
 
-		if ($this->validator->hasErrors()) {
-            $this->flash->addMessage('danger', 'Došlo je do greške prilikom dodavanja prevoza.');
-            return $response->withRedirect($this->router->pathFor('prevozi.dodavanje.get'));
-        } else {
-            $model = new Prevoz();
-            $model->insert($data);
-            $id = $model->getLastId();
-            $prevoz = $model->find($id);
-            $this->log($this::DODAVANJE, $prevoz, ['prezime', 'ime'], $prevoz);
-            $this->flash->addMessage('success', 'Novi prevoz je uspešno upisan.');
-            return $response->withRedirect($this->router->pathFor('prevozi'));
-        }
+		if ($this->validator->hasErrors())
+		{
+			$this->flash->addMessage('danger', 'Došlo je do greške prilikom dodavanja prevoza.');
+			return $response->withRedirect($this->router->pathFor('prevozi.dodavanje.get'));
+		}
+		else
+		{
+			$model = new Prevoz();
+			$model->insert($data);
+			$id = $model->getLastId();
+			$prevoz = $model->find($id);
+			$this->log($this::DODAVANJE, $prevoz, ['prezime', 'ime'], $prevoz);
+			$this->flash->addMessage('success', 'Novi prevoz je uspešno upisan.');
+			return $response->withRedirect($this->router->pathFor('prevozi'));
+		}
+	}
+
+	public function getPrevoziIzmena($request, $response, $args)
+	{
+		$id = (int) $args['id'];
+		$prevoz = (new Prevoz())->find($id);
+		$this->render($response, 'prevoz_izmena.twig', compact('prevoz'));
+	}
+
+	public function postPrevoziIzmena($request, $response)
+	{
+		$id = (int) $request->getParam('prevoz_id');
+		$data = $request->getParams();
+		unset($data['csrf_name']);
+		unset($data['csrf_value']);
+		unset($data['prevoz_id']);
+		$data['korisnik_id'] = $this->auth->user()->id;
+
+		$validation_rules = [
+			'datum' => [
+				'required' => true,
+			],
+			'vreme' => [
+				'required' => true,
+			],
+			'prezime' => [
+				'required' => true,
+			],
+			'ime' => [
+				'required' => true,
+			],
+			'telefon' => [
+				'required' => true,
+			],
+			'pok_prezime' => [
+				'required' => true,
+			],
+			'pok_ime' => [
+				'required' => true,
+			],
+			'od_mesto' => [
+				'required' => true,
+			],
+			'od_ulica' => [
+				'required' => true,
+			],
+			'od_broj' => [
+				'required' => true,
+			],
+			'do_mesto' => [
+				'required' => true,
+			],
+			'do_ulica' => [
+				'required' => true,
+			],
+			'do_broj' => [
+				'required' => true,
+			],
+		];
+
+		$this->validator->validate($data, $validation_rules);
+
+		if ($this->validator->hasErrors())
+		{
+			$this->flash->addMessage('danger', 'Došlo je do greške prilikom izmene podataka o prevozu.');
+			return $response->withRedirect($this->router->pathFor('prevozi.izmena.get'));
+		}
+		else
+		{
+			$model = new Prevoz();
+			$prevoz = $model->find($id);
+			$model->update($data, $id);
+			$this->log($this::DODAVANJE, $prevoz, ['prezime', 'ime'], $prevoz);
+			$this->flash->addMessage('success', 'Prevoz je uspešno IZMENJEN.');
+			return $response->withRedirect($this->router->pathFor('prevozi'));
+		}
 	}
 }
