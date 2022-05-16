@@ -9,6 +9,7 @@ use App\Models\Zaduzenje;
 use App\Models\Racun;
 use App\Models\Reprogram;
 use App\Models\Uplata;
+use App\Models\Log;
 
 class TransakcijeController extends Controller
 {
@@ -363,7 +364,11 @@ class TransakcijeController extends Controller
 			}
 
 			$pdo->commit();
-
+			$modelLoga = new Log();
+            $datal['tip'] = "dodavanje";
+            $datal['opis'] = "Zaduživanje za godinu: " . $cur_year;
+            $datal['korisnik_id'] = $this->auth->user()->id;
+            $modelLoga->insert($datal);
 			$this->flash->addMessage('success', 'Svi aktivni kartoni su uspešno zaduženi.');
 			return $response->withRedirect($this->router->pathFor('transakcije.zaduzivanje'));
 		}
@@ -487,7 +492,7 @@ class TransakcijeController extends Controller
 			$model_uplata = new Uplata();
 			$model_uplata->insert($uplata_data);
 			$uplata_id = $model_uplata->getLastId();
-
+			$uplata = $model_uplata->find($uplata_id);
 			$sql = "UPDATE staraoci SET privremeni_saldo = privremeni_saldo + {$razlika}, uplata_id = {$uplata_id} WHERE id = {$id};";
 			$staraoc->run($sql);
 
@@ -522,7 +527,7 @@ class TransakcijeController extends Controller
                         WHERE id IN ($rac);";
 				$model_uplata->run($sql);
 			}
-
+			$this->log($this::DODAVANJE, $uplata, ['karton_id', 'iznos', 'datum'], $uplata);
 			$this->flash->addMessage('success', 'Uplata je uspešno sačuvana, a odabrane stavke su razdužene.');
 			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $id]));
 		}

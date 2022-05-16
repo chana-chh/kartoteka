@@ -262,7 +262,8 @@ class PrevoziController extends Controller
 			$model = new Prevoz();
 			$prevoz = $model->find($id);
 			$model->update($data, $id);
-			$this->log($this::DODAVANJE, $prevoz, ['prezime', 'ime'], $prevoz);
+			$novi = $model->find($id);
+			$this->log($this::IZMENA, $novi, ['prezime', 'ime'], $prevoz);
 			$this->flash->addMessage('success', 'Prevoz je uspešno IZMENJEN.');
 			return $response->withRedirect($this->router->pathFor('prevozi'));
 		}

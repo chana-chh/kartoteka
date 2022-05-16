@@ -12,5 +12,5 @@
 
 - proveriti termine
 
-- 
+- postUplataBrisanje uplata_id problem sa referencijalnim
 

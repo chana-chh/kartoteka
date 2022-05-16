@@ -206,7 +206,7 @@ class RasporedController extends Controller
 
 				$id_uplate = $modelUplata->getLastId();
 				$uplata = $modelUplata->find($id_uplate);
-				$this->log($this::DODAVANJE, $uplata, ['karton_id', 'datum', 'priznanica'], $uplata);
+				$this->log($this::DODAVANJE, $uplata, ['karton_id', 'datum', 'iznos'], $uplata);
 			}
 		}
 

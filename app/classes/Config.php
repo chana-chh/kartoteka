@@ -45,7 +45,7 @@ final class Config
             // Podesavanja za PDO MySQL konekciju
             'dsn' => 'mysql:host=127.0.0.1;dbname=kartoteka;charset=utf8mb4',
             'username' => 'root',
-            'password' => '',
+            'password' => 'vir5373plus!',
             'options' => [
                 \PDO::ATTR_PERSISTENT => true,
                 \PDO::ATTR_EMULATE_PREPARES => false, // [true] za php verzije manje od 5.1.17 ?
