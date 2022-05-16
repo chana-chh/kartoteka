@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\Staraoc;
 use App\Models\Uplata;
+use App\Models\Log;
 
 class UplataController extends Controller
 {
@@ -49,6 +50,7 @@ class UplataController extends Controller
 
 		if ($success)
 		{
+			$this->log($this::BRISANJE, $uplata, ['karton_id', 'datum', 'iznos', 'priznanica'], $uplata);
 			$this->flash->addMessage('success', "Uplata je uspešno obrisana.");
 			return $response->withRedirect($this->router->pathFor('uplate', ['id' => $staraoc_id]));
 		}
@@ -323,7 +325,11 @@ class UplataController extends Controller
 		// posle upisa staraoc->privremeni_saldo se vraca na 0 i id uplate na null
 		$sql_s = "UPDATE staraoci SET privremeni_saldo = 0, uplata_id = NULL WHERE id = {$staraoc_id}";
 		$staraoc->run($sql_s);
-
+			$modelLoga = new Log();
+            $datal['tip'] = "dodavanje";
+            $datal['opis'] = "Potvrđena preraspodela preostalih sredstava za razduživanje taksi i zakupa. Karton: " .$karton_id. ", staraoc: " .$staraoc_id. ", datum: " .$datum;
+            $datal['korisnik_id'] = $this->auth->user()->id;
+            $modelLoga->insert($datal);
 		$this->flash->addMessage('success', 'Višak novca je uspešno raspoređen na razduživanje taksi i zakupa.');
 		return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $id]));
 	}

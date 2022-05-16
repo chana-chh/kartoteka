@@ -81,7 +81,6 @@ class RacuniController extends Controller
 		if ($success)
 		{
 			$this->log($this::BRISANJE, $racun, ['broj', 'datum'], $racun);
-
 			$this->flash->addMessage('success', "Račun je uspešno obrisan.");
 			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $racun->staraoc()->id]));
 		}

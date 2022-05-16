@@ -133,7 +133,8 @@ class ReprogramiController extends Controller
 				$sql_racuni = "UPDATE racuni SET reprogram_id = {$rep_id} WHERE id IN ($rac);";
 				$model->run($sql_racuni);
 			}
-
+			$repzalog = $model->find($id);
+			$this->log($this::DODAVANJE, $repzalog, ['broj', 'datum', 'period'], $repzalog);
 			$this->flash->addMessage('success', 'Reprogram je uspešno sačuvan.');
 			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $id]));
 		}
@@ -157,6 +158,8 @@ class ReprogramiController extends Controller
 		$data = $request->getParams();
 
 		$id = (int) $data['reprogram_id'];
+		$model = new Reprogram();
+		$stari = $model->find($id);
 		$korisnik_id = $this->auth->user()->id;
 		$reprogram_data = [
 			'broj' => $data['broj'],
@@ -187,7 +190,8 @@ class ReprogramiController extends Controller
 		else
 		{
 			(new Reprogram())->update($reprogram_data, $id);
-
+			$novi = $model->find($id);
+			$this->log($this::IZMENA, $novi, ['broj', 'datum', 'period'], $stari);
 			$this->flash->addMessage('success', 'Reprogram je uspešno izmenjen.');
 			return $response->withRedirect($this->router->pathFor('transakcije.reprogram', ['id' => $id]));
 		}
@@ -241,7 +245,7 @@ class ReprogramiController extends Controller
 			$model_uplata = new Uplata();
 			$model_uplata->insert($uplata_data);
 			$uplata_id = $model_uplata->getLastId();
-
+			$uplata = $model_uplata->find($uplata_id);
 			$preostalo_rata = $reprogram->preostalo_rata - $broj_rata;
 
 			// proveriti da li je broj rata 0 i ako jeste razduziti reprogram
@@ -271,6 +275,7 @@ class ReprogramiController extends Controller
 				$model_uplata->run($sql_reprogram);
 			}
 
+			$this->log($this::DODAVANJE, $uplata, ['karton_id', 'iznos', 'datum'], $uplata);
 			$this->flash->addMessage('success', 'Rata reprograma je uplaćena.');
 			return $response->withRedirect($this->router->pathFor('transakcije.reprogram', ['id' => $id]));
 		}
@@ -299,6 +304,7 @@ class ReprogramiController extends Controller
 
 		if ($success)
 		{
+			$this->log($this::BRISANJE, $reprogram, ['broj', 'datum', 'period'], $reprogram);
 			$this->flash->addMessage('success', "Reprogram je uspešno obrisan.");
 			return $response->withRedirect($this->router->pathFor('transakcije.reprogrami', ['id' => $staraoc_id]));
 		}
