@@ -149,8 +149,10 @@
 								{% if auth.logged and auth.user.nivo == 0 %}
 									<li>
 										<a
-											href=""
-											title="Brisanje">
+											href="#modal-brisanje"
+											title="Brisanje"
+											data-id="{{ prevoz.id }}" onclick="setId(this);"
+											uk-toggle>
 											<span
 												uk-icon="trash"></span>
 										</a>
@@ -180,4 +182,19 @@
 			</p>
 		</div>
 	</div>
+
+	<!-- MODAL BRISANJE PREVOZA -->
+	{% include 'inc/prevoz_brisanje.twig' %}
 {% endblock naslov %}
+
+{% block skripta %}
+	<script>
+		document.getElementById("modal_dugme_brisi").addEventListener("click", function () {
+			document.getElementById("forma_brisanje").submit();
+		});
+
+		function setId(el) {
+			document.getElementById("modal_prevoz_id").value = el.dataset.id;
+		}
+	</script>
+{% endblock skripta %}

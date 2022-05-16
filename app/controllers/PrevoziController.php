@@ -267,4 +267,31 @@ class PrevoziController extends Controller
 			return $response->withRedirect($this->router->pathFor('prevozi'));
 		}
 	}
+
+	public function postPrevoziBrisanje($request, $response)
+	{
+		$id = (int) $request->getParam('modal_prevoz_id');
+
+		if ($this->auth->user()->nivo !== 0)
+		{
+			$this->flash->addMessage('danger', "Samo administrator može da obriše prevoz.");
+			return $response->withRedirect($this->router->pathFor('prevozi'));
+		}
+
+		$model = new Prevoz();
+		$prevoz = $model->find($id);
+		$success = $model->deleteOne($id);
+
+		if ($success)
+		{
+			$this->log($this::BRISANJE, $prevoz, ['datum', 'vreme', 'prezime', 'ime'], $prevoz);
+			$this->flash->addMessage('success', "Prevoz je uspešno obrisan.");
+			return $response->withRedirect($this->router->pathFor('prevozi'));
+		}
+		else
+		{
+			$this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja prevoza.");
+			return $response->withRedirect($this->router->pathFor('prevozi'));
+		}
+	}
 }
