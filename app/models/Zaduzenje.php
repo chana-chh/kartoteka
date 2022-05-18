@@ -89,4 +89,22 @@ class Zaduzenje extends Model
         $uplata = (new Uplata())->find((int) $this->uplata_id);
         return $uplata;
     }
+
+    public function dugZaduzenjaZakup()
+    {
+    	$sql = "SELECT SUM(iznos_zaduzeno-iznos_razduzeno) AS ukupno
+				FROM {$this->table}
+				WHERE tip = 'zakup' AND reprogram_id IS NULL;";
+		$broj = $this->fetch($sql)[0]->ukupno;
+		return (float) $broj;
+    }
+
+    public function dugZaduzenjaTaksa()
+    {
+    	$sql = "SELECT SUM(iznos_zaduzeno-iznos_razduzeno) AS ukupno
+				FROM {$this->table}
+				WHERE tip = 'taksa' AND reprogram_id IS NULL;";
+		$broj = $this->fetch($sql)[0]->ukupno;
+		return (float) $broj;
+    }
 }
