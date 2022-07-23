@@ -22,7 +22,7 @@
 			<div class="uk-width-1-4">
 				<label for="iznos_zaduzeno" class="uk-form-label">Važeći zakup iz cenovnika</label>
 				<div class="uk-form-controls">
-					<input type="number" name="iznos_zaduzeno" id="iznos_zaduzeno" value="{{ old.iznos_zaduzeno ? : cene.zakup() }}" class="uk-input" autocomplete="off" readonly>
+					<input type="number" name="iznos_zaduzeno" id="iznos_zaduzeno" value="{{ old.iznos_zaduzeno ? : cene.zakup() }}" class="uk-input" autocomplete="off">
 				</div>
 				<small class="uk-text-danger">{{ errors.zakup[0] ? :'' }}</small>
 			</div>

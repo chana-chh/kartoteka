@@ -21,7 +21,7 @@
 		<label for="iznos_zaduzeno" class="uk-form-label">Važeća taksa iz cenovnika</label>
 		<div class="uk-form-controls">
 			<input type="number" name="iznos_zaduzeno" id="iznos_zaduzeno" value="{{ old.iznos_zaduzeno ? : cene.taksa() }}" class="uk-input"
-				autocomplete="off" readonly>
+				autocomplete="off">
 		</div>
 		<small class="uk-text-danger">{{ errors.taksa[0] ? :'' }}</small>
 	</div>
