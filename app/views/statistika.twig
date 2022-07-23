@@ -17,7 +17,7 @@
     <li>Ukupan dug za zakup: <strong>{{dugZakupi|number_format(2, '.', ',') }}</strong></li>
     <li>Ukupan dug za takse: <strong>{{dugTakse|number_format(2, '.', ',') }}</strong></li>
     <li>Ukupan dug za račune: <strong>{{racuni|number_format(2, '.', ',') }}</strong></li>
-    <li>Ukupan iznos uplata: <strong>{{uplate|number_format(2, '.', ',') }}</strong></li>
+    <li>Ukupan iznos uplata u {{ 'now'|date('Y') }}. godini: <strong>{{uplate|number_format(2, '.', ',') }}</strong></li>
 </ul>
 </div>
 <div style="max-height: 200px; max-width:200px" class="uk-margin uk-align-center">
@@ -33,25 +33,28 @@ var zakupi = {{ dugZakupi|json_encode() }};
 var racuni = {{ racuni|json_encode() }};
 var uplate = {{ uplate|json_encode() }};
 var dug = parseInt(takse + zakupi + racuni);
+var god = new Date().getFullYear()
 
 var ctx = document.getElementById('myChart');
 var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: ['Takse', 'Zakupi', 'Računi', 'Uplate'],
+        labels: ['Takse', 'Zakupi', 'Računi', 'Ukupan dug', 'Uplate'+' '+god+'.' ],
         datasets: [{
-            label: 'Ukupno dugovanje ',
-            data: [takse, zakupi, racuni, uplate],
+            label: 'Pregled dugovanja i uplata',
+            data: [takse, zakupi, racuni, dug, uplate],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
                 'rgba(255, 206, 86, 0.2)',
+                'rgba(105, 105, 105, 0.2)',
                 'rgba(75, 192, 192, 0.2)'
             ],
             borderColor: [
                 'rgba(255, 99, 132, 1)',
                 'rgba(54, 162, 235, 1)',
                 'rgba(255, 206, 86, 1)',
+                'rgba(105, 105, 105, 1)',
                 'rgba(75, 192, 192, 1)'
             ],
             borderWidth: 3
@@ -64,7 +67,17 @@ var myChart = new Chart(ctx, {
                     beginAtZero: true
                 }
             }]
+        },
+        legend: {
+            display: false
+            },
+    tooltips: {
+        callbacks: {
+           label: function(tooltipItem) {
+                  return tooltipItem.yLabel;
+           }
         }
+    }
     }
 });
 

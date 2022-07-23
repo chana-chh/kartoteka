@@ -6,13 +6,18 @@ use App\Models\Karton;
 use App\Models\Cena;
 use App\Models\Pokojnik;
 use App\Models\Staraoc;
+use App\Models\Zaduzenje;
+use App\Models\Racun;
+use App\Models\Uplata;
 
 
 class StatistikaController extends Controller
 {
 	public function getStatistika($request, $response)
 	{
-		$karton = new Karton();
+		$zaduzenje = new Zaduzenje();
+		$racun = new Racun();
+		$uplata = new Uplata();
 
 		$karton = new Karton();
 		$kartoni = count($karton->all());
@@ -24,10 +29,10 @@ class StatistikaController extends Controller
 		$staraoci = count($staraoc->all());
 
 		$broj_mesta = $karton->ukupanBrojMesta();
-		$dugTakse = $karton->brojNerazduzenihTaksi();
-		$dugZakupi = $karton->brojNerazduzenihZakupa();
-		$racuni = $karton->ukupanDugZaRacune();
-		$uplate = $karton->ukupnaSumaUplata();
+		$dugTakse = $zaduzenje->dugZaduzenjaTaksa();
+		$dugZakupi = $zaduzenje->dugZaduzenjaZakup();
+		$racuni = $racun->dugRacun();
+		$uplate = $uplata->tekucaUplate();
 
 		$this->render(
 			$response,

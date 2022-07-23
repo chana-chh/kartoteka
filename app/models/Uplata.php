@@ -36,4 +36,14 @@ class Uplata extends Model
 
 		return $reprogram;
 	}
+
+	public function tekucaUplate()
+	{
+		$god = GOD;
+		$sql = "SELECT SUM(iznos) AS ukupno
+				FROM {$this->table}
+				WHERE YEAR(datum) = {$god};";
+		$broj = $this->fetch($sql)[0]->ukupno;
+		return (float) $broj;
+	}
 }

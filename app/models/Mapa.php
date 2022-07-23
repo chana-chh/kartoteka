@@ -42,6 +42,6 @@ class Mapa extends Model
     {
         $sql = "SELECT * FROM {$this->table} WHERE veza LIKE :veza_naziv;";
         $params = [":veza_naziv" => '%'.$veza_naziv.'%'];
-        return $this->fetch($sql, $params) === [] ? null : $this->fetch($sql, $params);
+        return $this->fetch($sql, $params) === [] ? [] : $this->fetch($sql, $params);
     }
 }

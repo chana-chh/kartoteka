@@ -100,4 +100,13 @@ class Racun extends Model
         $uplata = (new Uplata())->find((int) $this->uplata_id);
         return $uplata;
     }
+
+    public function dugRacun()
+    {
+    	$sql = "SELECT SUM(iznos) AS ukupno
+				FROM {$this->table}
+				WHERE razduzeno = 0 AND reprogram_id IS NULL;";
+		$broj = $this->fetch($sql)[0]->ukupno;
+		return (float) $broj;
+    }
 }
