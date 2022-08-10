@@ -44,6 +44,9 @@ class UplataController extends Controller
 			$sql = "UPDATE racuni SET razduzeno = 0, korisnik_id_razduzio = NULL, uplata_id = NULL
 					WHERE uplata_id = {$uplata->id}";
 			$uplata->run($sql);
+
+			$sql = "UPDATE staraoci SET uplata_id = NULL WHERE uplata_id = {$uplata->id}";
+			$uplata->run($sql);
 		}
 		
 		$success = $uplata->deleteOne($id);
