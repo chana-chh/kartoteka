@@ -493,6 +493,7 @@ class TransakcijeController extends Controller
 			$model_uplata->insert($uplata_data);
 			$uplata_id = $model_uplata->getLastId();
 			$uplata = $model_uplata->find($uplata_id);
+			$razlika = ($razlika < 0) ? 0 : $razlika;
 			$sql = "UPDATE staraoci SET privremeni_saldo = privremeni_saldo + {$razlika}, uplata_id = {$uplata_id} WHERE id = {$id};";
 			$staraoc->run($sql);
 
