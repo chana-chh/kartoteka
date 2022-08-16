@@ -3,7 +3,7 @@
 		<a class="uk-navbar-item uk-logo" href="{{ path_for('pocetna') }}">Kartoteka - sektor grobalja</a>
 	</div>
 	<div class="uk-navbar-right">
-		<ul class="uk-navbar-nav">
+		<ul class="uk-navbar-nav uk-visible@s">
 			<li>
 				<a href="{{ path_for('pocetna') }}">
 					<span uk-icon="home" class="uk-margin-small-right"></span>
@@ -117,5 +117,119 @@
 				</li>
 			{% endif %}
 		</ul>
+		<a href="#" class="uk-navbar-toggle uk-hidden@s" uk-navbar-toggle-icon uk-toggle="target: #sidenav"></a>
 	</div>
 </nav>
+<div id="sidenav" uk-offcanvas="flip: true" class="uk-offcanvas">
+    <div class="uk-offcanvas-bar">
+        <ul class="uk-nav">
+			<li>
+				<a href="{{ path_for('pocetna') }}">
+					<span uk-icon="home" class="uk-margin-small-right"></span>
+					Početna
+				</a>
+			</li>
+			<li>
+				<a href="{{ path_for('kartoni') }}">
+					<span uk-icon="file" class="uk-margin-small-right"></span>
+					Kartoni
+				</a>
+			</li>
+			<li>
+				<a href="{{ path_for('staraoci') }}">
+					<span uk-icon="users" class="uk-margin-small-right"></span>
+					Staraoci
+				</a>
+			</li>
+			<li>
+				<a href="{{ path_for('pokojnici') }}">
+					<span uk-icon="plus" class="uk-margin-small-right"></span>
+					Pokojnici
+				</a>
+			</li>
+			<li>
+				<a href="{{ path_for('raspored') }}">
+					<span uk-icon="calendar" class="uk-margin-small-right"></span>
+					Raspored
+				</a>
+			</li>
+			<li>
+				<a href="{{ path_for('prevozi') }}">
+					<span uk-icon="location" class="uk-margin-small-right"></span>
+					Prevoz
+				</a>
+			</li>
+			{% if auth.logged and auth.user.nivo == 0 %}
+				<hr>
+				<li>
+					<p>
+						<span uk-icon="settings" class="uk-margin-small-right"></span>
+						Administracija
+					<p>
+						<ul class="uk-nav">
+							<li>
+								<a href="{{ path_for('korisnici') }}">Korisnici</a>
+							</li>
+							<li>
+								<a href="{{ path_for('logovi') }}">Logovi</a>
+							</li>
+							<li class="uk-nav-divider"></li>
+							<li>
+								<a href="{{ path_for('groblja') }}">Groblja</a>
+							</li>
+							<li>
+								<a href="{{ path_for('mape') }}">Mape</a>
+							</li>
+							<li class="uk-nav-divider"></li>
+							<li>
+								<a href="{{ path_for('cene') }}">Cene taksi i zakupa</a>
+							</li>
+							<li class="uk-nav-divider"></li>
+							<li>
+								<a href="{{ path_for('statistika') }}">Statistika</a>
+							</li>
+							<li class="uk-nav-divider"></li>
+							<li>
+								<a href="{{ path_for('transakcije.zaduzivanje') }}">Zaduživanje kartona</a>
+							</li>
+							<li class="uk-nav-divider"></li>
+							<li>
+								<a href="{{ path_for('transakcije.opomene') }}" target="_blank">Štampanje opomena</a>
+							</li>
+						</ul>
+				</li>
+			{% endif %}
+			<hr>
+			<li>
+				<p>
+					<span uk-icon="question" class="uk-margin-small-right"></span>
+					Pomoć
+				<p>
+					<ul>
+						<li>
+							<a href="{{ path_for('uputstvo') }}">Uputstvo za korišćenje programa</a>
+						</li>
+						<li>
+							<a href="{{ path_for('o_programu') }}">O programu</a>
+						</li>
+					</ul>
+			</li>
+			<hr>
+			{% if auth.logged %}
+				<li>
+					<a href="{{ path_for('odjava') }}">
+						<span uk-icon="sign-out" class="uk-margin-small-right"></span>
+						Odjava
+					</a>
+				</li>
+			{% else %}
+				<li>
+					<a href="{{ path_for('prijava') }}">
+						<span uk-icon="sign-in" class="uk-margin-small-right"></span>
+						Prijava
+					</a>
+				</li>
+			{% endif %}
+		</ul>
+    </div>
+</div>
