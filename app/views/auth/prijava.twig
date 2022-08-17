@@ -3,22 +3,22 @@
 {% block naslov %}
 	<h1>Prijava</h1>
 	<hr>
-	<div class="uk-flex uk-flex-center">
-		<form action="{{ path_for('prijava') }}" method="POST" class="uk-form-stacked uk-width-1-5">
+	<div class="uk-flex-center" uk-grid>
+		<form action="{{ path_for('prijava') }}" method="POST" class="uk-form-stacked">
 			{{ csrf|raw }}
-			<div class="uk-margin">
+			<div>
 				<label for="korisnicko_ime" class="uk-form-label">Korisničko ime</label>
 				<div class="uk-form-controls">
-					<input type="text" name="korisnicko_ime" id="korisnicko_ime" value="{{ old.korisnicko_ime }}" class="uk-input" autocomplete="off">
+					<input type="text" name="korisnicko_ime" id="korisnicko_ime" value="{{ old.korisnicko_ime }}" class="uk-input uk-width-1-1" autocomplete="off">
 				</div>
 			</div>
-			<div class="uk-margin">
+			<div>
 				<label for="lozinka" class="uk-form-label">Lozinka</label>
 				<div class="uk-form-controls">
-					<input type="password" name="lozinka" id="lozinka" class="uk-input" autocomplete="off">
+					<input type="password" name="lozinka" id="lozinka" class="uk-input uk-width-1-1" autocomplete="off">
 				</div>
 			</div>
-			<div class="uk-button-group uk-width-1-1">
+			<div class="uk-button-group uk-margin uk-width-1-1">
 				<input type="submit" value="Prijavi se" class="uk-button uk-button-primary uk-width-1-2">
 				<a href="{{ path_for('pocetna') }}" class="uk-button uk-button-secondary uk-width-1-2">Otkaži prijavu</a>
 			</div>
