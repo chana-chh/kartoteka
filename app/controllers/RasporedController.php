@@ -18,7 +18,22 @@ class RasporedController extends Controller
 	{
 		$modelRaspored = new Raspored();
 		$dogadjajiA = $modelRaspored->all();
-		$dogadjaji = json_encode($dogadjajiA);
+		// $dogadjaji = json_encode($dogadjajiA);
+
+		$data = [];
+
+        foreach ($dogadjajiA as $dog) {
+
+            $data[] = (object) [
+                "id" => $dog->id,
+                "title" => [$dog->title],
+                "start" => $dog->start,
+                "end" => $dog->end,
+                "description" => $dog->prezime_prijavioca. ' ' .$dog->ime_prijavioca
+            ];
+        }
+
+        $dogadjaji = json_encode($data);
 		$this->render($response, 'raspored.twig', compact('dogadjaji'));
 	}
 
