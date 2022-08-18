@@ -125,3 +125,12 @@ figcaption {
   background-color: #148f62;
   color: #fff;
 }
+
+/* NOVO !!! */
+@media (max-width: 900px) {
+  .uk-flex { 
+    display: flex;
+    flex-direction: column; }
+    .uk-table, .uk-panel{
+      font-size: 85%;}
+}

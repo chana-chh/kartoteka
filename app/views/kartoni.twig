@@ -39,7 +39,7 @@
 </div>
 
 <div class="uk-overflow-auto">
-  <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+  <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small uk-preserve-width">
     <thead>
       <tr>
         <th class="w-5">Id</th>
@@ -65,7 +65,7 @@
         <td>{{ karton.broj_mesta }}</td>
         <td>{{ karton.tip_groba }}</td>
         <td>{{ karton.aktivanDisabled() | raw }}</td>
-        <td>{{ karton.napomena | nl2br }}</td>
+        <td class="uk-text-truncate">{{ karton.napomena }}</td>
         <td class="uk-clearfix">
           <ul class="uk-iconnav uk-float-right">
             <li>
