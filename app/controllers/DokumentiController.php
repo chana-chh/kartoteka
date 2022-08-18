@@ -64,7 +64,7 @@ class DokumentiController extends Controller
 			$extension = pathinfo($dokument->getClientFilename(), PATHINFO_EXTENSION);
 			$name = "{$id_kartona}_{$data['tip']}_{$data['datum']}_{$unique}";
 			$filename = "{$name}.{$extension}";
-			$veza = URL . "doc/{$filename}";
+			$veza = "doc/{$filename}";
 			$data['veza'] = $veza;
 			$dokument->moveTo('doc/' . $filename);
 			$modelDokument = new Dokument();
@@ -165,7 +165,7 @@ class DokumentiController extends Controller
 				$extension = pathinfo($dokument->getClientFilename(), PATHINFO_EXTENSION);
 				$name = "{$id_kartona}_{$data['tip']}_{$data['datum']}_{$unique}";
 				$filename = "{$name}.{$extension}";
-				$veza = URL . "doc/{$filename}";
+				$veza = "doc/{$filename}";
 				$data['veza'] = $veza;
 				$dokument->moveTo('doc/' . $filename);
 			}
