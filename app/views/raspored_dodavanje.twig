@@ -52,12 +52,12 @@
 <hr>
 
 <div uk-grid>
-	<div class="uk-width-5-6">
+	<div class="uk-width-5-6@m">
 	<p class="uk-text-muted" id="poruka"></p>
 	<p class="uk-text-muted" id="poruka_staraoci"></p>
 	<p class="uk-text-muted" id="poruka_pokojnici"></p>
 </div>
-	<div class="uk-width-1-6">
+	<div class="uk-width-1-6@m@m">
 	<button class="uk-button uk-button-primary" id="ajax" name="ajax">Provera kartona <span uk-icon="search"></span></button>
 </div>
 </div>
@@ -66,7 +66,7 @@
 	<div class="uk-width-1-1">
 		<h3>Podaci o grobnom mestu</h3>
 	</div>
-	<div class="uk-width-1-5">
+	<div class="uk-width-1-5@m">
 		<legend for="groblje_id">Groblje:</legend>
 		<select name="groblje_id" id="groblje_id" class="uk-select">
 			{% for groblje in groblja %}
@@ -75,7 +75,7 @@
 		</select>
 	</div>
 
-	<div class="uk-width-1-5">
+	<div class="uk-width-1-5@m">
 		<label for="parcela" class="uk-form-label">Parcela:</label>
 		<div class="uk-form-controls">
 			<input type="text" name="parcela" id="parcela" value="{{ old.parcela ? : '' }}"
@@ -84,7 +84,7 @@
 		<small class=" uk-text-danger">{{ errors.parcela[0] ? :'' }}</small>
 	</div>
 
-	<div class="uk-width-1-5">
+	<div class="uk-width-1-5@m">
 		<label for="grobno_mesto" class="uk-form-label">Redni broj grobnog mesta</label>
 		<div class="uk-form-controls">
 			<input type="number" name="grobno_mesto" step="1" id="grobno_mesto" value="{{ old.grobno_mesto ? : '' }}"
@@ -92,7 +92,7 @@
 		</div>
 		<small class=" uk-text-danger">{{ errors.grobno_mesto[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-1-5">
+	<div class="uk-width-1-5@m">
 		<label for="tip_groba" class="uk-form-label">Tip groba</label>
 		<div class="uk-form-controls">
 			<select name="tip_groba" id="tip_groba" class="uk-select{{ errors.tip_groba[0] ? ' uk-form-danger': ''}}"
@@ -104,7 +104,7 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.tip_groba[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-1-5">
+	<div class="uk-width-1-5@m">
 		<div class="uk-form-controls uk-margin-top">
 			<label><input class="uk-checkbox{{ errors.dupla_raka[0] ? ' uk-form-danger': ''}}" type="checkbox"
 					name="dupla_raka" {{ old.dupla_raka ? ' checked' : '' }}> Dupla raka</label>
@@ -113,13 +113,13 @@
 	<div class="uk-width-1-1">
 		<h3>Podaci o pokojniku</h3>
 	</div>
-	<div class="uk-width-1-6">
+	<div class="uk-width-1-6@m">
 		<div class="uk-form-controls uk-margin-top">
 			<label><input class="uk-checkbox{{ errors.pio[0] ? ' uk-form-danger': ''}}" type="checkbox" name="pio"
 					{{ old.pio ? ' checked' : '' }}> PIO</label>
 		</div>
 	</div>
-	<div class="uk-width-1-6">
+	<div class="uk-width-1-6@m">
 		<label for="prezime" class="uk-form-label">Prezime</label>
 		<div class="uk-form-controls">
 			<input type="text" name="prezime" id="prezime"
@@ -128,7 +128,7 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.prezime[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-1-6">
+	<div class="uk-width-1-6@m">
 		<label for="ime" class="uk-form-label">Ime</label>
 		<div class="uk-form-controls">
 			<input type="text" name="ime" id="ime" class="uk-input{{ errors.ime[0] ? ' uk-form-danger': ''}}"
@@ -136,7 +136,7 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.ime[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-1-6">
+	<div class="uk-width-1-6@m">
 		<label for="srednje_ime" class="uk-form-label">Srednje ime</label>
 		<div class="uk-form-controls">
 			<input type="text" name="srednje_ime" id="srednje_ime"
@@ -145,7 +145,7 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.srednje_ime[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-1-6">
+	<div class="uk-width-1-6@m">
 		<label for="jmbg" class="uk-form-label">JMBG</label>
 		<div class="uk-form-controls">
 			<input type="text" name="jmbg" id="jmbg" class="uk-input{{ errors.jmbg[0] ? ' uk-form-danger': ''}}"
@@ -153,7 +153,7 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.jmbg[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-1-6">
+	<div class="uk-width-1-6@m">
 		<label for="mesto" class="uk-form-label">Mesto</label>
 		<div class="uk-form-controls">
 			<input type="text" name="mesto" id="mesto" class="uk-input{{ errors.mesto[0] ? ' uk-form-danger': ''}}"
@@ -161,7 +161,7 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.mesto[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-1-6">
+	<div class="uk-width-1-6@m">
 		<label for="prebivaliste" class="uk-form-label">Prebivalište</label>
 		<div class="uk-form-controls">
 			<input type="text" name="prebivaliste" id="prebivaliste"
@@ -170,7 +170,7 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.mesto[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-1-6">
+	<div class="uk-width-1-6@m">
 		<label for="datum_rodjenja" class="uk-form-label">Datum rođenja</label>
 		<div class="uk-form-controls">
 			<input type="date" name="datum_rodjenja" id="datum_rodjenja" value="{{ old.datum_rodjenja }}"
@@ -178,7 +178,7 @@
 		</div>
 		<small class=" uk-text-danger">{{ errors.datum_rodjenja[0] ? : '' }}</small>
 	</div>
-	<div class="uk-width-1-6">
+	<div class="uk-width-1-6@m">
 		<label for="datum_smrti" class="uk-form-label">Datum smrti</label>
 		<div class="uk-form-controls">
 			<input type="date" name="datum_smrti" id="datum_smrti" value="{{ old.datum_smrti ? : '' }}"
@@ -189,7 +189,7 @@
 	<div class="uk-width-1-1">
 		<h3>Podaci o prijaviocu sahrane</h3>
 	</div>
-	<div class="uk-width-1-5">
+	<div class="uk-width-1-5@m">
 		<label for="prezime_prijavioca" class="uk-form-label">Prezime prijavioca</label>
 		<div class="uk-form-controls">
 			<input type="text" name="prezime_prijavioca" id="prezime_prijavioca"
@@ -198,7 +198,7 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.prezime_prijavioca[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-1-5">
+	<div class="uk-width-1-5@m">
 		<label for="ime_prijavioca" class="uk-form-label">Ime prijavioca</label>
 		<div class="uk-form-controls">
 			<input type="text" name="ime_prijavioca" id="ime_prijavioca"
@@ -207,7 +207,7 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.ime_prijavioca[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-2-5">
+	<div class="uk-width-2-5@m">
 		<label for="ovlascen" class="uk-form-label">Ovlašćen od strane:</label>
 		<div class="uk-form-controls">
 			<input type="text" name="ovlascen" id="ovlascen"
@@ -216,11 +216,11 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.ovlascen[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-2-5"></div>
+	<div class="uk-width-2-5@m"></div>
 	<div class="uk-width-1-1">
 		<h3>Podaci potrebni za fakturisanje troškova</h3>
 	</div>
-	<div class="uk-width-1-5">
+	<div class="uk-width-1-5@m">
 		<label for="prezime_troskovi" class="uk-form-label">Prezime</label>
 		<div class="uk-form-controls">
 			<input type="text" name="prezime_troskovi" id="prezime_troskovi"
@@ -229,7 +229,7 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.prezime_troskovi[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-1-5">
+	<div class="uk-width-1-5@m">
 		<label for="ime_troskovi" class="uk-form-label">Ime</label>
 		<div class="uk-form-controls">
 			<input type="text" name="ime_troskovi" id="ime_troskovi"
@@ -238,7 +238,7 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.ime_troskovi[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-1-5">
+	<div class="uk-width-1-5@m">
 		<label for="jmbg_troskovi" class="uk-form-label">JMBG</label>
 		<div class="uk-form-controls">
 			<input type="text" name="jmbg_troskovi" id="jmbg_troskovi"
@@ -247,7 +247,7 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.jmbg_troskovi[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-1-5">
+	<div class="uk-width-1-5@m">
 		<label for="prebivaliste_troskovi" class="uk-form-label">Prebivalište:</label>
 		<div class="uk-form-controls">
 			<input type="text" name="prebivaliste_troskovi" id="prebivaliste_troskovi"
@@ -256,7 +256,7 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.prebivaliste_troskovi[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-1-5">
+	<div class="uk-width-1-5@m">
 		<label for="telefon" class="uk-form-label">Telefoni:</label>
 		<div class="uk-form-controls">
 			<input type="text" name="telefon" id="telefon"
@@ -265,7 +265,7 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.telefon[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-1-5">
+	<div class="uk-width-1-5@m">
 		<label for="broj_lk" class="uk-form-label">Broj lične karte</label>
 		<div class="uk-form-controls">
 			<input type="number" name="broj_lk" step="1" id="broj_lk" value="{{ old.broj_lk ? : '' }}"
@@ -273,7 +273,7 @@
 		</div>
 		<small class=" uk-text-danger">{{ errors.broj_lk[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-1-5">
+	<div class="uk-width-1-5@m">
 		<label for="mup" class="uk-form-label">MUP</label>
 		<div class="uk-form-controls">
 			<input type="text" name="mup" id="mup" class="uk-input{{ errors.mup[0] ? ' uk-form-danger': ''}}"
@@ -281,7 +281,7 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.mup[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-1-5">
+	<div class="uk-width-1-5@m">
 		<label for="uplata_do" class="uk-form-label">Uplata će biti izvršena do:</label>
 		<div class="uk-form-controls">
 			<input type="date" name="uplata_do" id="uplata_do" value="{{ old.uplata_do ? : '' }}"
@@ -289,7 +289,7 @@
 		</div>
 		<small class=" uk-text-danger">{{ errors.uplata_do[0] ? : '' }}</small>
 	</div>
-	<div class="uk-width-3-5"></div>
+	<div class="uk-width-3-5@m"></div>
 	<div class="uk-width-1-1">
 		<div uk-grid class="uk-background-muted uk-padding-small" style="margin-left:1px;">
 		<div class="uk-width-1-1">
@@ -302,7 +302,7 @@
 		    </label>
 		</div>
 		</div>
-			<div class="uk-width-1-5 pravno" style="display: none;">
+			<div class="uk-width-1-5@m pravno" style="display: none;">
 				<label for="naziv_primaoca" class="uk-form-label">Naziv:</label>
 					<div class="uk-form-controls">
 					<input type="text" name="naziv_primaoca" id="naziv_primaoca"
@@ -311,7 +311,7 @@
 					</div>
 				<small class="uk-text-danger">{{ errors.naziv_primaoca[0] ? :'' }}</small>
 			</div>
-			<div class="uk-width-1-5 pravno" style="display: none;">
+			<div class="uk-width-1-5@m pravno" style="display: none;">
 				<label for="adresa_primaoca" class="uk-form-label">Adresa:</label>
 					<div class="uk-form-controls">
 					<input type="text" name="adresa_primaoca" id="adresa_primaoca"
@@ -320,7 +320,7 @@
 					</div>
 				<small class="uk-text-danger">{{ errors.adresa_primaoca[0] ? :'' }}</small>
 			</div>
-			<div class="uk-width-1-5 pravno" style="display: none;">
+			<div class="uk-width-1-5@m pravno" style="display: none;">
 				<label for="ziro_primaoca" class="uk-form-label">Žiro račun:</label>
 					<div class="uk-form-controls">
 					<input type="text" name="ziro_primaoca" id="ziro_primaoca"
@@ -329,7 +329,7 @@
 					</div>
 				<small class="uk-text-danger">{{ errors.ziro_primaoca[0] ? :'' }}</small>
 			</div>
-			<div class="uk-width-1-5 pravno" style="display: none;">
+			<div class="uk-width-1-5@m pravno" style="display: none;">
 				<label for="pib_primaoca" class="uk-form-label">PIB:</label>
 					<div class="uk-form-controls">
 					<input type="text" name="pib_primaoca" id="pib_primaoca"
@@ -338,14 +338,14 @@
 					</div>
 				<small class="uk-text-danger">{{ errors.pib_primaoca[0] ? :'' }}</small>
 			</div>
-			<div class="uk-width-1-5 pravno" style="display: none;">
+			<div class="uk-width-1-5@m pravno" style="display: none;">
 				<div class="uk-form-controls uk-margin-medium-top">
 				<label><input class="uk-checkbox{{ errors.pdv[0] ? ' uk-form-danger': ''}}" type="checkbox" name="pdv"
 				{{ old.pdv ? ' checked' : '' }}> PDV</label>
 				</div>
 			</div>
 
-		<div class="uk-width-1-5">
+		<div class="uk-width-1-5@m">
 		<label for="broj" class="uk-form-label">Broj računa:</label>
 		<div class="uk-form-controls">
 			<input type="text" name="broj" id="broj"
@@ -354,7 +354,7 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.broj[0] ? :'' }}</small>
 	</div>
-		<div class="uk-width-1-5">
+		<div class="uk-width-1-5@m">
 		<label for="datum" class="uk-form-label">Datum:</label>
 		<div class="uk-form-controls">
 			<input type="date" name="datum" id="datum" value="{{ old.datum ? : '' }}"
@@ -362,7 +362,7 @@
 		</div>
 		<small class=" uk-text-danger">{{ errors.datum[0] ? : '' }}</small>
 	</div>
-	    <div class="uk-width-1-5">
+	    <div class="uk-width-1-5@m">
         <label for="iznos" class="uk-form-label">Iznos</label>
         <div class="uk-form-controls">
             <input type="number" name="iznos" id="iznos" value="0" min="0" step="0.01"
@@ -370,13 +370,13 @@
         </div>
         <small class="uk-text-danger">{{ errors.iznos[0] ? :'' }}</small>
     </div>
-    	<div class="uk-width-1-5">
+    	<div class="uk-width-1-5@m">
 		<div class="uk-form-controls uk-margin-medium-top">
 			<label><input class="uk-checkbox{{ errors.razduzeno[0] ? ' uk-form-danger': ''}}" type="checkbox" name="razduzeno"
 					{{ old.razduzeno ? ' checked' : '' }}> Razduženo</label>
 		</div>
 	</div>
-	<div class="uk-width-1-5">
+	<div class="uk-width-1-5@m">
 		<label for="datum_razduzenja" class="uk-form-label">Datum razduženja:</label>
 		<div class="uk-form-controls">
 			<input type="date" name="datum_razduzenja" id="datum_razduzenja" value="{{ old.datum_razduzenja ? : '' }}"
@@ -397,7 +397,7 @@
 	<div class="uk-width-1-1">
 		<hr class="uk-divider-icon">
 	</div>
-	<div class="uk-width-1-5">
+	<div class="uk-width-1-5@m">
 		<label for="start" class="uk-form-label">Datum i vreme obavljanja sahrane</label>
 		<div class="uk-form-controls">
 			<input type="datetime-local" name="start" id="start" value="{{ old.start ? : '' }}"
@@ -405,7 +405,7 @@
 		</div>
 		<small class=" uk-text-danger">{{ errors.start[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-1-5">
+	<div class="uk-width-1-5@m">
 		<label for="end" class="uk-form-label">Procenjen kraj sahrane</label>
 		<div class="uk-form-controls">
 			<input type="datetime-local" name="end" id="end" value="{{ old.end ? : '' }}"
@@ -413,7 +413,7 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.end[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-1-5">
+	<div class="uk-width-1-5@m">
 		<label for="datum_prijave" class="uk-form-label">Datum prijave smrti:</label>
 		<div class="uk-form-controls">
 			<input type="date" name="datum_prijave" id="datum_prijave" value="{{ old.datum_prijave ? : '' }}"
@@ -421,7 +421,7 @@
 		</div>
 		<small class=" uk-text-danger">{{ errors.datum_prijave[0] ? : '' }}</small>
 	</div>
-	<div class="uk-width-1-5"></div>
+	<div class="uk-width-1-5@m"></div>
 	<div class="uk-width-1-2">
 		<label for="napomena" class="uk-form-label">Napomena</label>
 		<div class="uk-form-controls">
@@ -438,11 +438,11 @@
 		</div>
 		<small class=" uk-text-danger">{{ errors.prevoz[0] ? :'' }}</small>
 	</div>
-	<div class="uk-button-group uk-width-1-4 uk-margin-medium-bottom">
+	<div class="uk-button-group uk-width-1-4@m uk-margin-medium-bottom">
 		<button class="uk-button uk-button-primary uk-width-1-2">Snimi</button>
 		<button onclick="window.history.back();" class="uk-button uk-button-secondary uk-width-1-2">Otkaži</button>
 	</div>
-	<div class="uk-width-3-4"></div>
+	<div class="uk-width-3-4@m"></div>
 </form>
 {% endblock naslov %}
 {% block skripta %}
