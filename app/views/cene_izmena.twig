@@ -17,7 +17,7 @@
 <form action="{{ path_for('cene.izmena.post') }}" method="POST" class="uk-form-stacked uk-margin-medium" uk-grid>
 	{{ csrf|raw }}
 	<input type="hidden" value="{{ cene.id }}" name="id" id="id">
-		<div class="uk-width-1-4">
+		<div class="uk-width-1-4@m">
 		<label for="datum" class="uk-form-label">Datum:</label>
 		<div class="uk-form-controls">
 			<input type="date" name="datum" id="datum" value="{{ old.datum ? : cene.datum }}"
@@ -25,7 +25,7 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.datum[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-1-4">
+	<div class="uk-width-1-4@m">
 		<label for="taksa" class="uk-form-label">Iznos za taksu:</label>
 		<div class="uk-form-controls">
 			<input type="number" name="taksa" id="taksa" class="uk-input{{ errors.taksa[0] ? ' uk-form-danger': ''}}"
@@ -33,7 +33,7 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.taksa[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-1-4">
+	<div class="uk-width-1-4@m">
 		<label for="zakup" class="uk-form-label">Iznos za zakup:</label>
 		<div class="uk-form-controls">
 			<input type="number" name="zakup" id="zakup" class="uk-input{{ errors.zakup[0] ? ' uk-form-danger': ''}}"
@@ -41,19 +41,19 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.zakup[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-1-4 uk-flex uk-flex-bottom">
-		<div class="uk-button-group uk-width-1-1">
-			<button class="uk-button uk-button-primary uk-width-1-2">Sačuvaj</button>
-			<a href="{{ path_for('cene') }}" class="uk-button uk-button-secondary uk-width-1-2">Otkaži</a>
-		</div>
-	</div>
-	<div class="uk-width-3-4">
+	<div class="uk-width-3-4@m">
 		<label for="napomena" class="uk-form-label">Napomena</label>
 		<div class="uk-form-controls">
 			<textarea class="uk-textarea{{ errors.napomena[0] ? ' uk-form-danger': ''}}" rows="3" name="napomena"
 				id="napomena">{{ old.napomena ? : cene.napomena }}</textarea>
 		</div>
 		<small class=" uk-text-danger">{{ errors.napomena[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-4@m uk-flex uk-flex-bottom">
+		<div class="uk-button-group uk-width-1-1">
+			<button class="uk-button uk-button-primary uk-width-1-2">Sačuvaj</button>
+			<a href="{{ path_for('cene') }}" class="uk-button uk-button-secondary uk-width-1-2">Otkaži</a>
+		</div>
 	</div>
 </form>
 {% endblock naslov %}

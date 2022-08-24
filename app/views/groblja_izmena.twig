@@ -7,7 +7,7 @@
 	{{ csrf|raw }}
 	<input type="hidden" value="{{ groblje.id }}" name="id" id="id">
 	<div uk-grid>
-	<div class="uk-width-1-4">
+	<div class="uk-width-1-4@m">
 		<label for="naziv" class="uk-form-label">Naziv</label>
 		<div class="uk-form-controls">
 			<input type="text" name="naziv" id="naziv" class="uk-input{{ errors.naziv[0] ? ' uk-form-danger': ''}}" value="{{ old.naziv ? : groblje.naziv }}"
@@ -15,7 +15,7 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.naziv[0] ? :'' }}</small>
 	</div>
-	<div class="uk-width-1-4">
+	<div class="uk-width-1-4@m">
 		<label for="adresa" class="uk-form-label">Adresa</label>
 		<div class="uk-form-controls">
 			<input type="text" name="adresa" id="adresa" value="{{ old.adresa ? : groblje.adresa }}" class="uk-input{{ errors.adresa[0] ? ' uk-form-danger': ''}}"
@@ -24,7 +24,7 @@
 		<small class="uk-text-danger">{{ errors.adresa[0] ? :'' }}</small>
 	</div>
 
-	<div class="uk-width-1-4">
+	<div class="uk-width-1-4@m">
 		<label for="mesto" class="uk-form-label">Mesto</label>
 		<div class="uk-form-controls">
 			<input type="text" name="mesto" id="mesto" value="{{ old.mesto ? : groblje.mesto }}" class="uk-input{{ errors.mesto[0] ? ' uk-form-danger': ''}}"
@@ -32,7 +32,7 @@
 		</div>
 		<small class="uk-text-danger">{{ errors.mesto[0] ? :'' }}</small>
 	</div>
-		<div class="uk-width-1-4">
+		<div class="uk-width-1-4@m">
 		<label for="ptt" class="uk-form-label">Poštanski broj</label>
 		<div class="uk-form-controls">
 			<input type="text" name="ptt" id="ptt" value="{{ old.ptt ? : groblje.ptt }}" class="uk-input{{ errors.ptt[0] ? ' uk-form-danger': ''}}"
@@ -42,7 +42,7 @@
 	</div>
 	</div>
 	<div uk-grid>
-	<div class="uk-button-group uk-width-1-5">
+	<div class="uk-button-group uk-width-1-5@m">
 		<button class="uk-button uk-button-primary uk-width-1-2"><span uk-icon="check"></span> Snimi</button>
 		<a href="{{ path_for('groblja') }}" class="uk-button uk-button-secondary uk-width-1-2">
 			<span uk-icon="ban"></span> Otkaži

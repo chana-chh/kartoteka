@@ -4,7 +4,7 @@
 <h1 id="top">Pregled groblja</h1>
 <hr>
 <div class="uk-overflow-auto">
-  <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+  <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small uk-preserve-width">
     <thead>
       <tr>
         <th class="w-10">Id</th>
@@ -64,7 +64,7 @@
 {% endblock sadrzaj %}
 
 {% block traka %}
-<form action="{{ path_for('groblja.dodavanje') }}" method="POST" class="uk-background-muted uk-margin-top uk-padding-small" onSubmit = "return checkPassword(this)">
+<form action="{{ path_for('groblja.dodavanje') }}" method="POST" class="uk-background-muted uk-margin-top uk-padding-small">
     {{ csrf|raw }}
     <fieldset class="uk-fieldset">
 

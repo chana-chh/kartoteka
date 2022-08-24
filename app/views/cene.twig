@@ -7,9 +7,9 @@
     <div class="uk-clearfix">
         <div class="uk-float-left uk-text-primary">
             <strong>
-                Važeće cene - Taksa:
+                Važeće cene:<br> Taksa:
                 <span class="uk-text-success">{{ taksa|number_format(2, '.', ',') }}</span>
-                din za jednu godinu, Zakup:
+                din za jednu godinu,<br> Zakup:
                 <span class="uk-text-success">{{ zakup|number_format(2, '.', ',') }}</span>
                 din za jednu godinu
             </strong>
@@ -22,7 +22,7 @@
 </div>
 
 <div class="uk-overflow-auto">
-    <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+    <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small uk-preserve-width">
         <thead>
             <tr>
                 <th class="w-10">Id</th>
@@ -30,7 +30,7 @@
                 <th class="w-10 uk-text-right">Taksa (za 1 godinu)</th>
                 <th class="w-10 uk-text-right">Zakup (za 1 godinu)</th>
                 <th class="w-10 uk-text-right">Važeće cene</th>
-                <th class="w-40">Napomena</th>
+                <th class="w-40 uk-visible@m">Napomena</th>
                 <th class="w-10 uk-text-right"><span uk-icon="cog"></span></th>
             </tr>
         </thead>
@@ -46,7 +46,7 @@
                 <td class="uk-text-right">{{ cena.taksa|number_format(2, '.', ',') }}</td>
                 <td class="uk-text-right">{{ cena.zakup|number_format(2, '.', ',') }}</td>
                 <td class="uk-text-right">{{ cena.vazecaDisabled | raw }}</td>
-                <th>{{ cena.napomena }}</th>
+                <th class="uk-visible@m">{{ cena.napomena }}</th>
                 <td class="uk-clearfix">
                     <ul class="uk-iconnav uk-float-right">
                         <li>
