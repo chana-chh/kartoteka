@@ -96,3 +96,31 @@ Ako ide samo racun onda mozda moze u zajednicku tabelu sa zaduzenjima,a ako se i
 
 - dodavanje cena uzima trenutni datum ...
 -
+# DB
+
+- dodati tabelu sa kamatama (datum od kada vazi, procenat na godisnjem nivou)
+	trenutno je 11.5%, ali ce da se promeni do kraja godine
+- dodati polje racun u zaduzenja
+
+
+# KAMATA
+
+- proverti kako se racuna zatezna kamata
+	pronasao sam sledece: glavnica * procenat * broj_dana / 365
+						  1000     * 0.115	  * 100		  / 365	= 31.51 (31.506849315...)
+
+
+# PROMENE U APLIKACIJI
+
+- kod zaduzenja obavezno se rucno unosi datum i iznos (default: now() i cenovnik)
+- "polje" za razduzenje je glavnica sa obracunatom kamatom (metoda u modelu)
+	metoda:	preuzeti sve zapise iz tabele kamate koji su noviji od datuma zaduzenja i stariji od now()
+
+
+
+# PITANJA
+
+1. DA LI POSTOJI NEKI PERIOD U KOME SE NE PLACA KAMATA
+	npr ako plati u narednih mesec dana ne racuna mu se kamata ili tako nesto
+2. 
+
