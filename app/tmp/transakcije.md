@@ -106,8 +106,9 @@ Ako ide samo racun onda mozda moze u zajednicku tabelu sa zaduzenjima,a ako se i
 # KAMATA
 
 - proverti kako se racuna zatezna kamata
-	pronasao sam sledece: glavnica * procenat * broj_dana / 365
-						  1000     * 0.115	  * 100		  / 365	= 31.51 (31.506849315...)
+	pronasao sam sledece: glavnica * procenat * broj_dana / 100 * 365 (366)
+						  1000     * 11.5	  * 100		  / 100 * 365		= 31.51 (31.506849315...)
+	prestupna godina = 366 dana
 
 
 # PROMENE U APLIKACIJI
@@ -122,5 +123,6 @@ Ako ide samo racun onda mozda moze u zajednicku tabelu sa zaduzenjima,a ako se i
 
 1. DA LI POSTOJI NEKI PERIOD U KOME SE NE PLACA KAMATA
 	npr ako plati u narednih mesec dana ne racuna mu se kamata ili tako nesto
-2. 
-
+2. STA JE SA PRESTUPNOM GODINOM (pretpostavljam da se sece na deo dana u prestupnoj i deo dana u neprestupnim)
+	dodati broj dana sa kojim se deli. Preseci datum kamate od 1. januara (automatski, npr. kada se ucita pocetna strana)
+3. RACUNI I REPROGRAMI KAMATA?
