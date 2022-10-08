@@ -230,13 +230,14 @@ class TransakcijeController extends Controller
 		$zaduzena_godina = false;
 		$upozorenje = '';
 
-		$curr_year = (int) date('Y');
+		$trenutna_godina = (int) date('Y');
+		$prethodna_godina = $trenutna_godina-1;
 
 		$model_karton = new Karton();
 		$model_zaduzenje = new Zaduzenje();
 
 		$sql_broj_kartona = "SELECT COUNT(*) AS broj_kartona FROM kartoni WHERE aktivan = 1;";
-		$sql_broj_zaduzenja = "SELECT COUNT(*) AS broj_zaduzenja FROM zaduzenja WHERE godina = {$curr_year};";
+		$sql_broj_zaduzenja = "SELECT COUNT(*) AS broj_zaduzenja FROM zaduzenja WHERE godina = {$prethodna_godina};";
 
 		$broj_kartona = $model_karton->fetch($sql_broj_kartona)[0]->broj_kartona;
 		$broj_zaduzenja = $model_zaduzenje->fetch($sql_broj_zaduzenja)[0]->broj_zaduzenja;
@@ -244,16 +245,16 @@ class TransakcijeController extends Controller
 		// vise 75% kartona je zaduzeno za godinu
 		if ($broj_zaduzenja > ($broj_kartona * 1.5))
 		{
-			$upozorenje = "Većina kartona je zadužena za tekuću godinu ({$curr_year})";
+			$upozorenje = "Većina kartona je zadužena za {$prethodna_godina}. godinu";
 			$zaduzena_godina = true;
 		}
 		else
 		{
-			$upozorenje = "Većina kartona nije zadužena za tekuću godinu ({$curr_year})";
+			$upozorenje = "Većina kartona nije zadužena za {$prethodna_godina}. godinu";
 			$zaduzena_godina = false;
 		}
 
-		$this->render($response, 'zaduzivanje.twig', compact('taksa', 'zakup', 'upozorenje', 'zaduzena_godina'));
+		$this->render($response, 'zaduzivanje.twig', compact('taksa', 'zakup', 'upozorenje', 'zaduzena_godina', 'trenutna_godina'));
 	}
 
 	public function postZaduzivanje($request, $response)
@@ -263,7 +264,7 @@ class TransakcijeController extends Controller
 		unset($data['csrf_name']);
 		unset($data['csrf_value']);
 
-		$cur_year = (int) date('Y');
+		$trenutna_godina = (int) date('Y');
 
 		$validation_rules = [
 			'taksa' => [
@@ -272,10 +273,19 @@ class TransakcijeController extends Controller
 			'zakup' => [
 				'required' => true,
 			],
+			'datum_zaduzenja' => [
+				'required' => true,
+			],
+			'datum_prispeca' => [
+				'required' => true,
+			],
+			'datum_prispeca' => [ // test radi i za datum
+				'min' => $data['datum_zaduzenja'],
+			],
 			'godina' => [
 				'required' => true,
-				'min' => $cur_year - 1,
-				'max' => $cur_year + 1,
+				'min' => $trenutna_godina - 1,
+				'max' => $trenutna_godina + 1,
 			],
 		];
 
@@ -294,6 +304,8 @@ class TransakcijeController extends Controller
 			$taksa =  (float) $data['taksa'];
 			$zakup =  (float) $data['zakup'];
 			$godina = (int) $data['godina'];
+			$datum_zaduzenja = date('Y-m-d', strtotime($data['datum_zaduzenja']));
+			$datum_prispeca = date('Y-m-d', strtotime($data['datum_prispeca']));
 
 			$podaci = [
 				':karton_id' => 0,
@@ -303,14 +315,15 @@ class TransakcijeController extends Controller
 				':iznos_zaduzeno' => 0,
 				':iznos_razduzeno' => 0,
 				':razduzeno' => 0,
-				':datum_zaduzenja' => date('Y-m-d'),
+				':datum_zaduzenja' => $datum_zaduzenja,
+				':datum_prispeca' => $datum_prispeca,
 				':korisnik_id_zaduzio' => $this->auth->user()->id,
 			];
 
 			$kartoni = $model_karton->sviAktivni();
 			$pdo = $model_karton->getDb()->getPDO();
-			$sql = "INSERT INTO `zaduzenja` (karton_id, staraoc_id, tip, iznos_zaduzeno, iznos_razduzeno, godina, razduzeno, datum_zaduzenja, korisnik_id_zaduzio)
-                    VALUES (:karton_id, :staraoc_id, :tip, :iznos_zaduzeno, :iznos_razduzeno, :godina, :razduzeno, :datum_zaduzenja, :korisnik_id_zaduzio);";
+			$sql = "INSERT INTO `zaduzenja` (karton_id, staraoc_id, tip, iznos_zaduzeno, iznos_razduzeno, godina, razduzeno, datum_zaduzenja, datum_prispeca, korisnik_id_zaduzio)
+                    VALUES (:karton_id, :staraoc_id, :tip, :iznos_zaduzeno, :iznos_razduzeno, :godina, :razduzeno, :datum_zaduzenja, :datum_prispeca, :korisnik_id_zaduzio);";
 			$stmt = $pdo->prepare($sql);
 
 			$pdo->beginTransaction();
@@ -365,10 +378,10 @@ class TransakcijeController extends Controller
 
 			$pdo->commit();
 			$modelLoga = new Log();
-            $datal['tip'] = "dodavanje";
-            $datal['opis'] = "Zaduživanje za godinu: " . $cur_year;
-            $datal['korisnik_id'] = $this->auth->user()->id;
-            $modelLoga->insert($datal);
+			$datal['tip'] = "dodavanje";
+			$datal['opis'] = "Zaduživanje za godinu: " . $trenutna_godina;
+			$datal['korisnik_id'] = $this->auth->user()->id;
+			$modelLoga->insert($datal);
 			$this->flash->addMessage('success', 'Svi aktivni kartoni su uspešno zaduženi.');
 			return $response->withRedirect($this->router->pathFor('transakcije.zaduzivanje'));
 		}

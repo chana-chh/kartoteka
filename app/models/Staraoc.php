@@ -97,6 +97,10 @@ class Staraoc extends Model
 
 
     // new ****************************************************************************************************************************
+	// prepraviti na novi nacin razduzivanja uz zateznu kamatu
+
+
+	
     public function svaZaduzenja()
     {
         $sql = "SELECT * FROM zaduzenja WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id} ORDER BY godina ASC;";

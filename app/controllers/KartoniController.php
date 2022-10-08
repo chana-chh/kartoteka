@@ -199,8 +199,9 @@ class KartoniController extends Controller
 		$groblje_id = isset($data['groblje_id']) ? (int) str_replace('%', '', filter_var($data['groblje_id'], FILTER_SANITIZE_STRING)) : 0;
 		$data['parcela'] = str_replace('%', '', filter_var($data['parcela'], FILTER_SANITIZE_STRING));
 		$data['grobno_mesto'] = str_replace('%', '', filter_var($data['grobno_mesto'], FILTER_SANITIZE_STRING));
-		$parcela = '%' . $data['parcela'] . '%';
-		$grobno_mesto = '%' . $data['grobno_mesto'] . '%';
+		// $parcela = '%' . $data['parcela'] . '%';
+		// $grobno_mesto = '%' . $data['grobno_mesto'] . '%';
+		$grobno_mesto = $data['grobno_mesto'] . '%';
 		$aktivan = isset($data['aktivan']) ? 1 : 0;
 		$query = [];
 		parse_str($request->getUri()->getQuery(), $query);
@@ -219,8 +220,8 @@ class KartoniController extends Controller
 			{
 				$where .= " AND ";
 			}
-			$where .= "parcela LIKE :parcela";
-			$params[':parcela'] = $parcela;
+			$where .= "parcela = :parcela";
+			$params[':parcela'] = $data['parcela'];
 		}
 		if (!empty($data['grobno_mesto']))
 		{
