@@ -245,9 +245,9 @@
 										<th
 											class="w-20">Ime</th>
 										<th
-											class="w-15 uk-text-right">Iznos (zaduženo)</th>
+											class="w-15 uk-text-right">Zaduženo</th>
 										<th
-											class="w-15 uk-text-right">Iznos (razduženo)</th>
+											class="w-15 uk-text-right">Razduženo</th>
 										<th
 											class="w-15 uk-text-right">Za razduženje</th>
 										<th
@@ -314,7 +314,7 @@
 											</td>
 											<td
 												class="uk-text-right">
-												{{ taksa.zaRazduzenje()|number_format(2, '.', ',') }}
+												{{ taksa.zaRazduzenje().ukupno|number_format(2, '.', ',') }}
 											</td>
 											<td
 												class="uk-text-center">{{ taksa.razduzenoDisabled()|raw }}</td>
@@ -447,7 +447,7 @@
 											</td>
 											<td
 												class="uk-text-right">
-												{{ zakup.zaRazduzenje()|number_format(2, '.', ',') }}
+												{{ zakup.zaRazduzenje().ukupno|number_format(2, '.', ',') }}
 											</td>
 											<td
 												class="uk-text-center">{{ zakup.razduzenoDisabled()|raw }}</td>

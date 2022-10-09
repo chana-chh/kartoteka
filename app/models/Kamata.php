@@ -9,6 +9,7 @@ class Kamata extends Model
 {
 	protected $table = 'kamate';
 
+	// vraca sve periode i kamate izmedju dva datuma
 	public function kamateZaObracun($od, $do)
 	{
 		$sql = "SELECT * FROM kamate WHERE datum > :od AND datum < :do ORDER BY datum ASC;";

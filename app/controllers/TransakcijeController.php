@@ -313,17 +313,19 @@ class TransakcijeController extends Controller
 				':tip' => 'taksa',
 				':godina' => $godina,
 				':iznos_zaduzeno' => 0,
+				':glavnica' => 0,
 				':iznos_razduzeno' => 0,
 				':razduzeno' => 0,
 				':datum_zaduzenja' => $datum_zaduzenja,
 				':datum_prispeca' => $datum_prispeca,
 				':korisnik_id_zaduzio' => $this->auth->user()->id,
+				':napomena' => "Automatsko zaduživanje za {$godina}. godinu",
 			];
 
 			$kartoni = $model_karton->sviAktivni();
 			$pdo = $model_karton->getDb()->getPDO();
-			$sql = "INSERT INTO `zaduzenja` (karton_id, staraoc_id, tip, iznos_zaduzeno, iznos_razduzeno, godina, razduzeno, datum_zaduzenja, datum_prispeca, korisnik_id_zaduzio)
-                    VALUES (:karton_id, :staraoc_id, :tip, :iznos_zaduzeno, :iznos_razduzeno, :godina, :razduzeno, :datum_zaduzenja, :datum_prispeca, :korisnik_id_zaduzio);";
+			$sql = "INSERT INTO `zaduzenja` (karton_id, staraoc_id, tip, iznos_zaduzeno, glavnica, iznos_razduzeno, godina, razduzeno, datum_zaduzenja, datum_prispeca, korisnik_id_zaduzio, napomena)
+                    VALUES (:karton_id, :staraoc_id, :tip, :iznos_zaduzeno, :glavnica, :iznos_razduzeno, :godina, :razduzeno, :datum_zaduzenja, :datum_prispeca, :korisnik_id_zaduzio, :napomena);";
 			$stmt = $pdo->prepare($sql);
 
 			$pdo->beginTransaction();
@@ -351,6 +353,7 @@ class TransakcijeController extends Controller
 						$podaci[':staraoc_id'] = $staraoc->id;
 						$podaci[':tip'] = 'taksa';
 						$podaci[':iznos_zaduzeno'] = $iznos_takse;
+						$podaci[':glavnica'] = $iznos_takse;
 
 						$stmt->execute($podaci);
 					}
@@ -370,6 +373,7 @@ class TransakcijeController extends Controller
 						$podaci[':staraoc_id'] = $staraoc->id;
 						$podaci[':tip'] = 'zakup';
 						$podaci[':iznos_zaduzeno'] = $iznos_zakupa;
+						$podaci[':glavnica'] = $iznos_zakupa;
 
 						$stmt->execute($podaci);
 					}
@@ -379,7 +383,7 @@ class TransakcijeController extends Controller
 			$pdo->commit();
 			$modelLoga = new Log();
 			$datal['tip'] = "dodavanje";
-			$datal['opis'] = "Zaduživanje za godinu: " . $trenutna_godina;
+			$datal['opis'] = "Zaduživanje za godinu: " . $godina;
 			$datal['korisnik_id'] = $this->auth->user()->id;
 			$modelLoga->insert($datal);
 			$this->flash->addMessage('success', 'Svi aktivni kartoni su uspešno zaduženi.');

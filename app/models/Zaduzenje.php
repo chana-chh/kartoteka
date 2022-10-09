@@ -96,25 +96,34 @@ class Zaduzenje extends Model
 	}
 	// ??? ***************************************************
 
+	// vraca iznos za razduzenje zaduzenja (glavnica + kamata)
+	// kmata se racuna od datum_prispeca do trenutnog datuma
 	public function zaRazduzenje()
 	{
+		$datum_prispeca = date($this->datum_prispeca);
+		$glavnica = (float) $this->glavnica;
+		$trenutni_datum = date('Y-m-d');
+		$zatezna = 0;
+
 		if ($this->razduzeno === 1)
 		{
-			return 0;
+			return [
+			'glavnica' => $glavnica,
+			'kamata' =>	$zatezna,
+			'ukupno' => $glavnica + $zatezna,
+		];
 		}
 		
 		if ($this->datum_prispeca === null)
 		{
-			return 0;
+			return [
+				'glavnica' => $glavnica,
+				'kamata' =>	$zatezna,
+				'ukupno' => $glavnica + $zatezna,
+			];
 		}
 
-		$datum_prispeca = date($this->datum_prispeca);
-		$glavnica = (float) $this->iznos_zaduzeno;
-		$trenutni_datum = date('Y-m-d');
-
 		$kamate = (new Kamata())->kamateZaObracun($datum_prispeca, $trenutni_datum);
-
-		$zatezna = 0;
 
 		foreach ($kamate as $k=> $v)
 		{
@@ -123,6 +132,10 @@ class Zaduzenje extends Model
 			$kamate[$k]['iznos'] = $kam;
 		}
 
-		return $glavnica + $zatezna;
+		return [
+			'glavnica' => $glavnica,
+			'kamata' =>	$zatezna,
+			'ukupno' => $glavnica + $zatezna,
+		];
 	}
 }

@@ -152,26 +152,30 @@ class Staraoc extends Model
         return $this->fetch($sql, null, '\App\Models\Zaduzenje');
     }
 
-    public function saldoZaTakse()
-    {
-        $sql = "SELECT SUM(iznos_razduzeno) AS saldo FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0 AND iznos_razduzeno > 0
-                AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
-        $saldo = $this->fetch($sql)[0]->saldo;
-        return round((float) $saldo, 2);
-    }
+	// ovo je suma delimicnih razduzenja
+	// delimicna razduzenja se sada moraju oduzimati od glavnice zbog racunanja kamate
+    // public function saldoZaTakse()
+    // {
+    //     $sql = "SELECT SUM(iznos_razduzeno) AS saldo FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0 AND iznos_razduzeno > 0
+    //             AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+    //     $saldo = $this->fetch($sql)[0]->saldo;
+    //     return round((float) $saldo, 2);
+    // }
 
     public function dugZaTakse()
     {
-        $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0
-                AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
-        $broj = (int) $this->fetch($sql)[0]->broj;
-        $cena = (float) (new Cena())->taksa();
-        $br_mesta = $this->karton()->broj_mesta;
-        $br_staraoca = $this->karton()->brojAktivnihStaraoca();
-        $saldo = $this->saldoZaTakse();
-        return round((float) ($broj * $cena * $br_mesta / $br_staraoca) - $saldo, 2);
+		$takse = $this->zaduzeneTakse();
+		$rez = 0;
+		
+		foreach ( $takse as $taksa)
+		{
+			$rez += $taksa->zaRazduzenje()['ukupno'];
+		}
+
+        return round($rez, 2);
     }
 
+	// takse zaduzene posle tekuce godine
     public function taksePosleTekuceGodine()
     {
         $god = GOD;
@@ -212,24 +216,25 @@ class Staraoc extends Model
         return $this->fetch($sql, null, '\App\Models\Zaduzenje');
     }
 
-    public function saldoZaZakupe()
-    {
-        $sql = "SELECT SUM(iznos_razduzeno) AS saldo FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0 AND iznos_razduzeno > 0
-                AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
-        $saldo = $this->fetch($sql)[0]->saldo;
-        return round((float) $saldo, 2);
-    }
+    // public function saldoZaZakupe()
+    // {
+    //     $sql = "SELECT SUM(iznos_razduzeno) AS saldo FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0 AND iznos_razduzeno > 0
+    //             AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+    //     $saldo = $this->fetch($sql)[0]->saldo;
+    //     return round((float) $saldo, 2);
+    // }
 
     public function dugZaZakupe()
     {
-        $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0
-                AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
-        $broj = (int) $this->fetch($sql)[0]->broj;
-        $cena = (float) (new Cena())->zakup();
-        $br_mesta = (int) $this->karton()->broj_mesta;
-        $br_staraoca = (int) $this->karton()->brojAktivnihStaraoca();
-        $saldo = $this->saldoZaZakupe();
-        return round((float) ($broj * $cena * $br_mesta / $br_staraoca) - $saldo, 2);
+		$zakupi = $this->zaduzeniZakupi();
+		$rez = 0;
+		
+		foreach ( $zakupi as $zakup)
+		{
+			$rez += $zakup->zaRazduzenje()['ukupno'];
+		}
+
+        return round($rez, 2);
     }
 
     public function zakupiPosleTekuceGodine()
@@ -242,6 +247,8 @@ class Staraoc extends Model
     }
 
     // racuni
+	// da li se racuna zatezna kamata - postoji rok (darum prispeca)
+	// ako moze da se lati delimicno dodati polje glavnica
 
     public function racuni()
     {

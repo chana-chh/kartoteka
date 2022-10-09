@@ -29,7 +29,7 @@
 			<div class="uk-width-1-4">
 				<label for="godina" class="uk-form-label">Godina zaduženja</label>
 				<div class="uk-form-controls">
-					<input type="number" name="godina" id="godina" value="{{ old.godina ? : 'now'|date('Y') + 1 }}" class="uk-input" autocomplete="off" required>
+					<input type="number" name="godina" id="godina" value="{{ old.godina ? : 'now'|date('Y') }}" class="uk-input" autocomplete="off" required>
 				</div>
 				<small class=" uk-text-danger">{{ errors.datum_zaduzenja[0] ? : '' }}</small>
 			</div>
