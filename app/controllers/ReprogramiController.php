@@ -133,7 +133,7 @@ class ReprogramiController extends Controller
 				$sql_racuni = "UPDATE racuni SET reprogram_id = {$rep_id} WHERE id IN ($rac);";
 				$model->run($sql_racuni);
 			}
-			$repzalog = $model->find($id);
+			$repzalog = $model->find($rep_id);
 			$this->log($this::DODAVANJE, $repzalog, ['broj', 'datum', 'period'], $repzalog);
 			$this->flash->addMessage('success', 'Reprogram je uspešno sačuvan.');
 			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $id]));

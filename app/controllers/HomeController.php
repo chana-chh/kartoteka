@@ -28,6 +28,8 @@ class HomeController extends Controller
         $racun = new Racun();
         $isticu = $racun->rok();
         $istekli = $racun->istekli();
+
+		// proveriti prestupnu godinu i srediri tabelu kamate
         
 		$this->render($response, 'home.twig', compact('danasnji', 'kartoni', 'pokojnici', 'staraoci', 'isticu', 'istekli'));
 	}

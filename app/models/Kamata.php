@@ -14,6 +14,7 @@ class Kamata extends Model
 	{
 		$sql = "SELECT * FROM kamate WHERE datum > :od AND datum < :do ORDER BY datum ASC;";
 		$kamate = $this->fetch($sql, [':od' => $od, ':do' => $do]);
+		
 		$rez = []; // od, do, dana, procenat, godina
 
 		$dat_od = new DateTime($od);
@@ -21,8 +22,14 @@ class Kamata extends Model
 		$procenat = 0;
 		$godina = 0;
 
+		if(empty($kamate))
+		{
+			return $rez;
+		}
+
 		foreach ($kamate as $k)
 		{
+			
 			$dat_do = new DateTime($k->datum);
 			$razlika = $dat_do->diff($dat_od);
 			$procenat = $k->procenat;

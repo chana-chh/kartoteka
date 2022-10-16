@@ -1,7 +1,6 @@
 
 + kod pretrage kartona za parcelu izbaciti LIKE (mozda i kod broja grobnog mesta)
 
-- da li postoji potreba da se prikaze detaljan obracun zatezne kamate
 
 # 1. MASOVNO ZADUZIVANJE KARTONA
 
@@ -43,9 +42,11 @@
 
 ### Zaduzenja (taksa i zakup)
 
+- da li postoji potreba da se prikaze detaljan obracun zatezne kamate
 - da li je dozvoljena delimicna uplata
 - ako jeste kako se regulise kamata
 	(iznos i datum od kad se racuna kamata obzirom da kad se automatski zaduzuju rok prispeca je od sledece godine)
+- od viska se skida kamata pa glavnica i resetuje se datum za kamatu ???
 - zaduzivanje i razduzivanje u buducnost (datum od kada se racuna kamata)
 	pretpostavljam da se sve sto se zaduzuje u buducnost automatski i razduzuje (placanje unapred) pa nema kamate
 

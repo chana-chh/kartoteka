@@ -164,7 +164,7 @@
                     {{ taksa.iznos_razduzeno | number_format(2, '.', ',') }}
                   </td>
                   <td class="uk-text-right">
-                    {{ taksa.zaRazduzenje() | number_format(2, '.', ',') }}
+                    {{ taksa.zaRazduzenje().ukupno | number_format(2, '.', ',') }}
                   </td>
                   <td class="uk-text-center">{{ taksa.razduzeno() | raw }}</td>
                 </tr>

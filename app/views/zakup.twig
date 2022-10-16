@@ -40,7 +40,14 @@
 				</div>
 				<small class=" uk-text-danger">{{ errors.datum_zaduzenja[0] ? : '' }}</small>
 			</div>
-			<div class="uk-width-1-4 uk-flex uk-flex-bottom">
+			<div class="uk-width-1-4">
+				<label for="datum_prispeca" class="uk-form-label">Datum prispeća</label>
+				<div class="uk-form-controls">
+					<input type="date" name="datum_prispeca" id="datum_prispeca" value="{{ old.datum_prispeca ? : 'now'|date('Y-m-d') }}" class="uk-input" autocomplete="off" required>
+				</div>
+				<small class=" uk-text-danger">{{ errors.datum_prispeca[0] ? : '' }}</small>
+			</div>
+			<div class="uk-width-1-1 uk-flex uk-flex-bottom">
 				<div class="uk-button-group uk-width-1-1">
 					<button class="uk-button uk-button-primary uk-width-1-2">Zaduži</button>
 					<a href="{{ path_for('transakcije.pregled', { id: staraoc.id }) }}" class="uk-button uk-button-secondary uk-width-1-2">Otkaži</a>

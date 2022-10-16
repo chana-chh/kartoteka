@@ -66,7 +66,7 @@ class TransakcijeController extends Controller
 			foreach ($zaduzenja as $zad)
 			{
 				$iznos = $ostatak;
-				$razlika = (float) $ostatak - $zad->zaRazduzenje();
+				$razlika = (float) $ostatak - $zad->zaRazduzenje()['ukupno'];
 
 				if ($razlika < 0)
 				{
@@ -231,7 +231,7 @@ class TransakcijeController extends Controller
 		$upozorenje = '';
 
 		$trenutna_godina = (int) date('Y');
-		$prethodna_godina = $trenutna_godina-1;
+		$prethodna_godina = $trenutna_godina - 1;
 
 		$model_karton = new Karton();
 		$model_zaduzenje = new Zaduzenje();
@@ -391,26 +391,19 @@ class TransakcijeController extends Controller
 		}
 	}
 
-
 	public function postUplata($request, $response)
 	{
+		// ako nista nije cekirano onda se samo upisuje visak novca na privremeni_saldo
+		// dodati pretragu sa svim staraocima koji imaju novac na privremeni_saldo
+		// regulisati kako razduziti privremeni_saldo
+
 		$data = $request->getParams();
-
-		// dd($data);
-
 		$id = $data['staraoc_id'];
 
 		// niz id-a zaduzenja
 		$zaduzenja_data = isset($data['razduzeno-zaduzenje']) ? $data['razduzeno-zaduzenje'] : [];
 		// niz id-a racuna
 		$racuni_data = isset($data['razduzeno-racuni']) ? $data['razduzeno-racuni'] : [];
-
-		if (empty($zaduzenja_data) && empty($racuni_data))
-		{
-			// nista nije cekirano => vrati gresku
-			$this->flash->addMessage('danger', 'Nije čekirana nijedna stavka za razduživanje.');
-			return $response->withRedirect($this->router->pathFor('transakcije.razduzivanje', ['id' => $id]));
-		}
 
 		unset($data['csrf_name']);
 		unset($data['csrf_value']);
@@ -430,19 +423,21 @@ class TransakcijeController extends Controller
 			],
 		];
 
+		// provera osnovnih podataka za uplatu
 		$this->validator->validate($data, $validation_rules);
 
-		// provera da li je iznos >= sva zaduzenja za razduzivanje
 		$model_zaduzenje = new Zaduzenje();
 		$model_racun = new Racun();
-		// $model_reprogram = new Reprogram();
-		// $cene = new Cena();
-
 		$zaduzenja = null;
 		$racuni = null;
-
 		$iznos_za_razduzenje = 0;
 
+		$staraoc = (new Staraoc())->find($id);
+		$korisnik_id = $this->auth->user()->id;
+
+		// provera da li je iznos >= sva zaduzenja za razduzivanje
+
+		// zaduzenja sa kamatom
 		if (!empty($zaduzenja_data))
 		{
 			$zad = implode(", ", $zaduzenja_data);
@@ -451,10 +446,11 @@ class TransakcijeController extends Controller
 
 			foreach ($zaduzenja as $zad)
 			{
-				$iznos_za_razduzenje += $zad->zaRazduzenje();
+				$iznos_za_razduzenje += $zad->zaRazduzenje()['ukupno'];
 			}
 		}
 
+		// racuni bez kamate
 		if (!empty($racuni_data))
 		{
 			$rac = implode(", ", $racuni_data);
@@ -463,6 +459,7 @@ class TransakcijeController extends Controller
 
 			foreach ($racuni as $rn)
 			{
+				// sa kamatom ???
 				$iznos_za_razduzenje += $rn->iznos;
 			}
 		}
@@ -470,19 +467,25 @@ class TransakcijeController extends Controller
 		// iznos za uplatu
 		$iznos = (float) $data['uplata_iznos'];
 		// razlika uplacenog i potrebnog novca za razduzenje
-		$razlika = $iznos - $iznos_za_razduzenje;
+		$razlika = round($iznos - round($iznos_za_razduzenje, 2), 2);
 
-		$br_cekiranih_zaduzenja = empty($zaduzenja_data) ? 0 : count($zaduzenja_data);
-		$br_cekiranih_racuna = empty($racuni_data) ? 0 : count($racuni_data);
+		// podaci za uplatu
+		$uplata_data = [
+			'karton_id' => $staraoc->karton()->id,
+			'staraoc_id' => $staraoc->id,
+			'iznos' => $iznos,
+			'datum' => $data['uplata_datum'],
+			'priznanica' => $data['uplata_priznanica'],
+			'napomena' => $data['uplata_napomena'],
+			'korisnik_id' => $korisnik_id,
+		];
+
+		// Trenutno nije moguce delimicno razduzivanje - visak novca ide na privremeni_saldo
 
 		if ($razlika < 0) // uplaceno je manje novca od potrebnog
 		{
-			// da li je cekirana samo jedna stavka zaduzenja
-			if ($br_cekiranih_zaduzenja != 1 || $br_cekiranih_racuna != 0)
-			{
-				$this->flash->addMessage('danger', 'Iznos uplate nije dovoljan za razduživanje odabranih stavki.');
-				return $response->withRedirect($this->router->pathFor('transakcije.razduzivanje', ['id' => $id]));
-			}
+			$this->flash->addMessage('danger', 'Iznos uplate nije dovoljan za razduživanje odabranih stavki.');
+			return $response->withRedirect($this->router->pathFor('transakcije.razduzivanje', ['id' => $id]));
 		}
 
 		if ($this->validator->hasErrors())
@@ -492,50 +495,43 @@ class TransakcijeController extends Controller
 		}
 		else
 		{
-			$staraoc = (new Staraoc())->find($id);
-			$korisnik_id = $this->auth->user()->id;
+			// upisivanje uplate i razduzivanje cekiranih stavki
 
-			// podaci za uplatu
-			$uplata_data = [
-				'karton_id' => $staraoc->karton()->id,
-				'staraoc_id' => $staraoc->id,
-				'iznos' => $iznos,
-				'datum' => $data['uplata_datum'],
-				'priznanica' => $data['uplata_priznanica'],
-				'napomena' => $data['uplata_napomena'],
-				'korisnik_id' => $korisnik_id,
-			];
-
+			// Upisivanje uplate
 			$model_uplata = new Uplata();
 			$model_uplata->insert($uplata_data);
 			$uplata_id = $model_uplata->getLastId();
 			$uplata = $model_uplata->find($uplata_id);
-			$rzl = ($razlika < 0) ? 0 : $razlika;
+			// za privrmeni saldo
+			$rzl = ($razlika <= 0) ? 0 : $razlika;
+			// Upisuje se visak novca u privremeni saldo staraoca i id uplate koja sadrzi visak novca
 			$sql = "UPDATE staraoci SET privremeni_saldo = privremeni_saldo + {$rzl}, uplata_id = {$uplata_id} WHERE id = {$id};";
 			$staraoc->run($sql);
 
-			// proveriti da li je delimicno razduzivanje
-			$razduzeno = ($razlika < 0) ? 0 : 1;
-			$taksa = $razduzeno === 1 ? $staraoc->taksaZaGodinu() : $iznos;
-			$zakup = $razduzeno === 1 ? $staraoc->zakupZaGodinu() : $iznos;
+			$data_za_razduzenje = [
+				'razduzeno' => 1,
+				'datum_razduzenja' => $data['uplata_datum'],
+				'korisnik_id_razduzio' => $korisnik_id,
+				'uplata_id' => $uplata_id,
+				'glavnica' => 0,
+			];
 
 			if (!empty($zaduzenja_data))
 			{
+				// sva zaduzenja koja se razduzuju
 				$zad = implode(", ", $zaduzenja_data);
+				$sql = "SELECT * FROM zaduzenja WHERE id IN ($zad);";
+				$zaduzenja = $model_zaduzenje->fetch($sql);
 
-				$sql = "UPDATE zaduzenja
-                        SET razduzeno = {$razduzeno}, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id},
-                        uplata_id = {$uplata_id}, iznos_razduzeno = {$taksa}
-                        WHERE id IN ($zad) AND tip = 'taksa';";
-				$model_uplata->run($sql);
-
-				$sql = "UPDATE zaduzenja
-                        SET razduzeno = {$razduzeno}, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id},
-                        uplata_id = {$uplata_id}, iznos_razduzeno = {$zakup}
-                        WHERE id IN ($zad) AND tip = 'zakup';";
-				$model_uplata->run($sql);
+				foreach ($zaduzenja as $zad)
+				{
+					$data_za_razduzenje['iznos_razduzeno'] = $zad->zaRazduzenje()['ukupno'];
+					$zid = (int) $zad->id;
+					$model_zaduzenje->update($data_za_razduzenje, $zid);
+				}
 			}
 
+			// ako ostane bez kamate onda moze ovako - inace mora da se prodje kroz ceo niz i izvrsi razduzivanje
 			if (!empty($racuni_data))
 			{
 				$rac = implode(", ", $racuni_data);
@@ -545,6 +541,8 @@ class TransakcijeController extends Controller
                         WHERE id IN ($rac);";
 				$model_uplata->run($sql);
 			}
+
+			// logovanje
 			$this->log($this::DODAVANJE, $uplata, ['karton_id', 'iznos', 'datum'], $uplata);
 			$this->flash->addMessage('success', 'Uplata je uspešno sačuvana, a odabrane stavke su razdužene.');
 			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $id]));
@@ -565,8 +563,8 @@ class TransakcijeController extends Controller
 		$zaduzenje = (new Zaduzenje())->find($id);
 
 		// ne moze da se brise ako je
-		// razduzeno = 1
-		// iznos_razduzeno > 0
+		// razduzeno = 1 ili
+		// iznos_razduzeno > 0 ili
 		// reprogram_id != null
 		if ($zaduzenje->razduzeno === 1 || $zaduzenje->iznos_razduzeno > 0 || $zaduzenje->reprogram_id != null)
 		{

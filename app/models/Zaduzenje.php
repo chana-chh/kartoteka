@@ -32,7 +32,7 @@ class Zaduzenje extends Model
 	{
 		$chk = $this->razduzeno === 1 ? ' checked' : '';
 		$pk = $this->pk;
-		return "<input type=\"checkbox\" name=\"razduzeno-zaduzenje[]\" value=\"{$this->$pk}\" data-tip=\"{$this->tip}\" data-iznos=\"{$this->zaRazduzenje()}\" class=\"razduzeno-zaduzenja\"{$chk}>";
+		return "<input type=\"checkbox\" name=\"razduzeno-zaduzenje[]\" value=\"{$this->$pk}\" data-tip=\"{$this->tip}\" data-iznos=\"{$this->zaRazduzenje()['ukupno']}\" class=\"razduzeno-zaduzenja\"{$chk}>";
 	}
 
 	public function razduzenoDisabled()
@@ -105,15 +105,15 @@ class Zaduzenje extends Model
 		$trenutni_datum = date('Y-m-d');
 		$zatezna = 0;
 
-		if ($this->razduzeno === 1)
+		if ($this->razduzeno === 1 || $this->reprogram_id !== null)
 		{
 			return [
-			'glavnica' => $glavnica,
-			'kamata' =>	$zatezna,
-			'ukupno' => $glavnica + $zatezna,
-		];
+				'glavnica' => $glavnica,
+				'kamata' =>	$zatezna,
+				'ukupno' => $glavnica + $zatezna,
+			];
 		}
-		
+
 		if ($this->datum_prispeca === null)
 		{
 			return [
@@ -125,7 +125,16 @@ class Zaduzenje extends Model
 
 		$kamate = (new Kamata())->kamateZaObracun($datum_prispeca, $trenutni_datum);
 
-		foreach ($kamate as $k=> $v)
+		if (empty($kamate))
+		{
+			return [
+				'glavnica' => $glavnica,
+				'kamata' =>	$zatezna,
+				'ukupno' => $glavnica + $zatezna,
+			];
+		}
+
+		foreach ($kamate as $k => $v)
 		{
 			$kam = ($glavnica * $v['procenat'] * $v['dana']) / (100 * $v['godina']);
 			$zatezna += $kam;
