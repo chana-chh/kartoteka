@@ -1,4 +1,8 @@
 
+
+Zorica Simovic 060 234 1004
+
+
 + kod pretrage kartona za parcelu izbaciti LIKE (mozda i kod broja grobnog mesta)
 
 
