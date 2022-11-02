@@ -1,0 +1,110 @@
+{% extends "templates/app.twig" %}
+
+{% block sadrzaj %}
+<h1 id="top">Pregled kamata</h1>
+<hr>
+<div class="uk-overflow-auto">
+  <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small uk-preserve-width">
+    <thead>
+      <tr>
+        <th class="w-10">Id</th>
+        <th class="w-30">Datum</th>
+        <th class="w-30">Procenat</th>
+        <th class="w-20">Dani</th>
+        <th class="w-10 uk-text-right"><span uk-icon="cog"></span></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for kamate in kamate.data %}
+      <tr>
+        <td>
+          <em>{{ kamate.id }}</em>
+        </td>
+        <td>
+            <strong>{{ kamate.datum() }}</strong>
+        </td>
+        <td>{{ kamate.procenat }}</td>
+        <td>{{ kamate.dani }}</td>
+        <td class="uk-clearfix">
+          <ul class="uk-iconnav uk-float-right">
+            <li>
+              <a href="{{ path_for('kamate.izmena', { id: kamate.id }) }}" title="Izmena">
+                <span uk-icon="pencil"></span>
+              </a>
+            </li>
+            <li>
+              <a title="Brisanje" href="#modal-brisanje" data-id="{{ kamate.id }}" onclick="setKamataId(this);" uk-toggle>
+                <span uk-icon="trash"></span>
+              </a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="uk-flex uk-flex-between uk-margin-top">
+  <div>{{ kamate.links.buttons | raw }}</div>
+  <div>Idi na stranu {{ kamate.links.select | raw }}</div>
+  <div>
+    <p>
+      Prikazani redovi od
+      <em>{{ kamate.links.row_from }}</em> do
+      <em>{{ kamate.links.row_to }}</em> od ukupno
+      <em>{{ kamate.links.total_rows }}</em>
+    </p>
+  </div>
+</div>
+<!-- MODAL BRISANJE KORISNIKA -->
+{% include 'inc/kamate_brisanje.twig' %}
+{% endblock sadrzaj %}
+
+{% block traka %}
+<form action="{{ path_for('kamate.dodavanje') }}" method="POST" class="uk-background-muted uk-margin-top uk-padding-small">
+    {{ csrf|raw }}
+    <fieldset class="uk-fieldset">
+
+        <legend class="uk-legend">Dodavanje kamate</legend>
+
+  <div class="uk-margin">
+    <label for="datum" class="uk-form-label">Datum:</label>
+    <div class="uk-form-controls">
+      <input type="date" name="datum" id="datum" value="{{ old.datum ? : 'now'|date('Y-m-d') }}"
+          class="uk-input{{ errors.datum[0] ? ' uk-form-danger': ''}}" autocomplete="off" required>
+    </div>
+  <small class="uk-text-danger">{{ errors.datum[0] ? :'' }}</small>
+  </div>
+
+  <div class="uk-margin">
+    <label for="procenat" class="uk-form-label">Procenat</label>
+    <div class="uk-form-controls">
+      <input type="number" name="procenat" id="procenat" class="uk-input{{ errors.procenat[0] ? ' uk-form-danger': ''}}"
+        value="{{ old.procenat ? : 0 }}" min="0" step="0.000001" autocomplete="off" required>
+    </div>
+    <small class="uk-text-danger">{{ errors.procenat[0] ? :'' }}</small>
+  </div>
+        
+
+        <hr class="uk-margin">
+        <div class="uk-margin uk-float-right">
+            <input type="submit" value="Sačuvaj" class="uk-button uk-button-primary uk-button-small">
+            <a href="{{ path_for('kamate') }}" class="uk-button uk-button-secondary uk-button-small">Otkaži</a>
+        </div>
+
+    </fieldset>
+</form>
+{% endblock traka %}
+{% block skripta %}
+<script>
+
+document.getElementById("modal_dugme_brisi").addEventListener("click", function () {
+    document.getElementById("forma_brisanje").submit();
+  });
+
+  function setKamataId(el) {
+    document.getElementById("modal_kamata_id").value = el.dataset.id;
+  }
+</script>
+{% endblock skripta %}

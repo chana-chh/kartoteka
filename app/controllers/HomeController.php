@@ -30,6 +30,11 @@ class HomeController extends Controller
         $istekli = $racun->istekli();
 
 		// proveriti prestupnu godinu i srediri tabelu kamate
+		 if (date('L')) {
+            $god = 'prestupna';
+         }else{
+            $god = 'prosta';
+         }
         
 		$this->render($response, 'home.twig', compact('danasnji', 'kartoni', 'pokojnici', 'staraoci', 'isticu', 'istekli'));
 	}

@@ -145,6 +145,12 @@ $app->group('', function ()
 	$this->post('/transakcije/reprogram/izmena', '\App\Controllers\ReprogramiController:postReprogramIzmena')->setName('transakcije.reprogram.izmena.post');
 	$this->post('/transakcije/reprogram/rata', '\App\Controllers\ReprogramiController:postReprogramUplataRate')->setName('transakcije.reprogram.uplata');
 	$this->post('/transakcije/reprogram/brisanje', '\App\Controllers\ReprogramiController:postReprogramBrisanje')->setName('transakcije.reprogram.brisanje');
+	// Kamate
+	$this->get('/administracija/kamate', '\App\Controllers\KamateController:getKamate')->setName('kamate');
+	$this->post('/administracija/kamate/dodavanje', '\App\Controllers\KamateController:postKamateDodavanje')->setName('kamate.dodavanje');
+	$this->post('/administracija/kamate/brisanje', '\App\Controllers\KamateController:postKamateBrisanje')->setName('kamate.brisanje');
+	$this->get('/administracija/kamate/izmena/{id}', '\App\Controllers\KamateController:getKamateIzmena')->setName('kamate.izmena');
+	$this->post('/administracija/kamate/izmena', '\App\Controllers\KamateController:postKamateIzmena')->setName('kamate.izmena.post');
 	// Racuni
 	$this->get('/transakcije/racun/{id}', '\App\Controllers\RacuniController:getRacun')->setName('racun');
 	$this->post('/transakcije/racun', '\App\Controllers\RacuniController:postRacun')->setName('racun.post');

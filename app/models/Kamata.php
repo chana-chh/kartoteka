@@ -57,4 +57,26 @@ class Kamata extends Model
 
 		return $rez;
 	}
+
+	// vraca datum u obliku ('d.m.Y')
+	public function datum()
+    {
+        $format = 'Y-m-d';
+        if ($this->datum === null) {
+            return "";
+        } else {
+            return DateTime::createFromFormat($format, $this->datum)->format('d.m.Y');
+        }
+    }
+
+    // vraca datum u obliku ('Y')
+    public function godina()
+    {
+        $format = 'Y-m-d';
+        if ($this->datum === null) {
+            return "";
+        } else {
+            return DateTime::createFromFormat($format, $this->datum)->format('Y');
+        }
+    }
 }
