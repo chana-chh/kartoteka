@@ -61,13 +61,13 @@ class Racun extends Model
 
 	public function rok()
 	{
-		$sql = "SELECT * FROM {$this->table} WHERE razduzeno = 0 AND rok IS NOT NULL AND rok >= CURDATE() AND rok < DATE_ADD(CURDATE(), INTERVAL 7 DAY)";
+		$sql = "SELECT * FROM {$this->table} WHERE razduzeno = 0 AND datum_prispeca IS NOT NULL AND datum_prispeca >= CURDATE() AND datum_prispeca < DATE_ADD(CURDATE(), INTERVAL 7 DAY)";
     	return $this->fetch($sql);
 	}
 
 	public function istekli()
 	{
-		$sql = "SELECT * FROM {$this->table} WHERE razduzeno = 0 AND rok IS NOT NULL AND rok < CURDATE()";
+		$sql = "SELECT * FROM {$this->table} WHERE razduzeno = 0 AND datum_prispeca IS NOT NULL AND datum_prispeca < CURDATE()";
     	return $this->fetch($sql);
 	}
 
@@ -109,4 +109,54 @@ class Racun extends Model
 		$broj = $this->fetch($sql)[0]->ukupno;
 		return (float) $broj;
     }
+
+	public function zaRazduzenje()
+	{
+		$datum_prispeca = date($this->datum_prispeca);
+		$glavnica = (float) $this->glavnica;
+		$trenutni_datum = date('Y-m-d');
+		$zatezna = 0;
+
+		if ($this->razduzeno === 1 || $this->reprogram_id !== null)
+		{
+			return [
+				'glavnica' => $glavnica,
+				'kamata' =>	$zatezna,
+				'ukupno' => $glavnica + $zatezna,
+			];
+		}
+
+		if ($this->datum_prispeca === null)
+		{
+			return [
+				'glavnica' => $glavnica,
+				'kamata' =>	$zatezna,
+				'ukupno' => $glavnica + $zatezna,
+			];
+		}
+
+		$kamate = (new Kamata())->kamateZaObracun($datum_prispeca, $trenutni_datum);
+
+		if (empty($kamate))
+		{
+			return [
+				'glavnica' => $glavnica,
+				'kamata' =>	$zatezna,
+				'ukupno' => $glavnica + $zatezna,
+			];
+		}
+
+		foreach ($kamate as $k => $v)
+		{
+			$kam = ($glavnica * $v['procenat'] * $v['dana']) / (100 * $v['godina']);
+			$zatezna += $kam;
+			$kamate[$k]['iznos'] = $kam;
+		}
+
+		return [
+			'glavnica' => $glavnica,
+			'kamata' =>	$zatezna,
+			'ukupno' => $glavnica + $zatezna,
+		];
+	}
 }

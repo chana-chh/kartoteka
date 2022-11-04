@@ -73,7 +73,7 @@ class UplataController extends Controller
 		$zaduzenja = $staraoc->zaduzenaZaduzenja();
 
 		// iznos viska para
-		$iznos = (float) $staraoc->privremeni_saldo;
+		$iznos = (float) $staraoc->avans;
 		// ostatak viska
 		$ostatak = $iznos;
 
@@ -325,8 +325,8 @@ class UplataController extends Controller
 
 		$pdo->commit();
 
-		// posle upisa staraoc->privremeni_saldo se vraca na 0 i id uplate na null
-		$sql_s = "UPDATE staraoci SET privremeni_saldo = 0, uplata_id = NULL WHERE id = {$staraoc_id}";
+		// posle upisa staraoc->avans se vraca na 0 i id uplate na null
+		$sql_s = "UPDATE staraoci SET avans = 0, uplata_id = NULL WHERE id = {$staraoc_id}";
 		$staraoc->run($sql_s);
 			$modelLoga = new Log();
             $datal['tip'] = "dodavanje";

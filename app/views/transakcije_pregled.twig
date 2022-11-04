@@ -43,90 +43,88 @@
 					</a>
 				</div>
 			</div>
-			{% if staraoc.imaSaldo() == false and staraoc.aktivan == 1 %}
+
+			<div
+				class="uk-float-right">
 				<div
-					class="uk-float-right">
+					class="uk-button-group">
+					<button
+						class="uk-button uk-button-primary uk-button-small">Zaduživanje</button>
 					<div
-						class="uk-button-group">
+						class="uk-inline">
 						<button
-							class="uk-button uk-button-primary uk-button-small">Zaduživanje</button>
+							class="uk-button uk-button-primary uk-button-small"
+							type="button">
+							<span
+								uk-icon="icon:  triangle-down"></span>
+						</button>
 						<div
-							class="uk-inline">
-							<button
-								class="uk-button uk-button-primary uk-button-small"
-								type="button">
-								<span
-									uk-icon="icon:  triangle-down"></span>
-							</button>
-							<div
-								uk-dropdown="mode: click; boundary: ! .uk-button-group; boundary-align: true;">
-								<ul
-									class="uk-nav uk-dropdown-nav">
-									<li>
-										<a
-											href="{{ path_for('taksa', { id: staraoc.id }) }}">
-											<span
-												uk-icon="bookmark"></span>&emsp;Zaduži taksu
-										</a>
-									</li>
-									<li>
-										<a
-											href="{{ path_for('zakup', { id: staraoc.id }) }}">
-											<span
-												uk-icon="bookmark"></span>&emsp;Zaduži zakup
-										</a>
-									</li>
-									<li>
-										<a
-											href="{{ path_for('racun', { id: staraoc.id }) }}">
-											<span
-												uk-icon="bookmark"></span>&emsp;Zaduži račun
-										</a>
-									</li>
-								</ul>
-							</div>
+							uk-dropdown="mode: click; boundary: ! .uk-button-group; boundary-align: true;">
+							<ul
+								class="uk-nav uk-dropdown-nav">
+								<li>
+									<a
+										href="{{ path_for('taksa', { id: staraoc.id }) }}">
+										<span
+											uk-icon="bookmark"></span>&emsp;Zaduži taksu
+									</a>
+								</li>
+								<li>
+									<a
+										href="{{ path_for('zakup', { id: staraoc.id }) }}">
+										<span
+											uk-icon="bookmark"></span>&emsp;Zaduži zakup
+									</a>
+								</li>
+								<li>
+									<a
+										href="{{ path_for('racun', { id: staraoc.id }) }}">
+										<span
+											uk-icon="bookmark"></span>&emsp;Zaduži račun
+									</a>
+								</li>
+							</ul>
 						</div>
-						<a
-							href="{{ path_for('transakcije.razduzivanje', { id: staraoc.id }) }}" class="uk-button uk-button-primary uk-button-small">
-							<span
-								uk-icon="database"
-								class="ikonica"></span>
-							Razduživanje
-						</a>
-						<a
-							href="{{ path_for('uplate', { id: staraoc.id }) }}" class="uk-button uk-button-primary uk-button-small">
-							<span
-								class="uk-badge">{{broj_uplata}}</span>
-							Pregled uplata
-						</a>
-						<a
-							href="{{ path_for('transakcije.reprogrami', { id: staraoc.id }) }}" class="uk-button uk-button-primary uk-button-small">
-							<span
-								uk-icon="refresh"
-								class="ikonica"></span>
-							Reprogrami
-						</a>
-						<a
-							href="{{ path_for('transakcije.pregled.stampa', { id: staraoc.id }) }}" target="_blank"
-							class="uk-button uk-button-primary uk-button-small">
-							<span
-								uk-icon="print"
-								class="ikonica"></span>
-							Štampa
-						</a>
 					</div>
+					<a
+						href="{{ path_for('transakcije.razduzivanje', { id: staraoc.id }) }}" class="uk-button uk-button-primary uk-button-small">
+						<span
+							uk-icon="database"
+							class="ikonica"></span>
+						Razduživanje
+					</a>
+					<a
+						href="{{ path_for('uplate', { id: staraoc.id }) }}" class="uk-button uk-button-primary uk-button-small">
+						<span
+							class="uk-badge">{{broj_uplata}}</span>
+						Pregled uplata
+					</a>
+					<a
+						href="{{ path_for('transakcije.reprogrami', { id: staraoc.id }) }}" class="uk-button uk-button-primary uk-button-small">
+						<span
+							uk-icon="refresh"
+							class="ikonica"></span>
+						Reprogrami
+					</a>
+					<a
+						href="{{ path_for('transakcije.pregled.stampa', { id: staraoc.id }) }}" target="_blank"
+						class="uk-button uk-button-primary uk-button-small">
+						<span
+							uk-icon="print"
+							class="ikonica"></span>
+						Štampa
+					</a>
 				</div>
-			{% endif %}
+			</div>
+
 		</div>
 	</div>
-
-	{% if staraoc.imaSaldo() == true %}
-
+	{% if staraoc.aktivan == 1 and staraoc.imaAvansNerazduzen() %}
 		<div
 			class="uk-panel uk-background-muted uk-padding-small uk-margin-small uk-border-rounded">
 			<h2
 				class="uk-text-danger">Staraoc ima neraspoređen novac u iznosu od
-				{{ staraoc.privremeni_saldo }}
+				{{ staraoc.avans }}
 				din</h2>
 			{% if visak.br_taksi > 0 %}
 				<p
@@ -150,28 +148,7 @@
 					{{ visak.deo|number_format(2, '.', ',') }}
 					din.</p>
 			{% endif %}
-			{% if visak.n_br_taksi > 0 %}
-				<p
-					class="uk-text-success">Zadužiće se i razdužiti [{{ visak.n_br_taksi }}] novih taksi za
-					{{ visak.n_godine_taksi }}
-					god.</p>
-			{% endif %}
-			{% if visak.n_br_zakupa > 0 %}
-				<p
-					class="uk-text-success">Zadužiće se i razdužiti [{{ visak.n_br_zakupa }}] novih zakupa za
-					{{ visak.n_godine_zakupa }}
-					god.</p>
-			{% endif %}
-			{% if visak.n_deo > 0 %}
-				<p
-					class="uk-text-success">Zadužiće se i delimično razdužiti
-					{{ visak.n_vrsta }}
-					za
-					{{ visak.n_godina }}
-					god. za iznos od
-					{{ visak.n_deo|number_format(2, '.', ',') }}
-					din.</p>
-			{% endif %}
+			
 			<form
 				action="{{ path_for('transakcije.visak') }}" method="POST">
 				{{ csrf|raw }}
@@ -179,538 +156,544 @@
 					type="hidden"
 					name="staraoc_id"
 					value="{{ staraoc.id }}">
-				{# <input
+				<input
 					type="submit"
 					value="POTVRDI"
-					class="uk-button uk-button-danger uk-button-small"/> #}
+					class="uk-button uk-button-danger uk-button-small"/>
 			</form>
 		</div>
-	{% else %}
-		<div
-			class="uk-panel uk-background-muted uk-padding-small uk-margin-small uk-border-rounded">
-			{% if zaduzenost == 0 %}
-				<p
-					class="uk-text-primary">
-					<strong>SVA ZADUŽENJA</strong>
-				</p>
-			{% endif %}
-			{% if zaduzenost == 1 %}
-				<p
-					class="uk-text-success">
-					<strong>RAZDUŽENO</strong>
-				</p>
-			{% endif %}
-			{% if zaduzenost == 2 %}
-				<p
-					class="uk-text-danger">
-					<strong>NERAZDUŽENO</strong>
-				</p>
-			{% endif %}
-		</div>
-
-		<div
-			class="uk-width-1-1 uk-margin-top">
-			<ul
-				uk-accordion="multiple: true">
-				<li>
-					<a
-						class="uk-accordion-title uk-background-muted"
-						href="#"
-						style="padding: 0 0.5rem;">
-						<h2>
-							Takse
-							<em
-								class="uk-text-primary">[{{ staraoc.sveTakse()|length }}]</em>
-							<em
-								class="uk-text-success">[{{ staraoc.razduzeneTakse()|length }}]</em>
-							<em
-								class="uk-text-danger">[{{ staraoc.zaduzeneTakse()|length }}]</em>
-							<small>
-								<em
-									class="uk-text-danger">[{{ staraoc.dugZaTakse()|number_format(2, '.', ',') }}]</em>
-							</small>
-						</h2>
-					</a>
-					<div
-						class="uk-accordion-content">
-						<hr>
-						<div
-							class="uk-overflow-auto">
-							<table
-								class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
-								<thead>
-									<tr>
-										<th
-											class="w-5">Godina</th>
-										<th
-											class="w-20">Ime</th>
-										<th
-											class="w-15 uk-text-right">Zaduženo</th>
-										<th
-											class="w-15 uk-text-right">Razduženo</th>
-										<th
-											class="w-15 uk-text-right">Za razduženje</th>
-										<th
-											class="w-10 uk-text-center">Razduženo</th>
-										<th
-											class="w-15">Reprogram</th>
-										<th
-											class="w-5 uk-text-right">
-											<span
-												uk-icon="cog"></span>
-										</th>
-									</tr>
-								</thead>
-								<tbody>
-									{% set takse =  staraoc.sveTakse() %}
-									{% if zaduzenost == 1 %}
-										{% set takse =  staraoc.razduzeneTakse() %}
-									{% endif %}
-									{% if zaduzenost == 2 %}
-										{% set takse =  staraoc.zaduzeneTakse() %}
-									{% endif %}
-									{% for taksa in takse %}
-										{% if taksa.razduzeno == 0  %}
-											{% set cls = "uk-text-danger" %}
-										{% endif %}
-										{% if taksa.razduzeno == 1  %}
-											{% set cls = "uk-text-success" %}
-										{% endif %}
-										{% if taksa.reprogram_id %}
-											{% set cls = "uk-text-primary" %}
-										{% endif %}
-										<tr
-											class="{{ cls }}">
-											<td>
-												<button
-													class="uk-button uk-button-link uk-button-small {{ cls }}">{{ taksa.godina }}</button>
-												<div
-													class="uk-width-large uk-text-meta"
-													uk-dropdown="mode: hover; pos: top-left">
-													Zadužio korisnik:
-													{{ taksa.korisnikZaduzio().ime|upper }}<br>
-													Datum zaduženja:
-													{{ taksa.datum_zaduzenja|date('d.m.Y') }}<br>
-													Razdužio korisnik:
-													{{ taksa.korisnikRazduzio().ime|upper }}<br>
-													Datum razduženja:
-													{{ taksa.datum_razduzenja is empty ? '' : taksa.datum_razduzenja|date('d.m.Y') }}<br>
-													Uplata od:
-													{{ taksa.uplata().datum is empty ? '' : taksa.uplata().datum|date('d.m.Y') }}
-													[{{ taksa.uplata().iznos }}
-													din]<br>
-													Napomena:
-													{{ taksa.napomena|nl2br }}
-												</div>
-											</td>
-											<td>{{ taksa.staraoc().punoIme()|upper }}</td>
-											<td
-												class="uk-text-right">
-												{{ taksa.iznos_zaduzeno|number_format(2, '.', ',') }}
-											</td>
-											<td
-												class="uk-text-right">
-												{{ taksa.iznos_razduzeno|number_format(2, '.', ',') }}
-											</td>
-											<td
-												class="uk-text-right">
-												{{ taksa.zaRazduzenje().ukupno|number_format(2, '.', ',') }}
-											</td>
-											<td
-												class="uk-text-center">{{ taksa.razduzenoDisabled()|raw }}</td>
-											<td>
-												{% if taksa.reprogram_id %}
-													<span
-														uk-icon="refresh"></span>
-													{{ taksa.reprogramLbl(taksa.reprogram_id)|raw }}
-												{% endif %}
-											</td>
-											<td
-												class="uk-text-right">
-												{% if auth.logged and auth.user.nivo == 0 %}
-													<a
-														title="Brisanje"
-														href="#modal-brisanje"
-														data-id="{{ taksa.id }}" onclick="setZaduzenjeId(this);"
-														uk-toggle>
-														<span
-															uk-icon="trash"></span>
-													</a>
-												{% endif %}
-											</td>
-										</tr>
-									{% endfor %}
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</li>
-				<li>
-					<a
-						class="uk-accordion-title uk-background-muted"
-						href="#"
-						style="padding: 0 0.5rem;">
-						<h2>
-							Zakup
-							<em
-								class="uk-text-primary">[{{ staraoc.sviZakupi()|length }}]</em>
-							<em
-								class="uk-text-success">[{{ staraoc.razduzeniZakupi()|length }}]</em>
-							<em
-								class="uk-text-danger">[{{ staraoc.zaduzeniZakupi()|length }}]</em>
-							<small>
-								<em
-									class="uk-text-danger">[{{ staraoc.dugZaZakupe()|number_format(2, '.', ',') }}]</em>
-							</small>
-						</h2>
-					</a>
-					<div
-						class="uk-accordion-content">
-						<hr>
-						<div
-							class="uk-overflow-auto">
-							<table
-								class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
-								<thead>
-									<tr>
-										<th
-											class="w-5">Godina</th>
-										<th
-											class="w-20">Ime</th>
-										<th
-											class="w-15 uk-text-right">Iznos (zaduženo)</th>
-										<th
-											class="w-15 uk-text-right">Iznos (razduženo)</th>
-										<th
-											class="w-15 uk-text-right">Za razduženje</th>
-										<th
-											class="w-10 uk-text-center">Razduženo</th>
-										<th
-											class="w-15">Reprogram</th>
-										<th
-											class="w-5 uk-text-right">
-											<span
-												uk-icon="cog"></span>
-										</th>
-									</tr>
-								</thead>
-								<tbody>
-									{% set zakupi =  staraoc.sviZakupi() %}
-									{% if zaduzenost == 1 %}
-										{% set zakupi =  staraoc.razduzeniZakupi() %}
-									{% endif %}
-									{% if zaduzenost == 2 %}
-										{% set zakupi =  staraoc.zaduzeniZakupi() %}
-									{% endif %}
-									{% for zakup in zakupi %}
-										{% if zakup.razduzeno == 0  %}
-											{% set cls = "uk-text-danger" %}
-										{% endif %}
-										{% if zakup.razduzeno == 1  %}
-											{% set cls = "uk-text-success" %}
-										{% endif %}
-										{% if zakup.reprogram_id %}
-											{% set cls = "uk-text-primary" %}
-										{% endif %}
-										<tr
-											class="{{ cls }}">
-											<td>
-												<button
-													class="uk-button uk-button-link uk-button-small {{ cls }}">{{ zakup.godina }}</button>
-												<div
-													class="uk-width-large uk-text-meta"
-													uk-dropdown="mode: hover; pos: top-left">
-													Zadužio korisnik:
-													{{ zakup.korisnikZaduzio().ime|upper }}<br>
-													Datum zaduženja:
-													{{ zakup.datum_zaduzenja|date('d.m.Y') }}<br>
-													Razdužio korisnik:
-													{{ zakup.korisnikRazduzio().ime|upper }}<br>
-													Datum razduženja:
-													{{ zakup.datum_razduzenja is empty ? '' : zakup.datum_razduzenja|date('d.m.Y') }}<br>
-													Uplata od:
-													{{ zakup.uplata().datum is empty ? '' : zakup.uplata().datum|date('d.m.Y') }}
-													[{{ zakup.uplata().iznos }}
-													din]<br>
-													Napomena:
-													{{ zakup.napomena|nl2br }}
-												</div>
-											</td>
-											<td>{{ zakup.staraoc().punoIme()|upper }}</td>
-											<td
-												class="uk-text-right">
-												{{ zakup.iznos_zaduzeno|number_format(2, '.', ',') }}
-											</td>
-											<td
-												class="uk-text-right">
-												{{ zakup.iznos_razduzeno|number_format(2, '.', ',') }}
-											</td>
-											<td
-												class="uk-text-right">
-												{{ zakup.zaRazduzenje().ukupno|number_format(2, '.', ',') }}
-											</td>
-											<td
-												class="uk-text-center">{{ zakup.razduzenoDisabled()|raw }}</td>
-											<td>
-												{% if zakup.reprogram_id %}
-													<span
-														uk-icon="refresh"></span>
-													{{ zakup.reprogramLbl(zakup.reprogram_id)|raw }}
-												{% endif %}
-											</td>
-											<td
-												class="uk-text-right">
-												{% if auth.logged and auth.user.nivo == 0 %}
-													<a
-														title="Brisanje"
-														href="#modal-brisanje"
-														data-id="{{ zakup.id }}" onclick="setZaduzenjeId(this);"
-														uk-toggle>
-														<span
-															uk-icon="trash"></span>
-													</a>
-												{% endif %}
-											</td>
-										</tr>
-									{% endfor %}
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</li>
-				<li>
-					<a
-						class="uk-accordion-title uk-background-muted"
-						href="#"
-						style="padding: 0 0.5rem;">
-						<h2>
-							Računi
-							<em
-								class="uk-text-primary">[{{ staraoc.sviRacuni()|length }}]</em>
-							<em
-								class="uk-text-success">[{{ staraoc.razduzeniRacuni()|length }}]</em>
-							<em
-								class="uk-text-danger">[{{ staraoc.zaduzeniRacuni()|length }}]</em>
-							<small>
-								<em
-									class="uk-text-danger">[{{ staraoc.dugZaRacune()|number_format(2, '.', ',') }}]</em>
-							</small>
-						</h2>
-					</a>
-					<div
-						class="uk-accordion-content">
-						<hr>
-						<div
-							class="uk-overflow-auto">
-							<table
-								class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
-								<thead>
-									<tr>
-										<th
-											class="w-15">Broj</th>
-										<th
-											class="w-10">Datum</th>
-										<th
-											class="w-20">Ime</th>
-										<th
-											class="w-15 uk-text-right">Iznos</th>
-										<th
-											class="w-10 uk-text-center">Razduženo</th>
-										<th
-											class="w-20">Reprogram</th>
-										<th
-											class="w-10 uk-text-right">
-											<span
-												uk-icon="cog"></span>
-										</th>
-									</tr>
-								</thead>
-								<tbody>
-									{% set racuni =  staraoc.sviRacuni() %}
-									{% if zaduzenost == 1 %}
-										{% set racuni =  staraoc.razduzeniRacuni() %}
-									{% endif %}
-									{% if zaduzenost == 2 %}
-										{% set racuni =  staraoc.zaduzeniRacuni() %}
-									{% endif %}
-									{% for rn in racuni %}
-										{% if rn.razduzeno == 0  %}
-											{% set cls = "uk-text-danger" %}
-										{% endif %}
-										{% if rn.razduzeno == 1  %}
-											{% set cls = "uk-text-success" %}
-										{% endif %}
-										{% if rn.reprogram_id %}
-											{% set cls = "uk-text-primary" %}
-										{% endif %}
-										<tr
-											class="{{ cls }}">
-											<td>
-												<button
-													class="uk-button uk-button-link uk-button-small {{ cls }}">{{ rn.broj }}</button>
-												<div
-													class="uk-width-large uk-text-meta"
-													uk-dropdown="mode: hover; pos: top-left">
-													Rok za plaćanje:
-													{{ rn.rok is empty ? '' : rn.rok|date('d.m.Y') }}<br>
-													Zadužio korisnik:
-													{{ rn.korisnikZaduzio().ime|upper }}<br>
-													Datum zaduženja:
-													{{ rn.datum|date('d.m.Y') }}<br>
-													Razdužio korisnik:
-													{{ rn.korisnikRazduzio().ime|upper }}<br>
-													Datum razduženja:
-													{{ rn.datum_razduzenja is empty ? '' : rn.datum_razduzenja|date('d.m.Y') }}<br>
-													Uplata od:
-													{{ rn.uplata().datum is empty ? '' : rn.uplata().datum|date('d.m.Y') }}
-													[{{ rn.uplata().iznos }}
-													din]<br>
-													Napomena:
-													{{ rn.napomena|nl2br }}
-												</div>
-											</td>
-											<td>{{ rn.datum() }}</td>
-											<td>{{ rn.staraoc().punoIme()|upper }}</td>
-											<td
-												class="uk-text-right">
-												{{ rn.iznos|number_format(2, '.', ',') }}
-											</td>
-											<td
-												class="uk-text-center">{{ rn.razduzenoDisabled()|raw }}</td>
-											<td>
-												{% if rn.reprogram_id %}
-													<span
-														uk-icon="refresh"></span>
-													{{ rn.reprogramLbl(rn.reprogram_id)|raw }}
-												{% endif %}
-											</td>
-											{% if auth.logged and auth.user.nivo == 0 %}
-												<td
-													class="uk-text-right">
-													<a
-														title="Brisanje"
-														href="#modal-brisanje-racuna"
-														data-id="{{ rn.id }}" onclick="setRacunId(this);"
-														uk-toggle>
-														<span
-															uk-icon="trash"></span>
-													</a>
-												</td>
-											{% endif %}
-										</tr>
-									{% endfor %}
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</li>
-				<li>
-					<a
-						class="uk-accordion-title uk-background-muted"
-						href="#"
-						style="padding: 0 0.5rem;">
-						<h2>
-							Reprogrami
-							<em
-								class="uk-text-primary">[{{ staraoc.sviReprogrami()|length }}]</em>
-							<em
-								class="uk-text-success">[{{ staraoc.razduzeniReprogrami()|length }}]</em>
-							<em
-								class="uk-text-danger">[{{ staraoc.zaduzeniReprogrami()|length }}]</em>
-							<small>
-								<em
-									class="uk-text-danger">[{{ staraoc.dugZaReprograme()|number_format(2, '.', ',') }}]</em>
-							</small>
-						</h2>
-					</a>
-					<div
-						class="uk-accordion-content">
-						<hr>
-						<div
-							class="uk-overflow-auto">
-							<table
-								class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
-								<thead>
-									<tr>
-										<th
-											class="w-15">Broj</th>
-										<th
-											class="w-10 uk-text-right">Datum</th>
-										<th
-											class="w-15">Ime</th>
-										<th
-											class="w-10 uk-text-right">Iznos</th>
-										<th
-											class="w-10 uk-text-right">Peroid</th>
-										<th
-											class="w-10 uk-text-right">Rata</th>
-										<th
-											class="w-10 uk-text-right">Preostalo rata</th>
-										<th
-											class="w-10 uk-text-right">Dug</th>
-										<th
-											class="w-10 uk-text-center">Razduženo</th>
-									</tr>
-								</thead>
-								<tbody>
-									{% set reprogrami =  staraoc.sviReprogrami() %}
-									{% if zaduzenost == 1 %}
-										{% set reprogrami =  staraoc.razduzeniReprogrami() %}
-									{% endif %}
-									{% if zaduzenost == 2 %}
-										{% set reprogrami =  staraoc.zaduzeniReprogrami() %}
-									{% endif %}
-									{% for rep in reprogrami %}
-										{% set cls = "" %}
-										{% if rep.razduzeno == 0  %}
-											{% set cls = "uk-text-danger" %}
-										{% endif %}
-										{% if rep.razduzeno == 1  %}
-											{% set cls = "uk-text-success" %}
-										{% endif %}
-										<tr
-											class="{{ cls }}">
-											<td>
-												<a
-													href="{{ path_for('transakcije.reprogram', { id: rep.id }) }}" class="uk-button uk-button-link uk-text-bold uk-button-small {{ cls }}">{{ rep.broj }}</a>
-												<div
-													class="uk-width-large uk-text-meta"
-													uk-dropdown="mode: hover; pos: top-left">
-													Datum prispeća prve rate:
-													{{ rep.datum_prve_rate is empty ? '' : rep.datum_prve_rate|date('d.m.Y') }}<br>
-													Zadužio korisnik:
-													{{ rep.korisnikZaduzio().ime|upper }}<br>
-													Razdužio korisnik:
-													{{ rep.korisnikRazduzio().ime|upper }}<br>
-													Napomena:
-													{{ rep.napomena|nl2br }}
-												</div>
-											</td>
-											<td
-												class="uk-text-right">{{ rep.datum() }}</td>
-											<td>{{ staraoc.punoIme()|upper }}</td>
-											<td
-												class="uk-text-right">{{ rep.iznos|number_format(2, '.', ',') }}</td>
-											<td
-												class="uk-text-right">{{ rep.period }}</td>
-											<td
-												class="uk-text-right">{{ rep.iznos_rate|number_format(2, '.', ',') }}</td>
-											<td
-												class="uk-text-right">{{ rep.preostalo_rata }}</td>
-											<td
-												class="uk-text-right">{{ (rep.iznos_rate * rep.preostalo_rata)|number_format(2, '.', ',') }}</td>
-											<td
-												class="uk-text-center">{{ rep.razduzenoDisabled()|raw }}</td>
-										</tr>
-									{% endfor %}
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</li>
-			</ul>
-		</div>
 	{% endif %}
+	<div
+		class="uk-panel uk-background-muted uk-padding-small uk-margin-small uk-border-rounded">
+		{% if zaduzenost == 0 %}
+			<p
+				class="uk-text-primary">
+				<strong>SVA ZADUŽENJA</strong>
+			</p>
+		{% endif %}
+		{% if zaduzenost == 1 %}
+			<p
+				class="uk-text-success">
+				<strong>RAZDUŽENO</strong>
+			</p>
+		{% endif %}
+		{% if zaduzenost == 2 %}
+			<p
+				class="uk-text-danger">
+				<strong>NERAZDUŽENO</strong>
+			</p>
+		{% endif %}
+	</div>
+
+	<div
+		class="uk-width-1-1 uk-margin-top">
+		<ul
+			uk-accordion="multiple: true">
+			<li>
+				<a
+					class="uk-accordion-title uk-background-muted"
+					href="#"
+					style="padding: 0 0.5rem;">
+					<h2>
+						Takse
+						<em
+							class="uk-text-primary">[{{ staraoc.sveTakse()|length }}]</em>
+						<em
+							class="uk-text-success">[{{ staraoc.razduzeneTakse()|length }}]</em>
+						<em
+							class="uk-text-danger">[{{ staraoc.zaduzeneTakse()|length }}]</em>
+						<small>
+							<em
+								class="uk-text-danger">[{{ staraoc.dugZaTakse()|number_format(2, '.', ',') }}]</em>
+						</small>
+					</h2>
+				</a>
+				<div
+					class="uk-accordion-content">
+					<hr>
+					<div
+						class="uk-overflow-auto">
+						<table
+							class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+							<thead>
+								<tr>
+									<th
+										class="w-5">Godina</th>
+									<th
+										class="w-20">Ime</th>
+									<th
+										class="w-15 uk-text-right">Zaduženo</th>
+									<th
+										class="w-15 uk-text-right">Razduženo</th>
+									<th
+										class="w-15 uk-text-right">Za razduženje</th>
+									<th
+										class="w-10 uk-text-center">Razduženo</th>
+									<th
+										class="w-15">Reprogram</th>
+									<th
+										class="w-5 uk-text-right">
+										<span
+											uk-icon="cog"></span>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% set takse =  staraoc.sveTakse() %}
+								{% if zaduzenost == 1 %}
+									{% set takse =  staraoc.razduzeneTakse() %}
+								{% endif %}
+								{% if zaduzenost == 2 %}
+									{% set takse =  staraoc.zaduzeneTakse() %}
+								{% endif %}
+								{% for taksa in takse %}
+									{% if taksa.razduzeno == 0  %}
+										{% set cls = "uk-text-danger" %}
+									{% endif %}
+									{% if taksa.razduzeno == 1  %}
+										{% set cls = "uk-text-success" %}
+									{% endif %}
+									{% if taksa.reprogram_id %}
+										{% set cls = "uk-text-primary" %}
+									{% endif %}
+									<tr
+										class="{{ cls }}">
+										<td>
+											<button
+												class="uk-button uk-button-link uk-button-small {{ cls }}">{{ taksa.godina }}</button>
+											<div
+												class="uk-width-large uk-text-meta"
+												uk-dropdown="mode: hover; pos: top-left">
+												Zadužio korisnik:
+												{{ taksa.korisnikZaduzio().ime|upper }}<br>
+												Datum zaduženja:
+												{{ taksa.datum_zaduzenja|date('d.m.Y') }}<br>
+												Razdužio korisnik:
+												{{ taksa.korisnikRazduzio().ime|upper }}<br>
+												Datum razduženja:
+												{{ taksa.datum_razduzenja is empty ? '' : taksa.datum_razduzenja|date('d.m.Y') }}<br>
+												Uplata od:
+												{{ taksa.uplata().datum is empty ? '' : taksa.uplata().datum|date('d.m.Y') }}
+												[{{ taksa.uplata().iznos }}
+												din]<br>
+												Napomena:
+												{{ taksa.napomena|nl2br }}
+											</div>
+										</td>
+										<td>{{ taksa.staraoc().punoIme()|upper }}</td>
+										<td
+											class="uk-text-right">
+											{{ taksa.iznos_zaduzeno|number_format(2, '.', ',') }}
+										</td>
+										<td
+											class="uk-text-right">
+											{{ taksa.iznos_razduzeno|number_format(2, '.', ',') }}
+										</td>
+										<td
+											class="uk-text-right">
+											{{ taksa.zaRazduzenje().ukupno|number_format(2, '.', ',') }}
+										</td>
+										<td
+											class="uk-text-center">{{ taksa.razduzenoDisabled()|raw }}</td>
+										<td>
+											{% if taksa.reprogram_id %}
+												<span
+													uk-icon="refresh"></span>
+												{{ taksa.reprogramLbl(taksa.reprogram_id)|raw }}
+											{% endif %}
+										</td>
+										<td
+											class="uk-text-right">
+											{% if auth.logged and auth.user.nivo == 0 %}
+												<a
+													title="Brisanje"
+													href="#modal-brisanje"
+													data-id="{{ taksa.id }}" onclick="setZaduzenjeId(this);"
+													uk-toggle>
+													<span
+														uk-icon="trash"></span>
+												</a>
+											{% endif %}
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</li>
+			<li>
+				<a
+					class="uk-accordion-title uk-background-muted"
+					href="#"
+					style="padding: 0 0.5rem;">
+					<h2>
+						Zakup
+						<em
+							class="uk-text-primary">[{{ staraoc.sviZakupi()|length }}]</em>
+						<em
+							class="uk-text-success">[{{ staraoc.razduzeniZakupi()|length }}]</em>
+						<em
+							class="uk-text-danger">[{{ staraoc.zaduzeniZakupi()|length }}]</em>
+						<small>
+							<em
+								class="uk-text-danger">[{{ staraoc.dugZaZakupe()|number_format(2, '.', ',') }}]</em>
+						</small>
+					</h2>
+				</a>
+				<div
+					class="uk-accordion-content">
+					<hr>
+					<div
+						class="uk-overflow-auto">
+						<table
+							class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+							<thead>
+								<tr>
+									<th
+										class="w-5">Godina</th>
+									<th
+										class="w-20">Ime</th>
+									<th
+										class="w-15 uk-text-right">Iznos (zaduženo)</th>
+									<th
+										class="w-15 uk-text-right">Iznos (razduženo)</th>
+									<th
+										class="w-15 uk-text-right">Za razduženje</th>
+									<th
+										class="w-10 uk-text-center">Razduženo</th>
+									<th
+										class="w-15">Reprogram</th>
+									<th
+										class="w-5 uk-text-right">
+										<span
+											uk-icon="cog"></span>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% set zakupi =  staraoc.sviZakupi() %}
+								{% if zaduzenost == 1 %}
+									{% set zakupi =  staraoc.razduzeniZakupi() %}
+								{% endif %}
+								{% if zaduzenost == 2 %}
+									{% set zakupi =  staraoc.zaduzeniZakupi() %}
+								{% endif %}
+								{% for zakup in zakupi %}
+									{% if zakup.razduzeno == 0  %}
+										{% set cls = "uk-text-danger" %}
+									{% endif %}
+									{% if zakup.razduzeno == 1  %}
+										{% set cls = "uk-text-success" %}
+									{% endif %}
+									{% if zakup.reprogram_id %}
+										{% set cls = "uk-text-primary" %}
+									{% endif %}
+									<tr
+										class="{{ cls }}">
+										<td>
+											<button
+												class="uk-button uk-button-link uk-button-small {{ cls }}">{{ zakup.godina }}</button>
+											<div
+												class="uk-width-large uk-text-meta"
+												uk-dropdown="mode: hover; pos: top-left">
+												Zadužio korisnik:
+												{{ zakup.korisnikZaduzio().ime|upper }}<br>
+												Datum zaduženja:
+												{{ zakup.datum_zaduzenja|date('d.m.Y') }}<br>
+												Razdužio korisnik:
+												{{ zakup.korisnikRazduzio().ime|upper }}<br>
+												Datum razduženja:
+												{{ zakup.datum_razduzenja is empty ? '' : zakup.datum_razduzenja|date('d.m.Y') }}<br>
+												Uplata od:
+												{{ zakup.uplata().datum is empty ? '' : zakup.uplata().datum|date('d.m.Y') }}
+												[{{ zakup.uplata().iznos }}
+												din]<br>
+												Napomena:
+												{{ zakup.napomena|nl2br }}
+											</div>
+										</td>
+										<td>{{ zakup.staraoc().punoIme()|upper }}</td>
+										<td
+											class="uk-text-right">
+											{{ zakup.iznos_zaduzeno|number_format(2, '.', ',') }}
+										</td>
+										<td
+											class="uk-text-right">
+											{{ zakup.iznos_razduzeno|number_format(2, '.', ',') }}
+										</td>
+										<td
+											class="uk-text-right">
+											{{ zakup.zaRazduzenje().ukupno|number_format(2, '.', ',') }}
+										</td>
+										<td
+											class="uk-text-center">{{ zakup.razduzenoDisabled()|raw }}</td>
+										<td>
+											{% if zakup.reprogram_id %}
+												<span
+													uk-icon="refresh"></span>
+												{{ zakup.reprogramLbl(zakup.reprogram_id)|raw }}
+											{% endif %}
+										</td>
+										<td
+											class="uk-text-right">
+											{% if auth.logged and auth.user.nivo == 0 %}
+												<a
+													title="Brisanje"
+													href="#modal-brisanje"
+													data-id="{{ zakup.id }}" onclick="setZaduzenjeId(this);"
+													uk-toggle>
+													<span
+														uk-icon="trash"></span>
+												</a>
+											{% endif %}
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</li>
+			<li>
+				<a
+					class="uk-accordion-title uk-background-muted"
+					href="#"
+					style="padding: 0 0.5rem;">
+					<h2>
+						Računi
+						<em
+							class="uk-text-primary">[{{ staraoc.sviRacuni()|length }}]</em>
+						<em
+							class="uk-text-success">[{{ staraoc.razduzeniRacuni()|length }}]</em>
+						<em
+							class="uk-text-danger">[{{ staraoc.zaduzeniRacuni()|length }}]</em>
+						<small>
+							<em
+								class="uk-text-danger">[{{ staraoc.dugZaRacune()|number_format(2, '.', ',') }}]</em>
+						</small>
+					</h2>
+				</a>
+				<div
+					class="uk-accordion-content">
+					<hr>
+					<div
+						class="uk-overflow-auto">
+						<table
+							class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+							<thead>
+								<tr>
+									<th
+										class="w-15">Broj</th>
+									<th
+										class="w-10">Datum</th>
+									<th
+										class="w-15">Ime</th>
+									<th
+										class="w-10 uk-text-right">Iznos</th>
+									<th
+										class="w-10 uk-text-right">Za razduzenje</th>
+									<th
+										class="w-10 uk-text-center">Razduženo</th>
+									<th
+										class="w-20">Reprogram</th>
+									<th
+										class="w-10 uk-text-right">
+										<span
+											uk-icon="cog"></span>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% set racuni =  staraoc.sviRacuni() %}
+								{% if zaduzenost == 1 %}
+									{% set racuni =  staraoc.razduzeniRacuni() %}
+								{% endif %}
+								{% if zaduzenost == 2 %}
+									{% set racuni =  staraoc.zaduzeniRacuni() %}
+								{% endif %}
+								{% for rn in racuni %}
+									{% if rn.razduzeno == 0  %}
+										{% set cls = "uk-text-danger" %}
+									{% endif %}
+									{% if rn.razduzeno == 1  %}
+										{% set cls = "uk-text-success" %}
+									{% endif %}
+									{% if rn.reprogram_id %}
+										{% set cls = "uk-text-primary" %}
+									{% endif %}
+									<tr
+										class="{{ cls }}">
+										<td>
+											<button
+												class="uk-button uk-button-link uk-button-small {{ cls }}">{{ rn.broj }}</button>
+											<div
+												class="uk-width-large uk-text-meta"
+												uk-dropdown="mode: hover; pos: top-left">
+												Rok za kamatu:
+												{{ rn.datum_prispeca is empty ? '' : rn.datum_prispeca|date('d.m.Y') }}<br>
+												Zadužio korisnik:
+												{{ rn.korisnikZaduzio().ime|upper }}<br>
+												Datum zaduženja:
+												{{ rn.datum|date('d.m.Y') }}<br>
+												Razdužio korisnik:
+												{{ rn.korisnikRazduzio().ime|upper }}<br>
+												Datum razduženja:
+												{{ rn.datum_razduzenja is empty ? '' : rn.datum_razduzenja|date('d.m.Y') }}<br>
+												Uplata od:
+												{{ rn.uplata().datum is empty ? '' : rn.uplata().datum|date('d.m.Y') }}
+												[{{ rn.uplata().iznos }}
+												din]<br>
+												Napomena:
+												{{ rn.napomena|nl2br }}
+											</div>
+										</td>
+										<td>{{ rn.datum() }}</td>
+										<td>{{ rn.staraoc().punoIme()|upper }}</td>
+										<td
+											class="uk-text-right">
+											{{ rn.iznos|number_format(2, '.', ',') }}
+										</td>
+										<td
+											class="uk-text-right">
+											{{ rn.zaRazduzenje().ukupno|number_format(2, '.', ',') }}
+										</td>
+										<td
+											class="uk-text-center">{{ rn.razduzenoDisabled()|raw }}</td>
+										<td>
+											{% if rn.reprogram_id %}
+												<span
+													uk-icon="refresh"></span>
+												{{ rn.reprogramLbl(rn.reprogram_id)|raw }}
+											{% endif %}
+										</td>
+										{% if auth.logged and auth.user.nivo == 0 %}
+											<td
+												class="uk-text-right">
+												<a
+													title="Brisanje"
+													href="#modal-brisanje-racuna"
+													data-id="{{ rn.id }}" onclick="setRacunId(this);"
+													uk-toggle>
+													<span
+														uk-icon="trash"></span>
+												</a>
+											</td>
+										{% endif %}
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</li>
+			<li>
+				<a
+					class="uk-accordion-title uk-background-muted"
+					href="#"
+					style="padding: 0 0.5rem;">
+					<h2>
+						Reprogrami
+						<em
+							class="uk-text-primary">[{{ staraoc.sviReprogrami()|length }}]</em>
+						<em
+							class="uk-text-success">[{{ staraoc.razduzeniReprogrami()|length }}]</em>
+						<em
+							class="uk-text-danger">[{{ staraoc.zaduzeniReprogrami()|length }}]</em>
+						<small>
+							<em
+								class="uk-text-danger">[{{ staraoc.dugZaReprograme()|number_format(2, '.', ',') }}]</em>
+						</small>
+					</h2>
+				</a>
+				<div
+					class="uk-accordion-content">
+					<hr>
+					<div
+						class="uk-overflow-auto">
+						<table
+							class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+							<thead>
+								<tr>
+									<th
+										class="w-15">Broj</th>
+									<th
+										class="w-10 uk-text-right">Datum</th>
+									<th
+										class="w-15">Ime</th>
+									<th
+										class="w-10 uk-text-right">Iznos</th>
+									<th
+										class="w-10 uk-text-right">Peroid</th>
+									<th
+										class="w-10 uk-text-right">Rata</th>
+									<th
+										class="w-10 uk-text-right">Preostalo rata</th>
+									<th
+										class="w-10 uk-text-right">Dug</th>
+									<th
+										class="w-10 uk-text-center">Razduženo</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% set reprogrami =  staraoc.sviReprogrami() %}
+								{% if zaduzenost == 1 %}
+									{% set reprogrami =  staraoc.razduzeniReprogrami() %}
+								{% endif %}
+								{% if zaduzenost == 2 %}
+									{% set reprogrami =  staraoc.zaduzeniReprogrami() %}
+								{% endif %}
+								{% for rep in reprogrami %}
+									{% set cls = "" %}
+									{% if rep.razduzeno == 0  %}
+										{% set cls = "uk-text-danger" %}
+									{% endif %}
+									{% if rep.razduzeno == 1  %}
+										{% set cls = "uk-text-success" %}
+									{% endif %}
+									<tr
+										class="{{ cls }}">
+										<td>
+											<a
+												href="{{ path_for('transakcije.reprogram', { id: rep.id }) }}" class="uk-button uk-button-link uk-text-bold uk-button-small {{ cls }}">{{ rep.broj }}</a>
+											<div
+												class="uk-width-large uk-text-meta"
+												uk-dropdown="mode: hover; pos: top-left">
+												Datum prispeća prve rate:
+												{{ rep.datum_prve_rate is empty ? '' : rep.datum_prve_rate|date('d.m.Y') }}<br>
+												Zadužio korisnik:
+												{{ rep.korisnikZaduzio().ime|upper }}<br>
+												Razdužio korisnik:
+												{{ rep.korisnikRazduzio().ime|upper }}<br>
+												Napomena:
+												{{ rep.napomena|nl2br }}
+											</div>
+										</td>
+										<td
+											class="uk-text-right">{{ rep.datum() }}</td>
+										<td>{{ staraoc.punoIme()|upper }}</td>
+										<td
+											class="uk-text-right">{{ rep.iznos|number_format(2, '.', ',') }}</td>
+										<td
+											class="uk-text-right">{{ rep.period }}</td>
+										<td
+											class="uk-text-right">{{ rep.iznos_rate|number_format(2, '.', ',') }}</td>
+										<td
+											class="uk-text-right">{{ rep.preostalo_rata }}</td>
+										<td
+											class="uk-text-right">{{ (rep.iznos_rate * rep.preostalo_rata)|number_format(2, '.', ',') }}</td>
+										<td
+											class="uk-text-center">{{ rep.razduzenoDisabled()|raw }}</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+
 	<!-- MODAL BRISANJE ZADUŽENJA -->
 	{% include 'inc/zaduzenje_brisanje.twig' %}
 	<!-- MODAL BRISANJE RAČUNA -->
@@ -718,15 +701,7 @@
 {% endblock sadrzaj %}
 
 {% block traka %}
-	{# <div
-				class="uk-width-1-2 uk-text-warning">
-				{% if staraoc.taksePosleTekuceGodine() > 0 %}
-					<p>Takse posle tekuće godine [{{ staraoc.taksePosleTekuceGodine() }}]</p>
-				{% endif %}
-				{% if staraoc.zakupiPosleTekuceGodine() > 0 %}
-					<p>Zakupi posle tekuće godine [{{ staraoc.zakupiPosleTekuceGodine() }}]</p>
-				{% endif %}
-			</div> #}
+
 	<h1
 		class="uk-text-danger">Dugovanja</h1>
 	<table
@@ -771,25 +746,35 @@
 				<strong>{{ staraoc.ukupanDugSaReprogramima()|number_format(2, '.', ',') }}</strong>
 			</td>
 		</tr>
+		<tr>
+			<th
+				class="uk-text-success">
+				<strong>Avans</strong>
+			</th>
+			<td
+				class="uk-text-success uk-text-right">
+				<strong>{{ staraoc.avans|number_format(2, '.', ',') }}</strong>
+			</td>
+		</tr>
 	</table>
 {% endblock traka %}
 
 {% block skripta %}
 	<script>
 		document.getElementById("modal_dugme_brisi_racun").addEventListener("click", function () {
-			document.getElementById("forma_brisanje_racuna").submit();
-		});
+document.getElementById("forma_brisanje_racuna").submit();
+});
 
-		function setRacunId(el) {
-			document.getElementById("modal_racun_id").value = el.dataset.id;
-		}
+function setRacunId(el) {
+document.getElementById("modal_racun_id").value = el.dataset.id;
+}
 
-		document.getElementById("modal_dugme_brisi").addEventListener("click", function () {
-			document.getElementById("forma_brisanje").submit();
-		});
+document.getElementById("modal_dugme_brisi").addEventListener("click", function () {
+document.getElementById("forma_brisanje").submit();
+});
 
-		function setZaduzenjeId(el) {
-			document.getElementById("modal_zaduzenje_id").value = el.dataset.id;
-		}
+function setZaduzenjeId(el) {
+document.getElementById("modal_zaduzenje_id").value = el.dataset.id;
+}
 	</script>
 {% endblock skripta %}

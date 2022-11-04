@@ -118,14 +118,12 @@
 			</div>
 		</div>
 	</div>
-	<hr
-		class="uk-margin-large">
+	<hr>
 	<div
 		class="uk-clearfix">
 		<div
 			class="uk-float-left">
-			<h2
-				class="uk-text-danger">
+			<h2>
 				Staraoci
 				<a
 					href="{{ path_for('staraoci') }}">
@@ -167,7 +165,14 @@
 			</thead>
 			<tbody>
 				{% for st in karton.staraoci() %}
-					<tr>
+					{% if st.imaAvansNerazduzen() %}
+						{% set cls = "uk-text-danger" %}
+					{% elseif st.imaAvans() %}
+						{% set cls = "uk-text-success" %}
+					{% else %}
+						{% set cls = "" %}
+					{% endif %}
+					<tr class="{{ cls }}">
 						<td>{{ st.redni_broj }}</td>
 						<td>{{ st.punoIme() }}</td>
 						<td>{{ st.jmbg }}</td>
@@ -334,92 +339,69 @@
 {% endblock sadrzaj %}
 
 {% block traka %}
-	<div
-		class="uk-grid">
-		<div
-			class="uk-width-1-1">
-			<p
-				class="uk-text-right uk-text-bold uk-text-large">Ukupan dug</p>
-			<div
-				class="uk-panel uk-background-muted uk-text-right">
-				<p
-					class="uk-text-danger uk-text-bold uk-text-large"
-					id="ukupan-dug">
-					{% set dug = karton.dugZaTakse() + karton.dugZaZakupe() + karton.dugZaRacune() + karton.dugZaReprograme() %}
-					{{ dug|number_format(2, '.', ',') }}
-				</p>
-			</div>
-		</div>
-		<div
-			class="uk-width-1-2">
-			<p
-				class="uk-margin-small">Dug za takse</p>
-		</div>
-		<div
-			class="uk-width-1-2">
-			<div
-				class="uk-panel uk-background-muted uk-text-right">
-				<p
-					class="uk-text-danger"
-					id="takse-dug uk-margin-small">
-					{{ karton.dugZaTakse() | number_format(2, '.', ',') }}
-				</p>
-			</div>
-		</div>
-		<div
-			class="uk-width-1-2">
-			<p>Dug za zakup</p>
-		</div>
-		<div
-			class="uk-width-1-2">
-			<div
-				class="uk-panel uk-background-muted uk-text-right">
-				<p
-					class="uk-text-danger"
-					id="takse-dug">
-					{{ karton.dugZaZakupe() | number_format(2, '.', ',') }}
-				</p>
-			</div>
-		</div>
-		<div
-			class="uk-width-1-2">
-			<p>Dug za račune</p>
-		</div>
-		<div
-			class="uk-width-1-2">
-			<div
-				class="uk-panel uk-background-muted uk-text-right">
-				<p
-					class="uk-text-danger"
-					id="takse-dug">
-					{{ karton.dugZaRacune() | number_format(2, '.', ',') }}
-				</p>
-			</div>
-		</div>
-		<div
-			class="uk-width-1-2">
-			<p>Dug za reprograme</p>
-		</div>
-		<div
-			class="uk-width-1-2">
-			<div
-				class="uk-panel uk-background-muted uk-text-right">
-				<p
-					class="uk-text-danger"
-					id="takse-dug">
-					{{ karton.dugZaReprograme() | number_format(2, '.', ',') }}
-				</p>
-			</div>
-		</div>
-	</div>
+	<h3
+		class="uk-text-danger">Dugovanja</h3>
+	<table
+		class="uk-table uk-table-divider uk-table-hover uk-table-small">
+		<tr>
+			<th>Dug za takse</th>
+			<td
+				class="uk-text-right">{{ karton.dugZaTakse()|number_format(2, '.', ',') }}</td>
+		</tr>
+		<tr>
+			<th>Dug za zakup</th>
+			<td
+				class="uk-text-right">{{ karton.dugZaZakupe()|number_format(2, '.', ',') }}</td>
+		</tr>
+		<tr>
+			<th>Dug za račune</th>
+			<td
+				class="uk-text-right">{{ karton.dugZaRacune()|number_format(2, '.', ',') }}</td>
+		</tr>
+		<tr>
+			<th
+				class="uk-text-primary">
+				<strong>Ukupno</strong>
+			</th>
+			<td
+				class="uk-text-right">
+				<strong>{{ karton.dug()|number_format(2, '.', ',') }}</strong>
+			</td>
+		</tr>
+		<tr>
+			<th>Dug za reprograme</th>
+			<td
+				class="uk-text-right">{{ karton.dugZaReprograme()|number_format(2, '.', ',') }}</td>
+		</tr>
+		<tr>
+			<th
+				class="uk-text-primary">
+				<strong>Ukupno sa reprogramima</strong>
+			</th>
+			<td
+				class="uk-text-right">
+				<strong>{{ staraoc.dugSaReprogramima()|number_format(2, '.', ',') }}</strong>
+			</td>
+		</tr>
+		<tr>
+			<th
+				class="uk-text-success">
+				<strong>Avans</strong>
+			</th>
+			<td
+				class="uk-text-success uk-text-right">
+				<strong>{{ staraoc.avans|number_format(2, '.', ',') }}</strong>
+			</td>
+		</tr>
+	</table>
 
 
 	<div
 		class="uk-clearfix uk-margin-large-top">
 		<div
 			class="uk-float-left">
-			<h2
-				class="uk-text-primary">Dokumenti</h2>
+			<h3
+				class="uk-text-primary">Dokumenti</h3>
 		</div>
 		<div
 			class="uk-float-right uk-margin-small-top">

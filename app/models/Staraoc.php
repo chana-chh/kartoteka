@@ -6,296 +6,311 @@ use App\Classes\Model;
 
 class Staraoc extends Model
 {
-    protected $table = 'staraoci';
+	protected $table = 'staraoci';
 
-    public function punoIme()
-    {
-        $si = empty($this->srednje_ime) ? "" : "({$this->srednje_ime}) ";
-        return "{$this->prezime} {$si}{$this->ime}";
-    }
+	public function punoIme()
+	{
+		$si = empty($this->srednje_ime) ? "" : "({$this->srednje_ime}) ";
+		return "{$this->prezime} {$si}{$this->ime}";
+	}
 
-    public function adresa()
-    {
-        return "{$this->mesto}, {$this->ulica} {$this->broj}";
-    }
+	public function adresa()
+	{
+		return "{$this->mesto}, {$this->ulica} {$this->broj}";
+	}
 
-    public function karton()
-    {
-        return $this->belongsTo('App\Models\Karton', 'karton_id');
-    }
+	public function karton()
+	{
+		return $this->belongsTo('App\Models\Karton', 'karton_id');
+	}
 
-    public function uplate()
-    {
+	public function uplate()
+	{
 		$sql = "SELECT * FROM uplate WHERE staraoc_id = {$this->id} ORDER BY datum DESC;";
-        return $this->fetch($sql, null, 'App\Models\Uplata');
-    }
+		return $this->fetch($sql, null, 'App\Models\Uplata');
+	}
 
-    public function ukupanIznosUplata()
-    {
-        $sql = "SELECT SUM(iznos) AS iznos_uplata FROM uplate WHERE staraoc_id = {$this->id};";
-        $iznos = (float) $this->fetch($sql)[0]->iznos_uplata;
+	public function ukupanIznosUplata()
+	{
+		$sql = "SELECT SUM(iznos) AS iznos_uplata FROM uplate WHERE staraoc_id = {$this->id};";
+		$iznos = (float) $this->fetch($sql)[0]->iznos_uplata;
 
-        return $iznos;
-    }
+		return $iznos;
+	}
 
-    // prikaz chk aktivan na pogledu
-    public function aktivan()
-    {
-        $chk = $this->aktivan === 1 ? ' checked' : '';
-        $pk = $this->pk;
-        return "<input type=\"checkbox\" name=\"aktivan\" data-id=\"{$this->$pk}\"{$chk}>";
-    }
+	// prikaz chk aktivan na pogledu
+	public function aktivan()
+	{
+		$chk = $this->aktivan === 1 ? ' checked' : '';
+		$pk = $this->pk;
+		return "<input type=\"checkbox\" name=\"aktivan\" data-id=\"{$this->$pk}\"{$chk}>";
+	}
 
-    // prikaz chk aktivan na pogledu (nije moguce promeniti klikom)
-    public function aktivanDisabled()
-    {
-        $chk = $this->aktivan === 1 ? ' checked' : '';
-        $pk = $this->pk;
-        return "<input type=\"checkbox\" name=\"aktivan\" data-id=\"{$this->$pk}\"{$chk} disabled>";
-    }
+	// prikaz chk aktivan na pogledu (nije moguce promeniti klikom)
+	public function aktivanDisabled()
+	{
+		$chk = $this->aktivan === 1 ? ' checked' : '';
+		$pk = $this->pk;
+		return "<input type=\"checkbox\" name=\"aktivan\" data-id=\"{$this->$pk}\"{$chk} disabled>";
+	}
 
-    // jedan prema vise na zaduzenje
-    public function zaduzenja()
-    {
-        return $this->hasMany('App\Models\Zaduzenje', 'staraoc_id');
-    }
+	// jedan prema vise na zaduzenje
+	public function zaduzenja()
+	{
+		return $this->hasMany('App\Models\Zaduzenje', 'staraoc_id');
+	}
 
-    // jedan prema vise na reprograme
-    public function reprogrami()
-    {
-        return $this->hasMany('App\Models\Reprogram', 'staraoc_id');
-    }
+	// jedan prema vise na reprograme
+	public function reprogrami()
+	{
+		return $this->hasMany('App\Models\Reprogram', 'staraoc_id');
+	}
 
-    public function sviReprogrami()
-    {
-        $sql = "SELECT * FROM reprogrami WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id} ORDER BY datum DESC;";
-        return $this->fetch($sql, null, '\App\Models\Reprogram');
-    }
+	public function sviReprogrami()
+	{
+		$sql = "SELECT * FROM reprogrami WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id} ORDER BY datum DESC;";
+		return $this->fetch($sql, null, '\App\Models\Reprogram');
+	}
 
-    public function zaduzeniReprogrami()
-    {
-        $sql = "SELECT * FROM reprogrami WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id}
+	public function zaduzeniReprogrami()
+	{
+		$sql = "SELECT * FROM reprogrami WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id}
                 AND razduzeno = 0 ORDER BY datum DESC;";
-        return $this->fetch($sql, null, '\App\Models\Reprogram');
-    }
+		return $this->fetch($sql, null, '\App\Models\Reprogram');
+	}
 
-    public function razduzeniReprogrami()
-    {
-        $sql = "SELECT * FROM reprogrami WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id}
+	public function razduzeniReprogrami()
+	{
+		$sql = "SELECT * FROM reprogrami WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id}
                 AND razduzeno = 1 ORDER BY datum DESC;";
-        return $this->fetch($sql, null, '\App\Models\Reprogram');
-    }
+		return $this->fetch($sql, null, '\App\Models\Reprogram');
+	}
 
-    public function dugZaReprograme()
-    {
-        $sql = "SELECT SUM(iznos_rate * preostalo_rata) AS dug FROM reprogrami WHERE razduzeno = 0
+	public function dugZaReprograme()
+	{
+		$sql = "SELECT SUM(iznos_rate * preostalo_rata) AS dug FROM reprogrami WHERE razduzeno = 0
                 AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
-        $dug = (float) $this->fetch($sql)[0]->dug;
-        return round($dug, 2);
-    }
+		$dug = (float) $this->fetch($sql)[0]->dug;
+		return round($dug, 2);
+	}
 
 
 
-    // new ****************************************************************************************************************************
-	// prepraviti na novi nacin razduzivanja uz zateznu kamatu
+	// new ****************************************************************************************************************************
+	// novi nacin razduzivanja uz zateznu kamatu
 
 
-	
-    public function svaZaduzenja()
-    {
-        $sql = "SELECT * FROM zaduzenja WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id} ORDER BY godina ASC;";
-        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
-    }
 
-    public function zaduzenaZaduzenja()
-    {
-        $sql = "SELECT * FROM zaduzenja WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id}
+	public function svaZaduzenja()
+	{
+		$sql = "SELECT * FROM zaduzenja WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id} ORDER BY godina ASC;";
+		return $this->fetch($sql, null, '\App\Models\Zaduzenje');
+	}
+
+	public function zaduzenaZaduzenja()
+	{
+		$sql = "SELECT * FROM zaduzenja WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id}
                 AND razduzeno = 0 AND reprogram_id IS NULL ORDER BY godina ASC, tip ASC;";
-        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
-    }
+		return $this->fetch($sql, null, '\App\Models\Zaduzenje');
+	}
 
-    public function razduzenaZaduzenja()
-    {
-        $sql = "SELECT * FROM zaduzenja WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id}
+	public function razduzenaZaduzenja()
+	{
+		$sql = "SELECT * FROM zaduzenja WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id}
                 AND razduzeno = 1 ORDER BY godina ASC;";
-        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
-    }
+		return $this->fetch($sql, null, '\App\Models\Zaduzenje');
+	}
 
-    // takse
+	// takse
 
-    public function taksaZaGodinu()
-    {
-        $cena = (float) (new Cena())->taksa();
-        $br_mesta = $this->karton()->broj_mesta;
-        $br_staraoca = $this->karton()->brojAktivnihStaraoca();
-        $taksa = $cena * $br_mesta / $br_staraoca;
-        return (float) $taksa;
-    }
+	public function taksaZaGodinu()
+	{
+		$cena = (float) (new Cena())->taksa();
+		$br_mesta = $this->karton()->broj_mesta;
+		$br_staraoca = $this->karton()->brojAktivnihStaraoca();
+		$taksa = $cena * $br_mesta / $br_staraoca;
+		return (float) $taksa;
+	}
 
-    public function sveTakse()
-    {
-        $sql = "SELECT * FROM zaduzenja WHERE tip = 'taksa' AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
-        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
-    }
+	public function sveTakse()
+	{
+		$sql = "SELECT * FROM zaduzenja WHERE tip = 'taksa' AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+		return $this->fetch($sql, null, '\App\Models\Zaduzenje');
+	}
 
-    public function zaduzeneTakse()
-    {
-        $sql = "SELECT * FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0
+	public function zaduzeneTakse()
+	{
+		$sql = "SELECT * FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0
                 AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
-        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
-    }
+		return $this->fetch($sql, null, '\App\Models\Zaduzenje');
+	}
 
-    public function razduzeneTakse()
-    {
-        $sql = "SELECT * FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 1
+	public function razduzeneTakse()
+	{
+		$sql = "SELECT * FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 1
                 AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
-        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
-    }
+		return $this->fetch($sql, null, '\App\Models\Zaduzenje');
+	}
 
 	// ovo je suma delimicnih razduzenja
 	// delimicna razduzenja se sada moraju oduzimati od glavnice zbog racunanja kamate
-    // public function saldoZaTakse()
-    // {
-    //     $sql = "SELECT SUM(iznos_razduzeno) AS saldo FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0 AND iznos_razduzeno > 0
-    //             AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
-    //     $saldo = $this->fetch($sql)[0]->saldo;
-    //     return round((float) $saldo, 2);
-    // }
+	// public function saldoZaTakse()
+	// {
+	//     $sql = "SELECT SUM(iznos_razduzeno) AS saldo FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0 AND iznos_razduzeno > 0
+	//             AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+	//     $saldo = $this->fetch($sql)[0]->saldo;
+	//     return round((float) $saldo, 2);
+	// }
 
-    public function dugZaTakse()
-    {
+	public function dugZaTakse()
+	{
 		$takse = $this->zaduzeneTakse();
 		$rez = 0;
-		
-		foreach ( $takse as $taksa)
+
+		foreach ($takse as $taksa)
 		{
 			$rez += $taksa->zaRazduzenje()['ukupno'];
 		}
 
-        return round($rez, 2);
-    }
+		return round($rez, 2);
+	}
 
 	// takse zaduzene posle tekuce godine
-    public function taksePosleTekuceGodine()
-    {
-        $god = GOD;
-        $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0
+	// ovo ne treba da postoji jer nema vise zaduzivanja u buducnost
+	public function taksePosleTekuceGodine()
+	{
+		$god = GOD;
+		$sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0
                 AND godina > {$god} AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
-        $broj = (int) $this->fetch($sql)[0]->broj;
-        return $broj;
-    }
+		$broj = (int) $this->fetch($sql)[0]->broj;
+		return $broj;
+	}
 
-    // zakupi
+	// zakupi
 
-    public function zakupZaGodinu()
-    {
-        $cena = (float) (new Cena())->zakup();
-        $br_mesta = $this->karton()->broj_mesta;
-        $br_staraoca = $this->karton()->brojAktivnihStaraoca();
-        $zakup = $cena * $br_mesta / $br_staraoca;
-        return (float) $zakup;
-    }
+	public function zakupZaGodinu()
+	{
+		$cena = (float) (new Cena())->zakup();
+		$br_mesta = $this->karton()->broj_mesta;
+		$br_staraoca = $this->karton()->brojAktivnihStaraoca();
+		$zakup = $cena * $br_mesta / $br_staraoca;
+		return (float) $zakup;
+	}
 
-    public function sviZakupi()
-    {
-        $sql = "SELECT * FROM zaduzenja WHERE tip = 'zakup' AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
-        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
-    }
+	public function sviZakupi()
+	{
+		$sql = "SELECT * FROM zaduzenja WHERE tip = 'zakup' AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+		return $this->fetch($sql, null, '\App\Models\Zaduzenje');
+	}
 
-    public function zaduzeniZakupi()
-    {
-        $sql = "SELECT * FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0
+	public function zaduzeniZakupi()
+	{
+		$sql = "SELECT * FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0
                 AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
-        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
-    }
+		return $this->fetch($sql, null, '\App\Models\Zaduzenje');
+	}
 
-    public function razduzeniZakupi()
-    {
-        $sql = "SELECT * FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 1
+	public function razduzeniZakupi()
+	{
+		$sql = "SELECT * FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 1
                 AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
-        return $this->fetch($sql, null, '\App\Models\Zaduzenje');
-    }
+		return $this->fetch($sql, null, '\App\Models\Zaduzenje');
+	}
 
-    // public function saldoZaZakupe()
-    // {
-    //     $sql = "SELECT SUM(iznos_razduzeno) AS saldo FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0 AND iznos_razduzeno > 0
-    //             AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
-    //     $saldo = $this->fetch($sql)[0]->saldo;
-    //     return round((float) $saldo, 2);
-    // }
+	// public function saldoZaZakupe()
+	// {
+	//     $sql = "SELECT SUM(iznos_razduzeno) AS saldo FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0 AND iznos_razduzeno > 0
+	//             AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+	//     $saldo = $this->fetch($sql)[0]->saldo;
+	//     return round((float) $saldo, 2);
+	// }
 
-    public function dugZaZakupe()
-    {
+	public function dugZaZakupe()
+	{
 		$zakupi = $this->zaduzeniZakupi();
 		$rez = 0;
-		
-		foreach ( $zakupi as $zakup)
+
+		foreach ($zakupi as $zakup)
 		{
 			$rez += $zakup->zaRazduzenje()['ukupno'];
 		}
 
-        return round($rez, 2);
-    }
+		return round($rez, 2);
+	}
 
-    public function zakupiPosleTekuceGodine()
-    {
-        $god = GOD;
-        $sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0
+	// ovo ne treba da postoji jer nema vise zaduzivanja u buducnost
+	public function zakupiPosleTekuceGodine()
+	{
+		$god = GOD;
+		$sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0
                 AND godina > {$god} AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
-        $broj = (int) $this->fetch($sql)[0]->broj;
-        return $broj;
-    }
+		$broj = (int) $this->fetch($sql)[0]->broj;
+		return $broj;
+	}
 
-    // racuni
+	// racuni
 	// da li se racuna zatezna kamata - postoji rok (darum prispeca)
-	// ako moze da se lati delimicno dodati polje glavnica
+	// ako moze da se plati delimicno dodati polje glavnica
 
-    public function racuni()
-    {
-        $sql = "SELECT * FROM racuni WHERE staraoc_id = {$this->id};";
-        return $this->fetch($sql, null, '\App\Models\Racun');
-    }
+	public function racuni()
+	{
+		$sql = "SELECT * FROM racuni WHERE staraoc_id = {$this->id};";
+		return $this->fetch($sql, null, '\App\Models\Racun');
+	}
 
-    public function sviRacuni()
-    {
-        $sql = "SELECT * FROM racuni WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
-        return $this->fetch($sql, null, '\App\Models\Racun');
-    }
+	public function sviRacuni()
+	{
+		$sql = "SELECT * FROM racuni WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+		return $this->fetch($sql, null, '\App\Models\Racun');
+	}
 
-    public function zaduzeniRacuni()
-    {
-        $sql = "SELECT * FROM racuni WHERE razduzeno = 0 AND reprogram_id IS NULL
+	public function zaduzeniRacuni()
+	{
+		$sql = "SELECT * FROM racuni WHERE razduzeno = 0 AND reprogram_id IS NULL
                 AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
-        return $this->fetch($sql, null, '\App\Models\Racun');
-    }
+		return $this->fetch($sql, null, '\App\Models\Racun');
+	}
 
-    public function razduzeniRacuni()
-    {
-        $sql = "SELECT * FROM racuni WHERE razduzeno = 1 AND reprogram_id IS NULL
+	public function razduzeniRacuni()
+	{
+		$sql = "SELECT * FROM racuni WHERE razduzeno = 1 AND reprogram_id IS NULL
                 AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
-        return $this->fetch($sql, null, '\App\Models\Racun');
-    }
+		return $this->fetch($sql, null, '\App\Models\Racun');
+	}
 
-    public function dugZaRacune()
-    {
-        $sql = "SELECT SUM(iznos) AS iznos FROM racuni WHERE razduzeno = 0
-                AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
-        $iznos = (float) $this->fetch($sql)[0]->iznos;
-        return round($iznos, 2);
-    }
+	public function dugZaRacune()
+	{
+		$racuni = $this->zaduzeniRacuni();
+		$rez = 0;
 
-    public function ukupanDug()
-    {
-        return $this->dugZaTakse() + $this->dugZaZakupe() + $this->dugZaRacune();
-    }
+		foreach ($racuni as $rn)
+		{
+			$rez += $rn->zaRazduzenje()['ukupno'];
+		}
 
-    public function ukupanDugSaReprogramima()
-    {
-        return $this->dugZaTakse() + $this->dugZaZakupe() + $this->dugZaRacune() + $this->dugZaReprograme();
-    }
+		return round($rez, 2);
+	}
 
-    public function imaSaldo()
-    {
-        return $this->privremeni_saldo > 0 ? true : false;
-    }
+	public function ukupanDug()
+	{
+		return $this->dugZaTakse() + $this->dugZaZakupe() + $this->dugZaRacune();
+	}
+
+	public function ukupanDugSaReprogramima()
+	{
+		return $this->dugZaTakse() + $this->dugZaZakupe() + $this->dugZaRacune() + $this->dugZaReprograme();
+	}
+
+	public function imaAvans()
+	{
+		return ((float) $this->avans) > 0 ? true : false;
+	}
+
+	public function imaAvansNerazduzen()
+	{
+		$ima_avans = $this->imaAvans();
+		$ima_dug = $this->ukupanDug() > 0 ? true : false;
+
+		return $ima_avans && $ima_dug;
+	}
 }

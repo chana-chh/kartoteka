@@ -81,7 +81,7 @@ class StaraociController extends Controller
             if ($where !== " WHERE ") {
                 $where .= " AND ";
             }
-            $where .= "privremeni_saldo > :saldo";
+            $where .= "avans > :saldo";
             $params[':saldo'] = $saldo;
         }
         $where = $where === " WHERE " ? "" : $where;

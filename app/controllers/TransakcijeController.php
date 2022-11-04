@@ -27,22 +27,28 @@ class TransakcijeController extends Controller
 		$staraoc = (new Staraoc())->find($staraoc_id);
 		$broj_uplata = count($staraoc->uplate());
 
-		// ako ima privremeni_saldo (pretekle mu pare posle razduzenja)
+		// ako ima avans (pretekle mu pare posle razduzenja)
 		// preuzeti sva nerazduzena zaduzenja
 		// sloziti po godinama ASC
 		// krenuti redom i smanjivati iznos
 		// razduzivati stare godine
-		// ako nema vise sarih godin zaduzivati/razduzivati nove
+		// ako nema vise sarih godin zaduzivati/razduzivati nove - ovo ne
 		// od toga napraviti izvestaj
 		// istu foru koristiti kod razduzivanja viska para
+
+
+		// dodati racune !!!
+
 		$visak = [];
-		if ($staraoc->privremeni_saldo > 0)
+		if ($staraoc->avans > 0 && $staraoc->aktivan == 1)
 		{
 			// sva nerazduzena zaduzenja
 			$zaduzenja = $staraoc->zaduzenaZaduzenja();
+			// svi nerazduzeni racuni
+			$racuni = $staraoc->zaduzeniRacuni();
 
 			// iznos viska para
-			$iznos = (float) $staraoc->privremeni_saldo;
+			$iznos = (float) $staraoc->avans;
 			// ostatak viska
 			$ostatak = $iznos;
 
@@ -63,6 +69,7 @@ class TransakcijeController extends Controller
 			// godine zakupa koji mogu celi da se razduze
 			$godine_zakupa = '';
 
+			// razduzivanje zaduzenih taksi i zakupa
 			foreach ($zaduzenja as $zad)
 			{
 				$iznos = $ostatak;
@@ -96,90 +103,15 @@ class TransakcijeController extends Controller
 			// dovde je za stare dugove
 
 
-			// ako postoji ostatak dodaju se nova zaduzenja taksa, zakup, taksa, zakup
-			// dok se ne potrosi ostatak
+			// ako postoji ostatak prelazi se na razduzivanje racuna
+
+
+
+			// ako postoji ostatak upisuje se u avans !!!
 
 			if ($ostatak > 0)
 			{
-				// za nova zaduzenja koja ne postoje
-
-				// broj celih taksi koje mogu da se razduze
-				$n_br_taksi = 0;
-				// broj celih zakupa koje mogu da se razduze
-				$n_br_zakupa = 0;
-				// taksa ili zakup koji moze delimicno da se razduzi
-				$n_deo = 0;
-				// vrsta (taksa ili zakup) za delimicno razduzivanje
-				$n_vrsta = '';
-				// godina takse ili zakupa za delimicno razduzivanje
-				$n_godina = 0;
-				// godine taksi koje mogu cele da se razduze
-				$n_godine_taksi = '';
-				// godine zakupa koji mogu celi da se razduze
-				$n_godine_zakupa = '';
-
-				// pocetna godina za nove takse
-				$sql = "SELECT MAX(godina) AS max_godina FROM zaduzenja WHERE tip = 'taksa' AND staraoc_id = {$staraoc->id};";
-				$godina_za_taksu = (int) $staraoc->fetch($sql)[0]->max_godina + 1;
-				// pocetna godina za nove zakupe
-				$sql = "SELECT MAX(godina) AS max_godina FROM zaduzenja WHERE tip = 'zakup' AND staraoc_id = {$staraoc->id};";
-				$godina_za_zakup = (int) $staraoc->fetch($sql)[0]->max_godina + 1;
-
-				// odrediti manji pocetnu godinu i krenuti odatle (taksa ili zakup)
-				// da li voziti isto dok se ne stigne druga pocetna godina ili
-				// samo terati taksa, zakup
-
-				$radi_taksu = $godina_za_taksu <= $godina_za_zakup ? true : false;
-				// petlja dok ima ostatka
-				do
-				{
-					$iznos = $ostatak;
-
-					if ($radi_taksu)
-					{
-						$razlika = (float) $ostatak - $staraoc->taksaZaGodinu();
-					}
-					else
-					{
-						$razlika = (float) $ostatak - $staraoc->zakupZaGodinu();
-					}
-
-					if ($razlika < 0)
-					{
-						$n_deo = $iznos;
-
-						if ($radi_taksu)
-						{
-							$n_vrsta = 'taksa';
-							$n_godina = $godina_za_taksu;
-						}
-						else
-						{
-							$n_vrsta = 'zakup';
-							$n_godina = $godina_za_zakup;
-						}
-
-						$ostatak = 0;
-					}
-					else
-					{
-						if ($radi_taksu)
-						{
-							$n_br_taksi++;
-							$n_godine_taksi .= ', ' . $godina_za_taksu;
-							$ostatak = $razlika;
-							$godina_za_taksu++;
-						}
-						else
-						{
-							$n_br_zakupa++;
-							$n_godine_zakupa .= ', ' . $godina_za_zakup;
-							$ostatak = $razlika;
-							$godina_za_zakup++;
-						}
-					}
-					$radi_taksu = $godina_za_taksu <= $godina_za_zakup ? true : false;
-				} while ($ostatak > 0);
+				dd("Ostatak: {$ostatak}");
 			}
 
 			$visak = [
@@ -190,13 +122,6 @@ class TransakcijeController extends Controller
 				'godina' => $godina,
 				'vrsta' => $vrsta,
 				'deo' => round($deo, 2),
-				'n_br_taksi' => $n_br_taksi,
-				'n_godine_taksi' => trim($n_godine_taksi, ','),
-				'n_br_zakupa' => $n_br_zakupa,
-				'n_godine_zakupa' => trim($n_godine_zakupa, ','),
-				'n_godina' => $n_godina,
-				'n_vrsta' => $n_vrsta,
-				'n_deo' => round($n_deo, 2),
 			];
 		}
 
@@ -260,6 +185,11 @@ class TransakcijeController extends Controller
 	public function postZaduzivanje($request, $response)
 	{
 		// onemoguciti zaduzivanje i razduzivanje neaktivnih staraoca
+
+		/*
+			DODATI BROJ RACUNA
+		*/
+		
 		$data = $request->getParams();
 		unset($data['csrf_name']);
 		unset($data['csrf_value']);
@@ -393,9 +323,15 @@ class TransakcijeController extends Controller
 
 	public function postUplata($request, $response)
 	{
-		// ako nista nije cekirano onda se samo upisuje visak novca na privremeni_saldo
-		// dodati pretragu sa svim staraocima koji imaju novac na privremeni_saldo
-		// regulisati kako razduziti privremeni_saldo
+		/*
+			AVANS moze da postoji samo ako je sve razduzeno inace ide na razduzenje/delimicno razduzivanje necega
+
+			Kod UPLATE
+				- moze da razduzi cele godine/racune za tacan iznos
+				- moze da razduzi sve godine/racune za tacan iznos
+				- moze da razduzi sve godine/racune za veci iznos (ide na avans)
+				- moze da razduzi neke godine/racune za veci iznos (ide na razduzivanje/delimicno razduzivanje necega). Cega ???
+		*/
 
 		$data = $request->getParams();
 		$id = $data['staraoc_id'];
@@ -480,7 +416,7 @@ class TransakcijeController extends Controller
 			'korisnik_id' => $korisnik_id,
 		];
 
-		// Trenutno nije moguce delimicno razduzivanje - visak novca ide na privremeni_saldo
+		// Trenutno nije moguce delimicno razduzivanje - visak novca ide na avans
 
 		if ($razlika < 0) // uplaceno je manje novca od potrebnog
 		{
@@ -505,7 +441,7 @@ class TransakcijeController extends Controller
 			// za privrmeni saldo
 			$rzl = ($razlika <= 0) ? 0 : $razlika;
 			// Upisuje se visak novca u privremeni saldo staraoca i id uplate koja sadrzi visak novca
-			$sql = "UPDATE staraoci SET privremeni_saldo = privremeni_saldo + {$rzl}, uplata_id = {$uplata_id} WHERE id = {$id};";
+			$sql = "UPDATE staraoci SET avans = avans + {$rzl}, uplata_id = {$uplata_id} WHERE id = {$id};";
 			$staraoc->run($sql);
 
 			$data_za_razduzenje = [

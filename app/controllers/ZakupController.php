@@ -24,16 +24,16 @@ class ZakupController extends Controller
 		$data = $request->getParams();
 		unset($data['csrf_name']);
 		unset($data['csrf_value']);
-		$id = $request->getParam('staraoc_id');
+		$staraoc_id = $request->getParam('staraoc_id');
 
 		$model = new Staraoc();
 		$sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE staraoc_id = :star AND godina = :god AND tip = 2;";
-		$broj = $model->fetch($sql, [':god' => $data['godina'], ':star' => $id])[0]->broj;
+		$broj = $model->fetch($sql, [':god' => $data['godina'], ':star' => $staraoc_id])[0]->broj;
 
 		if ($broj > 0)
 		{
 			$this->flash->addMessage('danger', 'Već postoji zaduženje za odabranu godinu');
-			return $response->withRedirect($this->router->pathFor('zakup', ['id' => $id]));
+			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $staraoc_id]));
 		}
 
 		$validation_rules = [
@@ -62,7 +62,7 @@ class ZakupController extends Controller
 		if ($this->validator->hasErrors())
 		{
 			$this->flash->addMessage('danger', 'Došlo je do greške prilikom zaduživanja kartona.');
-			return $response->withRedirect($this->router->pathFor('zakup', ['id' => $id]));
+			return $response->withRedirect($this->router->pathFor('zakup', ['id' => $staraoc_id]));
 		}
 		else
 		{
@@ -90,7 +90,7 @@ class ZakupController extends Controller
 			$zazduzenje = $model_zaduzenje->find($id);
 			$this->log($this::DODAVANJE, $zazduzenje, ['tip', 'godina'], $zazduzenje);
 			$this->flash->addMessage('success', 'Staraoc je uspešno zadužen odgovarajućim zakupom.');
-			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $id]));
+			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $staraoc_id]));
 		}
 	}
 }

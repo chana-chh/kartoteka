@@ -259,6 +259,16 @@
 				<strong>{{ staraoc.ukupanDugSaReprogramima()|number_format(2, '.', ',') }}</strong>
 			</td>
 		</tr>
+		<tr>
+			<th
+				class="uk-text-success">
+				<strong>Avans</strong>
+			</th>
+			<td
+				class="uk-text-success uk-text-right">
+				<strong>{{ staraoc.avans|number_format(2, '.', ',') }}</strong>
+			</td>
+		</tr>
 	</table>
 
 <h2 class="uk-text-right">Iznos razduženja</h2>
@@ -307,6 +317,7 @@
   var poruka = document.getElementById("poruka");
   var uplata_iznos = document.getElementById("uplata_iznos");
   var sub = false;
+  var avans = parseFloat({{ staraoc.avans }});
 
   document.getElementById("prosledi_formu").addEventListener("click", function () {
     if (sub) {

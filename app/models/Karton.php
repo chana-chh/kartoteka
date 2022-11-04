@@ -235,6 +235,11 @@ class Karton extends Model
 
     public function dug()
     {
+        return $this->dugZaTakse() + $this->dugZaZakupe() + $this->dugZaRacune();
+    }
+
+    public function dugSaReprogramima()
+    {
         return $this->dugZaTakse() + $this->dugZaZakupe() + $this->dugZaRacune() + $this->dugZaReprograme();
     }
 
