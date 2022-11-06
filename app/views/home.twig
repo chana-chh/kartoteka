@@ -1,97 +1,182 @@
 {% extends "templates/app.twig" %}
 
 {% block sadrzaj %}
-<style>
-  
-  .ikonica {
-  position: relative;
-  top: -2px;
-}
-</style>
-<div class="uk-text-center">
-	<img src="{{ base_url() }}/img/jkp_sumadija.jpg" alt="JKP Sumadija Kragujevac" height="280" width="280">
-</div>
-<div class="uk-child-width-1-2@s uk-grid-collapse uk-text-center" uk-grid>
-    <div>
-        <div class="uk-tile uk-tile-muted">
-            <a href="{{ path_for('kartoni') }}"><img src="{{ base_url() }}/img/kartoni.png" alt="Kartoni" height="150" width="150"></a>
-            <p class="uk-h4 uk-text-primary">KARTONI <em>({{kartoni}})</em></p>
-        </div>
-    </div>
-    <div>
-        <div class="uk-tile uk-tile-muted">
-            <a href="{{ path_for('raspored') }}"><img src="{{ base_url() }}/img/raspored.png" alt="Raspored" height="150" width="150"></a>
-            <p class="uk-h4 uk-text-primary">RASPORED</p>
-        </div>
-    </div>
-    <div>
-        <div class="uk-tile uk-tile-muted">
-            <a href="{{ path_for('staraoci') }}"><img src="{{ base_url() }}/img/staraoci.png" alt="Staraoci" height="150" width="150"></a>
-            <p class="uk-h4 uk-text-primary">STARAOCI <em>({{staraoci}})</em></p>
-        </div>
-    </div>
-    <div>
-        <div class="uk-tile uk-tile-muted">
-            <a href="{{ path_for('pokojnici') }}"><img src="{{ base_url() }}/img/pokojnici.png" alt="Pokojnici" height="150" width="150"></a>
-            <p class="uk-h4 uk-text-primary">POKOJNICI <em>({{pokojnici}})</em></p>
-        </div>
-    </div>
-</div>
+	<style>
+
+		.ikonica {
+			position: relative;
+			top: -2px;
+		}
+	</style>
+	<div
+		class="uk-text-center">
+		<img
+			src="{{ base_url() }}/img/jkp_sumadija.jpg" alt="JKP Sumadija Kragujevac"
+			height="280"
+			width="280">
+	</div>
+	<div
+		class="uk-child-width-1-2@s uk-grid-collapse uk-text-center"
+		uk-grid>
+		<div>
+			<div
+				class="uk-tile uk-tile-muted">
+				<a
+					href="{{ path_for('kartoni') }}"><img
+						src="{{ base_url() }}/img/kartoni.png" alt="Kartoni"
+						height="150"
+						width="150"></a>
+				<p
+					class="uk-h4 uk-text-primary">KARTONI
+					<em>({{kartoni}})</em>
+				</p>
+			</div>
+		</div>
+		<div>
+			<div
+				class="uk-tile uk-tile-muted">
+				<a
+					href="{{ path_for('raspored') }}"><img
+						src="{{ base_url() }}/img/raspored.png" alt="Raspored"
+						height="150"
+						width="150"></a>
+				<p
+					class="uk-h4 uk-text-primary">RASPORED</p>
+			</div>
+		</div>
+		<div>
+			<div
+				class="uk-tile uk-tile-muted">
+				<a
+					href="{{ path_for('staraoci') }}"><img
+						src="{{ base_url() }}/img/staraoci.png" alt="Staraoci"
+						height="150"
+						width="150"></a>
+				<p
+					class="uk-h4 uk-text-primary">STARAOCI
+					<em>({{staraoci}})</em>
+				</p>
+			</div>
+		</div>
+		<div>
+			<div
+				class="uk-tile uk-tile-muted">
+				<a
+					href="{{ path_for('pokojnici') }}"><img
+						src="{{ base_url() }}/img/pokojnici.png" alt="Pokojnici"
+						height="150"
+						width="150"></a>
+				<p
+					class="uk-h4 uk-text-primary">POKOJNICI
+					<em>({{pokojnici}})</em>
+				</p>
+			</div>
+		</div>
+	</div>
 {% endblock sadrzaj %}
 {% block traka %}
-<div uk-grid>
-<div class="uk-width-1-1">
-{% if danasnji %}
-<div class="uk-card uk-card-default uk-card-body uk-margin-top uk-padding-small">
-		<h3 class="uk-card-title">Današnji termini:</h3>
-		<ul class="uk-list uk-list-striped">
-	{% for termin in danasnji %}
-		<li>početak {{ termin.start|date('H:i') }}, kraj {{ termin.end|date('H:i') }}, {{ termin.karton().broj() }} <strong>{{ termin.pokojnik().ime }} {{ termin.pokojnik().prezime }}</strong> </li>
-	{% endfor %}
-	</ul>
-</div>
-{% else %}
-	<h3 class="uk-panel uk-background-muted uk-margin-top uk-padding-small">Danas nema zakazanih termina.</h3>
-{% endif %}
-{% if auth.logged %}
- <hr>
-    <div class="uk-float-right">
-        <a href="{{ path_for('raspored.dodavanje') }}" class="uk-button uk-button-primary uk-button-small"><span title="Zakazivanje termina" uk-icon="plus-circle" class="ikonica"></span></a>
-        <a href="{{ path_for('raspored.tabela') }}" class="uk-button uk-button-default uk-button-small"><span title="Tabelarni pregled termina" uk-icon="table" class="ikonica"></span></a>
-        <a href="{{ path_for('raspored.danas') }}" class="uk-button uk-button-default uk-button-small" target="_blank"><span title="Štampanje današnjih termina" uk-icon="print"  class="ikonica"></span></a>
-    </div>
-</div>
-</div>
+	<div
+		uk-grid>
+		<div
+			class="uk-width-1-1">
+			{% if danasnji %}
+				<div
+					class="uk-card uk-card-default uk-card-body uk-margin-top uk-padding-small">
+					<h3
+						class="uk-card-title">Današnji termini:</h3>
+					<ul
+						class="uk-list uk-list-striped">
+						{% for termin in danasnji %}
+							<li>početak
+								{{ termin.start|date('H:i') }}, kraj
+								{{ termin.end|date('H:i') }},
+								{{ termin.karton().broj() }}
+								<strong>{{ termin.pokojnik().ime }}
+									{{ termin.pokojnik().prezime }}</strong>
+							</li>
+						{% endfor %}
+					</ul>
+				</div>
+			{% else %}
+				<h3
+					class="uk-panel uk-background-muted uk-margin-top uk-padding-small">Danas nema zakazanih termina.</h3>
+			{% endif %}
+			{% if auth.logged %}
+				<hr>
+				<div
+					class="uk-float-right">
+					<a
+						href="{{ path_for('raspored.dodavanje') }}" class="uk-button uk-button-primary uk-button-small">
+						<span
+							title="Zakazivanje termina"
+							uk-icon="plus-circle"
+							class="ikonica"></span>
+					</a>
+					<a
+						href="{{ path_for('raspored.tabela') }}" class="uk-button uk-button-default uk-button-small">
+						<span
+							title="Tabelarni pregled termina"
+							uk-icon="table"
+							class="ikonica"></span>
+					</a>
+					<a
+						href="{{ path_for('raspored.danas') }}" class="uk-button uk-button-default uk-button-small"
+						target="_blank">
+						<span
+							title="Štampanje današnjih termina"
+							uk-icon="print"
+							class="ikonica"></span>
+					</a>
+				</div>
+			</div>
+		</div>
 
-<div uk-grid>
-<div class="uk-width-1-1">
-{% if isticu %}
-<div class="uk-card uk-card-default uk-card-body uk-margin-top uk-padding-small">
-        <h3 class="uk-card-title">Računi kojima ističe rok za uplatu:</h3>
-        <ul class="uk-list uk-list-striped">
-    {% for rac in isticu %}
-        <li>{{ rac.datum|date('d/m') }}, uplata do {{ rac.rok|date('d/m') }}, ({{ rac.broj }}) <strong>{{ rac.iznos }}</strong> </li>
-    {% endfor %}
-    </ul>
-</div>
-{% else %}
-    <h3 class="uk-panel uk-background-muted uk-margin-top uk-padding-small">Nema računa koje korisnici moraju da izmire.</h3>
-{% endif %}
-</div>
-</div>
-<div uk-grid>
-<div class="uk-width-1-1">
-    {% if istekli %}
-<div class="uk-card uk-card-default uk-card-body uk-margin-top uk-padding-small">
-        <h3 class="uk-card-title uk-text-danger">Računi kojima je istekao rok za uplatu:</h3>
-        <ul class="uk-list uk-list-striped">
-    {% for racu in istekli %}
-        <li>{{ racu.datum|date('d/m') }}, uplata do {{ racu.rok|date('d/m') }}, ({{ racu.broj }}) <strong>{{ racu.iznos }}</strong> </li>
-    {% endfor %}
-    </ul>
-</div>
-{% endif %}
-</div>
-</div>
-{% endif %}
+		<div
+			uk-grid>
+			<div
+				class="uk-width-1-1">
+				{% if isticu %}
+					<div
+						class="uk-card uk-card-default uk-card-body uk-margin-top uk-padding-small">
+						<h3
+							class="uk-card-title">Računi kojima ističe rok za uplatu:</h3>
+						<ul
+							class="uk-list uk-list-striped">
+							{% for rac in isticu %}
+								<li>{{ rac.datum|date('d.m.Y') }}, uplata do
+									{{ rac.datum_prispeca|date('d.m.Y') }}, ({{ rac.broj }})
+									<strong>{{ rac.iznos }}</strong>
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
+				{% else %}
+					<h3
+						class="uk-panel uk-background-muted uk-margin-top uk-padding-small">Nema računa koje korisnici moraju da izmire.</h3>
+				{% endif %}
+			</div>
+		</div>
+		<div
+			uk-grid>
+			<div
+				class="uk-width-1-1">
+				{% if istekli %}
+					<div
+						class="uk-card uk-card-default uk-card-body uk-margin-top uk-padding-small">
+						<h3
+							class="uk-card-title uk-text-danger">Računi kojima je istekao rok za uplatu:</h3>
+						<ul
+							class="uk-list uk-list-striped">
+							{% for racu in istekli %}
+								<li>{{ racu.datum|date('d.m.Y') }}, uplata do
+									{{ racu.datum_prispeca|date('d.m.Y') }}, ({{ racu.broj }})
+									<strong>{{ racu.iznos }}</strong>
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	{% endif %}
 {% endblock traka %}

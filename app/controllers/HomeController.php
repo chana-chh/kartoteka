@@ -14,28 +14,29 @@ class HomeController extends Controller
 	public function getHome($request, $response)
 	{
 		$model = new Raspored();
-        $danasnji = $model->danas();
+		$danasnji = $model->danas();
 
-        $karton = new Karton();
-        $kartoni = count($karton->all());
+		$karton = new Karton();
+		$kartoni = count($karton->all());
 
-        $pokojnik = new Pokojnik();
-        $pokojnici = count($pokojnik->all());
+		$pokojnik = new Pokojnik();
+		$pokojnici = count($pokojnik->all());
 
-        $staraoc = new Staraoc();
-        $staraoci = count($staraoc->all());
+		$staraoc = new Staraoc();
+		$staraoci = count($staraoc->all());
 
-        $racun = new Racun();
-        $isticu = $racun->rok();
-        $istekli = $racun->istekli();
+		$racun = new Racun();
+		$isticu = $racun->rok();
+		$istekli = $racun->istekli();
 
 		// proveriti prestupnu godinu i srediri tabelu kamate
-		 if (date('L')) {
-            $god = 'prestupna';
-         }else{
-            $god = 'prosta';
-         }
-        
+
+		// if (date('L') === 1) // prestupna godina
+		// {
+		// 	// preuzeti poslednju kamatu
+		// 	// 
+		// }
+
 		$this->render($response, 'home.twig', compact('danasnji', 'kartoni', 'pokojnici', 'staraoci', 'isticu', 'istekli'));
 	}
 

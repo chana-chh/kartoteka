@@ -104,7 +104,6 @@ class StaraociController extends Controller
     {
 
 		// ovde proveriti da li je nesto
-		// dd('postStaraociDodavanje');
 
         $data = $request->getParams();
         unset($data['csrf_name']);
@@ -194,7 +193,6 @@ class StaraociController extends Controller
 		// ovde proveriti da li je jedini aktivan sukorisnik
 		// ako jeste ne dozvoliti promenu statusa aktivan
 		// deljenje sa nulom ako nema njednog aktivnog staraoca
-		// dd('postStaraociIzmena');
 
         $id = (int)$request->getParam('id');
         $id_kartona = (int) $request->getParam('karton_id');

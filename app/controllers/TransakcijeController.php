@@ -111,7 +111,7 @@ class TransakcijeController extends Controller
 
 			if ($ostatak > 0)
 			{
-				dd("Ostatak: {$ostatak}");
+				// dd("Ostatak: {$ostatak}");
 			}
 
 			$visak = [
@@ -188,8 +188,10 @@ class TransakcijeController extends Controller
 
 		/*
 			DODATI BROJ RACUNA
+
+			prilokom zaduzivanja skidati novac sa avansa staraoca
 		*/
-		
+
 		$data = $request->getParams();
 		unset($data['csrf_name']);
 		unset($data['csrf_value']);
@@ -215,7 +217,7 @@ class TransakcijeController extends Controller
 			'godina' => [
 				'required' => true,
 				'min' => $trenutna_godina - 1,
-				'max' => $trenutna_godina + 1,
+				'max' => $trenutna_godina,
 			],
 		];
 
@@ -231,31 +233,20 @@ class TransakcijeController extends Controller
 			$model_karton = new Karton();
 			$model_zaduzenja = new Zaduzenje();
 
-			$taksa =  (float) $data['taksa'];
-			$zakup =  (float) $data['zakup'];
+			$taksa = (float) $data['taksa'];
+			$zakup = (float) $data['zakup'];
 			$godina = (int) $data['godina'];
 			$datum_zaduzenja = date('Y-m-d', strtotime($data['datum_zaduzenja']));
 			$datum_prispeca = date('Y-m-d', strtotime($data['datum_prispeca']));
 
-			$podaci = [
-				':karton_id' => 0,
-				':staraoc_id' => 0,
-				':tip' => 'taksa',
-				':godina' => $godina,
-				':iznos_zaduzeno' => 0,
-				':glavnica' => 0,
-				':iznos_razduzeno' => 0,
-				':razduzeno' => 0,
-				':datum_zaduzenja' => $datum_zaduzenja,
-				':datum_prispeca' => $datum_prispeca,
-				':korisnik_id_zaduzio' => $this->auth->user()->id,
-				':napomena' => "Automatsko zaduživanje za {$godina}. godinu",
-			];
-
 			$kartoni = $model_karton->sviAktivni();
 			$pdo = $model_karton->getDb()->getPDO();
-			$sql = "INSERT INTO `zaduzenja` (karton_id, staraoc_id, tip, iznos_zaduzeno, glavnica, iznos_razduzeno, godina, razduzeno, datum_zaduzenja, datum_prispeca, korisnik_id_zaduzio, napomena)
-                    VALUES (:karton_id, :staraoc_id, :tip, :iznos_zaduzeno, :glavnica, :iznos_razduzeno, :godina, :razduzeno, :datum_zaduzenja, :datum_prispeca, :korisnik_id_zaduzio, :napomena);";
+			$sql = "INSERT INTO `zaduzenja`
+					(karton_id, staraoc_id, tip, godina, iznos_zaduzeno, glavnica, iznos_razduzeno, razduzeno, datum_zaduzenja,
+					datum_razduzenja, datum_prispeca, korisnik_id_zaduzio, korisnik_id_razduzio, napomena, avansno, avans_iznos)
+                    VALUES
+					(:karton_id, :staraoc_id, :tip, :godina, :iznos_zaduzeno, :glavnica, :iznos_razduzeno, :razduzeno, :datum_zaduzenja,
+					:datum_razduzenja, :datum_prispeca, :korisnik_id_zaduzio, :korisnik_id_razduzio, :napomena, :avansno, :avans_iznos);";
 			$stmt = $pdo->prepare($sql);
 
 			$pdo->beginTransaction();
@@ -268,7 +259,10 @@ class TransakcijeController extends Controller
 
 				foreach ($staraoci as $staraoc)
 				{
-					// proveriti da li je zaduzen taksom
+					// ovse se skida sa avansa
+					$avans = $staraoc->avans;
+
+					// proveriti da li je zaduzen taksom za godinu
 					$tip = 1;
 					$sql_taksa = "SELECT COUNT(*) AS br_taksi FROM zaduzenja WHERE karton_id = {$karton->id}
                                     AND staraoc_id = {$staraoc->id} AND tip = {$tip} AND godina = {$godina}";
@@ -279,11 +273,54 @@ class TransakcijeController extends Controller
 						// odrediti taksu
 						$iznos_takse = (float) ($taksa * $br_mesta / $br_staraoca);
 
-						$podaci[':karton_id'] = $karton->id;
-						$podaci[':staraoc_id'] = $staraoc->id;
-						$podaci[':tip'] = 'taksa';
-						$podaci[':iznos_zaduzeno'] = $iznos_takse;
-						$podaci[':glavnica'] = $iznos_takse;
+						$podaci = [
+							':karton_id' => $karton->id,
+							':staraoc_id' => $staraoc->id,
+							':tip' => 'taksa',
+							':godina' => $godina,
+							':iznos_zaduzeno' => $iznos_takse,
+							':glavnica' => $iznos_takse,
+							':iznos_razduzeno' => 0,
+							':razduzeno' => 0,
+							':datum_zaduzenja' => $datum_zaduzenja,
+							':datum_razduzenja' => null,
+							':datum_prispeca' => $datum_prispeca,
+							':korisnik_id_zaduzio' => $this->auth->user()->id,
+							':korisnik_id_razduzio' => null,
+							':napomena' => "Automatsko zaduživanje za {$godina}. godinu",
+							':avansno' => 0,
+							':avans_iznos' => 0,
+						];
+
+						/*
+							1. ako je avans manji od iznos_takse
+								- umanjiti glavnicu za avans
+								- postaviti avans na 0
+							2. ako je avans veci od iznos_takse
+								- razduziti taksu
+								- umanjiti avans za iznos_takse
+						*/
+
+						if ($avans > 0 && $avans < $iznos_takse)
+						{
+							$podaci[':glavnica'] -= $avans;
+							$podaci[':iznos_razduzeno'] = $avans;
+							$podaci[':avans_iznos'] = $avans;
+							$avans = 0;
+							$podaci[':avansno'] = 1;
+						}
+
+						if ($avans > $iznos_takse)
+						{
+							$avans -= $iznos_takse;
+							$podaci[':glavnica'] = 0;
+							$podaci[':avansno'] = 1;
+							$podaci[':iznos_razduzeno'] = $iznos_takse;
+							$podaci[':avans_iznos'] = $iznos_takse;
+							$podaci[':razduzeno'] = 1;
+							$podaci[':datum_razduzenja'] = $datum_zaduzenja;
+							$podaci[':korisnik_id_razduzio'] = $this->auth->user()->id;
+						}
 
 						$stmt->execute($podaci);
 					}
@@ -299,14 +336,63 @@ class TransakcijeController extends Controller
 						// odrediti zakup
 						$iznos_zakupa = (float) ($zakup * $br_mesta / $br_staraoca);
 
-						$podaci[':karton_id'] = $karton->id;
-						$podaci[':staraoc_id'] = $staraoc->id;
-						$podaci[':tip'] = 'zakup';
-						$podaci[':iznos_zaduzeno'] = $iznos_zakupa;
-						$podaci[':glavnica'] = $iznos_zakupa;
+						$podaci = [
+							':karton_id' => $karton->id,
+							':staraoc_id' => $staraoc->id,
+							':tip' => 'zakup',
+							':godina' => $godina,
+							':iznos_zaduzeno' => $iznos_zakupa,
+							':glavnica' => $iznos_zakupa,
+							':iznos_razduzeno' => 0,
+							':razduzeno' => 0,
+							':datum_zaduzenja' => $datum_zaduzenja,
+							':datum_razduzenja' => null,
+							':datum_prispeca' => $datum_prispeca,
+							':korisnik_id_zaduzio' => $this->auth->user()->id,
+							':korisnik_id_razduzio' => null,
+							':napomena' => "Automatsko zaduživanje za {$godina}. godinu",
+							':avansno' => 0,
+							':avans_iznos' => 0,
+							
+						];
+
+						/*
+							1. ako je avans manji od iznos_zakupa
+								- umanjiti glavnicu za avans
+								- postaviti avans na 0
+							2. ako je avans veci od iznos_zakupa
+								- razduziti taksu
+								- umanjiti avans za iznos_zakupa
+						*/
+
+						if ($avans > 0 && $avans < $iznos_zakupa)
+						{
+							$podaci[':glavnica'] -= $avans;
+							$podaci[':iznos_razduzeno'] = $avans;
+							$podaci[':avans_iznos'] = $avans;
+							$avans = 0;
+							$podaci[':avansno'] = 1;
+						}
+
+						if ($avans > $iznos_zakupa)
+						{
+							$avans -= $iznos_zakupa;
+							$podaci[':glavnica'] = 0;
+							$podaci[':avansno'] = 1;
+							$podaci[':avans_iznos'] = $iznos_takse;
+							$podaci[':iznos_razduzeno'] = $iznos_zakupa;
+							$podaci[':razduzeno'] = 1;
+							$podaci[':datum_razduzenja'] = $datum_zaduzenja;
+							$podaci[':korisnik_id_razduzio'] = $this->auth->user()->id;
+						}
 
 						$stmt->execute($podaci);
 					}
+
+					// upisati avans staraoca
+					$model_staroaci = new Staraoc();
+					$sql_avans = "UPDATE staraoci SET avans = {$avans} WHERE id = {$staraoc->id};";
+					$model_staroaci->run($sql_avans);
 				}
 			}
 
@@ -395,15 +481,14 @@ class TransakcijeController extends Controller
 
 			foreach ($racuni as $rn)
 			{
-				// sa kamatom ???
-				$iznos_za_razduzenje += $rn->iznos;
+				$iznos_za_razduzenje += $rn->zaRazduzenje()['ukupno'];
 			}
 		}
 
-		// iznos za uplatu
 		$iznos = (float) $data['uplata_iznos'];
+		$iznos_sa_avansom = $iznos + (float) $staraoc->avans;
 		// razlika uplacenog i potrebnog novca za razduzenje
-		$razlika = round($iznos - round($iznos_za_razduzenje, 2), 2);
+		$razlika = round($iznos_sa_avansom - round($iznos_za_razduzenje, 2), 2);
 
 		// podaci za uplatu
 		$uplata_data = [
@@ -416,9 +501,7 @@ class TransakcijeController extends Controller
 			'korisnik_id' => $korisnik_id,
 		];
 
-		// Trenutno nije moguce delimicno razduzivanje - visak novca ide na avans
-
-		if ($razlika < 0) // uplaceno je manje novca od potrebnog
+		if ($razlika < 0) // uplaceno je manje novca od potrebnog za razduzivanje odabranih stavki
 		{
 			$this->flash->addMessage('danger', 'Iznos uplate nije dovoljan za razduživanje odabranih stavki.');
 			return $response->withRedirect($this->router->pathFor('transakcije.razduzivanje', ['id' => $id]));
@@ -438,7 +521,7 @@ class TransakcijeController extends Controller
 			$model_uplata->insert($uplata_data);
 			$uplata_id = $model_uplata->getLastId();
 			$uplata = $model_uplata->find($uplata_id);
-			// za privrmeni saldo
+			// za avans
 			$rzl = ($razlika <= 0) ? 0 : $razlika;
 			// Upisuje se visak novca u privremeni saldo staraoca i id uplate koja sadrzi visak novca
 			$sql = "UPDATE staraoci SET avans = avans + {$rzl}, uplata_id = {$uplata_id} WHERE id = {$id};";
