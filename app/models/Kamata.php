@@ -79,4 +79,21 @@ class Kamata extends Model
             return DateTime::createFromFormat($format, $this->datum)->format('Y');
         }
     }
+
+
+    public function sredi()
+    {
+    	$sql = "SELECT * from {$this->table} order by datum DESC limit 1";
+    	$poslednja = $this->fetch($sql)[0];
+    	$d = 365;
+    	if (date('L') === 1){
+    		$d = 366;
+    	}
+    	if($poslednja->godina() <= date('Y')){
+    		$sqlb = "UPDATE {$this->table}
+			SET dani = {$d}
+			WHERE id = {$poslednja->id}";
+			$this->run($sqlb);
+    	}
+    }
 }

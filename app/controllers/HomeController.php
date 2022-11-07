@@ -8,6 +8,7 @@ use App\Models\Pokojnik;
 use App\Models\Staraoc;
 use App\Models\Racun;
 use App\Models\Cena;
+use App\Models\Kamata;
 
 class HomeController extends Controller
 {
@@ -29,13 +30,8 @@ class HomeController extends Controller
 		$isticu = $racun->rok();
 		$istekli = $racun->istekli();
 
-		// proveriti prestupnu godinu i srediri tabelu kamate
-
-		// if (date('L') === 1) // prestupna godina
-		// {
-		// 	// preuzeti poslednju kamatu
-		// 	// 
-		// }
+		$kamata = new Kamata();
+		$poslednja = $kamata->sredi();
 
 		$this->render($response, 'home.twig', compact('danasnji', 'kartoni', 'pokojnici', 'staraoci', 'isticu', 'istekli'));
 	}
