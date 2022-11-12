@@ -22,7 +22,6 @@ class RacuniController extends Controller
 
 		// uracunati avans ako postoji
 
-
 		$data = $request->getParams();
 		unset($data['csrf_name']);
 		unset($data['csrf_value']);

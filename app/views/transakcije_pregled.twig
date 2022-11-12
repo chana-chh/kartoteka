@@ -48,64 +48,67 @@
 				class="uk-float-right">
 				<div
 					class="uk-button-group">
-					<button
-						class="uk-button uk-button-primary uk-button-small">Zaduživanje</button>
-					<div
-						class="uk-inline">
+					{% if staraoc.imaAvansNerazduzen() == false %}
 						<button
-							class="uk-button uk-button-primary uk-button-small"
-							type="button">
-							<span
-								uk-icon="icon:  triangle-down"></span>
-						</button>
+							class="uk-button uk-button-primary uk-button-small">Zaduživanje</button>
 						<div
-							uk-dropdown="mode: click; boundary: ! .uk-button-group; boundary-align: true;">
-							<ul
-								class="uk-nav uk-dropdown-nav">
-								<li>
-									<a
-										href="{{ path_for('taksa', { id: staraoc.id }) }}">
-										<span
-											uk-icon="bookmark"></span>&emsp;Zaduži taksu
-									</a>
-								</li>
-								<li>
-									<a
-										href="{{ path_for('zakup', { id: staraoc.id }) }}">
-										<span
-											uk-icon="bookmark"></span>&emsp;Zaduži zakup
-									</a>
-								</li>
-								<li>
-									<a
-										href="{{ path_for('racun', { id: staraoc.id }) }}">
-										<span
-											uk-icon="bookmark"></span>&emsp;Zaduži račun
-									</a>
-								</li>
-							</ul>
+							class="uk-inline">
+							<button
+								class="uk-button uk-button-primary uk-button-small"
+								type="button">
+								<span
+									uk-icon="icon:  triangle-down"></span>
+							</button>
+							<div
+								uk-dropdown="mode: click; boundary: ! .uk-button-group; boundary-align: true;">
+								<ul
+									class="uk-nav uk-dropdown-nav">
+									<li>
+										<a
+											href="{{ path_for('taksa', { id: staraoc.id }) }}">
+											<span
+												uk-icon="bookmark"></span>&emsp;Zaduži taksu
+										</a>
+									</li>
+									<li>
+										<a
+											href="{{ path_for('zakup', { id: staraoc.id }) }}">
+											<span
+												uk-icon="bookmark"></span>&emsp;Zaduži zakup
+										</a>
+									</li>
+									<li>
+										<a
+											href="{{ path_for('racun', { id: staraoc.id }) }}">
+											<span
+												uk-icon="bookmark"></span>&emsp;Zaduži račun
+										</a>
+									</li>
+								</ul>
+							</div>
 						</div>
-					</div>
-					<a
-						href="{{ path_for('transakcije.razduzivanje', { id: staraoc.id }) }}" class="uk-button uk-button-primary uk-button-small">
-						<span
-							uk-icon="database"
-							class="ikonica"></span>
-						Razduživanje
-					</a>
+						<a
+							href="{{ path_for('transakcije.razduzivanje', { id: staraoc.id }) }}" class="uk-button uk-button-primary uk-button-small">
+							<span
+								uk-icon="database"
+								class="ikonica"></span>
+							Razduživanje
+						</a>
+					{% endif %}
+
 					<a
 						href="{{ path_for('uplate', { id: staraoc.id }) }}" class="uk-button uk-button-primary uk-button-small">
 						<span
 							class="uk-badge">{{broj_uplata}}</span>
 						Pregled uplata
 					</a>
-					<a
-						href="{{ path_for('transakcije.reprogrami', { id: staraoc.id }) }}" class="uk-button uk-button-primary uk-button-small">
-						<span
-							uk-icon="refresh"
-							class="ikonica"></span>
-						Reprogrami
-					</a>
+					{# <a
+							href="{{ path_for('transakcije.reprogrami', { id: staraoc.id }) }}" class="uk-button uk-button-primary uk-button-small">
+							<span
+								uk-icon="refresh"
+								class="ikonica"></span>
+							Reprogrami
+						</a> #}
 					<a
 						href="{{ path_for('transakcije.pregled.stampa', { id: staraoc.id }) }}" target="_blank"
 						class="uk-button uk-button-primary uk-button-small">
@@ -128,13 +131,13 @@
 				din</h2>
 			{% if visak.br_taksi > 0 %}
 				<p
-					class="uk-text-primary">Razdužiće se [{{ visak.br_taksi }}] taksa za
+					class="uk-text-primary">Razdužiće se [{{ visak.br_taksi }}] taksa-e za
 					{{ visak.godine_taksi }}
 					god.</p>
 			{% endif %}
 			{% if visak.br_zakupa > 0 %}
 				<p
-					class="uk-text-primary">Razdužiće se [{{ visak.br_zakupa }}] zakup za
+					class="uk-text-primary">Razdužiće se [{{ visak.br_zakupa }}] zakup-a za
 					{{ visak.godine_zakupa }}
 					god.</p>
 			{% endif %}
@@ -148,7 +151,27 @@
 					{{ visak.deo|number_format(2, '.', ',') }}
 					din.</p>
 			{% endif %}
-			
+			{% if visak.br_racuna > 0 %}
+				<p
+					class="uk-text-primary">Razdužiće se [{{ visak.br_racuna }}] račun-a sa brojevima
+					{{ visak.brojevi_racuna }}</p>
+			{% endif %}
+			{% if visak.deo_racuna > 0 %}
+				<p
+					class="uk-text-primary">Razdužiće se delimično račun broj
+					{{ visak.broj_racuna }}
+					za iznos od
+					{{ visak.deo_racuna|number_format(2, '.', ',') }}
+					din.</p>
+			{% endif %}
+
+			{% if visak.ostatak > 0 %}
+				<p
+					class="uk-text-primary">Preostali iznos od
+					{{ visak.ostatak|number_format(2, '.', ',') }} din.
+					će biti upisan na avans staraoca.</p>
+			{% endif %}
+
 			<form
 				action="{{ path_for('transakcije.visak') }}" method="POST">
 				{{ csrf|raw }}

@@ -32,15 +32,16 @@ class TransakcijeController extends Controller
 		// sloziti po godinama ASC
 		// krenuti redom i smanjivati iznos
 		// razduzivati stare godine
-		// ako nema vise sarih godin zaduzivati/razduzivati nove - ovo ne
+		// akose sve razduzi i preostane para, visak se upisuje u avans staraoca
 		// od toga napraviti izvestaj
+
 		// istu foru koristiti kod razduzivanja viska para
 
 
 		// dodati racune !!!
 
 		$visak = [];
-		if ($staraoc->avans > 0 && $staraoc->aktivan == 1)
+		if ($staraoc->imaAvansNerazduzen() && $staraoc->aktivan == 1)
 		{
 			// sva nerazduzena zaduzenja
 			$zaduzenja = $staraoc->zaduzenaZaduzenja();
@@ -51,6 +52,7 @@ class TransakcijeController extends Controller
 			$iznos = (float) $staraoc->avans;
 			// ostatak viska
 			$ostatak = $iznos;
+
 
 			// pocetni parametri
 
@@ -69,13 +71,26 @@ class TransakcijeController extends Controller
 			// godine zakupa koji mogu celi da se razduze
 			$godine_zakupa = '';
 
-			// razduzivanje zaduzenih taksi i zakupa
+			// racuni (ako ostane para posle razduzivanja taksi i zakupa)
+			// broj celih racuna koji mogu da se razduze
+			$br_racuna = 0;
+			// iznos delimicnog razduzenja racuna
+			$deo_racuna = 0;
+			// broj racuna za delimicno razduzivanje
+			$broj_racuna = '';
+			// brojevi racuna koji mogu celi da se razduze
+			$brojevi_racuna = '';
+
+			// ostatak posle razduzivanja svih taksi, zakupa i racuna
+			$ost = 0;
+
+			// 1. razduzivanje zaduzenih taksi i zakupa
 			foreach ($zaduzenja as $zad)
 			{
 				$iznos = $ostatak;
 				$razlika = (float) $ostatak - $zad->zaRazduzenje()['ukupno'];
 
-				if ($razlika < 0)
+				if ($razlika < 0) // ako je delimicno razduzenje
 				{
 					$deo = $iznos;
 					$vrsta = $zad->tip;
@@ -85,13 +100,13 @@ class TransakcijeController extends Controller
 				}
 				else
 				{
-					if ($zad->tip === 'taksa')
+					if ($zad->tip === 'taksa') // ako se razduzuje cela taksa
 					{
 						$br_taksi++;
 						$godine_taksi .= ', ' . $zad->godina;
 						$ostatak = $razlika;
 					}
-					elseif ($zad->tip === 'zakup')
+					elseif ($zad->tip === 'zakup') // ako se razduzuje ceo zakup
 					{
 						$br_zakupa++;
 						$godine_zakupa .= ', ' . $zad->godina;
@@ -100,18 +115,28 @@ class TransakcijeController extends Controller
 				}
 			}
 
-			// dovde je za stare dugove
-
-
-			// ako postoji ostatak prelazi se na razduzivanje racuna
-
-
-
-			// ako postoji ostatak upisuje se u avans !!!
-
+			// 2. ako postoji ostatak prelazi se na razduzivanje racuna
 			if ($ostatak > 0)
 			{
-				// dd("Ostatak: {$ostatak}");
+				foreach ($racuni as $rn)
+				{
+					$iznos = $ostatak;
+					$razlika = (float) $ostatak - $rn->zaRazduzenje()['ukupno'];
+
+					if ($razlika < 0) // ako je delimicno razduzenje
+					{
+						$deo_racuna = $iznos;
+						$broj_racuna = $rn->broj;
+						$ostatak = 0;
+						break;
+					}
+					else
+					{
+						$br_racuna++;
+						$brojevi_racuna .= ', ' . $rn->broj;
+						$ostatak = $razlika;
+					}
+				}
 			}
 
 			$visak = [
@@ -122,6 +147,11 @@ class TransakcijeController extends Controller
 				'godina' => $godina,
 				'vrsta' => $vrsta,
 				'deo' => round($deo, 2),
+				'br_racuna' => $br_racuna,
+				'deo_racuna' => round($deo_racuna, 2),
+				'broj_racuna' => $broj_racuna,
+				'brojevi_racuna' => trim($brojevi_racuna, ','),
+				'ostatak' => round($ostatak > 0 ? $ostatak : 0, 2), // ostatak posle razduzenja svega
 			];
 		}
 
@@ -184,7 +214,15 @@ class TransakcijeController extends Controller
 
 	public function postZaduzivanje($request, $response)
 	{
-		// onemoguciti zaduzivanje i razduzivanje neaktivnih staraoca
+		// TODO: ako postoji nerazduzeni avansi onemoguciti zaduzivanje !!!
+
+		$staraoci_sa_nerazduzenim_avansom = count((new Staraoc())->sviSaraociSaNerazduzenimAvansom());
+
+		if ($staraoci_sa_nerazduzenim_avansom > 0)
+		{
+			$this->flash->addMessage('danger', 'Postoje staraoci koji imaju avans i nerazdužena zaduženja!');
+			return $response->withRedirect($this->router->pathFor('transakcije.zaduzivanje'));
+		}
 
 		/*
 			DODATI BROJ RACUNA
@@ -353,7 +391,7 @@ class TransakcijeController extends Controller
 							':napomena' => "Automatsko zaduživanje za {$godina}. godinu",
 							':avansno' => 0,
 							':avans_iznos' => 0,
-							
+
 						];
 
 						/*
@@ -409,15 +447,8 @@ class TransakcijeController extends Controller
 
 	public function postUplata($request, $response)
 	{
-		/*
-			AVANS moze da postoji samo ako je sve razduzeno inace ide na razduzenje/delimicno razduzivanje necega
 
-			Kod UPLATE
-				- moze da razduzi cele godine/racune za tacan iznos
-				- moze da razduzi sve godine/racune za tacan iznos
-				- moze da razduzi sve godine/racune za veci iznos (ide na avans)
-				- moze da razduzi neke godine/racune za veci iznos (ide na razduzivanje/delimicno razduzivanje necega). Cega ???
-		*/
+		// TODO: ako postoji nerazduzeni avans onemoguciti uplatu (razduzenje) !!!
 
 		$data = $request->getParams();
 		$id = $data['staraoc_id'];
@@ -472,7 +503,7 @@ class TransakcijeController extends Controller
 			}
 		}
 
-		// racuni bez kamate
+		// racuni sa kamatom
 		if (!empty($racuni_data))
 		{
 			$rac = implode(", ", $racuni_data);
@@ -486,22 +517,11 @@ class TransakcijeController extends Controller
 		}
 
 		$iznos = (float) $data['uplata_iznos'];
-		$iznos_sa_avansom = $iznos + (float) $staraoc->avans;
 		// razlika uplacenog i potrebnog novca za razduzenje
-		$razlika = round($iznos_sa_avansom - round($iznos_za_razduzenje, 2), 2);
+		$razlika = round($iznos - round($iznos_za_razduzenje, 2), 2);
 
-		// podaci za uplatu
-		$uplata_data = [
-			'karton_id' => $staraoc->karton()->id,
-			'staraoc_id' => $staraoc->id,
-			'iznos' => $iznos,
-			'datum' => $data['uplata_datum'],
-			'priznanica' => $data['uplata_priznanica'],
-			'napomena' => $data['uplata_napomena'],
-			'korisnik_id' => $korisnik_id,
-		];
-
-		if ($razlika < 0) // uplaceno je manje novca od potrebnog za razduzivanje odabranih stavki
+		// uplaceno je manje novca od potrebnog za razduzivanje odabranih stavki
+		if ($razlika < 0)
 		{
 			$this->flash->addMessage('danger', 'Iznos uplate nije dovoljan za razduživanje odabranih stavki.');
 			return $response->withRedirect($this->router->pathFor('transakcije.razduzivanje', ['id' => $id]));
@@ -516,15 +536,29 @@ class TransakcijeController extends Controller
 		{
 			// upisivanje uplate i razduzivanje cekiranih stavki
 
+			// visak uplate za dodavanje na avans
+			$visak_uplate = $razlika > 0 ? $razlika : 0;
+
+			// podaci za uplatu
+			$uplata_data = [
+				'karton_id' => $staraoc->karton()->id,
+				'staraoc_id' => $staraoc->id,
+				'iznos' => $iznos,
+				'avans' => $visak_uplate,
+				'datum' => $data['uplata_datum'],
+				'priznanica' => $data['uplata_priznanica'],
+				'napomena' => $data['uplata_napomena'],
+				'korisnik_id' => $korisnik_id,
+			];
+
 			// Upisivanje uplate
 			$model_uplata = new Uplata();
 			$model_uplata->insert($uplata_data);
 			$uplata_id = $model_uplata->getLastId();
 			$uplata = $model_uplata->find($uplata_id);
-			// za avans
-			$rzl = ($razlika <= 0) ? 0 : $razlika;
-			// Upisuje se visak novca u privremeni saldo staraoca i id uplate koja sadrzi visak novca
-			$sql = "UPDATE staraoci SET avans = avans + {$rzl}, uplata_id = {$uplata_id} WHERE id = {$id};";
+
+			// Dodaje se visak uplate na avans staraoca
+			$sql = "UPDATE staraoci SET avans = avans + {$visak_uplate} WHERE id = {$id};";
 			$staraoc->run($sql);
 
 			$data_za_razduzenje = [
@@ -550,15 +584,19 @@ class TransakcijeController extends Controller
 				}
 			}
 
-			// ako ostane bez kamate onda moze ovako - inace mora da se prodje kroz ceo niz i izvrsi razduzivanje
 			if (!empty($racuni_data))
 			{
+				// svi racuni koji se razduzuju
 				$rac = implode(", ", $racuni_data);
-				$sql = "UPDATE racuni
-                        SET razduzeno = 1, datum_razduzenja = CURDATE(), korisnik_id_razduzio = {$korisnik_id},
-						uplata_id = {$uplata_id}
-                        WHERE id IN ($rac);";
-				$model_uplata->run($sql);
+				$sql = "SELECT * FROM racuni WHERE id IN ($zad);";
+				$racuni = $model_racun->fetch($sql);
+
+				foreach ($racuni as $rn)
+				{
+					$data_za_razduzenje['iznos_razduzeno'] = $rn->zaRazduzenje()['ukupno'];
+					$rid = (int) $rn->id;
+					$model_racun->update($data_za_razduzenje, $rid);
+				}
 			}
 
 			// logovanje

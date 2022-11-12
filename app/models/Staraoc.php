@@ -313,4 +313,21 @@ class Staraoc extends Model
 
 		return $ima_avans && $ima_dug;
 	}
+
+	public function sviSaraociSaNerazduzenimAvansom()
+	{
+		$sql = "SELECT * FROM staraoci WHERE avans > 0;";
+		$staraoci = $this->fetch($sql);
+		$rez=[];
+
+		foreach ($staraoci as $staraoc)
+		{
+			if ($staraoc->ukupanDug() > 0)
+			{
+				$rez[] = $staraoc;
+			}
+		}
+
+		return $rez;
+	}
 }

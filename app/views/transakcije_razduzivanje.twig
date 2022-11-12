@@ -308,6 +308,38 @@
 </div>
 {% endblock traka %}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 {% block skripta %}
 <script>
   var razduzenje = document.getElementById("razduzenje");
@@ -317,7 +349,10 @@
   var poruka = document.getElementById("poruka");
   var uplata_iznos = document.getElementById("uplata_iznos");
   var sub = false;
-  var avans = parseFloat({{ staraoc.avans }});
+
+  // avans
+  // kako racunati???
+  // var avans = parseFloat({{ staraoc.avans }});
 
   document.getElementById("prosledi_formu").addEventListener("click", function () {
     if (sub) {
@@ -338,7 +373,7 @@
     }
 	else if (polje_razduzenje == 0 && polje_uplata > 0)
     {
-      poruka.innerHTML = "Nije odabrana/čekirana nijedna stavka za razduženje!<br>Iznos uplate se upisuje u privremeni saldo!";
+      poruka.innerHTML = "Nije odabrana/čekirana nijedna stavka za razduženje!<br>Iznos uplate će se upisati u avans!";
       sub = true;
     }
     else if (polje_uplata === polje_razduzenje)
@@ -348,7 +383,7 @@
     }
     else if (polje_uplata > polje_razduzenje)
     {
-      poruka.innerHTML = "Uplata je veća nego iznos za razduženje.";
+      poruka.innerHTML = "Uplata je veća nego iznos za razduženje.<br>Višak novca će se upisati u avans!";
       sub = true;
     }
     else

@@ -14,7 +14,7 @@ class Kamata extends Model
 	{
 		$sql = "SELECT * FROM kamate WHERE datum > :od AND datum < :do ORDER BY datum ASC;";
 		$kamate = $this->fetch($sql, [':od' => $od, ':do' => $do]);
-		
+
 		$rez = []; // od, do, dana, procenat, godina
 
 		$dat_od = new DateTime($od);
@@ -22,14 +22,14 @@ class Kamata extends Model
 		$procenat = 0;
 		$godina = 0;
 
-		if(empty($kamate))
+		if (empty($kamate))
 		{
 			return $rez;
 		}
 
 		foreach ($kamate as $k)
 		{
-			
+
 			$dat_do = new DateTime($k->datum);
 			$razlika = $dat_do->diff($dat_od);
 			$procenat = $k->procenat;
@@ -60,40 +60,48 @@ class Kamata extends Model
 
 	// vraca datum u obliku ('d.m.Y')
 	public function datum()
-    {
-        $format = 'Y-m-d';
-        if ($this->datum === null) {
-            return "";
-        } else {
-            return DateTime::createFromFormat($format, $this->datum)->format('d.m.Y');
-        }
-    }
+	{
+		$format = 'Y-m-d';
+		if ($this->datum === null)
+		{
+			return "";
+		}
+		else
+		{
+			return DateTime::createFromFormat($format, $this->datum)->format('d.m.Y');
+		}
+	}
 
-    // vraca datum u obliku ('Y')
-    public function godina()
-    {
-        $format = 'Y-m-d';
-        if ($this->datum === null) {
-            return "";
-        } else {
-            return DateTime::createFromFormat($format, $this->datum)->format('Y');
-        }
-    }
+	// vraca datum u obliku ('Y')
+	public function godina()
+	{
+		$format = 'Y-m-d';
+		if ($this->datum === null)
+		{
+			return "";
+		}
+		else
+		{
+			return DateTime::createFromFormat($format, $this->datum)->format('Y');
+		}
+	}
 
 
-    public function sredi()
-    {
-    	$sql = "SELECT * from {$this->table} order by datum DESC limit 1";
-    	$poslednja = $this->fetch($sql)[0];
-    	$d = 365;
-    	if (date('L') === 1){
-    		$d = 366;
-    	}
-    	if($poslednja->godina() <= date('Y')){
-    		$sqlb = "UPDATE {$this->table}
+	public function sredi()
+	{
+		$sql = "SELECT * from {$this->table} order by datum DESC limit 1";
+		$poslednja = $this->fetch($sql)[0];
+		$d = 365;
+		if (date('L') === 1)
+		{
+			$d = 366;
+		}
+		if ($poslednja->godina() <= date('Y'))
+		{
+			$sqlb = "UPDATE {$this->table}
 			SET dani = {$d}
 			WHERE id = {$poslednja->id}";
 			$this->run($sqlb);
-    	}
-    }
+		}
+	}
 }
