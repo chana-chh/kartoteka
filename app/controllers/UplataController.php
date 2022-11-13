@@ -21,9 +21,11 @@ class UplataController extends Controller
 
 	public function postUplataBrisanje($request, $response)
 	{
+		dd('!!! BRISANJE UPLATE TRENUTNO NIJE AKTIVNO !!!');
 		$id = (int) $request->getParam('modal_uplata_id');
 		$uplata = (new Uplata())->find($id);
 		$staraoc_id = $uplata->staraoc()->id;
+		$staraoc = (new Staraoc())->find($staraoc_id);
 
 		if ($this->auth->user()->nivo !== 0)
 		{
@@ -39,6 +41,13 @@ class UplataController extends Controller
 		}
 		else
 		{
+			
+			// TODO: proveriti brisanje
+
+			// osveziti glavnicu i datum_prispeca !!!
+			// dodati polje stari_datum_prispeca u tabele zaduzenja i racuni
+
+
 			$sql = "UPDATE zaduzenja SET razduzeno = 0, iznos_razduzeno = 0, korisnik_id_razduzio = NULL, uplata_id = NULL
 					WHERE uplata_id = {$uplata->id}";
 			$uplata->run($sql);
@@ -47,9 +56,16 @@ class UplataController extends Controller
 					WHERE uplata_id = {$uplata->id}";
 			$uplata->run($sql);
 
-			// ovde da se oduzme avans staraoca
-			// $sql = "UPDATE staraoci SET uplata_id = NULL WHERE uplata_id = {$uplata->id}";
-			// $uplata->run($sql);
+			// ako je $uplata->visak == 0 $uplata->avans oduzeti od $staraoc->avans
+			// ako je $uplata->visak == 1 $uplata->avans dodati na $staraoc->avans
+			if ($uplata->visak == 0)
+			{
+				$staraoc->update(['avans' => $staraoc->avans - $uplata->iznos], $staraoc_id);
+			}
+			else
+			{
+				$staraoc->update(['avans' => $staraoc->avans + $uplata->iznos], $staraoc_id);
+			}
 		}
 
 		$success = $uplata->deleteOne($id);
@@ -69,10 +85,8 @@ class UplataController extends Controller
 
 	public function postVisak($request, $response)
 	{
-		dd('RASPOREDJIVANJE VISKA');
 		$id = (int) $request->getParam('staraoc_id');
 		$staraoc = (new Staraoc())->find($id);
-
 
 		// bez zaduzivanja u buducnost
 		// kako vratiti nazad tj ponistiti automatsko razduzivanje???
@@ -97,7 +111,6 @@ class UplataController extends Controller
 				'visak' => 1,
 			]);
 			$uplata_id = $model_uplata->getLastId();
-			$uplata = $model_uplata->find($uplata_id);
 
 			// sva nerazduzena zaduzenja
 			$zaduzenja = $staraoc->zaduzenaZaduzenja();
@@ -121,6 +134,7 @@ class UplataController extends Controller
 						'iznos_razduzeno' => $zad->iznos_razduzeno + $iznos,
 						'datum_prispeca' => date('Y-m-d'),
 						'napomena' => $zad->napomena . "\nautomatsko razduživanje viška uplate",
+						'uplata_id' => $uplata_id,
 					], $zad->id);
 					$ostatak = 0;
 					break;
@@ -135,6 +149,7 @@ class UplataController extends Controller
 						'datum_razduzenja' => date('Y-m-d'),
 						'korisnik_id_razduzio' => $this->auth->user()->id,
 						'napomena' => $zad->napomena . "\nautomatsko razduživanje viška uplate",
+						'uplata_id' => $uplata_id,
 					], $zad->id);
 				}
 			}
@@ -150,26 +165,28 @@ class UplataController extends Controller
 					if ($razlika < 0) // ako je delimicno razduzenje
 					{
 						// delimcno razduzenje racuna
-						/*
-							- umanjiti glavnicu za $iznos
-							- uvecati iznos_razduzeno za $iznos
-							- resetovati datum_prispeca na trenutni datum
-							- dodati napomenu
-						*/
+						$rn->update([
+							'glavnica' => $rn->glavnica - $iznos,
+							'iznos_razduzeno' => $rn->iznos_razduzeno + $iznos,
+							'datum_prispeca' => date('Y-m-d'),
+							'napomena' => $rn->napomena . "\nautomatsko razduživanje viška uplate",
+							'uplata_id' => $uplata_id,
+						], $rn->id);
 						$ostatak = 0;
 						break;
 					}
 					else
 					{
 						// potpino razduzenje racuna
-						/*
-							- postaviti glavnicu na 0
-							- postaviti iznos_razduzeno na iznos
-							- postaviti razduzeno na 1
-							- postaviti datum_razduzenja na trenutni datum
-							- postaviti korisnik_id_razduzio na trenutnog korisnika
-							- dodati napomenu
-						*/
+						$rn->update([
+							'glavnica' => 0,
+							'iznos_razduzeno' => $rn->iznos,
+							'razduzeno' => 1,
+							'datum_razduzenja' => date('Y-m-d'),
+							'korisnik_id_razduzio' => $this->auth->user()->id,
+							'napomena' => $rn->napomena . "\nautomatsko razduživanje viška uplate",
+							'uplata_id' => $uplata_id,
+						], $rn->id);
 					}
 				}
 			}

@@ -89,19 +89,20 @@ class Kamata extends Model
 
 	public function sredi()
 	{
-		$sql = "SELECT * from {$this->table} order by datum DESC limit 1";
-		$poslednja = $this->fetch($sql)[0];
-		$d = 365;
-		if (date('L') === 1)
-		{
-			$d = 366;
-		}
-		if ($poslednja->godina() <= date('Y'))
-		{
-			$sqlb = "UPDATE {$this->table}
-			SET dani = {$d}
-			WHERE id = {$poslednja->id}";
-			$this->run($sqlb);
-		}
+		// mora da se doda novi zapis
+		// $sql = "SELECT * from {$this->table} order by datum DESC limit 1";
+		// $poslednja = $this->fetch($sql)[0];
+		// $d = 365;
+		// if (date('L') === 1)
+		// {
+		// 	$d = 366;
+		// }
+		// if ($poslednja->godina() <= date('Y'))
+		// {
+		// 	$sqlb = "UPDATE {$this->table}
+		// 	SET dani = {$d}
+		// 	WHERE id = {$poslednja->id}";
+		// 	$this->run($sqlb);
+		// }
 	}
 }

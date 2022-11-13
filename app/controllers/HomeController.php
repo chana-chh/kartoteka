@@ -30,8 +30,7 @@ class HomeController extends Controller
 		$isticu = $racun->rok();
 		$istekli = $racun->istekli();
 
-		$kamata = new Kamata();
-		$poslednja = $kamata->sredi();
+		(new Kamata())->sredi();
 
 		$this->render($response, 'home.twig', compact('danasnji', 'kartoni', 'pokojnici', 'staraoci', 'isticu', 'istekli'));
 	}

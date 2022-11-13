@@ -20,3 +20,10 @@ Pre masovnog zaduzivanja u bazi ne sme da postoji nijedan staraoc sa stanjem 4
 
 KOD SVIH TRANSAKCIJA PROVERITI DA LI JE STARAOC AKTIVAN !!!
 
+
+!!! VAZNO !!!
+
+OSMISLITI KAKO DA SE UNESU ZADUZENJA I UPLATE IZ BAZE RACUNOVODSTVA
+POCETNO STANJE
+
+!!! VAZNO !!!
