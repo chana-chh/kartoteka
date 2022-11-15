@@ -126,3 +126,5 @@ Ako ide samo racun onda mozda moze u zajednicku tabelu sa zaduzenjima,a ako se i
 2. STA JE SA PRESTUPNOM GODINOM (pretpostavljam da se sece na deo dana u prestupnoj i deo dana u neprestupnim)
 	dodati broj dana sa kojim se deli. Preseci datum kamate od 1. januara (automatski, npr. kada se ucita pocetna strana)
 3. RACUNI I REPROGRAMI KAMATA?
+
+
