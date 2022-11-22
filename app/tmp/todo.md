@@ -1,5 +1,25 @@
 
 
+
+# TODO
+
+
+BRISANJE UPLATE:
+
+- dodati stari datum_prispeca
+- brisanje samo poslednje uplate
+
+
+
+
+
+
+
+
+
+
+
+
 Zorica Simovic 060 234 1004
 
 
