@@ -8,12 +8,14 @@ BRISANJE UPLATE:
 
 - dodati stari datum_prispeca
 - dodati staru glavnicu
+
 - brisanje samo poslednje uplate
 
 
 UPLATA
 
-- datum uplate ne moze biti stariji od poslednje uplate
+- datum uplate ne moze biti stariji od poslednje uplate ???
+- u ukupnom iznosu uplata ne racunati visak = 1
 
 
 

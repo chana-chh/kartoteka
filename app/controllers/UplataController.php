@@ -22,6 +22,12 @@ class UplataController extends Controller
 	public function postUplataBrisanje($request, $response)
 	{
 		dd('!!! BRISANJE UPLATE TRENUTNO NIJE AKTIVNO !!!');
+
+		// brise se samo poslednja uplata
+		// sta je sa avansom kad se brise uplata ???
+		// onemoguciti brisanje uplate kada postoji nerazduzeni avans ili
+		// vratiti avans staraocu ???
+
 		$id = (int) $request->getParam('modal_uplata_id');
 		$uplata = (new Uplata())->find($id);
 		$staraoc_id = $uplata->staraoc()->id;
@@ -41,18 +47,17 @@ class UplataController extends Controller
 		}
 		else
 		{
-			
-			// TODO: proveriti brisanje
-
-			// osveziti glavnicu i datum_prispeca !!!
-			// dodati polje stari_datum_prispeca u tabele zaduzenja i racuni
-
-
-			$sql = "UPDATE zaduzenja SET razduzeno = 0, iznos_razduzeno = 0, korisnik_id_razduzio = NULL, uplata_id = NULL
+			$sql = "UPDATE zaduzenja SET razduzeno = 0, iznos_razduzeno = 0, korisnik_id_razduzio = NULL, uplata_id = NULL,
+							glavnica = poslednja_glavnica, datum_prispeca = poslednji_datum_prispeca, datum_razduzenja = NULL,
+							poslednja_glavnica = 0, poslednji_datum_prispeca = NULL,
+							iznos_razduzeno = iznos_zaduzeno - poslednja_glavnica
 					WHERE uplata_id = {$uplata->id}";
 			$uplata->run($sql);
 
-			$sql = "UPDATE racuni SET razduzeno = 0, korisnik_id_razduzio = NULL, uplata_id = NULL
+			$sql = "UPDATE racuni SET razduzeno = 0, korisnik_id_razduzio = NULL, uplata_id = NULL,
+							glavnica = poslednja_glavnica, datum_prispeca = poslednji_datum_prispeca, datum_razduzenja = NULL,
+							poslednja_glavnica = 0, poslednji_datum_prispeca = NULL,
+							iznos_razduzeno = iznos - poslednja_glavnica
 					WHERE uplata_id = {$uplata->id}";
 			$uplata->run($sql);
 
@@ -87,12 +92,6 @@ class UplataController extends Controller
 	{
 		$id = (int) $request->getParam('staraoc_id');
 		$staraoc = (new Staraoc())->find($id);
-
-		// bez zaduzivanja u buducnost
-		// kako vratiti nazad tj ponistiti automatsko razduzivanje???
-		// posto se razduzuje bez uplate
-		// uplata_id (racuna se kao poseban slucaj uplate - ne ulazi u zbir jer je ovo samo visak postojece uplate)
-		// ovo resiti kasnije (pomocu ovoga moze da se ponisti automatsko razduzivanje preko brisanja ove uplate)
 
 		if ($staraoc->imaAvansNerazduzen() && $staraoc->aktivan == 1)
 		{
@@ -130,6 +129,8 @@ class UplataController extends Controller
 				{
 					// delimcno razduzenje zaduzenja
 					$zad->update([
+						'poslednja_glavnica' => $zad->glavnica,
+						'poslednji_datum_prispeca' => $zad->datum_prispeca,
 						'glavnica' => $zad->glavnica - $iznos,
 						'iznos_razduzeno' => $zad->iznos_razduzeno + $iznos,
 						'datum_prispeca' => date('Y-m-d'),
@@ -143,6 +144,8 @@ class UplataController extends Controller
 				{
 					// potpino razduzenja zaduzenja
 					$zad->update([
+						'poslednja_glavnica' => $zad->glavnica,
+						'poslednji_datum_prispeca' => $zad->datum_prispeca,
 						'glavnica' => 0,
 						'iznos_razduzeno' => $zad->iznos_zaduzeno,
 						'razduzeno' => 1,
@@ -151,6 +154,7 @@ class UplataController extends Controller
 						'napomena' => $zad->napomena . "\nautomatsko razduživanje viška uplate",
 						'uplata_id' => $uplata_id,
 					], $zad->id);
+					$ostatak = $razlika;
 				}
 			}
 
@@ -166,6 +170,8 @@ class UplataController extends Controller
 					{
 						// delimcno razduzenje racuna
 						$rn->update([
+							'poslednja_glavnica' => $rn->glavnica,
+							'poslednji_datum_prispeca' => $rn->datum_prispeca,
 							'glavnica' => $rn->glavnica - $iznos,
 							'iznos_razduzeno' => $rn->iznos_razduzeno + $iznos,
 							'datum_prispeca' => date('Y-m-d'),
@@ -179,6 +185,8 @@ class UplataController extends Controller
 					{
 						// potpino razduzenje racuna
 						$rn->update([
+							'poslednja_glavnica' => $rn->glavnica,
+							'poslednji_datum_prispeca' => $rn->datum_prispeca,
 							'glavnica' => 0,
 							'iznos_razduzeno' => $rn->iznos,
 							'razduzeno' => 1,
@@ -187,6 +195,7 @@ class UplataController extends Controller
 							'napomena' => $rn->napomena . "\nautomatsko razduživanje viška uplate",
 							'uplata_id' => $uplata_id,
 						], $rn->id);
+						$ostatak = $razlika;
 					}
 				}
 			}

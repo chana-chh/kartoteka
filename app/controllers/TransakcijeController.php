@@ -35,11 +35,6 @@ class TransakcijeController extends Controller
 		// akose sve razduzi i preostane para, visak se upisuje u avans staraoca
 		// od toga napraviti izvestaj
 
-		// istu foru koristiti kod razduzivanja viska para
-
-
-		// dodati racune !!!
-
 		$visak = [];
 		if ($staraoc->imaAvansNerazduzen() && $staraoc->aktivan == 1)
 		{
@@ -227,7 +222,7 @@ class TransakcijeController extends Controller
 		/*
 			DODATI BROJ RACUNA
 
-			prilokom zaduzivanja skidati novac sa avansa staraoca
+			prilikom zaduzivanja skidati novac sa avansa staraoca
 		*/
 
 		$data = $request->getParams();
@@ -462,6 +457,8 @@ class TransakcijeController extends Controller
 		unset($data['csrf_value']);
 		unset($data['razduzeno-zaduzenje']);
 		unset($data['razduzeno-racuni']);
+		
+		$staraoc = (new Staraoc())->find($id);
 
 		$validation_rules = [
 			'staraoc_id' => [
@@ -474,6 +471,7 @@ class TransakcijeController extends Controller
 			'uplata_datum' => [
 				'required' => true,
 			],
+			// ovde da se proveri da li je datum uplate isti ili veci od poslednjeg datuma uplate
 		];
 
 		// provera osnovnih podataka za uplatu
@@ -485,7 +483,6 @@ class TransakcijeController extends Controller
 		$racuni = null;
 		$iznos_za_razduzenje = 0;
 
-		$staraoc = (new Staraoc())->find($id);
 		$korisnik_id = $this->auth->user()->id;
 
 		// provera da li je iznos >= sva zaduzenja za razduzivanje
@@ -567,6 +564,7 @@ class TransakcijeController extends Controller
 				'korisnik_id_razduzio' => $korisnik_id,
 				'uplata_id' => $uplata_id,
 				'glavnica' => 0,
+				'datum_prispeca' => null,
 			];
 
 			if (!empty($zaduzenja_data))
@@ -579,6 +577,8 @@ class TransakcijeController extends Controller
 				foreach ($zaduzenja as $zad)
 				{
 					$data_za_razduzenje['iznos_razduzeno'] = $zad->zaRazduzenje()['ukupno'];
+					$data_za_razduzenje['poslednja_glavnica'] = $zad->glavnica;
+					$data_za_razduzenje['poslednji_datum_prispeca'] = $zad->datum_prispeca;
 					$zid = (int) $zad->id;
 					$model_zaduzenje->update($data_za_razduzenje, $zid);
 				}
@@ -588,12 +588,14 @@ class TransakcijeController extends Controller
 			{
 				// svi racuni koji se razduzuju
 				$rac = implode(", ", $racuni_data);
-				$sql = "SELECT * FROM racuni WHERE id IN ($zad);";
+				$sql = "SELECT * FROM racuni WHERE id IN ($rac);";
 				$racuni = $model_racun->fetch($sql);
 
 				foreach ($racuni as $rn)
 				{
 					$data_za_razduzenje['iznos_razduzeno'] = $rn->zaRazduzenje()['ukupno'];
+					$data_za_razduzenje['poslednja_glavnica'] = $rn->glavnica;
+					$data_za_razduzenje['poslednji_datum_prispeca'] = $rn->datum_prispeca;
 					$rid = (int) $rn->id;
 					$model_racun->update($data_za_razduzenje, $rid);
 				}

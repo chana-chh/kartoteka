@@ -38,7 +38,8 @@ class Staraoc extends Model
 
 	public function ukupanIznosUplata()
 	{
-		$sql = "SELECT SUM(iznos) AS iznos_uplata FROM uplate WHERE staraoc_id = {$this->id};";
+		// visak = 1 su fiktivne uplate za razduzivanje viska prave uplate
+		$sql = "SELECT SUM(iznos) AS iznos_uplata FROM uplate WHERE staraoc_id = {$this->id} AND visak = 0;";
 		$iznos = (float) $this->fetch($sql)[0]->iznos_uplata;
 
 		return $iznos;
@@ -158,16 +159,6 @@ class Staraoc extends Model
 		return $this->fetch($sql, null, '\App\Models\Zaduzenje');
 	}
 
-	// ovo je suma delimicnih razduzenja
-	// delimicna razduzenja se sada moraju oduzimati od glavnice zbog racunanja kamate
-	// public function saldoZaTakse()
-	// {
-	//     $sql = "SELECT SUM(iznos_razduzeno) AS saldo FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0 AND iznos_razduzeno > 0
-	//             AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
-	//     $saldo = $this->fetch($sql)[0]->saldo;
-	//     return round((float) $saldo, 2);
-	// }
-
 	public function dugZaTakse()
 	{
 		$takse = $this->zaduzeneTakse();
@@ -183,15 +174,16 @@ class Staraoc extends Model
 
 	// takse zaduzene posle tekuce godine
 	// ovo ne treba da postoji jer nema vise zaduzivanja u buducnost
-	public function taksePosleTekuceGodine()
-	{
-		$god = GOD;
-		$sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0
-                AND godina > {$god} AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
-		$broj = (int) $this->fetch($sql)[0]->broj;
-		return $broj;
-	}
+	// public function taksePosleTekuceGodine()
+	// {
+	// 	$god = GOD;
+	// 	$sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'taksa' AND razduzeno = 0
+    //             AND godina > {$god} AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+	// 	$broj = (int) $this->fetch($sql)[0]->broj;
+	// 	return $broj;
+	// }
 
+	
 	// zakupi
 
 	public function zakupZaGodinu()
@@ -245,18 +237,14 @@ class Staraoc extends Model
 	}
 
 	// ovo ne treba da postoji jer nema vise zaduzivanja u buducnost
-	public function zakupiPosleTekuceGodine()
-	{
-		$god = GOD;
-		$sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0
-                AND godina > {$god} AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
-		$broj = (int) $this->fetch($sql)[0]->broj;
-		return $broj;
-	}
-
-	// racuni
-	// da li se racuna zatezna kamata - postoji rok (darum prispeca)
-	// ako moze da se plati delimicno dodati polje glavnica
+	// public function zakupiPosleTekuceGodine()
+	// {
+	// 	$god = GOD;
+	// 	$sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE tip = 'zakup' AND razduzeno = 0
+    //             AND godina > {$god} AND reprogram_id IS NULL AND karton_id = {$this->karton()->id} AND staraoc_id = {$this->id};";
+	// 	$broj = (int) $this->fetch($sql)[0]->broj;
+	// 	return $broj;
+	// }
 
 	public function racuni()
 	{
