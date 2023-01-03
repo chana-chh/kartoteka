@@ -201,7 +201,8 @@ class KartoniController extends Controller
 		$data['grobno_mesto'] = str_replace('%', '', filter_var($data['grobno_mesto'], FILTER_SANITIZE_STRING));
 		// $parcela = '%' . $data['parcela'] . '%';
 		// $grobno_mesto = '%' . $data['grobno_mesto'] . '%';
-		$grobno_mesto = $data['grobno_mesto'] . '%';
+		// $grobno_mesto = $data['grobno_mesto'] . '%';
+		$grobno_mesto = $data['grobno_mesto'];
 		$aktivan = isset($data['aktivan']) ? 1 : 0;
 		$query = [];
 		parse_str($request->getUri()->getQuery(), $query);
@@ -229,7 +230,7 @@ class KartoniController extends Controller
 			{
 				$where .= " AND ";
 			}
-			$where .= "grobno_mesto LIKE :grobno_mesto";
+			$where .= "grobno_mesto = :grobno_mesto";
 			$params[':grobno_mesto'] = $grobno_mesto;
 		}
 		if ($aktivan === 1)

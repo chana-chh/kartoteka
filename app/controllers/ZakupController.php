@@ -30,6 +30,7 @@ class ZakupController extends Controller
 		unset($data['csrf_name']);
 		unset($data['csrf_value']);
 		$staraoc_id = $request->getParam('staraoc_id');
+		dd($data,false);
 
 		$model = new Staraoc();
 		$sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE staraoc_id = :star AND godina = :god AND tip = 2;";
@@ -51,12 +52,12 @@ class ZakupController extends Controller
 			'datum_zaduzenja' => [
 				'required' => true,
 			],
-			'datum_prispeca' => [
-				'required' => true,
-			],
-			'datum_prispeca' => [ // test radi i za datum
-				'min' => $data['datum_zaduzenja'],
-			],
+			// 'datum_prispeca' => [
+			// 	'required' => true,
+			// ],
+			// 'datum_prispeca' => [ // test radi i za datum
+			// 	'min' => $data['datum_zaduzenja'],
+			// ],
 			'godina' => [
 				'required' => true,
 			],
@@ -90,7 +91,8 @@ class ZakupController extends Controller
 				'iznos_razduzeno' => 0,
 				'razduzeno' => 0,
 				'datum_zaduzenja' => $data['datum_zaduzenja'],
-				'datum_prispeca' => $data['datum_prispeca'],
+				'datum_prispeca' => null,
+				// 'datum_prispeca' => $data['datum_prispeca'],
 				'korisnik_id_zaduzio' => $this->auth->user()->id,
 				'napomena' => $data['napomena'],
 				'avansno' => 0,

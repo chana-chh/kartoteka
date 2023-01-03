@@ -44,8 +44,10 @@
 	<div class="uk-width-1-4">
 		<label for="datum_prispeca" class="uk-form-label">Datum prispeća</label>
 		<div class="uk-form-controls">
-			<input type="date" name="datum_prispeca" id="datum_prispeca" value="{{ old.datum_prispeca ? : 'now'|date('Y-m-d') }}" class="uk-input"
-				autocomplete="off" required>
+			<input type="date" name="datum_prispeca" id="datum_prispeca" class="uk-input"
+				autocomplete="off">
+			{# <input type="date" name="datum_prispeca" id="datum_prispeca" value="{{ old.datum_prispeca ? : 'now'|date('Y-m-d') }}" class="uk-input"
+				autocomplete="off" required> #}
 		</div>
 		<small class=" uk-text-danger">{{ errors.datum_prispeca[0] ? : '' }}</small>
 	</div>

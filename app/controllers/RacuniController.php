@@ -36,6 +36,7 @@ class RacuniController extends Controller
 			'broj' => [
 				'required' => true,
 			],
+			// dodati datum_prispeca (rok)
 			'datum' => [
 				'required' => true,
 			],
@@ -71,7 +72,8 @@ class RacuniController extends Controller
 				'korisnik_id_zaduzio' => $this->auth->user()->id,
 				'korisnik_id_razduzio' => null,
 				'napomena' => $data['napomena'],
-				'datum_prispeca' => $data['rok'],
+				'datum_prispeca' => null,
+				// 'datum_prispeca' => $data['rok'],
 				'avansno' => 0,
 				'avans_iznos' => 0,
 			];
