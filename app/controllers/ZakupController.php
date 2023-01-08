@@ -30,7 +30,6 @@ class ZakupController extends Controller
 		unset($data['csrf_name']);
 		unset($data['csrf_value']);
 		$staraoc_id = $request->getParam('staraoc_id');
-		dd($data,false);
 
 		$model = new Staraoc();
 		$sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE staraoc_id = :star AND godina = :god AND tip = 2;";

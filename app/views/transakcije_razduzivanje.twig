@@ -1,221 +1,364 @@
-{% extends "templates/app.twig" %} {% block sadrzaj %}
-<h1 class="uk-text-primary">
-  Razduživanje
-  <span class="uk-text-success">{{ staraoc.punoIme() | upper }}</span>
-  - <small class="uk-text-muted">[{{ staraoc.karton().broj() }}]</small>
-</h1>
-<div class="uk-panel uk-background-muted uk-padding-small">
-  <div class="uk-clearfix">
-    <div class="uk-float-left">
-      <div class="uk-button-group">
-        <button onclick="window.history.back();" class="uk-button uk-button-primary uk-button-small">
-          <span uk-icon="chevron-left"></span> Nazad
-        </button>
-        <a href="{{ path_for('kartoni.pregled', { id: staraoc.karton().id }) }}"
-          class="uk-button uk-button-primary uk-button-small">
-          <span uk-icon="chevron-double-left"></span> Otvori karton
-        </a>
-      </div>
-    </div>
-    <div class="uk-float-right">
-      <div class="uk-button-group">
-        <a href="{{ path_for('transakcije.pregled', { id: staraoc.id }) }}"
-          class="uk-button uk-button-secondary uk-button-small">
-          <span uk-icon="list"></span> Pregled zaduženja
-        </a>
-        <a href="{{ path_for('transakcije.reprogrami', { id: staraoc.id }) }}"
-          class="uk-button uk-button-danger uk-button-small">
-          <span uk-icon="refresh"></span> Reprogrami
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
+{% extends "templates/app.twig" %}
+{% block sadrzaj %}
+	<h1
+		class="uk-text-primary">
+		Razduživanje
+		<span
+			class="uk-text-success">{{ staraoc.punoIme() | upper }}</span>
+		-
+		<small
+			class="uk-text-muted">[{{ staraoc.karton().broj() }}]</small>
+	</h1>
+	<div
+		class="uk-panel uk-background-muted uk-padding-small">
+		<div
+			class="uk-clearfix">
+			<div
+				class="uk-float-left">
+				<div
+					class="uk-button-group">
+					<button
+						onclick="window.history.back();"
+						class="uk-button uk-button-primary uk-button-small">
+						<span
+							uk-icon="chevron-left"></span>
+						Nazad
+					</button>
+					<a
+						href="{{ path_for('kartoni.pregled', { id: staraoc.karton().id }) }}" class="uk-button uk-button-primary uk-button-small">
+						<span
+							uk-icon="chevron-double-left"></span>
+						Otvori karton
+					</a>
+				</div>
+			</div>
+			<div
+				class="uk-float-right">
+				<div
+					class="uk-button-group">
+					<a
+						href="{{ path_for('transakcije.pregled', { id: staraoc.id }) }}" class="uk-button uk-button-secondary uk-button-small">
+						<span
+							uk-icon="list"></span>
+						Pregled zaduženja
+					</a>
+					<a
+						href="{{ path_for('transakcije.reprogrami', { id: staraoc.id }) }}" class="uk-button uk-button-danger uk-button-small">
+						<span
+							uk-icon="refresh"></span>
+						Reprogrami
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
 
-<form action="{{ path_for('transakcije.uplata') }}" method="POST" id="foram_uplata" class="uk-form-stacked" uk-grid>
-  {{ csrf | raw }}
-  <input type="hidden" name="staraoc_id" value="{{ staraoc.id }}">
-  <input type="hidden" id="tacan_iznos" name="tacan_iznos" value="0">
-  <div class="uk-width-1-5">
-    <label for="uplata_iznos" class="uk-form-label">Iznos</label>
-    <div class="uk-form-controls">
-      <input type="number" name="uplata_iznos" id="uplata_iznos" value="0" min="0" step="0.01"
-        class="uk-input uk-text-right" autocomplete="off" required>
-    </div>
-    <small class="uk-text-danger">{{ errors.uplata_iznos[0] ? :'' }}</small>
-  </div>
-  <div class="uk-width-1-5">
-    <label for="uplata_datum" class="uk-form-label">Datum</label>
-    <div class="uk-form-controls">
-      <input type="date" name="uplata_datum" id="uplata_datum" value="{{ 'now'|date('Y-m-d') }}" class="uk-input"
-        autocomplete="off" required>
-    </div>
-    <small class=" uk-text-danger">{{ errors.uplata_datum[0] ? : '' }}</small>
-  </div>
+	<form
+		action="{{ path_for('transakcije.uplata') }}" method="POST"
+		id="foram_uplata"
+		class="uk-form-stacked"
+		uk-grid>
+		{{ csrf | raw }}
+		<input
+			type="hidden"
+			name="staraoc_id"
+			value="{{ staraoc.id }}">
+		<input
+			type="hidden"
+			id="tacan_iznos"
+			name="tacan_iznos"
+			value="0">
+		<div
+			class="uk-width-1-5">
+			<label
+				for="uplata_iznos"
+				class="uk-form-label">Iznos</label>
+			<div
+				class="uk-form-controls">
+				<input
+					type="number"
+					name="uplata_iznos"
+					id="uplata_iznos"
+					value="0"
+					min="0"
+					step="0.01"
+					class="uk-input uk-text-right"
+					autocomplete="off"
+					required>
+			</div>
+			<small
+				class="uk-text-danger">{{ errors.uplata_iznos[0] ? :'' }}</small>
+		</div>
+		<div
+			class="uk-width-1-5">
+			<label
+				for="uplata_datum"
+				class="uk-form-label">Datum</label>
+			<div
+				class="uk-form-controls">
+				<input
+					type="date"
+					name="uplata_datum"
+					id="uplata_datum"
+					value="{{ 'now'|date('Y-m-d') }}" class="uk-input"
+					autocomplete="off"
+					required>
+			</div>
+			<small
+				class=" uk-text-danger">{{ errors.uplata_datum[0] ? : '' }}</small>
+		</div>
 
-  <div class="uk-width-1-5">
-    <label for="uplata_priznanica" class="uk-form-label">Priznanica</label>
-    <div class="uk-form-controls">
-      <input type="text" name="uplata_priznanica" id="uplata_priznanica" value="{{ old.uplata_priznanica ? : '' }}"
-        class="uk-input" autocomplete="off">
-    </div>
-    <small class=" uk-text-danger">{{ errors.uplata_priznanica[0] ? : '' }}</small>
-  </div>
+		<div
+			class="uk-width-1-5">
+			<label
+				for="uplata_priznanica"
+				class="uk-form-label">Priznanica</label>
+			<div
+				class="uk-form-controls">
+				<input
+					type="text"
+					name="uplata_priznanica"
+					id="uplata_priznanica"
+					value="{{ old.uplata_priznanica ? : '' }}" class="uk-input"
+					autocomplete="off">
+			</div>
+			<small
+				class=" uk-text-danger">{{ errors.uplata_priznanica[0] ? : '' }}</small>
+		</div>
 
-  <div class="uk-width-2-5">
-    <label for="uplata_napomena" class="uk-form-label">Napomena</label>
-    <div class="uk-form-controls">
-      <textarea class="uk-textarea{{ errors.uplata_napomena[0] ? ' uk-form-danger': ''}}" rows="2"
-        name="uplata_napomena" id="uplata_napomena">{{ old.uplata_napomena ? : '' }}</textarea>
-    </div>
-    <small class=" uk-text-danger">{{ errors.uplata_napomena[0] ? :'' }}</small>
-  </div>
+		<div
+			class="uk-width-2-5">
+			<label
+				for="uplata_napomena"
+				class="uk-form-label">Napomena</label>
+			<div
+				class="uk-form-controls">
+				<textarea
+					class="uk-textarea{{ errors.uplata_napomena[0] ? ' uk-form-danger': ''}}"
+					rows="2"
+					name="uplata_napomena"
+					id="uplata_napomena">{{ old.uplata_napomena ? : '' }}</textarea>
+			</div>
+			<small
+				class=" uk-text-danger">{{ errors.uplata_napomena[0] ? :'' }}</small>
+		</div>
 
-  <div class="uk-button-group uk-width-3-5">
-    <a href="#modal-uplata" onclick="uporediPolja();" uk-toggle class="uk-button uk-button-primary uk-width-2-3">
-      Snimi uplatu i razduži odabrane stavke
-    </a>
-    <input type="reset" value="Otkaži" class="uk-button uk-button-secondary uk-width-1-3" onclick="resetRazduzenje();">
-  </div>
-  <div class="uk-width-1-1">
-    <ul uk-accordion="multiple: true">
-      <li>
-        <a class="uk-accordion-title" href="#">
-          <h2>
-            Takse
-            <em class="uk-text-primary">[{{ staraoc.sveTakse()|length }}]</em>
-            <em class="uk-text-success">[{{ staraoc.razduzeneTakse()|length }}]</em>
-            <em class="uk-text-danger">[{{ staraoc.zaduzeneTakse()|length }}]</em>
-            <small><em class="uk-text-danger">[{{ staraoc.dugZaTakse()|number_format(2, '.', ',') }}]</em></small>
-          </h2>
-        </a>
-        <div class="uk-accordion-content">
-          <hr>
-          <div class="uk-overflow-auto">
-            <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
-              <thead>
-                <tr>
-                  <th class="w-5">Godina</th>
-                  <th class="w-25">Ime</th>
-                  <th class="w-20 uk-text-right">Iznos (zaduženo)</th>
-                  <th class="w-20 uk-text-right">Iznos (razduženo)</th>
-                  <th class="w-20 uk-text-right">Za razduženje</th>
-                  <th class="w-10 uk-text-center">Razduženo</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for taksa in staraoc.zaduzeneTakse() %}
-                <tr>
-                  <td>{{ taksa.godina }}</td>
-                  <td>{{ taksa.staraoc().punoIme()|upper }}</td>
-                  <td class="uk-text-right">
-                    {{ taksa.iznos_zaduzeno|number_format(2, '.', ',') }}
-                  </td>
-                  <td class="uk-text-right">
-                    {{ taksa.iznos_razduzeno|number_format(2, '.', ',') }}
-                  </td>
-                  <td class="uk-text-right">
-                    {{ taksa.zaRazduzenje().ukupno|number_format(2, '.', ',') }}
-                  </td>
-                  <td class="uk-text-center">{{ taksa.razduzeno()|raw }}</td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </li>
-      <li>
-        <a class="uk-accordion-title" href="#">
-          <h2>
-            Zakup
-            <em class="uk-text-primary">[{{ staraoc.sviZakupi()|length }}]</em>
-            <em class="uk-text-success">[{{ staraoc.razduzeniZakupi()|length }}]</em>
-            <em class="uk-text-danger">[{{ staraoc.zaduzeniZakupi()|length }}]</em>
-            <small><em class="uk-text-danger">[{{ staraoc.dugZaZakupe()|number_format(2, '.', ',') }}]</em></small>
-          </h2>
-        </a>
-        <div class="uk-accordion-content">
-          <hr>
-          <div class="uk-overflow-auto">
-            <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
-              <thead>
-                <tr>
-                  <th class="w-5">Godina</th>
-                  <th class="w-25">Ime</th>
-                  <th class="w-20 uk-text-right">Iznos (zaduženo)</th>
-                  <th class="w-20 uk-text-right">Iznos (razduženo)</th>
-                  <th class="w-20 uk-text-right">Za razduženje</th>
-                  <th class="w-10 uk-text-center">Razduženo</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for zakup in staraoc.zaduzeniZakupi() %}
-                <tr>
-                  <td>{{ zakup.godina }}</td>
-                  <td>{{ zakup.staraoc().punoIme()|upper }}</td>
-                  <td class="uk-text-right">
-                    {{ zakup.iznos_zaduzeno|number_format(2, '.', ',') }}
-                  </td>
-                  <td class="uk-text-right">
-                    {{ zakup.iznos_razduzeno|number_format(2, '.', ',') }}
-                  </td>
-                  <td class="uk-text-right">
-                    {{ zakup.zaRazduzenje().ukupno|number_format(2, '.', ',') }}
-                  </td>
-                  <td class="uk-text-center">{{ zakup.razduzeno()|raw }}</td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </li>
-      <li>
-        <a class="uk-accordion-title" href="#">
-          <h2>
-            Računi
-            <em class="uk-text-primary">[{{ staraoc.sviRacuni()|length }}]</em>
-            <em class="uk-text-success">[{{ staraoc.razduzeniRacuni()|length }}]</em>
-            <em class="uk-text-danger">[{{ staraoc.zaduzeniRacuni()|length }}]</em>
-            <small><em class="uk-text-danger">[{{ staraoc.dugZaRacune()|number_format(2, '.', ',') }}]</em></small>
-          </h2>
-        </a>
-        <div class="uk-accordion-content">
-          <hr>
-          <div class="uk-overflow-auto">
-            <table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
-              <thead>
-                <tr>
-                  <th class="w-15">Broj</th>
-                  <th class="w-10">Datum</th>
-                  <th class="w-20">Ime</th>
-                  <th class="w-15 uk-text-right">Iznos</th>
-                  <th class="w-10 uk-text-center">Razduženo</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for rn in staraoc.zaduzeniRacuni() %}
-                <tr>
-                  <td>{{ rn.broj }}</td>
-                  <td>{{ rn.datum() }}</td>
-                  <td>{{ zakup.staraoc().punoIme()|upper }}</td>
-                  <td class="uk-text-right">{{ rn.iznos|number_format(2, '.', ',') }}</td>
-                  <td class="uk-text-center">{{ rn.razduzeno()|raw }}</td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </li>
-    </ul>
-  </div>
-</form>
+		<div
+			class="uk-button-group uk-width-3-5">
+			<a
+				href="#modal-uplata"
+				onclick="uporediPolja();"
+				uk-toggle
+				class="uk-button uk-button-primary uk-width-2-3">
+				Snimi uplatu i razduži odabrane stavke
+			</a>
+			<input
+				type="reset"
+				value="Otkaži"
+				class="uk-button uk-button-secondary uk-width-1-3"
+				onclick="resetRazduzenje();">
+		</div>
+		<div
+			class="uk-width-1-1">
+			<ul
+				uk-accordion="multiple: true">
+				<li>
+					<a
+						class="uk-accordion-title"
+						href="#">
+						<h2>
+							Takse
+							<em
+								class="uk-text-primary">[{{ staraoc.sveTakse()|length }}]</em>
+							<em
+								class="uk-text-success">[{{ staraoc.razduzeneTakse()|length }}]</em>
+							<em
+								class="uk-text-danger">[{{ staraoc.zaduzeneTakse()|length }}]</em>
+							<small>
+								<em
+									class="uk-text-danger">[{{ staraoc.dugZaTakse()|number_format(2, '.', ',') }}]</em>
+							</small>
+						</h2>
+					</a>
+					<div
+						class="uk-accordion-content">
+						<hr>
+						<div
+							class="uk-overflow-auto">
+							<table
+								class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+								<thead>
+									<tr>
+										<th
+											class="w-5">Godina</th>
+										<th
+											class="w-25">Ime</th>
+										<th
+											class="w-20 uk-text-right">Iznos (zaduženo)</th>
+										<th
+											class="w-20 uk-text-right">Iznos (razduženo)</th>
+										<th
+											class="w-20 uk-text-right">Za razduženje</th>
+										<th
+											class="w-10 uk-text-center">Razduženo</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for taksa in staraoc.zaduzeneTakse() %}
+										<tr>
+											<td>{{ taksa.godina }}</td>
+											<td>{{ taksa.staraoc().punoIme()|upper }}</td>
+											<td
+												class="uk-text-right">
+												{{ taksa.iznos_zaduzeno|number_format(2, '.', ',') }}
+											</td>
+											<td
+												class="uk-text-right">
+												{{ taksa.iznos_razduzeno|number_format(2, '.', ',') }}
+											</td>
+											<td
+												class="uk-text-right">
+												{{ taksa.zaRazduzenje().ukupno|number_format(2, '.', ',') }}
+											</td>
+											<td
+												class="uk-text-center">{{ taksa.razduzeno()|raw }}</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</li>
+				<li>
+					<a
+						class="uk-accordion-title"
+						href="#">
+						<h2>
+							Zakup
+							<em
+								class="uk-text-primary">[{{ staraoc.sviZakupi()|length }}]</em>
+							<em
+								class="uk-text-success">[{{ staraoc.razduzeniZakupi()|length }}]</em>
+							<em
+								class="uk-text-danger">[{{ staraoc.zaduzeniZakupi()|length }}]</em>
+							<small>
+								<em
+									class="uk-text-danger">[{{ staraoc.dugZaZakupe()|number_format(2, '.', ',') }}]</em>
+							</small>
+						</h2>
+					</a>
+					<div
+						class="uk-accordion-content">
+						<hr>
+						<div
+							class="uk-overflow-auto">
+							<table
+								class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+								<thead>
+									<tr>
+										<th
+											class="w-5">Godina</th>
+										<th
+											class="w-25">Ime</th>
+										<th
+											class="w-20 uk-text-right">Iznos (zaduženo)</th>
+										<th
+											class="w-20 uk-text-right">Iznos (razduženo)</th>
+										<th
+											class="w-20 uk-text-right">Za razduženje</th>
+										<th
+											class="w-10 uk-text-center">Razduženo</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for zakup in staraoc.zaduzeniZakupi() %}
+										<tr>
+											<td>{{ zakup.godina }}</td>
+											<td>{{ zakup.staraoc().punoIme()|upper }}</td>
+											<td
+												class="uk-text-right">
+												{{ zakup.iznos_zaduzeno|number_format(2, '.', ',') }}
+											</td>
+											<td
+												class="uk-text-right">
+												{{ zakup.iznos_razduzeno|number_format(2, '.', ',') }}
+											</td>
+											<td
+												class="uk-text-right">
+												{{ zakup.zaRazduzenje().ukupno|number_format(2, '.', ',') }}
+											</td>
+											<td
+												class="uk-text-center">{{ zakup.razduzeno()|raw }}</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</li>
+				<li>
+					<a
+						class="uk-accordion-title"
+						href="#">
+						<h2>
+							Računi
+							<em
+								class="uk-text-primary">[{{ staraoc.sviRacuni()|length }}]</em>
+							<em
+								class="uk-text-success">[{{ staraoc.razduzeniRacuni()|length }}]</em>
+							<em
+								class="uk-text-danger">[{{ staraoc.zaduzeniRacuni()|length }}]</em>
+							<small>
+								<em
+									class="uk-text-danger">[{{ staraoc.dugZaRacune()|number_format(2, '.', ',') }}]</em>
+							</small>
+						</h2>
+					</a>
+					<div
+						class="uk-accordion-content">
+						<hr>
+						<div
+							class="uk-overflow-auto">
+							<table
+								class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+								<thead>
+									<tr>
+										<th
+											class="w-15">Broj</th>
+										<th
+											class="w-10">Datum</th>
+										<th
+											class="w-20">Ime</th>
+										<th
+											class="w-15 uk-text-right">Iznos</th>
+										<th
+											class="w-10 uk-text-center">Razduženo</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for rn in staraoc.zaduzeniRacuni() %}
+										<tr>
+											<td>{{ rn.broj }}</td>
+											<td>{{ rn.datum() }}</td>
+											<td>{{ zakup.staraoc().punoIme()|upper }}</td>
+											<td
+												class="uk-text-right">{{ rn.iznos|number_format(2, '.', ',') }}</td>
+											<td
+												class="uk-text-center">{{ rn.razduzeno()|raw }}</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</form>
 {% endblock sadrzaj %}
 
 {% block traka %}
-<h1
+	<h1
 		class="uk-text-danger">Dugovanja</h1>
 	<table
 		class="uk-table uk-table-divider uk-table-hover uk-table-small">
@@ -271,72 +414,63 @@
 		</tr>
 	</table>
 
-<h2 class="uk-text-right">Iznos razduženja</h2>
-<div class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
-  <h1 class="uk-text-primary" id="razduzenje">
-    {{ (0)|number_format(2, '.', ',') }}
-  </h1>
-</div>
+	<h2
+		class="uk-text-right">Iznos razduženja</h2>
+	<div
+		class="uk-panel uk-background-muted uk-padding-small uk-text-large uk-text-bold uk-text-right">
+		<h1
+			class="uk-text-primary"
+			id="razduzenje">
+			{{ (0)|number_format(2, '.', ',') }}
+		</h1>
+	</div>
 
-<hr>
+	<hr>
 
-<h2>Uputstvo</h2>
-<p>
-  Odabrati (čekirati) zaduženja koja ce se razdužiti. Ukupan iznos odabranih
-  razduženja ce se pojaviti u polju "Iznos razduženja". Uneti iznos i datum
-  uplate. Kliknuti na dugme "Snimi uplatu i razduži odabrane stavke".
-</p>
-<p>
-  Izabrane stavke ce biti razdužene, a uplata snimljena.
-</p>
-<div id="modal-uplata" uk-modal>
-  <div class="uk-modal-dialog">
-    <button class="uk-modal-close-default" type="button" uk-close></button>
-    <div class="uk-modal-header">
-      <h2 class="uk-modal-title uk-text-danger">Potvrda uplate i razduženja</h2>
-    </div>
-    <div class="uk-modal-body">
-      <p id="poruka">Poruka</p>
-    </div>
-    <div class="uk-modal-footer uk-text-right">
-      <div class="uk-button-group">
-        <button class="uk-button uk-button-primary" type="button" id="prosledi_formu">Potvrdi</button>
-        <button class="uk-button uk-button-secondary uk-modal-close" type="button">Otkaži</button>
-      </div>
-    </div>
-  </div>
-</div>
+	<h2>Uputstvo</h2>
+	<p>
+		Odabrati (čekirati) zaduženja koja ce se razdužiti. Ukupan iznos odabranih
+		  razduženja ce se pojaviti u polju "Iznos razduženja". Uneti iznos i datum
+		  uplate. Kliknuti na dugme "Snimi uplatu i razduži odabrane stavke".
+	</p>
+	<p>
+		Izabrane stavke ce biti razdužene, a uplata snimljena.
+	</p>
+	<div
+		id="modal-uplata"
+		uk-modal>
+		<div
+			class="uk-modal-dialog">
+			<button
+				class="uk-modal-close-default"
+				type="button"
+				uk-close></button>
+			<div
+				class="uk-modal-header">
+				<h2
+					class="uk-modal-title uk-text-danger">Potvrda uplate i razduženja</h2>
+			</div>
+			<div
+				class="uk-modal-body">
+				<p
+					id="poruka">Poruka</p>
+			</div>
+			<div
+				class="uk-modal-footer uk-text-right">
+				<div
+					class="uk-button-group">
+					<button
+						class="uk-button uk-button-primary"
+						type="button"
+						id="prosledi_formu">Potvrdi</button>
+					<button
+						class="uk-button uk-button-secondary uk-modal-close"
+						type="button">Otkaži</button>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock traka %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

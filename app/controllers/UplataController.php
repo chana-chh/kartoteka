@@ -214,4 +214,15 @@ class UplataController extends Controller
 		$this->flash->addMessage('success', 'Višak novca je uspešno raspoređen na razduživanje taksi i zakupa.');
 		return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $id]));
 	}
+
+	public function postVisakUnos($request, $response)
+	{
+		$data = $request->getParams();
+		unset($data['csrf_name']);
+		unset($data['csrf_value']);
+		dd($data);
+		// proveriti da li je odabrano samo jedno zaduzenje
+		// proveriti da li je visak manji od glavnice odabranog zaduzenja
+		// delimicno razduziti odabrana zaduzenje
+	}
 }

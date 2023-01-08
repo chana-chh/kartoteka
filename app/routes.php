@@ -170,6 +170,9 @@ $app->group('', function ()
 	// Razduzivanje viska para
 	$this->post('/transakcije/visak', '\App\Controllers\UplataController:postVisak')->setName('transakcije.visak');
 
+	// Razduzivanje viska para za masovan unos pocetnog stanja
+	$this->post('/transakcije/visak/unos', '\App\Controllers\UplataController:postVisakUnos')->setName('transakcije.visak.unos');
+
 	// Prevoz
 	$this->get('/prevozi', '\App\Controllers\PrevoziController:getPrevozi')->setName('prevozi');
 	$this->get('/prevozi/pretraga', '\App\Controllers\PrevoziController:getPrevoziPretraga')->setName('prevozi.pretraga');
