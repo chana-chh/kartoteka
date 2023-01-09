@@ -26,13 +26,13 @@ class Staraoc extends Model
 
 	public function uplate()
 	{
-		$sql = "SELECT * FROM uplate WHERE staraoc_id = {$this->id} ORDER BY datum DESC;";
+		$sql = "SELECT * FROM uplate WHERE staraoc_id = {$this->id} ORDER BY datum DESC, id DESC;";
 		return $this->fetch($sql, null, 'App\Models\Uplata');
 	}
 
 	public function poslednjaUplata()
 	{
-		$sql = "SELECT * FROM uplate WHERE staraoc_id = {$this->id} ORDER BY datum DESC LIMIT 1;";
+		$sql = "SELECT * FROM uplate WHERE staraoc_id = {$this->id} ORDER BY datum DESC, id DESC LIMIT 1;";
 		return $this->fetch($sql, null, 'App\Models\Uplata')[0];
 	}
 
@@ -183,7 +183,7 @@ class Staraoc extends Model
 	// 	return $broj;
 	// }
 
-	
+
 	// zakupi
 
 	public function zakupZaGodinu()

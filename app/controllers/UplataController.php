@@ -218,11 +218,69 @@ class UplataController extends Controller
 	public function postVisakUnos($request, $response)
 	{
 		$data = $request->getParams();
+		// niz id-a zaduzenja
+		$zaduzenja_data = isset($data['razduzeno-zaduzenje']) ? $data['razduzeno-zaduzenje'] : [];
+		// niz id-a racuna
+		$racuni_data = isset($data['razduzeno-racuni']) ? $data['razduzeno-racuni'] : [];
 		unset($data['csrf_name']);
 		unset($data['csrf_value']);
-		dd($data);
-		// proveriti da li je odabrano samo jedno zaduzenje
-		// proveriti da li je visak manji od glavnice odabranog zaduzenja
-		// delimicno razduziti odabrana zaduzenje
+		unset($data['razduzeno-zaduzenje']);
+		unset($data['razduzeno-racuni']);
+		$staraoc_id = $data['staraoc_id'];
+		$staraoc = (new Staraoc())->find($staraoc_id);
+		$validation_rules = [
+			'staraoc_id' => [
+				'required' => true,
+			],
+			'visak_iznos' => [
+				'required' => true,
+				'min' => 0,
+			],
+		];
+
+		$this->validator->validate($data, $validation_rules);
+
+		// proveriti da li je odabrano samo jedno zaduzenje/racun
+		$br = count($zaduzenja_data) + count($racuni_data);
+		if($br != 1)
+		{
+			$this->flash->addMessage('danger', 'Došlo je do greške prilikom razduživanja. Može se razdužiti samo jedna stavka.');
+			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $staraoc_id]));
+		}
+
+		if ($this->validator->hasErrors())
+		{
+			$this->flash->addMessage('danger', 'Došlo je do greške prilikom razduživanja.');
+			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $staraoc_id]));
+		}
+
+
+		if (count($zaduzenja_data) == 1) // ako je zaduzenje
+		{
+			$zaduzenje = (new Zaduzenje())->find((int) $zaduzenja_data[0]);
+			$visak_iznos = (float) $data['visak_iznos'];
+			$glavnica = $zaduzenje->glavnica - $visak_iznos;
+			$razduzeno = $zaduzenje->iznos_razduzeno + $visak_iznos;
+			$uplata_id = $staraoc->poslednjaUplata()->id;
+			$poslednja_glavnica = $zaduzenje->glavnica;
+			$poslednji_datum_prispeca = $zaduzenje->datum_prispeca;
+			$zaduzenje->update([
+				'glavnica' => $glavnica,
+				'iznos_razduzeno' => $razduzeno,
+				'uplata_id' => $uplata_id,
+				'poslednja_glavnica' => $poslednja_glavnica,
+				'poslednji_datum_prispeca' => $poslednji_datum_prispeca,
+			], $zaduzenje->id);
+			$staraoc->update([
+				'avans' => $staraoc->avans - $visak_iznos,
+			], $staraoc_id);
+
+			$this->flash->addMessage('success', 'Delimično razduživanje je uspešno odrađeno.');
+			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $staraoc_id]));
+		}
+		else // onda je racun
+		{
+
+		}
 	}
 }

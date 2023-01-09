@@ -167,7 +167,7 @@
 								{{ visak.deo_racuna|number_format(2, '.', ',') }}
 								din.</p>
 						{% endif %}
-			
+
 						{% if visak.ostatak > 0 %}
 							<p
 								class="uk-text-primary">Preostali iznos od
@@ -200,7 +200,7 @@
 					value="{{ staraoc.id }}">
 				<input
 					type="hidden"
-					name="iznos"
+					name="visak_iznos"
 					value="{{ staraoc.avans }}">
 				<h2>Takse</h2>
 				<div class="uk-overflow-auto">
