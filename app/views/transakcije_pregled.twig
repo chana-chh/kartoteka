@@ -94,29 +94,28 @@
 								class="ikonica"></span>
 							Razduživanje
 						</a>
+						<a
+							href="{{ path_for('uplate', { id: staraoc.id }) }}" class="uk-button uk-button-primary uk-button-small">
+							<span
+								class="uk-badge">{{broj_uplata}}</span>
+							Pregled uplata
+						</a>
+						{# <a
+													href="{{ path_for('transakcije.reprogrami', { id: staraoc.id }) }}" class="uk-button uk-button-primary uk-button-small">
+													<span
+														uk-icon="refresh"
+														class="ikonica"></span>
+													Reprogrami
+												</a> #}
+						<a
+							href="{{ path_for('transakcije.pregled.stampa', { id: staraoc.id }) }}" target="_blank"
+							class="uk-button uk-button-primary uk-button-small">
+							<span
+								uk-icon="print"
+								class="ikonica"></span>
+							Štampa
+						</a>
 					{% endif %}
-
-					<a
-						href="{{ path_for('uplate', { id: staraoc.id }) }}" class="uk-button uk-button-primary uk-button-small">
-						<span
-							class="uk-badge">{{broj_uplata}}</span>
-						Pregled uplata
-					</a>
-					{# <a
-												href="{{ path_for('transakcije.reprogrami', { id: staraoc.id }) }}" class="uk-button uk-button-primary uk-button-small">
-												<span
-													uk-icon="refresh"
-													class="ikonica"></span>
-												Reprogrami
-											</a> #}
-					<a
-						href="{{ path_for('transakcije.pregled.stampa', { id: staraoc.id }) }}" target="_blank"
-						class="uk-button uk-button-primary uk-button-small">
-						<span
-							uk-icon="print"
-							class="ikonica"></span>
-						Štampa
-					</a>
 				</div>
 			</div>
 

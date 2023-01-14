@@ -443,8 +443,6 @@ class TransakcijeController extends Controller
 	public function postUplata($request, $response)
 	{
 
-		// TODO: ako postoji nerazduzeni avans onemoguciti uplatu (razduzenje) !!!
-
 		$data = $request->getParams();
 		$id = $data['staraoc_id'];
 
@@ -471,7 +469,10 @@ class TransakcijeController extends Controller
 			'uplata_datum' => [
 				'required' => true,
 			],
-			// ovde da se proveri da li je datum uplate isti ili veci od poslednjeg datuma uplate
+			// da li je datum uplate isti ili veci od poslednjeg datuma uplate
+			// 'uplata_datum' => [
+			// 	'min' => $staraoc->poslednjaUplata()->datum,
+			// ],
 		];
 
 		// provera osnovnih podataka za uplatu

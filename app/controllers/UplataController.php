@@ -33,9 +33,17 @@ class UplataController extends Controller
 		$staraoc_id = $uplata->staraoc()->id;
 		$staraoc = (new Staraoc())->find($staraoc_id);
 
+		$poseldnja_uplata_id = (int) $staraoc->poslednjaUplata()->id;
+
 		if ($this->auth->user()->nivo !== 0)
 		{
-			$this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja uplate.");
+			$this->flash->addMessage('danger', "Brisanje uplate je omoguženo samo za administratore.");
+			return $response->withRedirect($this->router->pathFor('uplate', ['id' => $staraoc_id]));
+		}
+
+		if ($id !== $poseldnja_uplata_id)
+		{
+			$this->flash->addMessage('danger', "Može se brisati samo poslednja uplata.");
 			return $response->withRedirect($this->router->pathFor('uplate', ['id' => $staraoc_id]));
 		}
 
@@ -47,6 +55,7 @@ class UplataController extends Controller
 		}
 		else
 		{
+			// TODO: ovde proveriti ispravnost !!!
 			$sql = "UPDATE zaduzenja SET razduzeno = 0, iznos_razduzeno = 0, korisnik_id_razduzio = NULL, uplata_id = NULL,
 							glavnica = poslednja_glavnica, datum_prispeca = poslednji_datum_prispeca, datum_razduzenja = NULL,
 							poslednja_glavnica = 0, poslednji_datum_prispeca = NULL,
@@ -254,11 +263,11 @@ class UplataController extends Controller
 			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $staraoc_id]));
 		}
 
+		$visak_iznos = (float) $data['visak_iznos'];
 
 		if (count($zaduzenja_data) == 1) // ako je zaduzenje
 		{
 			$zaduzenje = (new Zaduzenje())->find((int) $zaduzenja_data[0]);
-			$visak_iznos = (float) $data['visak_iznos'];
 			$glavnica = $zaduzenje->glavnica - $visak_iznos;
 			$razduzeno = $zaduzenje->iznos_razduzeno + $visak_iznos;
 			$uplata_id = $staraoc->poslednjaUplata()->id;
@@ -280,7 +289,25 @@ class UplataController extends Controller
 		}
 		else // onda je racun
 		{
+			$racun = (new Racun())->find((int) $racuni_data[0]);
+			$glavnica = $racun->glavnica - $visak_iznos;
+			$razduzeno = $racun->iznos_razduzeno + $visak_iznos;
+			$uplata_id = $staraoc->poslednjaUplata()->id;
+			$poslednja_glavnica = $racun->glavnica;
+			$poslednji_datum_prispeca = $racun->datum_prispeca;
+			$racun->update([
+				'glavnica' => $glavnica,
+				'iznos_razduzeno' => $razduzeno,
+				'uplata_id' => $uplata_id,
+				'poslednja_glavnica' => $poslednja_glavnica,
+				'poslednji_datum_prispeca' => $poslednji_datum_prispeca,
+			], $racun->id);
+			$staraoc->update([
+				'avans' => $staraoc->avans - $visak_iznos,
+			], $staraoc_id);
 
+			$this->flash->addMessage('success', 'Delimično razduživanje je uspešno odrađeno.');
+			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $staraoc_id]));
 		}
 	}
 }
