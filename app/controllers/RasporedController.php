@@ -18,7 +18,6 @@ class RasporedController extends Controller
 	{
 		$modelRaspored = new Raspored();
 		$dogadjajiA = $modelRaspored->all();
-		// $dogadjaji = json_encode($dogadjajiA);
 
 		$data = [];
 
@@ -29,7 +28,7 @@ class RasporedController extends Controller
                 "title" => [$dog->title],
                 "start" => $dog->start,
                 "end" => $dog->end,
-                "description" => $dog->prezime_prijavioca. ' ' .$dog->ime_prijavioca
+                "description" => "Prijavio:".$dog->prezime_prijavioca. ' ' .$dog->ime_prijavioca
             ];
         }
 
@@ -54,10 +53,7 @@ class RasporedController extends Controller
 		$modelGroblje = new Groblje();
 		$groblja = $modelGroblje->all();
 
-		$modelKarton = new Karton();
-		$tipovi = $modelKarton->enumOrSetList('tip_groba');
-
-		$this->render($response, 'raspored_dodavanje.twig', compact('groblja', 'tipovi'));
+		$this->render($response, 'raspored_dodavanje.twig', compact('groblja'));
 	}
 
 	public function postRasporedDodavanje($request, $response)
@@ -66,99 +62,93 @@ class RasporedController extends Controller
 		unset($data['csrf_name']);
 		unset($data['csrf_value']);
 
-		//Za sada ako su popunjena sva tri polja, koja će biti obavezna. Nigde nema validacije.
+		$validation_rules = [
+            'prezime' => [
+                'required' => true,
+            ],
+            'ime' => [
+                'required' => true,
+            ],
+            'ime_prijavioca' => [
+                'required' => true,
+            ],
+            'prezime_prijavioca' => [
+                'required' => true,
+            ],
+            'start' => [
+                'required' => true,
+            ],
+            'end' => [
+                'required' => true,
+            ],
+        ];
 
-		$modelKarton = new Karton();
-		$karton = null;
-		$id_kartona = null;
+        $this->validator->validate($data, $validation_rules);
+        if ($this->validator->hasErrors()) {
+            $this->flash->addMessage('danger', 'Došlo je do greške prilikom zakazivanja termina.');
+            return $response->withRedirect($this->router->pathFor('pocetna'));
+        } else {
 
-		if (!empty($data['groblje_id']) && !empty($data['parcela']) && !empty($data['grobno_mesto']))
-		{
-			$parcela = '%' . filter_var($data['parcela'], FILTER_SANITIZE_STRING) . '%';
-			$where = "groblje_id = :groblje_id AND parcela LIKE :parcela AND grobno_mesto = :grobno_mesto";
-			$params = [':groblje_id' => $data['groblje_id'], ':parcela' => $parcela, ':grobno_mesto' => $data['grobno_mesto']];
+            $prezime = filter_var($data['prezime'], FILTER_SANITIZE_STRING);
+			$ime = filter_var($data['ime'], FILTER_SANITIZE_STRING);
+			$jmbg = filter_var($data['jmbg'], FILTER_SANITIZE_STRING);
+			$srednje_ime = filter_var($data['srednje_ime'], FILTER_SANITIZE_STRING);
+			$mesto = filter_var($data['mesto'], FILTER_SANITIZE_STRING);
+			$prebivaliste = filter_var($data['prebivaliste'], FILTER_SANITIZE_STRING);
+			$datum_rodjenja = strlen($data['datum_rodjenja']) === 0 ? null : $data['datum_rodjenja'];
+			$datum_smrti = strlen($data['datum_smrti']) === 0 ? null : $data['datum_smrti'];
+			$prezime_prijavioca = filter_var($data['prezime_prijavioca'], FILTER_SANITIZE_STRING);
+			$ime_prijavioca = filter_var($data['ime_prijavioca'], FILTER_SANITIZE_STRING);
+			$prezime_troskovi = filter_var($data['prezime_troskovi'], FILTER_SANITIZE_STRING);
+			$ime_troskovi = filter_var($data['ime_troskovi'], FILTER_SANITIZE_STRING);
+			$jmbg_troskovi = filter_var($data['jmbg_troskovi'], FILTER_SANITIZE_STRING);
+			$prebivaliste_troskovi = filter_var($data['prebivaliste_troskovi'], FILTER_SANITIZE_STRING);
+			$ovlascen = filter_var($data['ovlascen'], FILTER_SANITIZE_STRING);
+			$mup = filter_var($data['mup'], FILTER_SANITIZE_STRING);
+			$telefon = filter_var($data['telefon'], FILTER_SANITIZE_STRING);
+			$pio = isset($data['pio']) ? 1 : 0;
 
-			$sql = "SELECT * FROM {$modelKarton->getTable()} WHERE {$where} LIMIT 1;";
-			$karton = $modelKarton->fetch($sql, $params);
-
-			if (!empty($karton))
-			{
-				$karton = $karton[0];
-				$id_kartona = $karton->id;
+			$tekst = "Nema podataka o groblju";
+			if (!empty($data['groblje_id'])) {
+				$id_groblja = (int)$data['groblje_id'];
+        		$modelGroblja = new Groblje();
+        		$groblje = $modelGroblja->find($id_groblja);
+        		$tekst = $groblje->naziv;
 			}
-			else
-			{
-				$modelKarton->insert([
-					'groblje_id' => $data['groblje_id'],
-					'parcela' => $data['parcela'],
-					'grobno_mesto' => $data['grobno_mesto'],
-					'broj_mesta' => 1,
-					'aktivan' => 1,
-					'tip_groba' => $data['tip_groba']
-				]);
+			
+		$dstart = date("Y-m-d H:i:s", strtotime($data['start']));
+        $modelRaspored = new Raspored();
+        $sql = "SELECT * FROM raspored WHERE prezime = :prezime 
+        AND ime = :ime
+        AND ime_prijavioca = :ime_prijavioca
+        AND prezime_prijavioca = :prezime_prijavioca
+        AND groblje_id = {$data['groblje_id']}
+        AND start = :dstart";
+        $params[':prezime'] = $data['prezime'];
+        $params[':ime'] = $data['ime'];
+        $params[':ime_prijavioca'] = $data['ime_prijavioca'];
+        $params[':prezime_prijavioca'] = $data['prezime_prijavioca'];
+        $params[':dstart'] = $dstart;
+		$postojeci = $modelRaspored->fetch($sql, $params);
 
-				$id_kartona = $modelKarton->getLastId();
-				$karton = $modelKarton->find($id_kartona);
-				$this->log($this::DODAVANJE, $karton, ['groblje_id', 'parcela', 'grobno_mesto'], $karton);
-			}
+		if (count($postojeci)>0) {
+			$this->flash->addMessage('danger', 'Već postoji termin sa ovim podacima!');
+            return $response->withRedirect($this->router->pathFor('raspored.dodavanje'));
 		}
 
-		$dupla_raka = isset($data['dupla_raka']) ? 1 : 0;
-
-		// podaci za pokojnika
-		$redni_broj = count($karton->pokojnici()) + 1;
-		$jmbg = filter_var($data['jmbg'], FILTER_SANITIZE_STRING);
-		$prezime = filter_var($data['prezime'], FILTER_SANITIZE_STRING);
-		$ime = filter_var($data['ime'], FILTER_SANITIZE_STRING);
-		$srednje_ime = filter_var($data['srednje_ime'], FILTER_SANITIZE_STRING);
-		$mesto = filter_var($data['mesto'], FILTER_SANITIZE_STRING);
-		$prebivaliste = filter_var($data['prebivaliste'], FILTER_SANITIZE_STRING);
-		$datum_rodjenja = strlen($data['datum_rodjenja']) === 0 ? null : $data['datum_rodjenja'];
-		$datum_smrti = strlen($data['datum_smrti']) === 0 ? null : $data['datum_smrti'];
-		$datum_ekshumacije = null;
-
-		$modelPokojnik = new Pokojnik();
-
-		// proveriti da li postoji pokojnik po jmbg !!!
-
-		$modelPokojnik->insert([
-			'karton_id' => $id_kartona,
-			'redni_broj' => $redni_broj,
-			'prezime' => $prezime,
+		$modelRaspored->insert([
+			'start' => $data['start'],
+			'end' => $data['end'],
+			'title' => $tekst."  Pokojnik:".$ime." ".$prezime,
+			'groblje_id' => $data['groblje_id'],
 			'ime' => $ime,
+			'prezime' => $prezime,
 			'srednje_ime' => $srednje_ime,
 			'jmbg' => $jmbg,
 			'mesto' => $mesto,
 			'prebivaliste' => $prebivaliste,
-			'dupla_raka' => $dupla_raka,
 			'datum_rodjenja' => $datum_rodjenja,
 			'datum_smrti' => $datum_smrti,
-			'datum_sahrane' => $data['start'],
-		]);
-
-		$id_pokojnika = $modelPokojnik->getLastId();
-		$pokojnik = $modelPokojnik->find($id_pokojnika);
-		$this->log($this::DODAVANJE, $pokojnik, ['prezime', 'ime'], $pokojnik);
-
-		// podaci za raspored (prijavu sahrane)
-		$prezime_prijavioca = filter_var($data['prezime_prijavioca'], FILTER_SANITIZE_STRING);
-		$ime_prijavioca = filter_var($data['ime_prijavioca'], FILTER_SANITIZE_STRING);
-		$prezime_troskovi = filter_var($data['prezime_troskovi'], FILTER_SANITIZE_STRING);
-		$ime_troskovi = filter_var($data['ime_troskovi'], FILTER_SANITIZE_STRING);
-		$jmbg_troskovi = filter_var($data['jmbg_troskovi'], FILTER_SANITIZE_STRING);
-		$prebivaliste_troskovi = filter_var($data['prebivaliste_troskovi'], FILTER_SANITIZE_STRING);
-		$ovlascen = filter_var($data['ovlascen'], FILTER_SANITIZE_STRING);
-		$mup = filter_var($data['mup'], FILTER_SANITIZE_STRING);
-		$telefon = filter_var($data['telefon'], FILTER_SANITIZE_STRING);
-		$pio = isset($data['pio']) ? 1 : 0;
-
-		$modelRaspored = new Raspored();
-		$modelRaspored->insert([
-			'start' => $data['start'],
-			'end' => $data['end'],
-			'title' => $karton->broj() . ", " . $ime . " " . $prezime,
-			'karton_id' => $id_kartona,
-			'pokojnik_id' => $id_pokojnika,
 			'broj_lk' => $data['broj_lk'],
 			'prezime_prijavioca' => $prezime_prijavioca,
 			'ime_prijavioca' => $ime_prijavioca,
@@ -177,56 +167,14 @@ class RasporedController extends Controller
 		]);
 
 		$id_rasporeda = $modelRaspored->getLastId();
-		$dataUrl['url'] = URL . "/raspored/izmena/" . $id_rasporeda;
+		$dataUrl['url'] = URL . "raspored/izmena/" . $id_rasporeda;
 		$modelRaspored->update($dataUrl, $id_rasporeda);
 
 		$raspored = $modelRaspored->find($id_rasporeda);
-		$this->log($this::DODAVANJE, $raspored, ['title', 'start'], $raspored);
-
-		$idzaracun = $this->auth->user()->id;
-
-		if (!empty($data['broj']) && !empty($data['datum']) && !empty($data['iznos']))
-		{
-			$modelRacun = new Racun();
-
-			$razduzeno = isset($data['razduzeno']) ? 1 : 0;
-
-			$modelRacun->insert([
-				'karton_id' => $id_kartona,
-				'broj' => $data['broj'],
-				'datum' => $data['datum'],
-				'iznos' => $data['iznos'],
-				'napomena' => $data['napomena_racun'],
-				'razduzeno' => $razduzeno,
-				'datum_razduzenja' => $data['datum_razduzenja'],
-				'korisnik_id_zaduzio' => $idzaracun,
-				'korisnik_id_razduzio' => $idzaracun,
-				'rok' => $data['uplata_do']
-			]);
-
-			$id_racuna = $modelRacun->getLastId();
-			$racun = $modelRacun->find($id_racuna);
-			$this->log($this::DODAVANJE, $racun, ['karton_id', 'broj', 'datum'], $racun);
-
-			if ($razduzeno == 1)
-			{
-				$modelUplata = new Uplata();
-				$modelUplata->insert([
-					'karton_id' => $id_kartona,
-					'iznos' => $data['iznos'],
-					'datum' => $data['datum'],
-					'napomena' => "Uplata uz zakazivanje termina za račun sa brojem - " . $data['broj'],
-					'korisnik_id' => $idzaracun,
-				]);
-
-				$id_uplate = $modelUplata->getLastId();
-				$uplata = $modelUplata->find($id_uplate);
-				$this->log($this::DODAVANJE, $uplata, ['karton_id', 'datum', 'iznos'], $uplata);
-			}
-		}
-
+		$this->log($this::DODAVANJE, $raspored, ['ime', 'prezime', 'start', 'end'], $raspored);
 		$this->flash->addMessage('success', "Zakazivanje termina je uspešno završeno.");
 		return $response->withRedirect($this->router->pathFor('raspored'));
+        }
 	}
 
 	public function getRasporedIzmena($request, $response, $args)
@@ -236,7 +184,49 @@ class RasporedController extends Controller
 		$modelRaspored = new Raspored();
 		$raspored = $modelRaspored->find($id);
 
-		$this->render($response, 'raspored_izmena.twig', compact('raspored'));
+		$modelGroblje = new Groblje();
+		$groblja = $modelGroblje->all();
+
+		$this->render($response, 'raspored_izmena.twig', compact('raspored', 'groblja'));
+	}	
+
+	public function getRasporedPovezi($request, $response, $args)
+	{
+
+		$id = (int)$args['id'];
+        $model = new Pokojnik();
+        $pokojnik = $model->find($id);
+
+		$modelRaspored = new Raspored();
+		$rasporedi = $modelRaspored->povezivanje();
+
+		$this->render($response, 'raspored_povezi.twig', compact('pokojnik','rasporedi'));
+	}
+
+	public function postRasporedPovezi($request, $response)
+	{
+
+		$id_pokojnika = (int)$request->getParam('pokojnik_id');
+		$id_rasporeda = (int)$request->getParam('raspored_id');
+
+		$modelPokojnik = new Pokojnik();
+        $pokojnik = $modelPokojnik->find($id_pokojnika);
+
+		$model = new Raspored();
+		$raspored = $model->find($id_rasporeda);
+		$data['pokojnik_id'] = $id_pokojnika;
+		$data['karton_id'] = $pokojnik->karton_id;
+		$data['groblje_id'] = $pokojnik->karton->groblje->id;
+		$idkarton = (int)$data['karton_id'];
+        $modelKartona = new Karton();
+        $karton = $modelKartona->find($idkarton);
+        $tekst = $karton->broj();
+		$data['title'] = $tekst." ".$pokojnik->punoIme();
+
+		$this->log($this::IZMENA, $raspored, ['title', 'start'], $raspored);
+		$model->update($data, $id_rasporeda);
+		$this->flash->addMessage('success', "Termin je su uspešno povezan sa pokojnikom i kartonom.");
+		return $response->withRedirect($this->router->pathFor('raspored'));
 	}
 
 	public function getRasporedStampa($request, $response, $args)
@@ -270,6 +260,32 @@ class RasporedController extends Controller
 		$pio = isset($data['pio']) ? 1 : 0;
 		$data['pio'] = $pio;
 
+		$validation_rules = [
+            'prezime' => [
+                'required' => true,
+            ],
+            'ime' => [
+                'required' => true,
+            ],
+            'ime_prijavioca' => [
+                'required' => true,
+            ],
+            'prezime_prijavioca' => [
+                'required' => true,
+            ],
+            'start' => [
+                'required' => true,
+            ],
+            'end' => [
+                'required' => true,
+            ],
+        ];
+
+        $this->validator->validate($data, $validation_rules);
+        if ($this->validator->hasErrors()) {
+            $this->flash->addMessage('danger', 'Došlo je do greške prilikom izmene termina.');
+            return $response->withRedirect($this->router->pathFor('pocetna'));
+        } else {
 		$model = new Raspored();
 
 		$raspored = $model->find($id);
@@ -280,6 +296,8 @@ class RasporedController extends Controller
 
 		$this->flash->addMessage('success', "Podaci termina su uspešno izmenjeni.");
 		return $response->withRedirect($this->router->pathFor('raspored'));
+		}
+
 	}
 
 	public function postRasporedBrisanje($request, $response)
@@ -353,5 +371,37 @@ class RasporedController extends Controller
 		$rezultat['poruka_pokojnici'] = $poruka_pokojnici;
 		$rezultat['nov_karton'] = $nov_karton;
 		return json_encode($rezultat);
+	}
+
+	public function postRasporedUkloni($request, $response)
+	{
+		
+		$id = (int)$request->getParam('modal_raspored_id');
+
+		$model = new Raspored();
+		$data['karton_id'] = null;
+		$data['pokojnik_id'] = null;
+
+		$raspored = $model->find($id);
+		$tekst = "Nema podataka o groblju";
+			if ($raspored->groblje_id) {
+				$id_groblja = (int)$raspored->groblje_id;
+        		$modelGroblja = new Groblje();
+        		$groblje = $modelGroblja->find($id_groblja);
+        		$tekst = $groblje->naziv;
+			}
+		$data['title'] = $tekst;
+		$success = $model->update($data, $id);
+		if ($success)
+		{
+			$this->log($this::IZMENA, $raspored, ['title', 'start'], $raspored);
+			$this->flash->addMessage('success', "Veza termina je uspešno raskinuta sa kartonom i pokojnikom.");
+			return $response->withRedirect($this->router->pathFor('raspored'));
+		}
+		else
+		{
+			$this->flash->addMessage('danger', "Došlo je do greške prilikom raskidnja veze.");
+			return $response->withRedirect($this->router->pathFor('raspored'));
+		}
 	}
 }

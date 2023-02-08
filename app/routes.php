@@ -59,6 +59,9 @@ $app->group('', function ()
 	$this->get('/raspored/stampa/{id}', '\App\Controllers\RasporedController:getRasporedStampa')->setName('raspored.stampa');
 	$this->get('/raspored/danas', '\App\Controllers\RasporedController:getRasporedDanas')->setName('raspored.danas');
 	$this->get('/raspored/tabela', '\App\Controllers\RasporedController:getRasporedTabela')->setName('raspored.tabela');
+	$this->get('/raspored/povezi/{id}', '\App\Controllers\RasporedController:getRasporedPovezi')->setName('raspored.povezi');
+	$this->post('/raspored/povezi', '\App\Controllers\RasporedController:postRasporedPovezi')->setName('raspored.povezi.post');
+	$this->post('/raspored/ukloni', '\App\Controllers\RasporedController:postRasporedUkloni')->setName('raspored.ukloni');
 	//Mape
 	$this->get('/mape', '\App\Controllers\MapeController:getMape')->setName('mape');
 	$this->get('/kartoni/mapa/{id}', '\App\Controllers\KartoniController:getKartoniMapa')->setName('kartoni.mapa');

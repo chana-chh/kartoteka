@@ -55,6 +55,19 @@ p {
 <hr>
 <p>PIO {{ raspored.pio == 1 ? '<span class="uk-margin-small-right" uk-icon="check"></span>' : '' }}</p>
 <h3 class="uk-margin-medium-top uk-text-center">Podaci o pokojniku</h3>
+{% if not raspored.pokojnik() %}
+<div uk-grid class="uk-margin-medium-top">
+	<div class="uk-width-1-2">
+		<p>Ime i prezime: {{ raspored.ime }} {{ raspored.prezime }}</p>
+		<p>sa poslednjim prebivalištem: {{ raspored.prebivaliste }}</p>
+		<p>Datum i mesto rođenja: {{ raspored.datum_rodjenja }}, {{ raspored.mesto }}</p>
+		<p>Preminuo dana: {{ raspored.datum_smrti }}</p>
+	</div>
+	<div class="uk-width-1-2">
+		<p>JMBG: {{ raspored.jmbg }}</p>
+	</div>
+</div>
+{% else %}
 <div uk-grid class="uk-margin-medium-top">
 	<div class="uk-width-1-2">
 		<p>Ime i prezime: {{ raspored.pokojnik().ime }} {{ raspored.pokojnik().prezime }}</p>
@@ -66,6 +79,7 @@ p {
 		<p>JMBG: {{ raspored.pokojnik().jmbg }}</p>
 	</div>
 </div>
+{% endif %}
 <h3 class="uk-margin-medium-top uk-text-center">Podaci o prijaviocu sahrane</h3>
 <div uk-grid>
 	<div class="uk-width-1-1">
@@ -95,6 +109,7 @@ p {
 		<p>Uplata će se izvršiti do: {{ raspored.uplata_do }};</p>
 	</div>
 </div>
+{% if raspored.karton() %}
 <div uk-grid>
 	<div class="uk-width-1-2">
 		<p>Datum obavljanja sahrane: {{ raspored.start }};</p>
@@ -105,6 +120,18 @@ p {
 		<p>Parcela i broj grobnog mesta: {{ raspored.karton().parcela }}/{{ raspored.karton().grobno_mesto }}</p>
 	</div>
 </div>
+{% else %}
+<div uk-grid>
+	<div class="uk-width-1-2">
+		<p>Datum obavljanja sahrane: {{ raspored.start }};</p>
+		<p>Na groblju: {{ raspored.groblje().naziv }};</p>
+	</div>
+	<div class="uk-width-1-2">
+		<p>Način: _____________________________________________________</p>
+		<p>Parcela i broj grobnog mesta: ______________________________</p>
+	</div>
+</div>
+{% endif %}
 <div uk-grid class="uk-margin-small uk-margin-small-left">
 <div class="uk-card uk-card-default uk-card-small uk-card-body uk-width-1-1">
     <p>Napomena:</p>

@@ -59,6 +59,27 @@
     </div>
   </div>
 </div>
+<div id="modal-raskidanje" uk-modal>
+  <div class="uk-modal-dialog">
+    <button class="uk-modal-close-default" type="button" uk-close></button>
+    <div class="uk-modal-header">
+      <h2 class="uk-modal-title uk-text-danger">Ukloni vezu sa terminom</h2>
+    </div>
+    <div class="uk-modal-body">
+      <p>Da li ste sigurni da želite da uklonite vezu sa terminom?</p>
+      <form action="{{ path_for('raspored.ukloni') }}" method="POST" id="forma_raskidanje">
+        {{ csrf|raw }}
+        <input type="hidden" name="modal_raspored_id" id="modal_raspored_id" value="{{pokojnik.raspored().id}}">
+      </form>
+    </div>
+    <div class="uk-modal-footer uk-text-right">
+      <div class="uk-button-group">
+        <button class="uk-button uk-button-primary" type="button" id="modal_dugme_raskidanje">Ukloni</button>
+        <button class="uk-button uk-button-secondary uk-modal-close" type="button">Otkaži</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock sadrzaj %}
 
@@ -73,6 +94,16 @@
           class="uk-button uk-button-secondary uk-button-small">
           <span uk-icon="pencil" class="ikonica"></span> Izmeni pokojnika
         </a>
+        {% if not pokojnik.raspored() %}
+        <a href="{{ path_for('raspored.povezi', { 'id': pokojnik.id }) }}"
+          class="uk-button uk-button-default uk-button-small">
+          <span uk-icon="calendar" class="ikonica"></span> Poveži termin
+        </a>
+        {% else %}
+          <a class="uk-button uk-button-default uk-button-small" href="#modal-raskidanje" uk-toggle>
+          <span uk-icon="ban" class="ikonica uk-text-danger"></span> Ukloni vezu sa terminom
+        </a>
+        {% endif %}
         <a class="uk-button uk-button-danger uk-button-small" href="#modal-brisanje-pokojnika" uk-toggle>
           <span uk-icon="trash" class="ikonica"></span> Obriši pokojnika
         </a>
@@ -85,6 +116,10 @@
 <script>
   document.getElementById("modal_dugme_brisi_pokojnika").addEventListener("click", function () {
     document.getElementById("forma_brisanje_pokojnika").submit();
+  });
+
+  document.getElementById("modal_dugme_raskidanje").addEventListener("click", function () {
+    document.getElementById("forma_raskidanje").submit();
   });
 </script>
 {% endblock skripta %}

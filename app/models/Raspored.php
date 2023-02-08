@@ -14,6 +14,11 @@ class Raspored extends Model
         return $this->belongsTo('App\Models\Karton', 'karton_id');
     }
 
+    public function groblje()
+    {
+        return $this->belongsTo('App\Models\Groblje', 'groblje_id');
+    }
+
     public function pokojnik()
     {
         return $this->belongsTo('App\Models\Pokojnik', 'pokojnik_id');
@@ -49,9 +54,35 @@ class Raspored extends Model
         }
     }
 
+    public function rodjenje()
+    {
+        $format = 'Y-m-d';
+        if ($this->datum_rodjenja === null) {
+            return "";
+        } else {
+            return DateTime::createFromFormat($format, $this->datum_rodjenja)->format('Y-m-d');
+        }
+    }
+
+    public function smrt()
+    {
+        $format = 'Y-m-d';
+        if ($this->datum_smrti === null) {
+            return "";
+        } else {
+            return DateTime::createFromFormat($format, $this->datum_smrti)->format('Y-m-d');
+        }
+    }
+
     public function danas()
     {
     	$sql = "SELECT * FROM {$this->table} WHERE end >= CURDATE() AND end < DATE_ADD(CURDATE(), INTERVAL 1 DAY) ORDER BY start";
     	return $this->fetch($sql);
+    }
+
+    public function povezivanje()
+    {
+        $sql = "SELECT * FROM {$this->table} WHERE created_at >= now()-interval 3 month ORDER BY start";
+        return $this->fetch($sql);
     }
 }

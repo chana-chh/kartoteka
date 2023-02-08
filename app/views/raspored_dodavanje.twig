@@ -1,66 +1,8 @@
 {% extends "templates/app.twig" %}
 
 {% block naslov %}
-<style>
-.onoffswitch {
-    position: relative; width: 120px;
-    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
-}
-.onoffswitch-checkbox {
-    display: none;
-}
-.onoffswitch-label {
-    display: block; overflow: hidden; cursor: pointer;
-    border: 2px solid #999999; border-radius: 20px;
-}
-.onoffswitch-inner {
-    display: block; width: 200%; margin-left: -100%;
-    transition: margin 0.3s ease-in 0s;
-}
-.onoffswitch-inner:before, .onoffswitch-inner:after {
-    display: block; float: left; width: 50%; height: 30px; padding: 0; line-height: 30px;
-    font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
-    box-sizing: border-box;
-}
-.onoffswitch-inner:before {
-    content: "Fizičko lice";
-    padding-left: 10px;
-    background-color: #34A7C1; color: #FFFFFF;
-}
-.onoffswitch-inner:after {
-    content: "Pravno lice";
-    padding-right: 10px;
-    background-color: #EEEEEE; color: #999999;
-    text-align: right;
-}
-.onoffswitch-switch {
-    display: block; width: 18px; margin: 6px;
-    background: #FFFFFF;
-    position: absolute; top: 0; bottom: 0;
-    right: 86px;
-    border: 2px solid #999999; border-radius: 20px;
-    transition: all 0.3s ease-in 0s; 
-}
-.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
-    margin-left: 0;
-}
-.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
-    right: 0px; 
-}
-</style>
 <h1>Zakazivanje sahrane</h1>
 <hr>
-
-<div uk-grid>
-	<div class="uk-width-5-6@m">
-	<p class="uk-text-muted" id="poruka"></p>
-	<p class="uk-text-muted" id="poruka_staraoci"></p>
-	<p class="uk-text-muted" id="poruka_pokojnici"></p>
-</div>
-	<div class="uk-width-1-6@m@m">
-	<button class="uk-button uk-button-primary" id="ajax" name="ajax">Provera kartona <span uk-icon="search"></span></button>
-</div>
-</div>
 <form action="{{ path_for('raspored.dodavanje.post') }}" method="POST" class="uk-form-stacked" id="forma" uk-grid>
 	{{ csrf|raw }}
 	<div class="uk-width-1-1">
@@ -68,48 +10,14 @@
 	</div>
 	<div class="uk-width-1-5@m">
 		<legend for="groblje_id">Groblje:</legend>
-		<select name="groblje_id" id="groblje_id" class="uk-select">
+		<select name="groblje_id" id="groblje_id" class="uk-select" required>
+			<option value="" disabled selected>ODABERI GROBLJE</option>
 			{% for groblje in groblja %}
 			<option value="{{ groblje.id }}">{{ groblje.naziv }}</option>
 			{% endfor %}
 		</select>
 	</div>
 
-	<div class="uk-width-1-5@m">
-		<label for="parcela" class="uk-form-label">Parcela:</label>
-		<div class="uk-form-controls">
-			<input type="text" name="parcela" id="parcela" value="{{ old.parcela ? : '' }}"
-				class="uk-input{{ errors.parcela[0] ? ' uk-form-danger': ''}}" autocomplete="off" required>
-		</div>
-		<small class=" uk-text-danger">{{ errors.parcela[0] ? :'' }}</small>
-	</div>
-
-	<div class="uk-width-1-5@m">
-		<label for="grobno_mesto" class="uk-form-label">Redni broj grobnog mesta</label>
-		<div class="uk-form-controls">
-			<input type="number" name="grobno_mesto" step="1" id="grobno_mesto" value="{{ old.grobno_mesto ? : '' }}"
-				class="uk-input{{ errors.grobno_mesto[0] ? ' uk-form-danger': ''}}" autocomplete="off" required>
-		</div>
-		<small class=" uk-text-danger">{{ errors.grobno_mesto[0] ? :'' }}</small>
-	</div>
-	<div class="uk-width-1-5@m">
-		<label for="tip_groba" class="uk-form-label">Tip groba</label>
-		<div class="uk-form-controls">
-			<select name="tip_groba" id="tip_groba" class="uk-select{{ errors.tip_groba[0] ? ' uk-form-danger': ''}}"
-				required>
-				{% for tip in tipovi %}
-				<option value="{{ tip }}" {{ old.tip_groba == tip ? ' selected' : '' }}>{{ tip }}</option>
-				{% endfor %}
-			</select>
-		</div>
-		<small class="uk-text-danger">{{ errors.tip_groba[0] ? :'' }}</small>
-	</div>
-	<div class="uk-width-1-5@m">
-		<div class="uk-form-controls uk-margin-top">
-			<label><input class="uk-checkbox{{ errors.dupla_raka[0] ? ' uk-form-danger': ''}}" type="checkbox"
-					name="dupla_raka" {{ old.dupla_raka ? ' checked' : '' }}> Dupla raka</label>
-		</div>
-	</div>
 	<div class="uk-width-1-1">
 		<h3>Podaci o pokojniku</h3>
 	</div>
@@ -149,7 +57,7 @@
 		<label for="jmbg" class="uk-form-label">JMBG</label>
 		<div class="uk-form-controls">
 			<input type="text" name="jmbg" id="jmbg" class="uk-input{{ errors.jmbg[0] ? ' uk-form-danger': ''}}"
-				value="{{ old.jmbg ? : '' }}" autocomplete="off" maxlength="13" required>
+				value="{{ old.jmbg ? : '' }}" autocomplete="off" maxlength="13">
 		</div>
 		<small class="uk-text-danger">{{ errors.jmbg[0] ? :'' }}</small>
 	</div>
@@ -212,7 +120,7 @@
 		<div class="uk-form-controls">
 			<input type="text" name="ovlascen" id="ovlascen"
 				class="uk-input{{ errors.ovlascen[0] ? ' uk-form-danger': ''}}" value="{{ old.ovlascen ? : '' }}"
-				autocomplete="off" required>
+				autocomplete="off" >
 		</div>
 		<small class="uk-text-danger">{{ errors.ovlascen[0] ? :'' }}</small>
 	</div>
@@ -225,7 +133,7 @@
 		<div class="uk-form-controls">
 			<input type="text" name="prezime_troskovi" id="prezime_troskovi"
 				class="uk-input{{ errors.prezime_troskovi[0] ? ' uk-form-danger': ''}}"
-				value="{{ old.prezime_troskovi ? : '' }}" autocomplete="off" required>
+				value="{{ old.prezime_troskovi ? : '' }}" autocomplete="off">
 		</div>
 		<small class="uk-text-danger">{{ errors.prezime_troskovi[0] ? :'' }}</small>
 	</div>
@@ -234,7 +142,7 @@
 		<div class="uk-form-controls">
 			<input type="text" name="ime_troskovi" id="ime_troskovi"
 				class="uk-input{{ errors.ime_troskovi[0] ? ' uk-form-danger': ''}}"
-				value="{{ old.ime_troskovi ? : '' }}" autocomplete="off" required>
+				value="{{ old.ime_troskovi ? : '' }}" autocomplete="off">
 		</div>
 		<small class="uk-text-danger">{{ errors.ime_troskovi[0] ? :'' }}</small>
 	</div>
@@ -290,109 +198,6 @@
 		<small class=" uk-text-danger">{{ errors.uplata_do[0] ? : '' }}</small>
 	</div>
 	<div class="uk-width-3-5@m"></div>
-	<div class="uk-width-1-1">
-		<div uk-grid class="uk-background-muted uk-padding-small" style="margin-left:1px;">
-		<div class="uk-width-1-1">
-		<h4>Podaci o računu ako je dostupan</h4>
-		<div class="onoffswitch">
-		    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
-		    <label class="onoffswitch-label" for="myonoffswitch">
-		        <span class="onoffswitch-inner"></span>
-		        <span class="onoffswitch-switch"></span>
-		    </label>
-		</div>
-		</div>
-			<div class="uk-width-1-5@m pravno" style="display: none;">
-				<label for="naziv_primaoca" class="uk-form-label">Naziv:</label>
-					<div class="uk-form-controls">
-					<input type="text" name="naziv_primaoca" id="naziv_primaoca"
-					class="uk-input{{ errors.naziv_primaoca[0] ? ' uk-form-danger': ''}}" value="{{ old.naziv_primaoca ? : '' }}"
-					autocomplete="off">
-					</div>
-				<small class="uk-text-danger">{{ errors.naziv_primaoca[0] ? :'' }}</small>
-			</div>
-			<div class="uk-width-1-5@m pravno" style="display: none;">
-				<label for="adresa_primaoca" class="uk-form-label">Adresa:</label>
-					<div class="uk-form-controls">
-					<input type="text" name="adresa_primaoca" id="adresa_primaoca"
-					class="uk-input{{ errors.adresa_primaoca[0] ? ' uk-form-danger': ''}}" value="{{ old.adresa_primaoca ? : '' }}"
-					autocomplete="off">
-					</div>
-				<small class="uk-text-danger">{{ errors.adresa_primaoca[0] ? :'' }}</small>
-			</div>
-			<div class="uk-width-1-5@m pravno" style="display: none;">
-				<label for="ziro_primaoca" class="uk-form-label">Žiro račun:</label>
-					<div class="uk-form-controls">
-					<input type="text" name="ziro_primaoca" id="ziro_primaoca"
-					class="uk-input{{ errors.ziro_primaoca[0] ? ' uk-form-danger': ''}}" value="{{ old.ziro_primaoca ? : '' }}"
-					autocomplete="off">
-					</div>
-				<small class="uk-text-danger">{{ errors.ziro_primaoca[0] ? :'' }}</small>
-			</div>
-			<div class="uk-width-1-5@m pravno" style="display: none;">
-				<label for="pib_primaoca" class="uk-form-label">PIB:</label>
-					<div class="uk-form-controls">
-					<input type="text" name="pib_primaoca" id="pib_primaoca"
-					class="uk-input{{ errors.pib_primaoca[0] ? ' uk-form-danger': ''}}" value="{{ old.pib_primaoca ? : '' }}"
-					autocomplete="off">
-					</div>
-				<small class="uk-text-danger">{{ errors.pib_primaoca[0] ? :'' }}</small>
-			</div>
-			<div class="uk-width-1-5@m pravno" style="display: none;">
-				<div class="uk-form-controls uk-margin-medium-top">
-				<label><input class="uk-checkbox{{ errors.pdv[0] ? ' uk-form-danger': ''}}" type="checkbox" name="pdv"
-				{{ old.pdv ? ' checked' : '' }}> PDV</label>
-				</div>
-			</div>
-
-		<div class="uk-width-1-5@m">
-		<label for="broj" class="uk-form-label">Broj računa:</label>
-		<div class="uk-form-controls">
-			<input type="text" name="broj" id="broj"
-				class="uk-input{{ errors.broj[0] ? ' uk-form-danger': ''}}" value="{{ old.broj ? : '' }}"
-				autocomplete="off">
-		</div>
-		<small class="uk-text-danger">{{ errors.broj[0] ? :'' }}</small>
-	</div>
-		<div class="uk-width-1-5@m">
-		<label for="datum" class="uk-form-label">Datum:</label>
-		<div class="uk-form-controls">
-			<input type="date" name="datum" id="datum" value="{{ old.datum ? : '' }}"
-				class="uk-input{{ errors.datum[0] ? ' uk-form-danger': ''}}" autocomplete="off">
-		</div>
-		<small class=" uk-text-danger">{{ errors.datum[0] ? : '' }}</small>
-	</div>
-	    <div class="uk-width-1-5@m">
-        <label for="iznos" class="uk-form-label">Iznos</label>
-        <div class="uk-form-controls">
-            <input type="number" name="iznos" id="iznos" value="0" min="0" step="0.01"
-                class="uk-input uk-text-right" autocomplete="off">
-        </div>
-        <small class="uk-text-danger">{{ errors.iznos[0] ? :'' }}</small>
-    </div>
-    	<div class="uk-width-1-5@m">
-		<div class="uk-form-controls uk-margin-medium-top">
-			<label><input class="uk-checkbox{{ errors.razduzeno[0] ? ' uk-form-danger': ''}}" type="checkbox" name="razduzeno"
-					{{ old.razduzeno ? ' checked' : '' }}> Razduženo</label>
-		</div>
-	</div>
-	<div class="uk-width-1-5@m">
-		<label for="datum_razduzenja" class="uk-form-label">Datum razduženja:</label>
-		<div class="uk-form-controls">
-			<input type="date" name="datum_razduzenja" id="datum_razduzenja" value="{{ old.datum_razduzenja ? : '' }}"
-				class="uk-input{{ errors.datum_razduzenja[0] ? ' uk-form-danger': ''}}" autocomplete="off">
-		</div>
-		<small class=" uk-text-danger">{{ errors.datum_razduzenja[0] ? : '' }}</small>
-	</div>
-	  <div class="uk-width-1-1">
-    <label for="napomena_racun" class="uk-form-label">Napomena / opis uplate</label>
-    <div class="uk-form-controls">
-      <textarea class="uk-textarea{{ errors.napomena_racun[0] ? ' uk-form-danger': ''}}" rows="2" name="napomena_racun" id="napomena_racun">{{ old.napomena_racun ? : '' }}</textarea>
-    </div>
-    <small class=" uk-text-danger">{{ errors.napomena_racun[0] ? :'' }}</small>
-  </div>
-		</div>
-	</div>
 
 	<div class="uk-width-1-1">
 		<hr class="uk-divider-icon">
@@ -447,53 +252,15 @@
 {% endblock naslov %}
 {% block skripta %}
 	<script type="text/javascript">
-	window.onload = function () {
-		window.scrollTo(0, 0);
-		document.getElementById('ajax').addEventListener('click', loadText);
-		function loadText(){
-			var groblje = document.getElementById('groblje_id').value;
-			var parcela = document.getElementById('parcela').value;
-			var mesto = document.getElementById('grobno_mesto').value;
-
-			if(groblje == null || groblje == "", parcela == null || parcela == "", mesto == null || mesto == ""){
-				document.getElementById('poruka').innerHTML = "Morate uneti naziv groblja, parcelu i redni broj grobnog mesta da bi ste proverili postojanje određenog kartona!";
-		}else{
-			var xhr = new XMLHttpRequest();
-			xhr.open('POST', '{{ path_for('raspored.ajax') }}', true);
-			xhr.onload = function(){
-				var data = JSON.parse(this.responseText);
-				if (this.status == 200){
-					document.getElementById('poruka').innerHTML = data.poruka;
-					if(data.nov_karton == 0){
-						var str1 = "Staraoci: ";
-						var str2 = "Pokojnici: ";
-						document.getElementById('poruka_staraoci').innerHTML = str1.concat(data.poruka_staraoci);
-						document.getElementById('poruka_pokojnici').innerHTML = str2.concat(data.poruka_pokojnici);
-					}else{
-						document.getElementById('poruka_staraoci').innerHTML = "";
-						document.getElementById('poruka_pokojnici').innerHTML = "";
-					}
-						document.getElementById("csrf_name").value = data.csrf_name;
-						document.getElementById("csrf_value").value = data.csrf_value;
-				}
-			}
-			token = new FormData(document.querySelector("#forma"));
-			xhr.send(token);
-		}}
-
-		const checkbox = document.getElementById('myonoffswitch');
-
-		checkbox.addEventListener('change', (event) => {
-		  if (event.target.checked) {
-		    [].forEach.call(document.querySelectorAll('.pravno'), function (el) {
-  				el.style.display = 'none';
-			});
-		  } else {
-		    [].forEach.call(document.querySelectorAll('.pravno'), function (el) {
-  				el.style.display = 'inline-block';
-			});
-		  }
-		});
-	};
+		var pocetak = document.getElementById('start');
+		var kraj = document.getElementById('end');
+		const inputHandler = function(e) {
+			var pocDate = new Date(e.target.value);
+			var krajDate = pocDate.setHours(pocDate.getHours() + 1);
+			var kd = new Date(krajDate);
+			var krajString = (kd.getFullYear() + "-" + ("0"+(kd.getMonth()+1)).slice(-2) + "-" + ("0" + kd.getDate()).slice(-2) + "T" + ("0" + kd.getHours()).slice(-2) + ":" + ("0" + kd.getMinutes()).slice(-2));
+			kraj.value = krajString;
+		}
+		pocetak.addEventListener('input', inputHandler);
 	</script>
 {% endblock skripta %}

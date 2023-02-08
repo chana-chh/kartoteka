@@ -14,14 +14,125 @@
   </div>
 </div>
 <hr>
+{% if raspored.pokojnik() %}
 <h2 class="uk-text-primary uk-margin-medium-bottom">
 	Veza sa kartonom: <small><em class="uk-text-success">[{{ raspored.karton().broj() }}]</em></small>
+<a href="{{ path_for('kartoni.pregled', { id: raspored.karton().id }) }}" title="Pregled"><span
+                  uk-icon="search"></span></a>
 </h2>
 <h3 class="uk-margin-medium-bottom">Pokojnik: <em class="uk-text-muted">{{ raspored.pokojnik().ime }}
-		{{ raspored.pokojnik().prezime }}</em></h3>
+		{{ raspored.pokojnik().prezime }}</em>
+		<a href="{{ path_for('pokojnici.pregled',{id:raspored.pokojnik().id}) }}" title="Pregled">
+                            <span uk-icon="search"></span>
+                            </a>
+		</h3>
+			{% else %}
+				<h3
+					class="uk-panel uk-background-muted uk-margin-top uk-padding-small">Termin nije povezan sa kartonom niti pokojnikom.</h3>
+			{% endif %}
 <form action="{{ path_for('raspored.izmena.post') }}" method="POST" class="uk-form-stacked">
 	{{ csrf|raw }}
 	<input type="hidden" value="{{ raspored.id }}" name="id" id="id">
+	{% if not raspored.pokojnik() %}
+	<div uk-grid>
+		<div class="uk-width-1-6@m">
+		<label for="groblje_id" class="uk-form-label">Groblje</label>
+		<div class="uk-form-controls">
+			<select name="groblje_id" id="groblje_id" class="uk-select{{ errors.groblje_id[0] ? ' uk-form-danger': ''}}"
+			 required>
+				{% for groblje in groblja %}
+				<option value="{{ groblje.id }}" {{ (old.groblje_id == groblje.id or raspored.groblje_id == groblje.id) ? ' selected' : '' }}>
+					{{ groblje.naziv }}
+				</option>
+				{% endfor %}
+			</select>
+		</div>
+		<small class="uk-text-danger">{{ errors.groblje_id[0] ? :'' }}</small>
+	</div>
+</div>
+	<div class="uk-width-1-1">
+		<h3>Podaci o pokojniku</h3>
+	</div>
+	<div uk-grid class="uk-margin-medium-top">
+		<div class="uk-width-1-6@m">
+			<div class="uk-form-controls uk-margin-top">
+				<label><input class="uk-checkbox{{ errors.pio[0] ? ' uk-form-danger': ''}}" type="checkbox" name="pio"
+						{{ (old.pio or raspored.pio == 1) ? ' checked' : '' }}> PIO</label>
+			</div>
+		</div>
+	</div>
+<div uk-grid>
+<div class="uk-width-1-6@m">
+		<label for="prezime" class="uk-form-label">Prezime</label>
+		<div class="uk-form-controls">
+			<input type="text" name="prezime" id="prezime"
+				class="uk-input{{ errors.prezime[0] ? ' uk-form-danger': ''}}" value="{{ old.prezime ? : raspored.prezime }}"
+				autocomplete="off" required>
+		</div>
+		<small class="uk-text-danger">{{ errors.prezime[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-6@m">
+		<label for="ime" class="uk-form-label">Ime</label>
+		<div class="uk-form-controls">
+			<input type="text" name="ime" id="ime" class="uk-input{{ errors.ime[0] ? ' uk-form-danger': ''}}"
+				value="{{ old.ime ? : raspored.ime }}" autocomplete="off" required>
+		</div>
+		<small class="uk-text-danger">{{ errors.ime[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-6@m">
+		<label for="srednje_ime" class="uk-form-label">Srednje ime</label>
+		<div class="uk-form-controls">
+			<input type="text" name="srednje_ime" id="srednje_ime"
+				class="uk-input{{ errors.srednje_ime[0] ? ' uk-form-danger': ''}}" value="{{ old.srednje_ime ? : raspored.srednje_ime }}"
+				autocomplete="off">
+		</div>
+		<small class="uk-text-danger">{{ errors.srednje_ime[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-6@m">
+		<label for="jmbg" class="uk-form-label">JMBG</label>
+		<div class="uk-form-controls">
+			<input type="text" name="jmbg" id="jmbg" class="uk-input{{ errors.jmbg[0] ? ' uk-form-danger': ''}}"
+				value="{{ old.jmbg ? : raspored.jmbg }}" autocomplete="off" maxlength="13">
+		</div>
+		<small class="uk-text-danger">{{ errors.jmbg[0] ? : '' }}</small>
+	</div>
+	<div class="uk-width-1-6@m">
+		<label for="mesto" class="uk-form-label">Mesto</label>
+		<div class="uk-form-controls">
+			<input type="text" name="mesto" id="mesto" class="uk-input{{ errors.mesto[0] ? ' uk-form-danger': ''}}"
+				value="{{ old.mesto ? : raspored.mesto }}" autocomplete="off">
+		</div>
+		<small class="uk-text-danger">{{ errors.mesto[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-6@m">
+		<label for="prebivaliste" class="uk-form-label">Prebivalište</label>
+		<div class="uk-form-controls">
+			<input type="text" name="prebivaliste" id="prebivaliste"
+				class="uk-input{{ errors.prebivaliste[0] ? ' uk-form-danger': ''}}"
+				value="{{ old.prebivaliste ? : raspored.prebivaliste }}" autocomplete="off">
+		</div>
+		<small class="uk-text-danger">{{ errors.mesto[0] ? :'' }}</small>
+	</div>
+	</div>
+	<div uk-grid>
+	<div class="uk-width-1-6@m">
+		<label for="datum_rodjenja" class="uk-form-label">Datum rođenja</label>
+		<div class="uk-form-controls">
+			<input type="date" name="datum_rodjenja" id="datum_rodjenja" value="{{ old.datum_rodjenja ? : raspored.rodjenje()}}"
+				class="uk-input{{ errors.datum_rodjenja[0] ? ' uk-form-danger': ''}}" autocomplete="off">
+		</div>
+		<small class=" uk-text-danger">{{ errors.datum_rodjenja[0] ? : '' }}</small>
+	</div>
+	<div class="uk-width-1-6@m">
+		<label for="datum_smrti" class="uk-form-label">Datum smrti</label>
+		<div class="uk-form-controls">
+			<input type="date" name="datum_smrti" id="datum_smrti" value="{{ old.datum_smrti ? : raspored.smrt() }}"
+				class="uk-input{{ errors.datum_smrti[0] ? ' uk-form-danger': ''}}" autocomplete="off">
+		</div>
+		<small class=" uk-text-danger">{{ errors.datum_smrti[0] ? : '' }}</small>
+	</div>
+	</div>
+{% endif %}
 	<div uk-grid>
 		<div class="uk-width-1-4@m">
 			<label for="start" class="uk-form-label">Početak</label>
@@ -57,8 +168,7 @@
 			<div class="uk-form-controls">
 				<input type="text" name="prezime_prijavioca" id="prezime_prijavioca"
 					value="{{ old.prezime_prijavioca ? : raspored.prezime_prijavioca }}"
-					class="uk-input{{ errors.prezime_prijavioca[0] ? ' uk-form-danger': ''}}" autocomplete="off"
-					required>
+					class="uk-input{{ errors.prezime_prijavioca[0] ? ' uk-form-danger': ''}}" autocomplete="off">
 			</div>
 			<small class="uk-text-danger">{{ errors.prezime_prijavioca[0] ? :'' }}</small>
 		</div>
@@ -67,7 +177,7 @@
 			<div class="uk-form-controls">
 				<input type="text" name="ime_prijavioca" id="ime_prijavioca"
 					value="{{ old.ime_prijavioca ? : raspored.ime_prijavioca }}"
-					class="uk-input{{ errors.ime_prijavioca[0] ? ' uk-form-danger': ''}}" autocomplete="off" required>
+					class="uk-input{{ errors.ime_prijavioca[0] ? ' uk-form-danger': ''}}" autocomplete="off">
 			</div>
 			<small class="uk-text-danger">{{ errors.ime_prijavioca[0] ? :'' }}</small>
 		</div>
@@ -90,7 +200,7 @@
 			<div class="uk-form-controls">
 				<input type="text" name="prezime_troskovi" id="prezime_troskovi"
 					value="{{ old.prezime_troskovi ? : raspored.prezime_troskovi }}"
-					class="uk-input{{ errors.prezime_troskovi[0] ? ' uk-form-danger': ''}}" autocomplete="off" required>
+					class="uk-input{{ errors.prezime_troskovi[0] ? ' uk-form-danger': ''}}" autocomplete="off">
 			</div>
 			<small class="uk-text-danger">{{ errors.prezime_troskovi[0] ? :'' }}</small>
 		</div>
@@ -99,7 +209,7 @@
 			<div class="uk-form-controls">
 				<input type="text" name="ime_troskovi" id="ime_troskovi"
 					value="{{ old.ime_troskovi ? : raspored.ime_troskovi }}"
-					class="uk-input{{ errors.ime_troskovi[0] ? ' uk-form-danger': ''}}" autocomplete="off" required>
+					class="uk-input{{ errors.ime_troskovi[0] ? ' uk-form-danger': ''}}" autocomplete="off">
 			</div>
 			<small class="uk-text-danger">{{ errors.ime_troskovi[0] ? :'' }}</small>
 		</div>
@@ -107,7 +217,7 @@
 			<label for="ovlascen" class="uk-form-label">Ovlašćen od strane:</label>
 			<div class="uk-form-controls">
 				<input type="text" name="ovlascen" id="ovlascen" value="{{ old.ovlascen ? : raspored.ovlascen }}"
-					class="uk-input{{ errors.ovlascen[0] ? ' uk-form-danger': ''}}" autocomplete="off" required>
+					class="uk-input{{ errors.ovlascen[0] ? ' uk-form-danger': ''}}" autocomplete="off">
 			</div>
 			<small class="uk-text-danger">{{ errors.ovlascen[0] ? :'' }}</small>
 		</div>
@@ -132,7 +242,7 @@
 	</div>
 	<div uk-grid>
 		<div class="uk-width-1-5@m">
-			<label for="broj_lk" class="uk-form-label">Lična karta</label>
+			<label for="broj_lk" class="uk-form-label">Broj lične karte</label>
 			<div class="uk-form-controls">
 				<input type="number" name="broj_lk" step="1" id="broj_lk" value="{{ old.broj_lk ? : raspored.broj_lk }}"
 					class="uk-input{{ errors.broj_lk[0] ? ' uk-form-danger': ''}}" autocomplete="off">
@@ -166,14 +276,6 @@
 		<div class="uk-width-1-5"></div>
 	</div>
 	<hr>
-	<div uk-grid class="uk-margin-medium-top">
-		<div class="uk-width-1-6@m">
-			<div class="uk-form-controls uk-margin-top">
-				<label><input class="uk-checkbox{{ errors.pio[0] ? ' uk-form-danger': ''}}" type="checkbox" name="pio"
-						{{ (old.pio or raspored.pio == 1) ? ' checked' : '' }}> PIO</label>
-			</div>
-		</div>
-	</div>
 	<div uk-grid>
 		<div class="uk-width-1-2@m">
 			<label for="napomena" class="uk-form-label">Napomena</label>
@@ -202,6 +304,11 @@
 			<a href="{{ path_for('raspored') }}" class="uk-button uk-button-secondary uk-width-1-4">
 				<span uk-icon="ban"></span> Otkaži
 			</a>
+			 {% if raspored.pokojnik() %}
+          <a class="uk-button uk-button-default uk-button-small" href="#modal-raskidanje" uk-toggle>
+          <span uk-icon="ban" class="ikonica uk-text-danger"></span> Ukloni vezu sa terminom
+        </a>
+        {% endif %}
 			<a href="{{ path_for('raspored.stampa', { 'id': raspored.id }) }}"
 				class="uk-button uk-button-default uk-width-1-4">
 				<span uk-icon="print"></span> Štampaj
@@ -231,6 +338,27 @@
 		</div>
 	</div>
 </div>
+<div id="modal-raskidanje" uk-modal>
+  <div class="uk-modal-dialog">
+    <button class="uk-modal-close-default" type="button" uk-close></button>
+    <div class="uk-modal-header">
+      <h2 class="uk-modal-title uk-text-danger">Ukloni vezu sa terminom</h2>
+    </div>
+    <div class="uk-modal-body">
+      <p>Da li ste sigurni da želite da uklonite vezu sa terminom?</p>
+      <form action="{{ path_for('raspored.ukloni') }}" method="POST" id="forma_raskidanje">
+        {{ csrf|raw }}
+        <input type="hidden" name="modal_raspored_id" id="modal_raspored_id" value="{{pokojnik.raspored().id}}">
+      </form>
+    </div>
+    <div class="uk-modal-footer uk-text-right">
+      <div class="uk-button-group">
+        <button class="uk-button uk-button-primary" type="button" id="modal_dugme_raskidanje">Ukloni</button>
+        <button class="uk-button uk-button-secondary uk-modal-close" type="button">Otkaži</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock naslov %}
 {% block skripta %}
@@ -238,6 +366,8 @@
 document.getElementById("modal_dugme_brisi_termin").addEventListener("click", function () {
     document.getElementById("forma_brisanje_termina").submit();
   });
-
+  document.getElementById("modal_dugme_raskidanje").addEventListener("click", function () {
+    document.getElementById("forma_raskidanje").submit();
+  });
 </script>
 {% endblock skripta %}

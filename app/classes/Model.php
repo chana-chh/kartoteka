@@ -376,7 +376,11 @@ abstract class Model
         $pk = $this->getPrimaryKey();
         $params = [":{$foreign_table_fk}" => $this->$pk];
         $result = $this->fetch($sql, $params, $model_class);
-        return $result[0];
+        if (!$result) {
+            return null;
+        }else{
+            return $result[0];
+        }
     }
 
     /**
@@ -415,7 +419,11 @@ abstract class Model
         $sql = "SELECT * FROM {$m->getTable()} WHERE {$m->getPrimaryKey()} = :{$m->getPrimaryKey()};";
         $params = [":{$m->getPrimaryKey()}" => $this->$this_table_fk];
         $result = $this->fetch($sql, $params, $model_class);
-        return $result[0];
+        if (!$result) {
+            return null;
+        }else{
+            return $result[0];
+        }
     }
 
     /**
