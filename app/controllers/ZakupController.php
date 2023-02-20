@@ -22,9 +22,7 @@ class ZakupController extends Controller
 	public function postZakup($request, $response)
 	{
 		// pojedinacno zaduzivanje zakupom
-
 		// uracunati avans ako postoji
-
 
 		$data = $request->getParams();
 		unset($data['csrf_name']);
@@ -51,6 +49,9 @@ class ZakupController extends Controller
 			'datum_zaduzenja' => [
 				'required' => true,
 			],
+
+			// ovo samo kad obracun kamate  postane obavezan
+
 			// 'datum_prispeca' => [
 			// 	'required' => true,
 			// ],
@@ -90,8 +91,7 @@ class ZakupController extends Controller
 				'iznos_razduzeno' => 0,
 				'razduzeno' => 0,
 				'datum_zaduzenja' => $data['datum_zaduzenja'],
-				'datum_prispeca' => null,
-				// 'datum_prispeca' => $data['datum_prispeca'],
+				'datum_prispeca' => $data['datum_prispeca'] ?? null,
 				'korisnik_id_zaduzio' => $this->auth->user()->id,
 				'napomena' => $data['napomena'],
 				'avansno' => 0,
@@ -105,6 +105,7 @@ class ZakupController extends Controller
 				$podaci['avans_iznos'] = $avans;
 				$avans = 0;
 				$podaci['avansno'] = 1;
+				// dodati uplata_id
 			}
 
 			if ($avans > $iznos_zakupa)
@@ -117,6 +118,7 @@ class ZakupController extends Controller
 				$podaci['razduzeno'] = 1;
 				$podaci['datum_razduzenja'] = $data['datum_zaduzenja'];
 				$podaci['korisnik_id_razduzio'] = $this->auth->user()->id;
+				// dodati uplata_id
 			}
 
 

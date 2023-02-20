@@ -55,31 +55,19 @@ class UplataController extends Controller
 		}
 		else
 		{
-			// TODO: ovde proveriti ispravnost !!!
 			$sql = "UPDATE zaduzenja SET razduzeno = 0, iznos_razduzeno = 0, korisnik_id_razduzio = NULL, uplata_id = NULL,
 							glavnica = poslednja_glavnica, datum_prispeca = poslednji_datum_prispeca, datum_razduzenja = NULL,
-							poslednja_glavnica = 0, poslednji_datum_prispeca = NULL,
-							iznos_razduzeno = iznos_zaduzeno - poslednja_glavnica
+							poslednja_glavnica = 0, poslednji_datum_prispeca = NULL
 					WHERE uplata_id = {$uplata->id}";
 			$uplata->run($sql);
 
-			$sql = "UPDATE racuni SET razduzeno = 0, korisnik_id_razduzio = NULL, uplata_id = NULL,
+			$sql = "UPDATE racuni SET razduzeno = 0, korisnik_id_razduzio = NULL, uplata_id = NULL, iznos_razduzeno = 0,
 							glavnica = poslednja_glavnica, datum_prispeca = poslednji_datum_prispeca, datum_razduzenja = NULL,
-							poslednja_glavnica = 0, poslednji_datum_prispeca = NULL,
-							iznos_razduzeno = iznos - poslednja_glavnica
+							poslednja_glavnica = 0, poslednji_datum_prispeca = NULL
 					WHERE uplata_id = {$uplata->id}";
 			$uplata->run($sql);
 
-			// ako je $uplata->visak == 0 $uplata->avans oduzeti od $staraoc->avans
-			// ako je $uplata->visak == 1 $uplata->avans dodati na $staraoc->avans
-			if ($uplata->visak == 0)
-			{
-				$staraoc->update(['avans' => $staraoc->avans - $uplata->iznos], $staraoc_id);
-			}
-			else
-			{
-				$staraoc->update(['avans' => $staraoc->avans + $uplata->iznos], $staraoc_id);
-			}
+			$staraoc->update(['avans' => 0], $staraoc->id);
 		}
 
 		$success = $uplata->deleteOne($id);
@@ -251,7 +239,7 @@ class UplataController extends Controller
 
 		// proveriti da li je odabrano samo jedno zaduzenje/racun
 		$br = count($zaduzenja_data) + count($racuni_data);
-		if($br != 1)
+		if ($br != 1)
 		{
 			$this->flash->addMessage('danger', 'Došlo je do greške prilikom razduživanja. Može se razdužiti samo jedna stavka.');
 			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $staraoc_id]));

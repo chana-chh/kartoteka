@@ -19,7 +19,6 @@ class RacuniController extends Controller
 	public function postRacun($request, $response)
 	{
 		// pojedinacno zaduzivanje racunima
-
 		// uracunati avans ako postoji
 
 		$data = $request->getParams();
@@ -36,10 +35,19 @@ class RacuniController extends Controller
 			'broj' => [
 				'required' => true,
 			],
-			// dodati datum_prispeca (rok)
 			'datum' => [
 				'required' => true,
 			],
+
+			// ovo samo kad obracun kamate  postane obavezan
+			
+			// 'rok' => [
+			// 	'required' => true,
+			// ],
+			// 'rok' => [ // test radi i za datum
+			// 	'min' => $data['datum_zaduzenja'],
+			// ],
+
 			'iznos' => [
 				'required' => true,
 				'min' => 0.01,
@@ -72,8 +80,7 @@ class RacuniController extends Controller
 				'korisnik_id_zaduzio' => $this->auth->user()->id,
 				'korisnik_id_razduzio' => null,
 				'napomena' => $data['napomena'],
-				'datum_prispeca' => null,
-				// 'datum_prispeca' => $data['rok'],
+				'datum_prispeca' => $data['rok'] ?? null,
 				'avansno' => 0,
 				'avans_iznos' => 0,
 			];

@@ -1,13 +1,14 @@
 
-# TODO
+TODO: 
 
-## Zakazivanje sahrane (Stanislav)
+Brisanje uplate
 
-- broj grobnog mesta da bude tekst (trenutno je broj)
-- obavezna polja su samo:
-	- ime i prezime pokojika
-	- ime i prezime prijavioca
-	- datum i vreme sahrane
+Kada se napravi pravi avans (sve je razduzeno i postoji visak para), a kasnije se
+brisu zaduzenja/racuni koji su razduzeni ovim parama sta da se radi. (vratiti pare na avans)
+
+Isto pitanje kad se brise uplata koja je napravila avans. ???
+
+Avans moze biti iz vise uplata.
 
 
 

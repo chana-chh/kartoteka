@@ -209,8 +209,6 @@ class TransakcijeController extends Controller
 
 	public function postZaduzivanje($request, $response)
 	{
-		// TODO: ako postoji nerazduzeni avansi onemoguciti zaduzivanje !!!
-
 		$staraoci_sa_nerazduzenim_avansom = count((new Staraoc())->sviSaraociSaNerazduzenimAvansom());
 
 		if ($staraoci_sa_nerazduzenim_avansom > 0)
@@ -556,7 +554,7 @@ class TransakcijeController extends Controller
 			$uplata = $model_uplata->find($uplata_id);
 
 			// Dodaje se visak uplate na avans staraoca
-			$sql = "UPDATE staraoci SET avans = avans + {$visak_uplate} WHERE id = {$id};";
+			$sql = "UPDATE staraoci SET avans = avans + {$visak_uplate}, avans_uplata_id = {$uplata_id} WHERE id = {$id};";
 			$staraoc->run($sql);
 
 			$data_za_razduzenje = [
