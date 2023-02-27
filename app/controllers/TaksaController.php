@@ -91,7 +91,7 @@ class TaksaController extends Controller
 				'iznos_razduzeno' => 0,
 				'razduzeno' => 0,
 				'datum_zaduzenja' => $data['datum_zaduzenja'],
-				'datum_prispeca' => null,
+				'datum_prispeca' => empty($data['datum_prispeca']) ? null : $data['datum_prispeca'],
 				// 'datum_prispeca' => $data['datum_prispeca'],
 				'korisnik_id_zaduzio' => $this->auth->user()->id,
 				'napomena' => $data['napomena'],

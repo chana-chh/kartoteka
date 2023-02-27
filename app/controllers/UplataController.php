@@ -130,7 +130,7 @@ class UplataController extends Controller
 						'poslednji_datum_prispeca' => $zad->datum_prispeca,
 						'glavnica' => $zad->glavnica - $iznos,
 						'iznos_razduzeno' => $zad->iznos_razduzeno + $iznos,
-						'datum_prispeca' => date('Y-m-d'),
+						'datum_prispeca' => $zad->datum_prispeca === null ? null : date('Y-m-d'),
 						'napomena' => $zad->napomena . "\nautomatsko razduživanje viška uplate",
 						'uplata_id' => $uplata_id,
 					], $zad->id);
@@ -144,6 +144,7 @@ class UplataController extends Controller
 						'poslednja_glavnica' => $zad->glavnica,
 						'poslednji_datum_prispeca' => $zad->datum_prispeca,
 						'glavnica' => 0,
+						'datum_prispeca' => null,
 						'iznos_razduzeno' => $zad->iznos_zaduzeno,
 						'razduzeno' => 1,
 						'datum_razduzenja' => date('Y-m-d'),
@@ -171,7 +172,7 @@ class UplataController extends Controller
 							'poslednji_datum_prispeca' => $rn->datum_prispeca,
 							'glavnica' => $rn->glavnica - $iznos,
 							'iznos_razduzeno' => $rn->iznos_razduzeno + $iznos,
-							'datum_prispeca' => date('Y-m-d'),
+							'datum_prispeca' => $rn->datum_prispeca === null ? null : date('Y-m-d'),
 							'napomena' => $rn->napomena . "\nautomatsko razduživanje viška uplate",
 							'uplata_id' => $uplata_id,
 						], $rn->id);
@@ -185,6 +186,7 @@ class UplataController extends Controller
 							'poslednja_glavnica' => $rn->glavnica,
 							'poslednji_datum_prispeca' => $rn->datum_prispeca,
 							'glavnica' => 0,
+							'datum_prispeca' => null,
 							'iznos_razduzeno' => $rn->iznos,
 							'razduzeno' => 1,
 							'datum_razduzenja' => date('Y-m-d'),
@@ -252,6 +254,12 @@ class UplataController extends Controller
 		}
 
 		$visak_iznos = (float) $data['visak_iznos'];
+
+		/*
+
+				??? STA JE SA ID UPLATE ???
+
+		*/
 
 		if (count($zaduzenja_data) == 1) // ako je zaduzenje
 		{

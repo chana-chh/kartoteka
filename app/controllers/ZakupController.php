@@ -91,13 +91,14 @@ class ZakupController extends Controller
 				'iznos_razduzeno' => 0,
 				'razduzeno' => 0,
 				'datum_zaduzenja' => $data['datum_zaduzenja'],
-				'datum_prispeca' => $data['datum_prispeca'] ?? null,
+				'datum_prispeca' => empty($data['datum_prispeca']) ? null : $data['datum_prispeca'],
 				'korisnik_id_zaduzio' => $this->auth->user()->id,
 				'napomena' => $data['napomena'],
 				'avansno' => 0,
 				'avans_iznos' => 0,
 			];
 
+			// ako avans ne pokriva iznos zaduzenja
 			if ($avans > 0 && $avans < $iznos_zakupa)
 			{
 				$podaci['glavnica'] -= $avans;
@@ -105,10 +106,10 @@ class ZakupController extends Controller
 				$podaci['avans_iznos'] = $avans;
 				$avans = 0;
 				$podaci['avansno'] = 1;
-				// dodati uplata_id
 			}
 
-			if ($avans > $iznos_zakupa)
+			// ako avans tacno pokriva iznos zaduzenja ili je veci od zaduzenja
+			if ($avans >= $iznos_zakupa)
 			{
 				$avans -= $iznos_zakupa;
 				$podaci['glavnica'] = 0;
@@ -118,9 +119,7 @@ class ZakupController extends Controller
 				$podaci['razduzeno'] = 1;
 				$podaci['datum_razduzenja'] = $data['datum_zaduzenja'];
 				$podaci['korisnik_id_razduzio'] = $this->auth->user()->id;
-				// dodati uplata_id
 			}
-
 
 			$model_zaduzenje->insert($podaci);
 

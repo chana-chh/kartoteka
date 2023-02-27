@@ -80,11 +80,12 @@ class RacuniController extends Controller
 				'korisnik_id_zaduzio' => $this->auth->user()->id,
 				'korisnik_id_razduzio' => null,
 				'napomena' => $data['napomena'],
-				'datum_prispeca' => $data['rok'] ?? null,
+				'datum_prispeca' => empty($data['rok']) ? null : $data['rok'],
 				'avansno' => 0,
 				'avans_iznos' => 0,
 			];
 
+			// ako avans ne pokriva iznos racuna
 			if ($avans > 0 && $avans < $iznos_racuna)
 			{
 				$podaci['glavnica'] -= $avans;
@@ -94,6 +95,7 @@ class RacuniController extends Controller
 				$podaci['avansno'] = 1;
 			}
 
+			// ako avans tacno pokriva iznos racuna ili je veci od racuna
 			if ($avans > $iznos_racuna)
 			{
 				$avans -= $iznos_racuna;
