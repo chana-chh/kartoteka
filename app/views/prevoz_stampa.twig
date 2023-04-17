@@ -1,0 +1,27 @@
+{% extends "templates/print.twig" %}
+
+{% block sadrzaj %}
+	<h1>Prevoz pokojnika</h1>
+	
+	<hr>
+	
+	<h3>Datum i vreme prevoza</h3>
+	<p>Dana: {{ prevoz.datum|date('Y-m-d') }}. godine u {{ prevoz.vreme|date('H:i') }} časova.</p>
+	
+	<h3>Naručilac prevoza</h3>
+	<p>{{  prevoz.punoIme()|upper }}, broj telefona {{ prevoz.telefon }}.</p>
+	
+	<h3>Pokojnik</h3>
+	<p>{{  prevoz.punoImePokojnika()|upper }}</p>
+
+	<h3>Početna destinacija</h3>
+	<p>{{ prevoz.adresaOd() }}</p>
+	
+	<h3>Krajnja destinacija</h3>
+	<p>{{ prevoz.adresaDo() }}</p>
+	
+	<h3>Napomena</h3>
+	<p>{{ prevoz.napomena }}</p>
+
+
+{% endblock sadrzaj %}

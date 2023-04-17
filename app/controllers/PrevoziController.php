@@ -295,4 +295,12 @@ class PrevoziController extends Controller
 			return $response->withRedirect($this->router->pathFor('prevozi'));
 		}
 	}
+
+	public function getPrevoziStampa($request, $response, $args)
+	{
+		$id = (int) $args['id'];
+		$prevoz = (new Prevoz())->find($id);
+		$this->render($response, 'prevoz_stampa.twig', compact('prevoz'));
+	}
+
 }

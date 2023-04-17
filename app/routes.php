@@ -185,6 +185,7 @@ $app->group('', function ()
 	$this->get('/prevozi/izmena/{id}', '\App\Controllers\PrevoziController:getPrevoziIzmena')->setName('prevozi.izmena.get');
 	$this->post('/prevozi/izmena', '\App\Controllers\PrevoziController:postPrevoziIzmena')->setName('prevozi.izmena.post');
 	$this->post('/prevozi/brisanje', '\App\Controllers\PrevoziController:postPrevoziBrisanje')->setName('prevozi.brisanje.post');
+	$this->get('/prevozi/stampa/{id}', '\App\Controllers\PrevoziController:getPrevoziStampa')->setName('prevozi.stampa.get');
 
 	// $this->get('/staraoci/dodavanje/{id}', '\App\Controllers\PrevoziController:getStaraociDodavanje')->setName('staraoci.dodavanje');
 	// $this->post('/staraoci/dodavanje', '\App\Controllers\PrevoziController:postStaraociDodavanje')->setName('staraoci.dodavanje.post');

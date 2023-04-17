@@ -101,17 +101,17 @@
 					<th
 						class="w-10">Pokojnik</th>
 					<th
-						class="w-10">Datum</th>
+						class="w-5">Datum</th>
 					<th
-						class="w-10">Vreme</th>
+						class="w-5">Vreme</th>
 					<th
 						class="w-15">Adresa OD</th>
 					<th
 						class="w-15">Adresa DO</th>
 					<th
-						class="w-10">Napomena</th>
+						class="w-15">Napomena</th>
 					<th
-						class="w-5 uk-text-right">
+						class="w-10 uk-text-right">
 						<span
 							uk-icon="cog"></span>
 					</th>
@@ -139,6 +139,13 @@
 							class="uk-clearfix">
 							<ul
 								class="uk-iconnav uk-float-right">
+								<li>
+									<a
+										href="{{ path_for('prevozi.stampa.get',{id:prevoz.id}) }}" title="Štampa" target="_blank">
+										<span
+											uk-icon="print"></span>
+									</a>
+								</li>
 								<li>
 									<a
 										href="{{ path_for('prevozi.izmena.get',{id:prevoz.id}) }}" title="Izmena">
