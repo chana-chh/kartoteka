@@ -35,7 +35,7 @@
 	<input type="hidden" value="{{ raspored.id }}" name="id" id="id">
 	{% if not raspored.pokojnik() %}
 	<div uk-grid>
-		<div class="uk-width-1-6@m">
+		<div class="uk-width-1-4@m">
 		<label for="groblje_id" class="uk-form-label">Groblje</label>
 		<div class="uk-form-controls">
 			<select name="groblje_id" id="groblje_id" class="uk-select{{ errors.groblje_id[0] ? ' uk-form-danger': ''}}"
@@ -48,6 +48,22 @@
 			</select>
 		</div>
 		<small class="uk-text-danger">{{ errors.groblje_id[0] ? :'' }}</small>
+	</div>
+		<div class="uk-width-1-4@m">
+		<label for="parcela" class="uk-form-label">Parcela</label>
+		<div class="uk-form-controls">
+			<input type="text" name="parcela" id="parcela" class="uk-input{{ errors.parcela[0] ? ' uk-form-danger': ''}}" value="{{ old.parcela ? : raspored.parcela }}"
+			 autocomplete="off">
+		</div>
+		<small class="uk-text-danger">{{ errors.parcela[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-4@m">
+		<label for="grobno_mesto" class="uk-form-label">Grobno mesto</label>
+		<div class="uk-form-controls">
+			<input type="text" name="grobno_mesto" id="grobno_mesto" value="{{ old.grobno_mesto ? : raspored.grobno_mesto }}" class="uk-input{{ errors.grobno_mesto[0] ? ' uk-form-danger': ''}}"
+			 autocomplete="off">
+		</div>
+		<small class="uk-text-danger">{{ errors.grobno_mesto[0] ? :'' }}</small>
 	</div>
 </div>
 	<div class="uk-width-1-1">

@@ -8,7 +8,7 @@
 	<div class="uk-width-1-1">
 		<h3>Podaci o grobnom mestu</h3>
 	</div>
-	<div class="uk-width-1-5@m">
+	<div class="uk-width-1-4@m">
 		<legend for="groblje_id">Groblje:</legend>
 		<select name="groblje_id" id="groblje_id" class="uk-select" required>
 			<option value="" disabled selected>ODABERI GROBLJE</option>
@@ -16,6 +16,23 @@
 			<option value="{{ groblje.id }}">{{ groblje.naziv }}</option>
 			{% endfor %}
 		</select>
+	</div>
+	<div class="uk-width-1-4@m">
+		<label for="parcela" class="uk-form-label">Parcela</label>
+		<div class="uk-form-controls">
+			<input type="text" name="parcela" id="parcela"
+				class="uk-input{{ errors.parcela[0] ? ' uk-form-danger': ''}}" value="{{ old.parcela ? : '' }}"
+				autocomplete="off">
+		</div>
+		<small class="uk-text-danger">{{ errors.parcela[0] ? :'' }}</small>
+	</div>
+	<div class="uk-width-1-4@m">
+		<label for="grobno_mesto" class="uk-form-label">Grobno mesto</label>
+		<div class="uk-form-controls">
+			<input type="text" name="grobno_mesto" id="grobno_mesto" value="{{ old.grobno_mesto ? : '' }}"
+				class="uk-input{{ errors.grobno_mesto[0] ? ' uk-form-danger': ''}}" autocomplete="off">
+		</div>
+		<small class="uk-text-danger">{{ errors.grobno_mesto[0] ? :'' }}</small>
 	</div>
 
 	<div class="uk-width-1-1">

@@ -107,6 +107,8 @@ class RasporedController extends Controller
 			$mup = filter_var($data['mup'], FILTER_SANITIZE_STRING);
 			$telefon = filter_var($data['telefon'], FILTER_SANITIZE_STRING);
 			$pio = isset($data['pio']) ? 1 : 0;
+			$parcela = str_replace('%', '', filter_var($data['parcela'], FILTER_SANITIZE_STRING));
+			$grobno_mesto = str_replace('%', '', filter_var($data['grobno_mesto'], FILTER_SANITIZE_STRING));
 
 			$tekst = "Nema podataka o groblju";
 			if (!empty($data['groblje_id'])) {
@@ -114,6 +116,12 @@ class RasporedController extends Controller
         		$modelGroblja = new Groblje();
         		$groblje = $modelGroblja->find($id_groblja);
         		$tekst = $groblje->naziv;
+			}
+			if (!empty($data['parcela'])) {
+        		$tekst = $tekst.", ".$data['parcela'];
+			}
+			if (!empty($data['grobno_mesto'])) {
+        		$tekst = $tekst.", ".$data['grobno_mesto'];
 			}
 			
 		$dstart = date("Y-m-d H:i:s", strtotime($data['start']));
@@ -143,6 +151,8 @@ class RasporedController extends Controller
 			'groblje_id' => $data['groblje_id'],
 			'ime' => $ime,
 			'prezime' => $prezime,
+			'parcela' => $parcela,
+			'grobno_mesto' => $grobno_mesto,
 			'srednje_ime' => $srednje_ime,
 			'jmbg' => $jmbg,
 			'mesto' => $mesto,
@@ -286,8 +296,21 @@ class RasporedController extends Controller
             $this->flash->addMessage('danger', 'Došlo je do greške prilikom izmene termina.');
             return $response->withRedirect($this->router->pathFor('pocetna'));
         } else {
+        $tekst = "Nema podataka o groblju";
+			if (!empty($data['groblje_id'])) {
+				$id_groblja = (int)$data['groblje_id'];
+        		$modelGroblja = new Groblje();
+        		$groblje = $modelGroblja->find($id_groblja);
+        		$tekst = $groblje->naziv;
+			}
+			if (!empty($data['parcela'])) {
+        		$tekst = $tekst.", ".$data['parcela'];
+			}
+			if (!empty($data['grobno_mesto'])) {
+        		$tekst = $tekst.", ".$data['grobno_mesto'];
+			}
+		$data['title'] = $tekst."  Pokojnik:".$data['ime']." ".$data['prezime'];
 		$model = new Raspored();
-
 		$raspored = $model->find($id);
 
 		$this->log($this::IZMENA, $raspored, ['title', 'start'], $raspored);
