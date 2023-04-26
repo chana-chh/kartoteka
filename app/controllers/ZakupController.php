@@ -73,6 +73,11 @@ class ZakupController extends Controller
 		else
 		{
 			$staraoc = $model->find($data['staraoc_id']);
+			if($staraoc->aktivan === 0)
+			{
+				$this->flash->addMessage('danger', 'Staraoc nije aktivan.');
+				return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $data['staraoc_id']]));
+			}
 			$bm = $staraoc->karton()->broj_mesta;
 			$bs = $staraoc->karton()->brojAktivnihStaraoca();
 

@@ -309,4 +309,10 @@ class Karton extends Model
         return (float) $this->fetch($sql)[0]->ukupno;
     }
 
+	// racunovodstvo
+	public function pedja()
+	{
+		return $this->hasOne('App\Models\Racunovodstvo', 'karton_id');
+	}
+
 }

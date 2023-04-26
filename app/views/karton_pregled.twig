@@ -395,6 +395,27 @@
 		</tr>
 	</table>
 
+	{# ovo da se brise kada se zavrsi unos #}
+	<div
+		class="uk-panel uk-background-muted uk-padding-small uk-text-primary">
+		<p><strong>DUG: {{ karton.pedja().saldo|number_format(2, '.', ',') }}</strong></p>
+		<p>BR: {{ karton.pedja().pib }}</p>
+		<p>Broj mesta: {{ karton.pedja().br_mesta }}</p>
+		<p>Jmbg: {{ karton.pedja().jmbg }}</p>
+		<p>Staraoc: {{ karton.pedja().opis }}</p>
+		<p>Adresa: {{ karton.pedja().adresa() }}</p>
+		<p>Vlasnik: {{ karton.pedja().vlasnik }}</p>
+		<p>Resenje: {{ karton.pedja().resenje }}</p>
+		<p>Sukorisnici: {{ karton.pedja().sukorisnici }}</p>
+		<p>Telefon: {{ karton.pedja().tel }}</p>
+		<p>Telefax: {{ karton.pedja().telefax }}</p>
+		<p>Kontakt: {{ karton.pedja().kontakt }}</p>
+		<p>Broj izjave: {{ karton.pedja().br_izjave }}</p>
+		<p>Sifra delatnosti: {{ karton.pedja().email }}</p>
+		<p>Maticni broj: {{ karton.pedja().mat_broj }}</p>
+		<p>Sektor: {{ karton.pedja().sektor }}</p>
+		<p>Ref. prod.: {{ karton.pedja().ref?prod }}</p>
+	</div>
 
 	<div
 		class="uk-clearfix uk-margin-large-top">

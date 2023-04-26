@@ -47,5 +47,21 @@ $container['view'] = function ($container)
     $view->getEnvironment()->addGlobal('DIR', DIR);
     $view->addExtension(new Knlv\Slim\Views\TwigMessages(new Slim\Flash\Messages));
     $view->addExtension(new Twig_Extension_Debug);
+	$function = new \Twig\TwigFunction('latinicaUCirilicu',function(string $tekst){
+		$latinica = [
+			'Đ', 'Dj', 'DJ', 'Lj', 'LJ', 'Nj', 'NJ', 'Dž', 'DŽ',
+			'A', 'B', 'V', 'G', 'D', 'E', 'Ž', 'Z', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'Ć', 'U', 'F', 'H', 'C', 'Č', 'Š',
+			'đ', 'dj', 'lj', 'nj', 'dž',
+			'a', 'b', 'v', 'g', 'd', 'e', 'ž', 'z', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 't', 'ć', 'u', 'f', 'h', 'c', 'č', 'š',
+		];
+		$cirilica = [
+			'Ђ', 'Ђ', 'Ђ', 'Љ', 'Љ', 'Њ', 'Њ', 'Џ', 'Џ',
+			'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'Ј', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'Ћ', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш',
+			'ђ', 'ђ', 'љ', 'њ', 'џ',
+			'а', 'б', 'в', 'г', 'д', 'е', 'ж', 'з', 'и', 'ј', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'ћ', 'у', 'ф', 'х', 'ц', 'ч', 'ш',
+		];
+		return str_replace($latinica, $cirilica, $tekst);
+	});
+	$view->getEnvironment()->addFunction($function);
     return $view;
 };

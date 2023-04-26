@@ -67,6 +67,12 @@ class RacuniController extends Controller
 			$staraoc = (new Staraoc())->find($data['staraoc_id']);
 			$avans = $staraoc->avans;
 
+			if($staraoc->aktivan === 0)
+			{
+				$this->flash->addMessage('danger', 'Staraoc nije aktivan.');
+				return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $data['staraoc_id']]));
+			}
+
 			$podaci = [
 				'karton_id' => $data['karton_id'],
 				'staraoc_id' => $data['staraoc_id'],
