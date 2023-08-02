@@ -131,7 +131,7 @@
 							{{  prevoz.punoImePokojnika()|upper }}
 						</td>
 						<td>{{ prevoz.datum|date('d.m.Y') }}</td>
-						<td>{{ prevoz.vreme|date('H:i') }}</td>
+						<td class="uk-text-danger"><strong>{{ prevoz.vreme|date('H:i') }}</strong></td>
 						<td>{{ prevoz.adresaOd() }}</td>
 						<td>{{ prevoz.adresaDo() }}</td>
 						<td>{{ prevoz.napomena|nl2br }}</td>

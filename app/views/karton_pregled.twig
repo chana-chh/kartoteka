@@ -178,7 +178,12 @@
 						<td>{{ st.jmbg }}</td>
 						<td>{{ st.adresa() }}</td>
 						<td>{{ st.telefon }}</td>
-						<td>{{ st.aktivanDisabled()|raw }}</td>
+						{# <td>{{ st.aktivanDisabled()|raw }}</td> #}
+						<td class="uk-text-success">
+							{% if st.aktivan == 1 %}
+								<span uk-icon="check"></span>
+							{% endif %}
+						</td>
 						<td
 							class="uk-clearfix">
 							<ul

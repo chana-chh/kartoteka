@@ -64,7 +64,11 @@
         </td>
         <td>{{ karton.broj_mesta }}</td>
         <td>{{ karton.tip_groba }}</td>
-        <td>{{ karton.aktivanDisabled() | raw }}</td>
+		<td class="uk-text-success">
+			{% if karton.aktivan == 1 %}
+				<span uk-icon="check"></span>
+			{% endif %}
+		</td>
         <td class="uk-text-truncate">{{ karton.napomena }}</td>
         <td class="uk-clearfix">
           <ul class="uk-iconnav uk-float-right">
@@ -76,10 +80,6 @@
               <a href="{{ path_for('kartoni.mapa', { id: karton.id }) }}" title="Lokacija"><span
                   uk-icon="location"></span></a>
             </li>
-            {# <li>
-              <a href="{{ path_for('transakcije.pregled', { id: karton.id }) }}" title="Transakcije"><span
-                  uk-icon="credit-card"></span></a>
-            </li> #}
           </ul>
         </td>
       </tr>

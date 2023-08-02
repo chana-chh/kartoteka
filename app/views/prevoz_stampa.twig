@@ -5,7 +5,7 @@
 	<p>Месец: {{ "now"|date('m.Y') }}. године</p>
 	<h3 style="text-align:center;">НАЛОГ ЗА ПРЕВОЗ</h3>
 	<p>
-		Дана: {{ prevoz.datum|date('Y-m-d') }}. године у {{ prevoz.vreme|date('H:i') }} часова по налогу
+		Дана: {{ prevoz.datum|date('d.m.Y') }}. године у {{ prevoz.vreme|date('H:i') }} часова по налогу
 		{{ latinicaUCirilicu(prevoz.punoIme())|upper }}, телефон {{ prevoz.telefon }}.
 	</p>
 	<p>
