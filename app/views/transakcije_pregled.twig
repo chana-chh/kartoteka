@@ -125,68 +125,11 @@
 		<div
 			class="uk-panel uk-background-muted uk-padding-small uk-margin-small uk-border-rounded">
 			<h3
-				class="uk-text-primary">Staraoc ima neraspoređen novac u iznosu od
-				{{ staraoc.avans }}
-				din</h3>
+				class="uk-text-primary">STARAOC ima neraspoređen novac u iznosu od
+				{{ staraoc.avans() }} din
+			</h3>
 			<h4
 				class="uk-text-danger">Odaberite samo jednu stavku koja je delimično razdužena ovom uplatom!</h4>
-
-			{# {% if visak.br_taksi > 0 %}
-							<p
-								class="uk-text-primary">Razdužiće se [{{ visak.br_taksi }}] taksa-e za
-								{{ visak.godine_taksi }}
-								god.</p>
-						{% endif %}
-						{% if visak.br_zakupa > 0 %}
-							<p
-								class="uk-text-primary">Razdužiće se [{{ visak.br_zakupa }}] zakup-a za
-								{{ visak.godine_zakupa }}
-								god.</p>
-						{% endif %}
-						{% if visak.deo > 0 %}
-							<p
-								class="uk-text-primary">Razdužiće se delimično
-								{{ visak.vrsta }}
-								za
-								{{ visak.godina }}
-								god. za iznos od
-								{{ visak.deo|number_format(2, '.', ',') }}
-								din.</p>
-						{% endif %}
-						{% if visak.br_racuna > 0 %}
-							<p
-								class="uk-text-primary">Razdužiće se [{{ visak.br_racuna }}] račun-a sa brojevima
-								{{ visak.brojevi_racuna }}</p>
-						{% endif %}
-						{% if visak.deo_racuna > 0 %}
-							<p
-								class="uk-text-primary">Razdužiće se delimično račun broj
-								{{ visak.broj_racuna }}
-								za iznos od
-								{{ visak.deo_racuna|number_format(2, '.', ',') }}
-								din.</p>
-						{% endif %}
-
-						{% if visak.ostatak > 0 %}
-							<p
-								class="uk-text-primary">Preostali iznos od
-								{{ visak.ostatak|number_format(2, '.', ',') }} din.
-								će biti upisan na avans staraoca.</p>
-						{% endif %} #}
-
-		{# <form
-						action="{{ path_for('transakcije.visak') }}" method="POST">
-						{{ csrf|raw }}
-						<input
-							type="hidden"
-							name="staraoc_id"
-							value="{{ staraoc.id }}">
-						<input
-							type="submit"
-							value="POTVRDI"
-							class="uk-button uk-button-danger uk-button-small"/>
-					</form> #}
-
 
 			<!-- forma za biranje delimcnog razduzivanja (kao razduzivanje - tabela umesto harmonike) -->
 
@@ -200,7 +143,7 @@
 				<input
 					type="hidden"
 					name="visak_iznos"
-					value="{{ staraoc.avans }}">
+					value="{{ staraoc.avans() }}">
 				<h2>Takse</h2>
 				<div class="uk-overflow-auto">
 					<table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
@@ -907,7 +850,7 @@
 			</th>
 			<td
 				class="uk-text-success uk-text-right">
-				<strong>{{ staraoc.avans|number_format(2, '.', ',') }}</strong>
+				<strong>{{ staraoc.avans()|number_format(2, '.', ',') }}</strong>
 			</td>
 		</tr>
 	</table>

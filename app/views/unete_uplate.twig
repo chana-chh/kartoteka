@@ -1,0 +1,38 @@
+{% extends "templates/app.twig" %}
+
+{% block naslov %}
+	<h1>Pregled unetih uplata staraoca</h1>
+	<form
+		action="{{ path_for('unete.uplate.post') }}" method="POST">
+		{{ csrf | raw }}
+		<select
+			name="groblje_id"
+			id="groblje_id"
+			class="uk-select uk-form-width-small"
+			autofocus>
+
+			{% for groblje in groblja %}
+				<option
+					value="{{ groblje.id }}" {{ data.groblje_id == groblje.id ? ' selected' : '' }}>{{ groblje.naziv }}
+				</option>
+			{% endfor %}
+		</select>
+		<input
+			type="text"
+			name="parcele"
+			id="parcele"
+			class="uk-input uk-form-width-large"
+			value="{{ data.parcela }}" autocomplete="off"
+			placeholder="PARCELE"/>
+		<div
+			class="uk-button-group">
+			<input
+				type="submit"
+				value="Prikaži"
+				class="uk-button uk-button-primary"/>
+			{# <a
+				href="{{ path_for('kartoni') }}" class="uk-button uk-button-secondary uk-button-small">Svi kartoni</a> #}
+		</div>
+	</form>
+	<p class="uk-text-danger uk-text-large">* Uneti parcele razdvojene zarezom (,)</p>
+{% endblock naslov %}

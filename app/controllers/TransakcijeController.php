@@ -27,15 +27,12 @@ class TransakcijeController extends Controller
 		$staraoc = (new Staraoc())->find($staraoc_id);
 		$broj_uplata = count($staraoc->uplate());
 
-		// ako ima avans (pretekle mu pare posle razduzenja)
-		// preuzeti sva nerazduzena zaduzenja
-		// sloziti po godinama ASC
-		// krenuti redom i smanjivati iznos
-		// razduzivati stare godine
-		// akose sve razduzi i preostane para, visak se upisuje u avans staraoca
-		// od toga napraviti izvestaj
 
+		// TODO izbrisati visak posto se ne koristi na formi/pogledu
 		$visak = [];
+
+		// ako postoji visak/avans i postoje zaduzenja koja nisu razduzena
+		// visak/avans mora da se prebaci na neko nerazduzeno zaduzenje
 		if ($staraoc->imaAvansNerazduzen() && $staraoc->aktivan == 1)
 		{
 			// sva nerazduzena zaduzenja
@@ -44,7 +41,7 @@ class TransakcijeController extends Controller
 			$racuni = $staraoc->zaduzeniRacuni();
 
 			// iznos viska para
-			$iznos = (float) $staraoc->avans;
+			$iznos = (float) $staraoc->avans();
 			// ostatak viska
 			$ostatak = $iznos;
 
@@ -438,173 +435,7 @@ class TransakcijeController extends Controller
 		}
 	}
 
-	public function postUplata($request, $response)
-	{
-		$data = $request->getParams();
-		$id = $data['staraoc_id'];
-
-		// niz id-a zaduzenja
-		$zaduzenja_data = isset($data['razduzeno-zaduzenje']) ? $data['razduzeno-zaduzenje'] : [];
-		// niz id-a racuna
-		$racuni_data = isset($data['razduzeno-racuni']) ? $data['razduzeno-racuni'] : [];
-
-		unset($data['csrf_name']);
-		unset($data['csrf_value']);
-		unset($data['razduzeno-zaduzenje']);
-		unset($data['razduzeno-racuni']);
-		
-		$staraoc = (new Staraoc())->find($id);
-
-		$validation_rules = [
-			'staraoc_id' => [
-				'required' => true,
-			],
-			'uplata_iznos' => [
-				'required' => true,
-				'min' => 0,
-			],
-			'uplata_datum' => [
-				'required' => true,
-			],
-			// da li je datum uplate isti ili veci od poslednjeg datuma uplate
-			// 'uplata_datum' => [
-			// 	'min' => $staraoc->poslednjaUplata()->datum,
-			// ],
-		];
-
-		// provera osnovnih podataka za uplatu
-		$this->validator->validate($data, $validation_rules);
-
-		$model_zaduzenje = new Zaduzenje();
-		$model_racun = new Racun();
-		$zaduzenja = null;
-		$racuni = null;
-		$iznos_za_razduzenje = 0;
-
-		$korisnik_id = $this->auth->user()->id;
-
-		// provera da li je iznos >= sva zaduzenja za razduzivanje
-
-		// zaduzenja sa kamatom
-		if (!empty($zaduzenja_data))
-		{
-			$zad = implode(", ", $zaduzenja_data);
-			$sql = "SELECT * FROM zaduzenja WHERE id IN ($zad);";
-			$zaduzenja = $model_zaduzenje->fetch($sql);
-
-			foreach ($zaduzenja as $zad)
-			{
-				$iznos_za_razduzenje += $zad->zaRazduzenje()['ukupno'];
-			}
-		}
-
-		// racuni sa kamatom
-		if (!empty($racuni_data))
-		{
-			$rac = implode(", ", $racuni_data);
-			$sql = "SELECT * FROM racuni WHERE id IN ($rac);";
-			$racuni = $model_racun->fetch($sql);
-
-			foreach ($racuni as $rn)
-			{
-				$iznos_za_razduzenje += $rn->zaRazduzenje()['ukupno'];
-			}
-		}
-
-		$iznos = (float) $data['uplata_iznos'];
-		// razlika uplacenog i potrebnog novca za razduzenje
-		$razlika = round($iznos - round($iznos_za_razduzenje, 2), 2);
-
-		// uplaceno je manje novca od potrebnog za razduzivanje odabranih stavki
-		if ($razlika < 0)
-		{
-			$this->flash->addMessage('danger', 'Iznos uplate nije dovoljan za razduživanje odabranih stavki.');
-			return $response->withRedirect($this->router->pathFor('transakcije.razduzivanje', ['id' => $id]));
-		}
-
-		if ($this->validator->hasErrors())
-		{
-			$this->flash->addMessage('danger', 'Došlo je do greške prilikom snimanja uplate i razduživanja.');
-			return $response->withRedirect($this->router->pathFor('transakcije.razduzivanje', ['id' => $id]));
-		}
-		else
-		{
-			// upisivanje uplate i razduzivanje cekiranih stavki
-
-			// visak uplate za dodavanje na avans
-			$visak_uplate = $razlika > 0 ? $razlika : 0;
-
-			// podaci za uplatu
-			$uplata_data = [
-				'karton_id' => $staraoc->karton()->id,
-				'staraoc_id' => $staraoc->id,
-				'iznos' => $iznos,
-				'avans' => $visak_uplate,
-				'datum' => $data['uplata_datum'],
-				'priznanica' => $data['uplata_priznanica'],
-				'napomena' => $data['uplata_napomena'],
-				'korisnik_id' => $korisnik_id,
-			];
-
-			// Upisivanje uplate
-			$model_uplata = new Uplata();
-			$model_uplata->insert($uplata_data);
-			$uplata_id = $model_uplata->getLastId();
-			$uplata = $model_uplata->find($uplata_id);
-
-			// Dodaje se visak uplate na avans staraoca
-			$sql = "UPDATE staraoci SET avans = avans + {$visak_uplate} WHERE id = {$id};";
-			$staraoc->run($sql);
-
-			$data_za_razduzenje = [
-				'razduzeno' => 1,
-				'datum_razduzenja' => $data['uplata_datum'],
-				'korisnik_id_razduzio' => $korisnik_id,
-				'uplata_id' => $uplata_id,
-				'glavnica' => 0,
-				'datum_prispeca' => null,
-			];
-
-			if (!empty($zaduzenja_data))
-			{
-				// sva zaduzenja koja se razduzuju
-				$zad = implode(", ", $zaduzenja_data);
-				$sql = "SELECT * FROM zaduzenja WHERE id IN ($zad);";
-				$zaduzenja = $model_zaduzenje->fetch($sql);
-
-				foreach ($zaduzenja as $zad)
-				{
-					$data_za_razduzenje['iznos_razduzeno'] = $zad->zaRazduzenje()['ukupno'];
-					$data_za_razduzenje['poslednja_glavnica'] = $zad->glavnica;
-					$data_za_razduzenje['poslednji_datum_prispeca'] = $zad->datum_prispeca;
-					$zid = (int) $zad->id;
-					$model_zaduzenje->update($data_za_razduzenje, $zid);
-				}
-			}
-
-			if (!empty($racuni_data))
-			{
-				// svi racuni koji se razduzuju
-				$rac = implode(", ", $racuni_data);
-				$sql = "SELECT * FROM racuni WHERE id IN ($rac);";
-				$racuni = $model_racun->fetch($sql);
-
-				foreach ($racuni as $rn)
-				{
-					$data_za_razduzenje['iznos_razduzeno'] = $rn->zaRazduzenje()['ukupno'];
-					$data_za_razduzenje['poslednja_glavnica'] = $rn->glavnica;
-					$data_za_razduzenje['poslednji_datum_prispeca'] = $rn->datum_prispeca;
-					$rid = (int) $rn->id;
-					$model_racun->update($data_za_razduzenje, $rid);
-				}
-			}
-
-			// logovanje
-			$this->log($this::DODAVANJE, $uplata, ['karton_id', 'iznos', 'datum'], $uplata);
-			$this->flash->addMessage('success', 'Uplata je uspešno sačuvana, a odabrane stavke su razdužene.');
-			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $id]));
-		}
-	}
+	
 
 	public function getOpomene($request, $response)
 	{

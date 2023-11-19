@@ -1,53 +1,29 @@
+PROMENE ZA UPLOAD
 
-- Logovi su samo nabaceni kao dodatna mogucnost. Nisu razradjeni do kraja.
-- Treba napraviti eksport baze sa svim izmenama u jednom fajlu
-- Termini su bez validacije i provere preklapanja
-- Stampa nije bas prilagodjena
-- Mape zahtevaju dva foldera img/Mape/Thumb/ i img/Mape/ nisam potrobno testirao
+app
+	routes.php
 
+	\controllers
+		StatistikaController.php
+		TaksaController.php
+		TransakcijeController.php
+		UplataController.php
+		ZakupController.php
 
+	\models
+		Staraoc.php
+		Staraoc1.php
+		Zaduzenje.php
+		ZaduzenjeUplata.php
 
+	\views
+		karton_pregled.twig
+		taksa.twig
+		transakcije_pregled.twig
+		transakcije_razduzivanje.twig
+		unete_uplate_stampa.twig
+		unete_uplate.twig
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-STARO!!!! i to treba proveriti
-============================================================================================
-
-
-https://plainjs.com/javascript/ajax/send-ajax-get-and-post-requests-47/
-
-
-
-
-
-
-
-BAZA
-=======================
-
-- [pokojnici] dodata napomena
-- [staraoci] dodata napomena
-
-sve ostalo ima napomenu ili nije potrebna (taksa, zakup ...)
-
-APLIKACIJA
-=======================
-
-Ne brise pokojnike iz pregleda kartona !!!
-Ne brise termine iz pregleda kartona !!!
-
-TODO
-
-kod uplate rate reprograma na view proveriti da li uplata pokriva ratu (veliki broj decimala!!!)
-
+		\templates
+			\inc
+				navigation.twig

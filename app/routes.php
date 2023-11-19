@@ -138,7 +138,7 @@ $app->group('', function ()
 	$this->get('/transakcije/pregled/straoc/{id}[/{z}]', '\App\Controllers\TransakcijeController:getKartonPregled')->setName('transakcije.pregled');
 	$this->get('/transakcije/pregled/stampa/staraoc/{id}', '\App\Controllers\TransakcijeController:getKartonPregledStampa')->setName('transakcije.pregled.stampa'); // stampa
 	$this->get('/transakcije/karton/{id}', '\App\Controllers\TransakcijeController:getKartonRazduzivanje')->setName('transakcije.razduzivanje'); // razduzivanje
-	$this->post('/transakcije/uplata', '\App\Controllers\TransakcijeController:postUplata')->setName('transakcije.uplata');
+	$this->post('/transakcije/uplata', '\App\Controllers\UplataController:postUplata')->setName('transakcije.uplata');
 	// Reprogrami
 	$this->get('/transakcije/reprogrami/staraoc/{id}', '\App\Controllers\ReprogramiController:getKartonReprogrami')->setName('transakcije.reprogrami'); // reprogram
 	$this->get('/transakcije/reprogram/{id}', '\App\Controllers\ReprogramiController:getReprogram')->setName('transakcije.reprogram');
@@ -169,11 +169,16 @@ $app->group('', function ()
 	$this->post('/transakcije/uplate/brisanje', '\App\Controllers\UplataController:postUplataBrisanje')->setName('uplate.brisanje');
 	// Statistika
 	$this->get('/statistika', '\App\Controllers\StatistikaController:getStatistika')->setName('statistika');
+	$this->get('/unete-uplate', '\App\Controllers\StatistikaController:getUneteUplate')->setName('unete.uplate.get');
+	$this->post('/unete-uplate', '\App\Controllers\StatistikaController:postUneteUplate')->setName('unete.uplate.post');
+	$this->get('/unete-uplate/stampa', '\App\Controllers\StatistikaController:getUneteUplateStampa')->setName('unete.uplate.stampa');
 
 	// Razduzivanje viska para
+	// TODO ovo se nece koristiti
 	$this->post('/transakcije/visak', '\App\Controllers\UplataController:postVisak')->setName('transakcije.visak');
 
 	// Razduzivanje viska para za masovan unos pocetnog stanja
+	// TODO ovo da se koristi
 	$this->post('/transakcije/visak/unos', '\App\Controllers\UplataController:postVisakUnos')->setName('transakcije.visak.unos');
 
 	// Prevoz

@@ -1,0 +1,40 @@
+{% extends "templates/print.twig" %}
+
+{% block sadrzaj %}
+	<h1>Groblje:
+		{{ groblje }}, parcele:
+		{{ parcele }}</h1>
+
+	<table
+		class="prn-table">
+		<thead>
+			<tr>
+				<th class="w-25 prn-text-left"><strong>Broj</strong></th>
+				<th class="w-5 prn-text-center"><strong>Aktivan</strong></th>
+				<th class="w-30 prn-text-left"><strong>Staraoc</strong></th>
+				<th class="w-20 prn-text-right"><strong>Dug (Z+T)</strong></th>
+				<th class="w-20 prn-text-right"><strong>Avans</strong></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for karton in kartoni %}
+			<tr>
+				<td><strong>{{ karton.broj() }}</strong></td>
+				<td>{{ karton.aktivanDisabled()|raw }}</td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			{% for staraoc in karton.aktivniStaraoci() %}
+			<tr>
+				<td></td>
+				<td></td>
+				<td>{{ staraoc.prezime|capitalize }} {{ staraoc.ime|capitalize }}</td>
+				<td class="prn-text-right">{{ (staraoc.dugZaZakupe() + staraoc.dugZaTakse())|number_format(2, ',', '.') }}</td>
+				<td class="prn-text-right">{{ staraoc.avans|number_format(2, ',', '.') }}</td>
+			</tr>
+			{% endfor %}
+			{% endfor %}
+		</tbody>
+	</table>
+{% endblock sadrzaj %}

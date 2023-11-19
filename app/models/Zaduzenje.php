@@ -94,10 +94,13 @@ class Zaduzenje extends Model
 		$broj = $this->fetch($sql)[0]->ukupno;
 		return (float) $broj;
 	}
+	
+	
+	
 	// ??? ***************************************************
 
 	// vraca iznos za razduzenje zaduzenja (glavnica + kamata)
-	// kmata se racuna od datum_prispeca do trenutnog datuma
+	// kamata se racuna od datum_prispeca do trenutnog datuma
 	public function zaRazduzenje()
 	{
 		$datum_prispeca = date($this->datum_prispeca);

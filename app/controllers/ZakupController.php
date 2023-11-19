@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\Cena;
 use App\Models\Staraoc;
 use App\Models\Zaduzenje;
+use App\Models\ZaduzenjeUplata;
 use DateTime;
 
 class ZakupController extends Controller
@@ -19,26 +20,28 @@ class ZakupController extends Controller
 		$this->render($response, 'zakup.twig', compact('cene', 'staraoc'));
 	}
 
+	// pojedinacno zaduzivanje staraoca zakupom
 	public function postZakup($request, $response)
 	{
-		// pojedinacno zaduzivanje zakupom
-		// uracunati avans ako postoji
-
 		$data = $request->getParams();
 		unset($data['csrf_name']);
 		unset($data['csrf_value']);
-		$staraoc_id = $request->getParam('staraoc_id');
+		$staraoc_id = $data['staraoc_id'];
 
 		$model = new Staraoc();
+
+		// trazi se zaduzenje (zakup) sa prosledjenim parametrima
 		$sql = "SELECT COUNT(*) AS broj FROM zaduzenja WHERE staraoc_id = :star AND godina = :god AND tip = 2;";
 		$broj = $model->fetch($sql, [':god' => $data['godina'], ':star' => $staraoc_id])[0]->broj;
 
+		// ako je pronadjeno zaduzenje znaci da zaduzenje za godinu vec postoji i staraoc se ne zaduzuje
 		if ($broj > 0)
 		{
 			$this->flash->addMessage('danger', 'Već postoji zaduženje za odabranu godinu');
 			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $staraoc_id]));
 		}
 
+		// pravila za proveru podataka
 		$validation_rules = [
 			'iznos_zaduzeno' => [
 				'required' => true,
@@ -49,9 +52,7 @@ class ZakupController extends Controller
 			'datum_zaduzenja' => [
 				'required' => true,
 			],
-
-			// ovo samo kad obracun kamate  postane obavezan
-
+			// XXX ovo je za datum od kada pocinje da se racuna zatezna kamata
 			// 'datum_prispeca' => [
 			// 	'required' => true,
 			// ],
@@ -65,78 +66,138 @@ class ZakupController extends Controller
 
 		$this->validator->validate($data, $validation_rules);
 
+		// ako postoji greska u unetim podacima
 		if ($this->validator->hasErrors())
 		{
 			$this->flash->addMessage('danger', 'Došlo je do greške prilikom zaduživanja kartona.');
-			return $response->withRedirect($this->router->pathFor('zakup', ['id' => $staraoc_id]));
+			return $response->withRedirect($this->router->pathFor('taksa', ['id' => $staraoc_id]));
 		}
-		else
+
+		// ako su podaci ispravni vrsi se preuzimanje staraoca
+		$staraoc = $model->find($data['staraoc_id']);
+
+		// ako staraoc nije aktivan nije moguce da se zaduzi taksom
+		if ($staraoc->aktivan === 0)
 		{
-			$staraoc = $model->find($data['staraoc_id']);
-			if($staraoc->aktivan === 0)
-			{
-				$this->flash->addMessage('danger', 'Staraoc nije aktivan.');
-				return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $data['staraoc_id']]));
-			}
-			$bm = $staraoc->karton()->broj_mesta;
-			$bs = $staraoc->karton()->brojAktivnihStaraoca();
+			$this->flash->addMessage('danger', 'Staraoc nije aktivan.');
+			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $data['staraoc_id']]));
+		}
 
-			$avans = $staraoc->avans;
-			$iznos_zakupa = (float) ($data['iznos_zaduzeno'] * $bm / $bs);
+		// posto su sve provere prosle vrsi se zaduzivanje staraoca taksom
+		$bm = $staraoc->karton()->broj_mesta;
+		$bs = $staraoc->karton()->brojAktivnihStaraoca();
 
-			$model_zaduzenje = new Zaduzenje();
+		// iznos ukupne takse je cena * broj grobnih mesta / broj aktivnih staraoca na kartonu
+		$iznos_zakupa = (float) ($data['iznos_zaduzeno'] * $bm / $bs);
 
-			$podaci = [
-				'karton_id' => $staraoc->karton()->id,
-				'staraoc_id' => $staraoc->id,
-				'tip' => 'zakup',
-				'godina' => (int) $data['godina'],
-				'iznos_zaduzeno' => $iznos_zakupa,
-				'glavnica' => $iznos_zakupa,
-				'iznos_razduzeno' => 0,
-				'razduzeno' => 0,
-				'datum_zaduzenja' => $data['datum_zaduzenja'],
-				'datum_prispeca' => empty($data['datum_prispeca']) ? null : $data['datum_prispeca'],
-				'korisnik_id_zaduzio' => $this->auth->user()->id,
-				'napomena' => $data['napomena'],
-				'avansno' => 0,
-				'avans_iznos' => 0,
+		$model_zaduzenje = new Zaduzenje();
+		$korisnik_id = $this->auth->user()->id;
+
+		$podaci = [
+			'karton_id' => $staraoc->karton()->id,
+			'staraoc_id' => $staraoc->id,
+			'tip' => 'zakup',
+			'godina' => (int) $data['godina'],
+			'iznos_zaduzeno' => $iznos_zakupa,
+			// XXX glavnica samo kad se krene sa zateznom kamatom
+			// koristi se na vise mesta umesto iznosa za razduzenje pa zbog oga ostaje
+			'glavnica' => $iznos_zakupa,
+			'iznos_razduzeno' => 0,
+			'razduzeno' => 0,
+			'datum_zaduzenja' => $data['datum_zaduzenja'],
+			// XXX datum prispeca samo kad se krene sa zateznom kamatom
+			// 'datum_prispeca' => empty($data['datum_prispeca']) ? null : $data['datum_prispeca'],
+			'datum_prispeca' => null,
+			'korisnik_id_zaduzio' => $korisnik_id,
+			'napomena' => $data['napomena'],
+			'avansno' => 0,
+			'avans_iznos' => 0,
+		];
+
+		$model_zaduzenje->insert($podaci);
+		$id = $model_zaduzenje->getLastId();
+
+		// razduzivanje/umanjenje zaduzenja avansom
+
+		// FIXME avans da se vadi iz uplata staraoca
+		// $avans = $staraoc->avans; trebalo bi da bude isto ($staraoc->avans i $staraoc->avans())
+		$avans = $staraoc->avans();
+
+		// proveri se da li staraoc ima avans $staraoc->avans() > 0 ?
+		if ($avans > 0)
+		{
+			$uplate_sa_avansom = $staraoc->uplateSaAvansom();
+
+			$data_za_razduzenje = [
+				'datum_prispeca' => null,
+				'poslednji_datum_prispeca' => null,
+				'avansno' => 1,
 			];
 
-			// ako avans ne pokriva iznos zaduzenja
-			if ($avans > 0 && $avans < $iznos_zakupa)
+			$data_z_u = [
+				'zaduzenje_id' => $id,
+				'staraoc_id' => $staraoc->id,
+				'avansno' => 1,
+			];
+
+			$model_z_u = new ZaduzenjeUplata;
+
+			foreach ($uplate_sa_avansom as $ua)
 			{
-				$podaci['glavnica'] -= $avans;
-				$podaci['iznos_razduzeno'] = $avans;
-				$podaci['avans_iznos'] = $avans;
-				$avans = 0;
-				$podaci['avansno'] = 1;
+				$zakup = $model_zaduzenje->find($id);
+
+				// za svaku uplatu se proveri da li je dovoljna za razduzivanje takse
+				if ($ua->avans >= $zakup->glavnica) // ili glavnica
+				{
+					// ako je dovoljno da se razduzi celo zaduzenje-zakup
+					// razduzivanje celog zaduzenja
+					$data_za_razduzenje['razduzeno'] = 1;
+					$data_za_razduzenje['korisnik_id_razduzio'] = $korisnik_id;
+					$data_za_razduzenje['datum_razduzenja'] = $data['datum_zaduzenja'];
+					$data_za_razduzenje['uplata_id'] = $ua->id;
+					$data_za_razduzenje['iznos_razduzeno'] = $zakup->iznos_zaduzeno;
+					$data_za_razduzenje['poslednja_glavnica'] = $zakup->glavnica;
+					$data_za_razduzenje['glavnica'] = 0;
+					$zakup->update($data_za_razduzenje, $zakup->id);
+					// unos zaduzenje_uplata
+					$data_z_u['uplata_id'] = $ua->id;
+					$data_z_u['uplata_datum'] = $ua->datum;
+					$data_z_u['iznos'] = $zakup->glavnica;
+					$data_z_u['iznos_prethodni'] = $zakup->glavnica;
+					$model_z_u->insert($data_z_u);
+					// osvezava se uplata (skida se iznos koji je otiso na razduzivanje takse sa avansa uplate)
+					$ua->update(['avans' => $ua->avans - $zakup->glavnica], $ua->id);
+					break; // prekida se foreach jer je razduzeno celo zaduzenje
+				}
+				else
+				{
+					// ako nije dovoljno da se razduzi celo zaduzenje-zakup
+					// delimicno razduzivanje zaduzenja
+					$data_za_razduzenje['razduzeno'] = 0;
+					$data_za_razduzenje['korisnik_id_razduzio'] = null;
+					$data_za_razduzenje['datum_razduzenja'] = null;
+					$data_za_razduzenje['uplata_id'] = $ua->id;
+					$data_za_razduzenje['iznos_razduzeno'] = $zakup->iznos_razduzeno + $ua->avans;
+					$data_za_razduzenje['poslednja_glavnica'] = $zakup->glavnica;
+					$data_za_razduzenje['glavnica'] = $zakup->glavnica - $ua->avans;
+					$zakup->update($data_za_razduzenje, $zakup->id);
+					// unos zaduzenje_uplata
+					$data_z_u['uplata_id'] = $ua->id;
+					$data_z_u['uplata_datum'] = $ua->datum;
+					$data_z_u['iznos'] = $ua->avans;
+					$data_z_u['iznos_prethodni'] = $zakup->glavnica;
+					$model_z_u->insert($data_z_u);
+					// osvezava se uplata (skida se iznos koji je otiso na razduzivanje takse sa avansa uplate)
+					$ua->update(['avans' => 0], $ua->id);
+				}
 			}
-
-			// ako avans tacno pokriva iznos zaduzenja ili je veci od zaduzenja
-			if ($avans >= $iznos_zakupa)
-			{
-				$avans -= $iznos_zakupa;
-				$podaci['glavnica'] = 0;
-				$podaci['avansno'] = 1;
-				$podaci['avans_iznos'] = $iznos_zakupa;
-				$podaci['iznos_razduzeno'] = $iznos_zakupa;
-				$podaci['razduzeno'] = 1;
-				$podaci['datum_razduzenja'] = $data['datum_zaduzenja'];
-				$podaci['korisnik_id_razduzio'] = $this->auth->user()->id;
-			}
-
-			$model_zaduzenje->insert($podaci);
-
-			$id = $model_zaduzenje->getLastId();
-
-			$sql_avans = "UPDATE staraoci SET avans = {$avans} WHERE id = {$staraoc->id};";
-			$staraoc->run($sql_avans);
-
-			$zazduzenje = $model_zaduzenje->find($id);
-			$this->log($this::DODAVANJE, $zazduzenje, ['tip', 'godina'], $zazduzenje);
-			$this->flash->addMessage('success', 'Staraoc je uspešno zadužen odgovarajućim zakupom.');
-			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $staraoc_id]));
 		}
+
+		$staraoc->update(['avans' => $staraoc->avans()], $staraoc->id);
+
+		$zazduzenje = $model_zaduzenje->find($id);
+		$this->log($this::DODAVANJE, $zazduzenje, ['tip', 'godina'], $zazduzenje);
+		$this->flash->addMessage('success', 'Staraoc je uspešno zadužen odgovarajućim zakupom.');
+		return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $staraoc_id]));
 	}
 }
