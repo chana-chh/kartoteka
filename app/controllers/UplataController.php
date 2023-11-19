@@ -290,7 +290,7 @@ class UplataController extends Controller
 					'avans_iznos' => 0,
 					'poslednja_glavnica' => 0,
 				];
-				$zad->update($zad_data,$zad->id);
+				$zad->update($zad_data, $zad->id);
 			}
 		}
 
@@ -505,11 +505,14 @@ class UplataController extends Controller
 			$model_z_u = new ZaduzenjeUplata;
 
 			$data_za_razduzenje = [];
-			$data_z_u = [];
+			$data_z_u = [
+				'zaduzenje_id' => $zaduzenje->id,
+				'staraoc_id' => $staraoc->id,
+			];
 
 			foreach ($uplate_sa_avansom as $ua)
 			{
-				$zaduzenje = $zaduzenje->find($id);
+				// $zaduzenje = $zaduzenje->find($id);
 
 				// za svaku uplatu se proveri da li je dovoljna za razduzivanje zaduzenja
 				if ($ua->avans >= $zaduzenje->glavnica) // ili glavnica
