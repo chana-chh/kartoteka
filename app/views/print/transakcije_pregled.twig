@@ -1,19 +1,23 @@
 {% extends "templates/print.twig" %}
 {% block sadrzaj %}
-<h1 class="uk-text-primary">
-  Pregled dugovanja
-  <span class="uk-text-success">{{ staraoc.punoIme() | upper }}</span>
-  - <small class="uk-text-muted">[{{ staraoc.karton().broj() }}]</small>
-</h1>
+<h2 class="uk-text-primary">
+  Pregled dugovanja<br>
+  {{ staraoc.punoIme() | upper }} [1/{{ staraoc.karton().brojAktivnihStaraoca() }}]<br>
+  {{ staraoc.karton().broj() }} [broj grobnih mesta: {{ staraoc.karton().broj_mesta }}]
+</h2>
 <hr>
 <table class="prn-table">
   <tbody>
     <tr>
-      <th class="w-40 prn-text-left">Dug za takse</th>
-      <td class="w-60 prn-text-right">
+      <th class="w-30 prn-text-left">Dug za takse</th>
+      <td class="w-70 prn-text-right">
         <ol>
           {% for taksa in staraoc.zaduzeneTakse() %}
-          <li>za godinu {{ taksa.godina }}. po ceni od {{ cene.taksa() | number_format(2, '.', ',') }} din</li>
+          	<li>
+		  	za godinu <strong>{{ taksa.godina }}.</strong> - glavnica {{ taksa.zaRazduzenje().glavnica | number_format(2, '.', ',') }} din;
+			kamata {{ taksa.zaRazduzenje().kamata | number_format(2, '.', ',') }} din;
+			ukupno <strong>{{ taksa.zaRazduzenje().ukupno | number_format(2, '.', ',') }} din</strong>
+			</li>
           {% endfor %}
         </ol>
       </td>
@@ -27,7 +31,9 @@
       <td class="prn-text-right">
         <ol>
           {% for zakup in staraoc.zaduzeniZakupi() %}
-          <li>za godinu {{ zakup.godina }}. po ceni od {{ cene.zakup() | number_format(2, '.', ',') }} din</li>
+            za godinu <strong>{{ zakup.godina }}.</strong> - glavnica {{ zakup.zaRazduzenje().glavnica | number_format(2, '.', ',') }} din;
+			kamata {{ zakup.zaRazduzenje().kamata | number_format(2, '.', ',') }} din;
+			ukupno <strong>{{ zakup.zaRazduzenje().ukupno | number_format(2, '.', ',') }} din</strong>
           {% endfor %}
         </ol>
       </td>
@@ -41,7 +47,12 @@
       <td class="prn-text-right">
         <ol>
           {% for racun in staraoc.zaduzeniRacuni() %}
-          <li>račun broj {{ racun.broj }} od {{ racun.datum() }} u iznosu od {{ racun.iznos | number_format(2, '.', ',') }} din</li>
+          	<li>
+		  		račun broj {{ racun.broj }} od {{ racun.datum() }} u iznosu od {{ racun.iznos | number_format(2, '.', ',') }} din<br>
+				glavnica {{ racun.zaRazduzenje().glavnica | number_format(2, '.', ',') }} din;
+				kamata {{ racun.zaRazduzenje().kamata | number_format(2, '.', ',') }} din;
+				ukupno <strong>{{ racun.zaRazduzenje().ukupno | number_format(2, '.', ',') }} din</strong>
+			</li>
           {% endfor %}
         </ol>
       </td>
