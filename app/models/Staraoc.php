@@ -393,4 +393,19 @@ class Staraoc extends Model
 		$sql = "SELECT * FROM uplate WHERE staraoc_id = {$this->id} AND avans > 0 ORDER BY datum ASC;";
 		return (new Uplata)->fetch($sql);
 	}
+
+	// Brisanje svih zaduzenja i uplata staraoca
+	public function brisanjeZaduzenjaIUplata()
+	{
+		$id = $this->id;
+		$sql1 = "DELETE FROM zaduzenje_uplata WHERE staraoc_id = :id;";
+		$sql2 = "DELETE FROM zaduzenja WHERE staraoc_id = :id;";
+		$sql3 = "DELETE FROM uplate WHERE staraoc_id = :id;";
+
+		$succ1 = $this->run($sql1, [":id" => $id]);
+		$succ2 = $this->run($sql2, [":id" => $id]);
+		$succ3 = $this->run($sql3, [":id" => $id]);
+
+		return $succ1 && $succ2 && $succ3;
+	}
 }

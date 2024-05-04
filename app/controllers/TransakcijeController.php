@@ -476,5 +476,25 @@ class TransakcijeController extends Controller
 
 	public function postSveBrisanje($request, $response)
 	{
+		$korisnik_id = (int) $this->auth->user()->id;
+		$staraoc_id = (int) $request->getParam('staraoc_id_brisanje_sve');
+		// treba da bude 7
+		if ($korisnik_id !== 7)
+		{
+			$this->flash->addMessage('danger', "Nemate pravo na ovu akciju!");
+			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $staraoc_id]));
+		}
+		$staraoc = (new Staraoc())->find($staraoc_id);
+		$success = $staraoc->brisanjeZaduzenjaIUplata();
+		if ($success)
+		{
+			$this->flash->addMessage('success', "Zaduženja i uplate su uspešno obrisani.");
+			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $staraoc_id]));
+		}
+		else
+		{
+			$this->flash->addMessage('danger', "Došlo je do greške prilikom brisanja zaduženja i uplata.");
+			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $staraoc_id]));
+		}
 	}
 }

@@ -101,12 +101,12 @@
 							Pregled uplata
 						</a>
 						{# <a
-													href="{{ path_for('transakcije.reprogrami', { id: staraoc.id }) }}" class="uk-button uk-button-primary uk-button-small">
-													<span
-														uk-icon="refresh"
-														class="ikonica"></span>
-													Reprogrami
-												</a> #}
+																									href="{{ path_for('transakcije.reprogrami', { id: staraoc.id }) }}" class="uk-button uk-button-primary uk-button-small">
+																									<span
+																										uk-icon="refresh"
+																										class="ikonica"></span>
+																									Reprogrami
+																								</a> #}
 						<a
 							href="{{ path_for('transakcije.pregled.stampa', { id: staraoc.id }) }}" target="_blank"
 							class="uk-button uk-button-primary uk-button-small">
@@ -126,14 +126,16 @@
 			class="uk-panel uk-background-muted uk-padding-small uk-margin-small uk-border-rounded">
 			<h3
 				class="uk-text-primary">STARAOC ima neraspoređen novac u iznosu od
-				{{ staraoc.avans() }} din
+				{{ staraoc.avans() }}
+				din
 			</h3>
 			<h4
 				class="uk-text-danger">Odaberite samo jednu stavku koja je delimično razdužena ovom uplatom!</h4>
 
 			<!-- forma za biranje delimcnog razduzivanja (kao razduzivanje - tabela umesto harmonike) -->
 
-			<form onsubmit="return confirm('Da li ste sigurni da želite da delimično razdužite ovo zaduženje?');"
+			<form
+				onsubmit="return confirm('Da li ste sigurni da želite da delimično razdužite ovo zaduženje?');"
 				action="{{ path_for('transakcije.visak.unos') }}" method="POST">
 				{{ csrf|raw }}
 				<input
@@ -145,21 +147,32 @@
 					name="visak_iznos"
 					value="{{ staraoc.avans() }}">
 				<h2>Takse</h2>
-				<div class="uk-overflow-auto">
-					<table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+				<div
+					class="uk-overflow-auto">
+					<table
+						class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
 						<thead>
 							<tr>
-								<th class="w-20 uk-text-right uk-text-primary">Godina</th>
-								<th class="w-20 uk-text-right">Zaduženo</th>
-								<th class="w-20 uk-text-right">Razduženo</th>
-								<th class="w-20 uk-text-right uk-text-primary">Za razduženje</th>
-								<th class="w-20 uk-text-center"><span uk-icon="check"></span></th>
+								<th
+									class="w-20 uk-text-right uk-text-primary">Godina</th>
+								<th
+									class="w-20 uk-text-right">Zaduženo</th>
+								<th
+									class="w-20 uk-text-right">Razduženo</th>
+								<th
+									class="w-20 uk-text-right uk-text-primary">Za razduženje</th>
+								<th
+									class="w-20 uk-text-center">
+									<span
+										uk-icon="check"></span>
+								</th>
 							</tr>
 						</thead>
 						<tbody>
 							{% for taksa in staraoc.zaduzeneTakse() %}
 								<tr>
-									<td class="uk-text-right uk-text-primary">{{ taksa.godina }}</td>
+									<td
+										class="uk-text-right uk-text-primary">{{ taksa.godina }}</td>
 									<td
 										class="uk-text-right">
 										{{ taksa.iznos_zaduzeno|number_format(2, '.', ',') }}
@@ -181,21 +194,32 @@
 				</div>
 
 				<h2>Zakupi</h2>
-				<div class="uk-overflow-auto">
-					<table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+				<div
+					class="uk-overflow-auto">
+					<table
+						class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
 						<thead>
 							<tr>
-								<th class="w-20 uk-text-right uk-text-primary">Godina</th>
-								<th class="w-20 uk-text-right">Zaduženo</th>
-								<th class="w-20 uk-text-right">Razduženo</th>
-								<th class="w-20 uk-text-right uk-text-primary">Za razduženje</th>
-								<th class="w-20 uk-text-center"><span uk-icon="check"></span></th>
+								<th
+									class="w-20 uk-text-right uk-text-primary">Godina</th>
+								<th
+									class="w-20 uk-text-right">Zaduženo</th>
+								<th
+									class="w-20 uk-text-right">Razduženo</th>
+								<th
+									class="w-20 uk-text-right uk-text-primary">Za razduženje</th>
+								<th
+									class="w-20 uk-text-center">
+									<span
+										uk-icon="check"></span>
+								</th>
 							</tr>
 						</thead>
 						<tbody>
 							{% for zakup in staraoc.zaduzeniZakupi() %}
 								<tr>
-									<td class="uk-text-right uk-text-primary">{{ zakup.godina }}</td>
+									<td
+										class="uk-text-right uk-text-primary">{{ zakup.godina }}</td>
 									<td
 										class="uk-text-right">
 										{{ zakup.iznos_zaduzeno|number_format(2, '.', ',') }}
@@ -217,21 +241,34 @@
 				</div>
 
 				<h2>Računi</h2>
-				<div class="uk-overflow-auto">
-					<table class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
+				<div
+					class="uk-overflow-auto">
+					<table
+						class="uk-table uk-table-divider uk-table-striped uk-table-hover uk-table-small">
 						<thead>
 							<tr>
-								<th class="w-20 uk-text-right uk-text-primary">Broj / Datum</th>
-								<th class="w-20 uk-text-right">Zaduženo</th>
-								<th class="w-20 uk-text-right">Razduženo</th>
-								<th class="w-20 uk-text-right uk-text-primary">Za razduženje</th>
-								<th class="w-20 uk-text-center"><span uk-icon="check"></span></th>
+								<th
+									class="w-20 uk-text-right uk-text-primary">Broj / Datum</th>
+								<th
+									class="w-20 uk-text-right">Zaduženo</th>
+								<th
+									class="w-20 uk-text-right">Razduženo</th>
+								<th
+									class="w-20 uk-text-right uk-text-primary">Za razduženje</th>
+								<th
+									class="w-20 uk-text-center">
+									<span
+										uk-icon="check"></span>
+								</th>
 							</tr>
 						</thead>
 						<tbody>
 							{% for rn in staraoc.zaduzeniRacuni() %}
 								<tr>
-									<td class="uk-text-right uk-text-primary">{{ rn.broj }} od {{ rn.datum() }}</td>
+									<td
+										class="uk-text-right uk-text-primary">{{ rn.broj }}
+										od
+										{{ rn.datum() }}</td>
 									<td
 										class="uk-text-right">
 										{{ rn.iznos|number_format(2, '.', ',') }}
@@ -799,6 +836,21 @@
 
 {% block traka %}
 
+	{# treba da bude 7 #}
+	{% if auth.logged and auth.user.id == 7 %}
+		<form
+			onsubmit="return confirm('Da li ste sigurni da želite da obrišete sva zaduženja i uplate staraoca?');"
+			action="{{ path_for('transakcije.zaduzenja.brisanje.sve') }}" method="POST">
+			{{ csrf|raw }}
+			<input
+				type="hidden" name="staraoc_id_brisanje_sve"
+				value="{{ staraoc.id }}">
+			<input
+					type="submit"
+					value="BRISANJE SVIH ZADUŽENJA I UPLATA STARAOCA"
+					class="uk-button uk-button-danger"/>
+		</form>
+	{% endif %}
 	<h1
 		class="uk-text-danger">Dugovanja</h1>
 	<table
@@ -860,19 +912,19 @@
 {% block skripta %}
 	<script>
 		document.getElementById("modal_dugme_brisi_racun").addEventListener("click", function () {
-		document.getElementById("forma_brisanje_racuna").submit();
-		});
+document.getElementById("forma_brisanje_racuna").submit();
+});
 
-		function setRacunId(el) {
-		document.getElementById("modal_racun_id").value = el.dataset.id;
-		}
+function setRacunId(el) {
+document.getElementById("modal_racun_id").value = el.dataset.id;
+}
 
-		document.getElementById("modal_dugme_brisi").addEventListener("click", function () {
-		document.getElementById("forma_brisanje").submit();
-		});
+document.getElementById("modal_dugme_brisi").addEventListener("click", function () {
+document.getElementById("forma_brisanje").submit();
+});
 
-		function setZaduzenjeId(el) {
-		document.getElementById("modal_zaduzenje_id").value = el.dataset.id;
-		}
+function setZaduzenjeId(el) {
+document.getElementById("modal_zaduzenje_id").value = el.dataset.id;
+}
 	</script>
 {% endblock skripta %}

@@ -181,6 +181,9 @@ $app->group('', function ()
 	// TODO ovo da se koristi
 	$this->post('/transakcije/visak/unos', '\App\Controllers\UplataController:postVisakUnos')->setName('transakcije.visak.unos');
 
+	// Brisanje SVIH zaduzenja i uplata staraoca
+	$this->post('/transakcije/brisanje/sve', '\App\Controllers\TransakcijeController:postSveBrisanje')->setName('transakcije.zaduzenja.brisanje.sve');
+
 	// Prevoz
 	$this->get('/prevozi', '\App\Controllers\PrevoziController:getPrevozi')->setName('prevozi');
 	$this->get('/prevozi/pretraga', '\App\Controllers\PrevoziController:getPrevoziPretraga')->setName('prevozi.pretraga');
