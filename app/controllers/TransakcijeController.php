@@ -478,7 +478,7 @@ class TransakcijeController extends Controller
 		$korisnik_id = (int) $this->auth->user()->id;
 		$staraoc_id = (int) $request->getParam('staraoc_id_brisanje_sve');
 		// treba da bude 7
-		if ($korisnik_id !== 1)
+		if ($korisnik_id !== 7)
 		{
 			$this->flash->addMessage('danger', "Nemate pravo na ovu akciju!");
 			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $staraoc_id]));

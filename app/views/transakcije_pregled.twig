@@ -836,7 +836,7 @@
 {% block traka %}
 
 	{# treba da bude 7 #}
-	{% if auth.logged and auth.user.id == 1 %}
+	{% if auth.logged and auth.user.id == 7 %}
 		<form
 			onsubmit="return confirm('Da li ste sigurni da želite da obrišete sva zaduženja i uplate staraoca?');"
 			action="{{ path_for('transakcije.zaduzenja.brisanje.sve') }}" method="POST">
