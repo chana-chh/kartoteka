@@ -16,11 +16,9 @@ class RacuniController extends Controller
 		$this->render($response, 'racun.twig', compact('staraoc'));
 	}
 
+	// pojedinacno zaduzivanje racunom
 	public function postRacun($request, $response)
 	{
-		// pojedinacno zaduzivanje racunima
-		// uracunati avans ako postoji
-
 		$data = $request->getParams();
 		unset($data['csrf_name']);
 		unset($data['csrf_value']);
@@ -35,19 +33,10 @@ class RacuniController extends Controller
 			'broj' => [
 				'required' => true,
 			],
+			// TODO dodati unique za broj
 			'datum' => [
 				'required' => true,
 			],
-
-			// ovo samo kad obracun kamate  postane obavezan
-			
-			// 'rok' => [
-			// 	'required' => true,
-			// ],
-			// 'rok' => [ // test radi i za datum
-			// 	'min' => $data['datum_zaduzenja'],
-			// ],
-
 			'iznos' => [
 				'required' => true,
 				'min' => 0.01,
@@ -61,71 +50,123 @@ class RacuniController extends Controller
 			$this->flash->addMessage('danger', 'Došlo je do greške prilikom zaduženja računa.');
 			return $response->withRedirect($this->router->pathFor('racun', ['id' => $data['staraoc_id']]));
 		}
-		else
+
+		// posto su sve provere prosle vrsi se zaduzivanje staraoca racunom
+		$iznos_racuna = (float) $data['iznos'];
+		$staraoc = (new Staraoc())->find((int) $data['staraoc_id']);
+
+		if ($staraoc->aktivan === 0)
 		{
-			$iznos_racuna = (float) $data['iznos'];
-			$staraoc = (new Staraoc())->find($data['staraoc_id']);
-			$avans = $staraoc->avans;
-
-			if($staraoc->aktivan === 0)
-			{
-				$this->flash->addMessage('danger', 'Staraoc nije aktivan.');
-				return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $data['staraoc_id']]));
-			}
-
-			$podaci = [
-				'karton_id' => $data['karton_id'],
-				'staraoc_id' => $data['staraoc_id'],
-				'broj' => $data['broj'],
-				'datum' => $data['datum'],
-				'iznos' => $iznos_racuna,
-				'glavnica' => $iznos_racuna,
-				'iznos_razduzeno' => 0,
-				'razduzeno' => 0,
-				'datum_razduzenja' => null,
-				'korisnik_id_zaduzio' => $this->auth->user()->id,
-				'korisnik_id_razduzio' => null,
-				'napomena' => $data['napomena'],
-				'datum_prispeca' => empty($data['rok']) ? null : $data['rok'],
-				'avansno' => 0,
-				'avans_iznos' => 0,
-			];
-
-			// ako avans ne pokriva iznos racuna
-			if ($avans > 0 && $avans < $iznos_racuna)
-			{
-				$podaci['glavnica'] -= $avans;
-				$podaci['iznos_razduzeno'] = $avans;
-				$podaci['avans_iznos'] = $avans;
-				$avans = 0;
-				$podaci['avansno'] = 1;
-			}
-
-			// ako avans tacno pokriva iznos racuna ili je veci od racuna
-			if ($avans > $iznos_racuna)
-			{
-				$avans -= $iznos_racuna;
-				$podaci['glavnica'] = 0;
-				$podaci['avansno'] = 1;
-				$podaci['avans_iznos'] = $iznos_racuna;
-				$podaci['iznos_razduzeno'] = $iznos_racuna;
-				$podaci['razduzeno'] = 1;
-				$podaci['datum_razduzenja'] = $data['datum_zaduzenja'];
-				$podaci['korisnik_id_razduzio'] = $this->auth->user()->id;
-			}
-
-			$model = new Racun();
-			$model->insert($podaci);
-			$id = $model->getLastId();
-
-			$sql_avans = "UPDATE staraoci SET avans = {$avans} WHERE id = {$staraoc->id};";
-			$staraoc->run($sql_avans);
-
-			$racun = $model->find($id);
-			$this->log($this::DODAVANJE, $racun, ['broj', 'datum'], $racun);
-			$this->flash->addMessage('success', 'Karton je uspešno zadužen računom.');
+			$this->flash->addMessage('danger', 'Staraoc nije aktivan.');
 			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $data['staraoc_id']]));
 		}
+
+		$model_racun = new Racun();
+		$korisnik_id = $this->auth->user()->id;
+
+		$podaci = [
+			'karton_id' => $data['karton_id'],
+			'staraoc_id' => $data['staraoc_id'],
+			'broj' => $data['broj'],
+			'datum' => $data['datum'],
+			'iznos' => $iznos_racuna,
+			'glavnica' => $iznos_racuna,
+			'iznos_razduzeno' => 0,
+			'razduzeno' => 0,
+			'datum_razduzenja' => null,
+			'korisnik_id_zaduzio' => $korisnik_id,
+			'korisnik_id_razduzio' => null,
+			'napomena' => $data['napomena'],
+			'datum_prispeca' => null,
+			// XXX datum prispeca samo kad se krene sa zateznom kamatom
+			// 'datum_prispeca' => empty($data['rok']) ? null : $data['rok'],
+			'avansno' => 0,
+			'avans_iznos' => 0,
+		];
+
+		$model_racun->insert($podaci);
+		$id = $model_racun->getLastId();
+
+		// razduzivanje/umanjenje zaduzenja avansom
+
+		$avans = $staraoc->avans();
+
+		// proveri se da li staraoc ima avans $staraoc->avans() > 0
+		if ($avans > 0) // ako ima avans poksati razduzivanje novounetog zaduzenja postojecim avansom
+		{
+			$uplate_sa_avansom = $staraoc->uplateSaAvansom();
+
+			$data_za_razduzenje = [
+				'datum_prispeca' => null,
+				'poslednji_datum_prispeca' => null,
+				'avansno' => 1,
+			];
+
+			$data_r_u = [
+				'zaduzenje_id' => $id,
+				'staraoc_id' => $staraoc->id,
+				'avansno' => 1,
+			];
+
+			$model_r_u = new RacunUplata();
+
+			foreach ($uplate_sa_avansom as $ua)
+			{
+				$racun = $model_racun->find($id);
+
+				// za svaku uplatu se proveri da li je dovoljna za razduzivanje racuna
+				if ($ua->avans >= $racun->glavnica) // ili glavnica
+				{
+					// ako je dovoljno da se razduzi ceo racun
+					// razduzivanje celog racuna
+					$data_za_razduzenje['razduzeno'] = 1;
+					$data_za_razduzenje['korisnik_id_razduzio'] = $korisnik_id;
+					$data_za_razduzenje['datum_razduzenja'] = $data['datum_zaduzenja'];
+					$data_za_razduzenje['uplata_id'] = $ua->id;
+					$data_za_razduzenje['iznos_razduzeno'] = $racun->iznos_zaduzeno;
+					$data_za_razduzenje['poslednja_glavnica'] = $racun->glavnica;
+					$data_za_razduzenje['glavnica'] = 0;
+					$racun->update($data_za_razduzenje, $racun->id);
+					// unos racun_uplata
+					$data_r_u['uplata_id'] = $ua->id;
+					$data_r_u['uplata_datum'] = $ua->datum;
+					$data_r_u['iznos'] = $racun->glavnica;
+					$data_r_u['iznos_prethodni'] = $racun->glavnica;
+					$model_r_u->insert($data_r_u);
+					// osvezava se uplata (skida se iznos koji je otiso na razduzivanje takse sa avansa uplate)
+					$ua->update(['avans' => $ua->avans - $racun->glavnica], $ua->id);
+					break; // prekida se foreach jer je razduzen ceo racun
+				}
+				else
+				{
+					// ako nije dovoljno da se razduzi ceo racun
+					// delimicno razduzivanje racuna
+					$data_za_razduzenje['razduzeno'] = 0;
+					$data_za_razduzenje['korisnik_id_razduzio'] = null;
+					$data_za_razduzenje['datum_razduzenja'] = null;
+					$data_za_razduzenje['uplata_id'] = $ua->id;
+					$data_za_razduzenje['iznos_razduzeno'] = $racun->iznos_razduzeno + $ua->avans;
+					$data_za_razduzenje['poslednja_glavnica'] = $racun->glavnica;
+					$data_za_razduzenje['glavnica'] = $racun->glavnica - $ua->avans;
+					$racun->update($data_za_razduzenje, $racun->id);
+					// unos racun_uplata
+					$data_r_u['uplata_id'] = $ua->id;
+					$data_r_u['uplata_datum'] = $ua->datum;
+					$data_r_u['iznos'] = $ua->avans;
+					$data_r_u['iznos_prethodni'] = $racun->glavnica;
+					$model_r_u->insert($data_r_u);
+					// osvezava se uplata (skida se iznos koji je otiso na razduzivanje racuna sa avansa uplate)
+					$ua->update(['avans' => 0], $ua->id);
+				}
+			}
+		}
+
+		$staraoc->update(['avans' => $staraoc->avans()], $staraoc->id);
+
+		$racun = $model_racun->find($id);
+		$this->log($this::DODAVANJE, $racun, ['broj', 'datum'], $racun);
+		$this->flash->addMessage('success', 'Karton je uspešno zadužen računom.');
+		return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $data['staraoc_id']]));
 	}
 
 	public function postRacunBrisanje($request, $response)

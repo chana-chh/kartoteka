@@ -8,12 +8,14 @@ use App\Models\Log;
 use App\Models\Racun;
 use App\Models\Zaduzenje;
 use App\Models\ZaduzenjeUplata;
+use App\Models\RacunUplata;
 
 class UplataController extends Controller
 {
 	// pregled svih uplata
 	public function getUplate($request, $response, array $args)
 	{
+		// dd(iznosSlovima(1112563.36));
 		$id = (int) $args['id'];
 		$staraoc = (new Staraoc())->find($id);
 
@@ -139,7 +141,7 @@ class UplataController extends Controller
 			'staraoc_id' => $staraoc->id,
 			'iznos' => $iznos, // ukupan iznos uplate
 			'avans' => $visak_uplate, // visak posle razduzivanja svih cekiranih stavki
-			'datum' => $data['uplata_datum'], // TODO promeniti na formi polje za datum (datetime)
+			'datum' => $data['uplata_datum'],
 			'priznanica' => $data['uplata_priznanica'],
 			'napomena' => $data['uplata_napomena'],
 			'korisnik_id' => $korisnik_id,
@@ -169,9 +171,16 @@ class UplataController extends Controller
 		];
 
 		$model_z_u = new ZaduzenjeUplata;
+		$model_r_u = new RacunUplata;
 
-		// opsti podaci za zaduzenje_uplata
+		// opsti podaci za zaduzenje_uplata/racun_uplata
 		$data_z_u = [
+			'uplata_id' => $uplata_id,
+			'uplata_datum' => $uplata->datum,
+			'staraoc_id' => $staraoc->id,
+			'avansno' => 0,
+		];
+		$data_r_u = [
 			'uplata_id' => $uplata_id,
 			'uplata_datum' => $uplata->datum,
 			'staraoc_id' => $staraoc->id,
@@ -179,7 +188,7 @@ class UplataController extends Controller
 		];
 
 		// razduzivanje svih cekiranih zaduzenja i
-		// unos zaduzenje_uplata
+		// unos u tabelu zaduzenje_uplata
 		if (!empty($zaduzenja_data))
 		{
 			$zad = implode(", ", $zaduzenja_data);
@@ -190,7 +199,7 @@ class UplataController extends Controller
 			foreach ($zaduzenja as $zad)
 			{
 				// razduzivanje zaduzenja
-				$data_za_razduzenje['iznos_razduzeno'] = $zad->iznos_zaduzeno;
+				$data_za_razduzenje['iznos_razduzeno'] = $zad->zaRazduzenje()['ukupno'];
 				$data_za_razduzenje['poslednja_glavnica'] = $zad->glavnica;
 				$data_za_razduzenje['poslednji_datum_prispeca'] = $zad->datum_prispeca;
 				$zid = (int) $zad->id;
@@ -212,12 +221,18 @@ class UplataController extends Controller
 
 			foreach ($racuni as $rn)
 			{
+				// razduzivanje racuna
 				$data_za_razduzenje['iznos_razduzeno'] = $rn->zaRazduzenje()['ukupno'];
 				$data_za_razduzenje['poslednja_glavnica'] = $rn->glavnica;
 				$data_za_razduzenje['poslednji_datum_prispeca'] = $rn->datum_prispeca;
 				$rid = (int) $rn->id;
 				$model_racun->update($data_za_razduzenje, $rid);
 				// TODO racun_uplata ili racuni da se prebace u zaduzenja
+				// unos racun_uplata
+				$data_r_u['racun_id'] = $rid;
+				$data_r_u['iznos'] = $rn->glavnica;
+				$data_r_u['iznos_prethodni'] = $data_za_razduzenje['poslednja_glavnica'];
+				$model_r_u->insert($data_r_u);
 			}
 		}
 
@@ -264,34 +279,62 @@ class UplataController extends Controller
 			$sql = "UPDATE reprogrami SET preostalo_rata = preostalo_rata + {$uplata->broj_rata}, korisnik_id_razduzio = NULL
 					WHERE id = {$uplata->reprogram_id};";
 			$uplata->run($sql);
+			return;
 		}
-		else
-		{ // kada nije reprogram
-			$sql = "SELECT * FROM zaduzenje_uplata WHERE uplata_id = :upid";
-			$zaduzenje_uplata = new ZaduzenjeUplata();
-			// sva zaduzenje_uplata za uplatu koja se brise
-			$z_u = $zaduzenje_uplata->fetch($sql, [':upid' => $uplata->id]);
-			$zaduzenje = new Zaduzenje();
 
-			foreach ($z_u as $zu)
-			{
-				// zaduzenje
-				$zad = $zaduzenje->find($zu->zaduzenje_id);
-				// podaci za vracanje zaduzenja na prethodno stanje
-				$zad_data = [
-					'glavnica' => $zu->iznos_prethodni,
-					'iznos_razduzeno' => $zad->iznos_razduzeno - $zu->iznos,
-					'datum_razduzenja' => null,
-					'korisnik_id_razduzio' => null,
-					'razduzeno' => 0,
-					// XXX: ovo se inace koristilo pre tabele zaduzenje_uplata tako da nije bitno (treba obrisati)
-					'uplata_id' => null,
-					'avansno' => 0,
-					'avans_iznos' => 0,
-					'poslednja_glavnica' => 0,
-				];
-				$zad->update($zad_data, $zad->id);
-			}
+		// kada nije reprogram
+		$sqlz = "SELECT * FROM zaduzenje_uplata WHERE uplata_id = :upid";
+		$zaduzenje_uplata = new ZaduzenjeUplata();
+		// sva zaduzenje_uplata za uplatu koja se brise
+		$z_u = $zaduzenje_uplata->fetch($sqlz, [':upid' => $uplata->id]);
+		$zaduzenje = new Zaduzenje();
+		
+		$sqlr = "SELECT * FROM racun_uplata WHERE uplata_id = :upid";
+		$racun_uplata = new RacunUplata();
+		// sva racun_uplata za uplatu koja se brise
+		$r_u = $racun_uplata->fetch($sqlr, [':upid' => $uplata->id]);
+		$racun = new Racun();
+
+		foreach ($z_u as $zu)
+		{
+			// zaduzenje
+			$zad = $zaduzenje->find($zu->zaduzenje_id);
+			// podaci za vracanje zaduzenja na prethodno stanje
+			$zad_data = [
+				'glavnica' => $zu->iznos_prethodni,
+				'iznos_razduzeno' => $zad->iznos_razduzeno - $zu->iznos,
+				'datum_razduzenja' => null,
+				'korisnik_id_razduzio' => null,
+				'razduzeno' => 0,
+				// XXX: ovo se inace koristilo pre tabele zaduzenje_uplata tako da nije bitno (treba obrisati)
+				'uplata_id' => null,
+				'avansno' => 0,
+				'avans_iznos' => 0,
+				'poslednja_glavnica' => 0,
+			];
+			// vracanje stanja zaduzenja na stanje pre uplate
+			$zad->update($zad_data, $zad->id);
+		}
+
+		foreach ($r_u as $ru)
+		{
+			// racun
+			$rac = $racun->find($ru->racun_id);
+			// podaci za vracanje racuna na prethodno stanje
+			$rac_data = [
+				'glavnica' => $ru->iznos_prethodni,
+				'iznos_razduzeno' => $rac->iznos_razduzeno - $ru->iznos,
+				'datum_razduzenja' => null,
+				'korisnik_id_razduzio' => null,
+				'razduzeno' => 0,
+				// XXX: ovo se inace koristilo pre tabele zaduzenje_uplata tako da nije bitno (treba obrisati)
+				'uplata_id' => null,
+				'avansno' => 0,
+				'avans_iznos' => 0,
+				'poslednja_glavnica' => 0,
+			];
+			// vracanje stanja zaduzenja na stanje pre uplate
+			$rac->update($rac_data, $rac->id);
 		}
 
 		// update staraoc: staraoc->avans -= uplata->avans
@@ -300,6 +343,10 @@ class UplataController extends Controller
 		// brisanje svih zapisa za uplatu u tabeli zaduzenje_uplata
 		$sql = "DELETE FROM zaduzenje_uplata WHERE uplata_id = :upid;";
 		$zaduzenje_uplata->run($sql, [':upid' => $uplata->id]);
+
+		// brisanje svih zapisa za uplatu u tabeli racun_uplata
+		$sql = "DELETE FROM racun_uplata WHERE uplata_id = :upid;";
+		$racun_uplata->run($sql, [':upid' => $uplata->id]);
 
 		// brisanje same uplate
 		$success = $uplata->deleteOne($id_uplate);
@@ -493,12 +540,11 @@ class UplataController extends Controller
 		}
 
 		$staraoc = (new Staraoc())->find($staraoc_id);
-		$visak_iznos = $staraoc->avans();
+		// $visak_iznos = $staraoc->avans();
+		$korisnik_id = $this->auth->user()->id;
 
-		if (count($zaduzenja_data) == 1) // ako je zaduzenje
+		if (count($zaduzenja_data) == 1) // ako je zaduzenje (taksa/zakup)
 		{
-			// TODO uraditi razduzivanje zaduzenja isto kao u pojedinacnom zaduzivanju taksa/zakup
-			$korisnik_id = $this->auth->user()->id;
 			$id = (int) $zaduzenja_data[0];
 			$zaduzenje = (new Zaduzenje())->find($id);
 			$uplate_sa_avansom = $staraoc->uplateSaAvansom();
@@ -512,8 +558,6 @@ class UplataController extends Controller
 
 			foreach ($uplate_sa_avansom as $ua)
 			{
-				// $zaduzenje = $zaduzenje->find($id);
-
 				// za svaku uplatu se proveri da li je dovoljna za razduzivanje zaduzenja
 				if ($ua->avans >= $zaduzenje->glavnica) // ili glavnica
 				{
@@ -533,7 +577,7 @@ class UplataController extends Controller
 					$data_z_u['iznos'] = $zaduzenje->glavnica;
 					$data_z_u['iznos_prethodni'] = $zaduzenje->glavnica;
 					$model_z_u->insert($data_z_u);
-					// osvezava se uplata (skida se iznos koji je otiso na razduzivanje takse sa avansa uplate)
+					// osvezava se uplata (skida se iznos koji je otiso na razduzivanje zaduzenja sa avansa uplate)
 					$ua->update(['avans' => $ua->avans - $zaduzenje->glavnica], $ua->id);
 					break; // prekida se foreach jer je razduzeno celo zaduzenje
 				}
@@ -560,24 +604,66 @@ class UplataController extends Controller
 				}
 			}
 		}
-		else // onda je racun
+		else // ako nije zaduzenje onda je racun
 		{
-			// $racun = (new Racun())->find((int) $racuni_data[0]);
-			// $glavnica = $racun->glavnica - $visak_iznos;
-			// $razduzeno = $racun->iznos_razduzeno + $visak_iznos;
-			// $uplata_id = $staraoc->poslednjaUplata()->id;
-			// $poslednja_glavnica = $racun->glavnica;
-			// $poslednji_datum_prispeca = $racun->datum_prispeca;
-			// $racun->update([
-			// 	'glavnica' => $glavnica,
-			// 	'iznos_razduzeno' => $razduzeno,
-			// 	'uplata_id' => $uplata_id,
-			// 	'poslednja_glavnica' => $poslednja_glavnica,
-			// 	'poslednji_datum_prispeca' => $poslednji_datum_prispeca,
-			// ], $racun->id);
-			// $staraoc->update([
-			// 	'avans' => $staraoc->avans - $visak_iznos,
-			// ], $staraoc_id);
+			$id = (int) $racuni_data[0];
+			$racun = (new Racun())->find($id);
+			$uplate_sa_avansom = $staraoc->uplateSaAvansom();
+			$model_r_u = new RacunUplata();
+
+			$data_za_razduzenje = [];
+			$data_r_u = [
+				'racun_id' => $racun->id,
+				'staraoc_id' => $staraoc->id,
+			];
+
+			foreach ($uplate_sa_avansom as $ua)
+			{
+				// za svaku uplatu se proveri da li je dovoljna za razduzivanje racuna
+				if ($ua->avans >= $racun->glavnica) // ili glavnica
+				{
+					// ako je dovoljno da se razduzi ceo racun
+					// razduzivanje celog racuna
+					$data_za_razduzenje['razduzeno'] = 1;
+					$data_za_razduzenje['korisnik_id_razduzio'] = $korisnik_id;
+					$data_za_razduzenje['datum_razduzenja'] = date('Y-m-d');
+					$data_za_razduzenje['uplata_id'] = $ua->id;
+					$data_za_razduzenje['iznos_razduzeno'] = $racun->iznos_zaduzeno;
+					$data_za_razduzenje['poslednja_glavnica'] = $racun->glavnica;
+					$data_za_razduzenje['glavnica'] = 0;
+					$racun->update($data_za_razduzenje, $racun->id);
+					// unos racun_uplata
+					$data_r_u['uplata_id'] = $ua->id;
+					$data_r_u['uplata_datum'] = $ua->datum;
+					$data_r_u['iznos'] = $racun->glavnica;
+					$data_r_u['iznos_prethodni'] = $racun->glavnica;
+					$model_r_u->insert($data_r_u);
+					// osvezava se uplata (skida se iznos koji je otiso na razduzivanje racuna sa avansa uplate)
+					$ua->update(['avans' => $ua->avans - $racun->glavnica], $ua->id);
+					break; // prekida se foreach jer je razduzeno celo zaduzenje
+				}
+				else
+				{
+					// ako nije dovoljno da se razduzi ceo racun
+					// delimicno razduzivanje racuna
+					$data_za_razduzenje['razduzeno'] = 0;
+					$data_za_razduzenje['korisnik_id_razduzio'] = null;
+					$data_za_razduzenje['datum_razduzenja'] = null;
+					$data_za_razduzenje['uplata_id'] = $ua->id;
+					$data_za_razduzenje['iznos_razduzeno'] = $racun->iznos_razduzeno + $ua->avans;
+					$data_za_razduzenje['poslednja_glavnica'] = $racun->glavnica;
+					$data_za_razduzenje['glavnica'] = $racun->glavnica - $ua->avans;
+					$racun->update($data_za_razduzenje, $racun->id);
+					// unos racun_uplata
+					$data_r_u['uplata_id'] = $ua->id;
+					$data_r_u['uplata_datum'] = $ua->datum;
+					$data_r_u['iznos'] = $ua->avans;
+					$data_r_u['iznos_prethodni'] = $racun->glavnica;
+					$model_r_u->insert($data_r_u);
+					// osvezava se uplata (skida se iznos koji je otiso na razduzivanje racuna sa avansa uplate)
+					$ua->update(['avans' => 0], $ua->id);
+				}
+			}
 		}
 
 		$staraoc->update(['avans' => $staraoc->avans()], $staraoc->id);

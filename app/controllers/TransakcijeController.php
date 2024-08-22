@@ -19,7 +19,7 @@ class TransakcijeController extends Controller
 		$staraoc_id = $args['id'];
 		$zaduzenost = isset($args['z']) ? (int) $args['z'] : 0;
 
-		if ($zaduzenost < 0 | $zaduzenost > 2)
+		if ($zaduzenost < 0 || $zaduzenost > 2)
 		{
 			$zaduzenost = 0;
 		}
@@ -31,121 +31,122 @@ class TransakcijeController extends Controller
 		// TODO izbrisati visak posto se ne koristi na formi/pogledu
 		$visak = [];
 
+		// TODO ovo se ne koristi verovatno treba brsati
 		// ako postoji visak/avans i postoje zaduzenja koja nisu razduzena
 		// visak/avans mora da se prebaci na neko nerazduzeno zaduzenje
-		if ($staraoc->imaAvansNerazduzen() && $staraoc->aktivan == 1)
-		{
-			// sva nerazduzena zaduzenja
-			$zaduzenja = $staraoc->zaduzenaZaduzenja();
-			// svi nerazduzeni racuni
-			$racuni = $staraoc->zaduzeniRacuni();
+		// if ($staraoc->imaAvansNerazduzen() && $staraoc->aktivan == 1)
+		// {
+		// 	// sva nerazduzena zaduzenja
+		// 	$zaduzenja = $staraoc->zaduzenaZaduzenja();
+		// 	// svi nerazduzeni racuni
+		// 	$racuni = $staraoc->zaduzeniRacuni();
 
-			// iznos viska para
-			$iznos = (float) $staraoc->avans();
-			// ostatak viska
-			$ostatak = $iznos;
+		// 	// iznos viska para
+		// 	$iznos = (float) $staraoc->avans();
+		// 	// ostatak viska
+		// 	$ostatak = $iznos;
 
 
-			// pocetni parametri
+		// 	// pocetni parametri
 
-			// broj celih taksi koje mogu da se razduze
-			$br_taksi = 0;
-			// broj celih zakupa koje mogu da se razduze
-			$br_zakupa = 0;
-			// taksa ili zakup koji moze delimicno da se razduzi
-			$deo = 0;
-			// vrsta (taksa ili zakup) za delimicno razduzivanje
-			$vrsta = '';
-			// godina takse ili zakupa za delimicno razduzivanje
-			$godina = 0;
-			// godine taksi koje mogu cele da se razduze
-			$godine_taksi = '';
-			// godine zakupa koji mogu celi da se razduze
-			$godine_zakupa = '';
+		// 	// broj celih taksi koje mogu da se razduze
+		// 	$br_taksi = 0;
+		// 	// broj celih zakupa koje mogu da se razduze
+		// 	$br_zakupa = 0;
+		// 	// taksa ili zakup koji moze delimicno da se razduzi
+		// 	$deo = 0;
+		// 	// vrsta (taksa ili zakup) za delimicno razduzivanje
+		// 	$vrsta = '';
+		// 	// godina takse ili zakupa za delimicno razduzivanje
+		// 	$godina = 0;
+		// 	// godine taksi koje mogu cele da se razduze
+		// 	$godine_taksi = '';
+		// 	// godine zakupa koji mogu celi da se razduze
+		// 	$godine_zakupa = '';
 
-			// racuni (ako ostane para posle razduzivanja taksi i zakupa)
-			// broj celih racuna koji mogu da se razduze
-			$br_racuna = 0;
-			// iznos delimicnog razduzenja racuna
-			$deo_racuna = 0;
-			// broj racuna za delimicno razduzivanje
-			$broj_racuna = '';
-			// brojevi racuna koji mogu celi da se razduze
-			$brojevi_racuna = '';
+		// 	// racuni (ako ostane para posle razduzivanja taksi i zakupa)
+		// 	// broj celih racuna koji mogu da se razduze
+		// 	$br_racuna = 0;
+		// 	// iznos delimicnog razduzenja racuna
+		// 	$deo_racuna = 0;
+		// 	// broj racuna za delimicno razduzivanje
+		// 	$broj_racuna = '';
+		// 	// brojevi racuna koji mogu celi da se razduze
+		// 	$brojevi_racuna = '';
 
-			// ostatak posle razduzivanja svih taksi, zakupa i racuna
-			$ost = 0;
+		// 	// ostatak posle razduzivanja svih taksi, zakupa i racuna
+		// 	$ost = 0;
 
-			// 1. razduzivanje zaduzenih taksi i zakupa
-			foreach ($zaduzenja as $zad)
-			{
-				$iznos = $ostatak;
-				$razlika = (float) $ostatak - $zad->zaRazduzenje()['ukupno'];
+		// 	// 1. razduzivanje zaduzenih taksi i zakupa
+		// 	foreach ($zaduzenja as $zad)
+		// 	{
+		// 		$iznos = $ostatak;
+		// 		$razlika = (float) $ostatak - $zad->zaRazduzenje()['ukupno'];
 
-				if ($razlika < 0) // ako je delimicno razduzenje
-				{
-					$deo = $iznos;
-					$vrsta = $zad->tip;
-					$godina = $zad->godina;
-					$ostatak = 0;
-					break;
-				}
-				else
-				{
-					if ($zad->tip === 'taksa') // ako se razduzuje cela taksa
-					{
-						$br_taksi++;
-						$godine_taksi .= ', ' . $zad->godina;
-						$ostatak = $razlika;
-					}
-					elseif ($zad->tip === 'zakup') // ako se razduzuje ceo zakup
-					{
-						$br_zakupa++;
-						$godine_zakupa .= ', ' . $zad->godina;
-						$ostatak = $razlika;
-					}
-				}
-			}
+		// 		if ($razlika < 0) // ako je delimicno razduzenje
+		// 		{
+		// 			$deo = $iznos;
+		// 			$vrsta = $zad->tip;
+		// 			$godina = $zad->godina;
+		// 			$ostatak = 0;
+		// 			break;
+		// 		}
+		// 		else
+		// 		{
+		// 			if ($zad->tip === 'taksa') // ako se razduzuje cela taksa
+		// 			{
+		// 				$br_taksi++;
+		// 				$godine_taksi .= ', ' . $zad->godina;
+		// 				$ostatak = $razlika;
+		// 			}
+		// 			elseif ($zad->tip === 'zakup') // ako se razduzuje ceo zakup
+		// 			{
+		// 				$br_zakupa++;
+		// 				$godine_zakupa .= ', ' . $zad->godina;
+		// 				$ostatak = $razlika;
+		// 			}
+		// 		}
+		// 	}
 
-			// 2. ako postoji ostatak prelazi se na razduzivanje racuna
-			if ($ostatak > 0)
-			{
-				foreach ($racuni as $rn)
-				{
-					$iznos = $ostatak;
-					$razlika = (float) $ostatak - $rn->zaRazduzenje()['ukupno'];
+		// 	// 2. ako postoji ostatak prelazi se na razduzivanje racuna
+		// 	if ($ostatak > 0)
+		// 	{
+		// 		foreach ($racuni as $rn)
+		// 		{
+		// 			$iznos = $ostatak;
+		// 			$razlika = (float) $ostatak - $rn->zaRazduzenje()['ukupno'];
 
-					if ($razlika < 0) // ako je delimicno razduzenje
-					{
-						$deo_racuna = $iznos;
-						$broj_racuna = $rn->broj;
-						$ostatak = 0;
-						break;
-					}
-					else
-					{
-						$br_racuna++;
-						$brojevi_racuna .= ', ' . $rn->broj;
-						$ostatak = $razlika;
-					}
-				}
-			}
+		// 			if ($razlika < 0) // ako je delimicno razduzenje
+		// 			{
+		// 				$deo_racuna = $iznos;
+		// 				$broj_racuna = $rn->broj;
+		// 				$ostatak = 0;
+		// 				break;
+		// 			}
+		// 			else
+		// 			{
+		// 				$br_racuna++;
+		// 				$brojevi_racuna .= ', ' . $rn->broj;
+		// 				$ostatak = $razlika;
+		// 			}
+		// 		}
+		// 	}
 
-			$visak = [
-				'br_taksi' => $br_taksi,
-				'godine_taksi' => trim($godine_taksi, ','),
-				'br_zakupa' => $br_zakupa,
-				'godine_zakupa' => trim($godine_zakupa, ','),
-				'godina' => $godina,
-				'vrsta' => $vrsta,
-				'deo' => round($deo, 2),
-				'br_racuna' => $br_racuna,
-				'deo_racuna' => round($deo_racuna, 2),
-				'broj_racuna' => $broj_racuna,
-				'brojevi_racuna' => trim($brojevi_racuna, ','),
-				'ostatak' => round($ostatak > 0 ? $ostatak : 0, 2), // ostatak posle razduzenja svega
-			];
-		}
+		// 	$visak = [
+		// 		'br_taksi' => $br_taksi,
+		// 		'godine_taksi' => trim($godine_taksi, ','),
+		// 		'br_zakupa' => $br_zakupa,
+		// 		'godine_zakupa' => trim($godine_zakupa, ','),
+		// 		'godina' => $godina,
+		// 		'vrsta' => $vrsta,
+		// 		'deo' => round($deo, 2),
+		// 		'br_racuna' => $br_racuna,
+		// 		'deo_racuna' => round($deo_racuna, 2),
+		// 		'broj_racuna' => $broj_racuna,
+		// 		'brojevi_racuna' => trim($brojevi_racuna, ','),
+		// 		'ostatak' => round($ostatak > 0 ? $ostatak : 0, 2), // ostatak posle razduzenja svega
+		// 	];
+		// }
 
 		$this->render($response, 'transakcije_pregled.twig', compact('staraoc', 'broj_uplata', 'zaduzenost', 'visak'));
 	}
@@ -170,6 +171,7 @@ class TransakcijeController extends Controller
 
 	public function getZaduzivanje($request, $response)
 	{
+		// TODO proverti ovo
 		$model = new Cena();
 		$taksa = $model->taksa();
 		$zakup = $model->zakup();
@@ -206,6 +208,7 @@ class TransakcijeController extends Controller
 
 	public function postZaduzivanje($request, $response)
 	{
+		// TODO prepraviti masovno zaduzivanje da bude kao pojedinacno [TaksaController i ZakupController]
 		$staraoci_sa_nerazduzenim_avansom = count((new Staraoc())->sviSaraociSaNerazduzenimAvansom());
 
 		if ($staraoci_sa_nerazduzenim_avansom > 0)
@@ -214,11 +217,7 @@ class TransakcijeController extends Controller
 			return $response->withRedirect($this->router->pathFor('transakcije.zaduzivanje'));
 		}
 
-		/*
-			DODATI BROJ RACUNA
-
-			prilikom zaduzivanja skidati novac sa avansa staraoca
-		*/
+		//	prilikom zaduzivanja skidati novac sa avansa staraoca
 
 		$data = $request->getParams();
 		unset($data['csrf_name']);
@@ -479,7 +478,7 @@ class TransakcijeController extends Controller
 		$korisnik_id = (int) $this->auth->user()->id;
 		$staraoc_id = (int) $request->getParam('staraoc_id_brisanje_sve');
 		// treba da bude 7
-		if ($korisnik_id !== 7)
+		if ($korisnik_id !== 1)
 		{
 			$this->flash->addMessage('danger', "Nemate pravo na ovu akciju!");
 			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $staraoc_id]));

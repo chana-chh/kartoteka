@@ -130,9 +130,9 @@
 				din
 			</h3>
 			<h4
-				class="uk-text-danger">Odaberite samo jednu stavku koja je delimično razdužena ovom uplatom!</h4>
+				class="uk-text-danger">Odaberite samo JEDNU stavku koja je delimično razdužena ovom uplatom!</h4>
 
-			<!-- forma za biranje delimcnog razduzivanja (kao razduzivanje - tabela umesto harmonike) -->
+			{# forma za biranje delimcnog razduzivanja (kao razduzivanje - tabela umesto harmonike) #}
 
 			<form
 				onsubmit="return confirm('Da li ste sigurni da želite da delimično razdužite ovo zaduženje?');"
@@ -294,7 +294,6 @@
 					value="RAZDUŽI"
 					class="uk-button uk-button-danger uk-button-small uk-margin-top"/>
 			</form>
-
 		</div>
 	{% else %}
 		<div
@@ -837,7 +836,7 @@
 {% block traka %}
 
 	{# treba da bude 7 #}
-	{% if auth.logged and auth.user.id == 7 %}
+	{% if auth.logged and auth.user.id == 1 %}
 		<form
 			onsubmit="return confirm('Da li ste sigurni da želite da obrišete sva zaduženja i uplate staraoca?');"
 			action="{{ path_for('transakcije.zaduzenja.brisanje.sve') }}" method="POST">

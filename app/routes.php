@@ -174,11 +174,11 @@ $app->group('', function ()
 	$this->get('/unete-uplate/stampa', '\App\Controllers\StatistikaController:getUneteUplateStampa')->setName('unete.uplate.stampa');
 
 	// Razduzivanje viska para
-	// TODO ovo se nece koristiti
-	$this->post('/transakcije/visak', '\App\Controllers\UplataController:postVisak')->setName('transakcije.visak');
+	// XXX ovo se nece koristiti
+	// $this->post('/transakcije/visak', '\App\Controllers\UplataController:postVisak')->setName('transakcije.visak');
 
 	// Razduzivanje viska para za masovan unos pocetnog stanja
-	// TODO ovo da se koristi
+	// XXX ovo da se koristi
 	$this->post('/transakcije/visak/unos', '\App\Controllers\UplataController:postVisakUnos')->setName('transakcije.visak.unos');
 
 	// Brisanje SVIH zaduzenja i uplata staraoca

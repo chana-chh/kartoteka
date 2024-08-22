@@ -103,7 +103,6 @@ class Staraoc extends Model
 	// sva zaduzenja staraoca
 	public function svaZaduzenja()
 	{
-		// XXX da li je potrebano sortiranje po godini
 		$sql = "SELECT * FROM zaduzenja WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id} ORDER BY godina ASC;";
 		return $this->fetch($sql, null, '\App\Models\Zaduzenje');
 	}
@@ -111,7 +110,6 @@ class Staraoc extends Model
 	// sva zaduzenja staraoca koja nisu u potpunosti razduzena
 	public function zaduzenaZaduzenja()
 	{
-		// XXX sortiranje?
 		$sql = "SELECT * FROM zaduzenja WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id}
                 AND razduzeno = 0 AND reprogram_id IS NULL ORDER BY godina ASC, tip ASC;";
 		return $this->fetch($sql, null, '\App\Models\Zaduzenje');
@@ -120,7 +118,6 @@ class Staraoc extends Model
 	// sva zaduzenja staraoca koja su u potpunosti razduzena
 	public function razduzenaZaduzenja()
 	{
-		// XXX sortiranje?
 		$sql = "SELECT * FROM zaduzenja WHERE karton_id = {$this->karton()->id} AND staraoc_id = {$this->id}
                 AND razduzeno = 1 ORDER BY godina ASC;";
 		return $this->fetch($sql, null, '\App\Models\Zaduzenje');
@@ -400,12 +397,16 @@ class Staraoc extends Model
 		$id = $this->id;
 		$sql1 = "DELETE FROM zaduzenje_uplata WHERE staraoc_id = :id;";
 		$sql2 = "DELETE FROM zaduzenja WHERE staraoc_id = :id;";
-		$sql3 = "DELETE FROM uplate WHERE staraoc_id = :id;";
+		$sql3 = "DELETE FROM racun_uplata WHERE staraoc_id = :id;";
+		$sql4 = "DELETE FROM racuni WHERE staraoc_id = :id;";
+		$sql5 = "DELETE FROM uplate WHERE staraoc_id = :id;";
 
 		$succ1 = $this->run($sql1, [":id" => $id]);
 		$succ2 = $this->run($sql2, [":id" => $id]);
 		$succ3 = $this->run($sql3, [":id" => $id]);
+		$succ4 = $this->run($sql4, [":id" => $id]);
+		$succ5 = $this->run($sql5, [":id" => $id]);
 
-		return $succ1 && $succ2 && $succ3;
+		return $succ1 && $succ2 && $succ3 && $succ4 && $succ5;
 	}
 }

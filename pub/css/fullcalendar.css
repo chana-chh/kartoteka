@@ -175,7 +175,7 @@ previous button's border...
 }
 
 .fc-popover .fc-header {
-  /* TODO: be more consistent with fc-head/fc-body */
+  /*  be more consistent with fc-head/fc-body */
   padding: 2px 4px;
 }
 
@@ -380,7 +380,7 @@ temporary rendered events).
   -webkit-overflow-scrolling: touch;
 }
 
-/* TODO: move to agenda/basic */
+/* move to agenda/basic */
 .fc-scroller > .fc-day-grid,
 .fc-scroller > .fc-time-grid {
   position: relative;
@@ -684,9 +684,7 @@ a.fc-more:hover {
   -webkit-tap-highlight-color: transparent;
 }
 
-/*
-TODO: more distinction between this file and common.css
-*/
+/* more distinction between this file and common.css */
 /* Colors
 --------------------------------------------------------------------------------------------------*/
 .fc-unthemed th,

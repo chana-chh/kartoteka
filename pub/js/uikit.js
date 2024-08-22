@@ -8109,7 +8109,7 @@
                         return;
                     }
 
-                    // TODO better isToggled handling
+                    // better isToggled handling
                     var link;
                     if (closest(e.target, 'a[href="#"], a[href=""], button')
                         || (link = closest(e.target, 'a[href]')) && (

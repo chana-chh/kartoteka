@@ -35,7 +35,7 @@ class ZakupController extends Controller
 		$broj = $model->fetch($sql, [':god' => $data['godina'], ':star' => $staraoc_id])[0]->broj;
 
 		// ako je pronadjeno zaduzenje znaci da zaduzenje za godinu vec postoji i staraoc se ne zaduzuje
-		if ($broj > 0)
+		if ($broj != 0)
 		{
 			$this->flash->addMessage('danger', 'Već postoji zaduženje za odabranu godinu');
 			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $staraoc_id]));
@@ -56,8 +56,8 @@ class ZakupController extends Controller
 			// 'datum_prispeca' => [
 			// 	'required' => true,
 			// ],
-			// 'datum_prispeca' => [ // test radi i za datum
-			// 	'min' => $data['datum_zaduzenja'],
+			// test radi i za datum
+			// 'datum_prispeca' => ['min' => $data['datum_zaduzenja'],
 			// ],
 			'godina' => [
 				'required' => true,
@@ -76,14 +76,14 @@ class ZakupController extends Controller
 		// ako su podaci ispravni vrsi se preuzimanje staraoca
 		$staraoc = $model->find($data['staraoc_id']);
 
-		// ako staraoc nije aktivan nije moguce da se zaduzi taksom
+		// ako staraoc nije aktivan nije moguce da se zaduzi zakupom
 		if ($staraoc->aktivan === 0)
 		{
 			$this->flash->addMessage('danger', 'Staraoc nije aktivan.');
 			return $response->withRedirect($this->router->pathFor('transakcije.pregled', ['id' => $data['staraoc_id']]));
 		}
 
-		// posto su sve provere prosle vrsi se zaduzivanje staraoca taksom
+		// posto su sve provere prosle vrsi se zaduzivanje staraoca zakupom
 		$bm = $staraoc->karton()->broj_mesta;
 		$bs = $staraoc->karton()->brojAktivnihStaraoca();
 
@@ -99,13 +99,11 @@ class ZakupController extends Controller
 			'tip' => 'zakup',
 			'godina' => (int) $data['godina'],
 			'iznos_zaduzeno' => $iznos_zakupa,
-			// XXX glavnica samo kad se krene sa zateznom kamatom
-			// koristi se na vise mesta umesto iznosa za razduzenje pa zbog oga ostaje
 			'glavnica' => $iznos_zakupa,
 			'iznos_razduzeno' => 0,
 			'razduzeno' => 0,
 			'datum_zaduzenja' => $data['datum_zaduzenja'],
-			// XXX datum prispeca samo kad se krene sa zateznom kamatom
+			// XXX ovo je za datum od kada pocinje da se racuna zatezna kamata
 			// 'datum_prispeca' => empty($data['datum_prispeca']) ? null : $data['datum_prispeca'],
 			'datum_prispeca' => null,
 			'korisnik_id_zaduzio' => $korisnik_id,
@@ -119,12 +117,10 @@ class ZakupController extends Controller
 
 		// razduzivanje/umanjenje zaduzenja avansom
 
-		// FIXME avans da se vadi iz uplata staraoca
-		// $avans = $staraoc->avans; trebalo bi da bude isto ($staraoc->avans i $staraoc->avans())
 		$avans = $staraoc->avans();
 
 		// proveri se da li staraoc ima avans $staraoc->avans() > 0 ?
-		if ($avans > 0)
+		if ($avans > 0) // ako ima avans poksati razduzivanje novounetog zaduzenja postojecim avansom
 		{
 			$uplate_sa_avansom = $staraoc->uplateSaAvansom();
 
