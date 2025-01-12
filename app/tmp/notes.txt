@@ -1,29 +1,35 @@
-PROMENE ZA UPLOAD
+*NISU ZADUZENI TAKSOM ZA 2024*
+SELECT karton.naziv, karton.parcela, karton.grobno_mesto,
+staraoci.id, staraoci.prezime, staraoci.ime, staraoci.ulica, staraoci.broj, staraoci.ptt, staraoci.mesto
+FROM staraoci
+JOIN (SELECT kartoni.id, groblja.naziv,kartoni.parcela, kartoni.grobno_mesto, kartoni.aktivan FROM kartoni JOIN groblja ON kartoni.groblje_id = groblja.id) AS karton ON staraoci.karton_id = karton.id
+WHERE staraoci.id NOT IN (SELECT staraoc_id FROM zaduzenja WHERE godina = 2024 AND tip = 'taksa') AND staraoci.aktivan = 1 AND karton.aktivan = 1
+ORDER BY naziv, parcela, grobno_mesto
 
-app
-	routes.php
+*NISU ZADUZENI TAKSOM ZA 2024*
+SELECT karton.naziv, karton.parcela, karton.grobno_mesto,
+staraoci.id, staraoci.prezime, staraoci.ime, staraoci.ulica, staraoci.broj, staraoci.ptt, staraoci.mesto
+FROM staraoci
+JOIN (SELECT kartoni.id, groblja.naziv,kartoni.parcela, kartoni.grobno_mesto, kartoni.aktivan FROM kartoni JOIN groblja ON kartoni.groblje_id = groblja.id) AS karton ON staraoci.karton_id = karton.id
+WHERE staraoci.id NOT IN (SELECT staraoc_id FROM zaduzenja WHERE godina = 2024 AND tip = 'zakup') AND staraoci.aktivan = 1 AND karton.aktivan = 1
+ORDER BY naziv, parcela, grobno_mesto
 
-	\controllers
-		StatistikaController.php
-		TaksaController.php
-		TransakcijeController.php
-		UplataController.php
-		ZakupController.php
+*ZADUZENI TAKSOM ZA 2024 A NISU PLATILI NISTA (za taksu 2024)*
+SELECT karton.naziv, karton.parcela, karton.grobno_mesto,
+staraoci.id, staraoci.prezime, staraoci.ime, staraoci.ulica, staraoci.broj, staraoci.ptt, staraoci.mesto
+FROM zaduzenja
+JOIN staraoci ON zaduzenja.staraoc_id = staraoci.id
+JOIN (SELECT kartoni.id, groblja.naziv,kartoni.parcela, kartoni.grobno_mesto, kartoni.aktivan FROM kartoni JOIN groblja ON kartoni.groblje_id = groblja.id) AS karton
+ON zaduzenja.karton_id = karton.id
+WHERE zaduzenja.godina = 2024 AND zaduzenja.tip = 'taksa' AND glavnica = iznos_zaduzeno
+ORDER BY naziv, parcela, grobno_mesto
 
-	\models
-		Staraoc.php
-		Staraoc1.php
-		Zaduzenje.php
-		ZaduzenjeUplata.php
-
-	\views
-		karton_pregled.twig
-		taksa.twig
-		transakcije_pregled.twig
-		transakcije_razduzivanje.twig
-		unete_uplate_stampa.twig
-		unete_uplate.twig
-
-		\templates
-			\inc
-				navigation.twig
+*ZADUZENI ZAKUPOM ZA 2024 A NISU PLATILI NISTA (za zakup 2024)*
+SELECT karton.naziv, karton.parcela, karton.grobno_mesto,
+staraoci.id, staraoci.prezime, staraoci.ime, staraoci.ulica, staraoci.broj, staraoci.ptt, staraoci.mesto
+FROM zaduzenja
+JOIN staraoci ON zaduzenja.staraoc_id = staraoci.id
+JOIN (SELECT kartoni.id, groblja.naziv,kartoni.parcela, kartoni.grobno_mesto, kartoni.aktivan FROM kartoni JOIN groblja ON kartoni.groblje_id = groblja.id) AS karton
+ON zaduzenja.karton_id = karton.id
+WHERE zaduzenja.godina = 2024 AND zaduzenja.tip = 'zakup' AND glavnica = iznos_zaduzeno
+ORDER BY naziv, parcela, grobno_mesto
